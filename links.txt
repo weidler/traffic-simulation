@@ -1,1 +1,6 @@
 http://elib.dlr.de/6661/2/dkrajzew_MESM2002.pdf
+http://xxx.uni-augsburg.de/pdf/cond-mat/0002177v1               //Traffic Math from Real Life Data
+https://arxiv.org/pdf/1012.4913.pdf                             //Traffic Simulation Math & Example Simulation
+https://github.com/movsim/traffic-simulation-de                 //Open-Source code for Traffic Simulator at
+                                                                  http://www.traffic-simulation.de/
+                                                                  
