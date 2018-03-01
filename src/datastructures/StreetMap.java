@@ -24,7 +24,12 @@ public class StreetMap {
 	 * connects the intersections with the IDs i and j.
 	 */
 	private ArrayList<ArrayList<Connection>> adjacency_matrix;
-
+	
+	/**
+	 * 
+	 * list of all roads;
+	 */
+	private ArrayList<Road> roads = new ArrayList();
 	// CONSTRUCTORS
 	
 	public StreetMap(ArrayList<Intersection> intersections) {
@@ -44,6 +49,14 @@ public class StreetMap {
 	
 	// GRAPH MODIFICATION
 
+	/**
+	 * adds roads
+	 * @param r is a road
+	 */
+	public void addRoad(Road r) {
+		roads.add(r);
+	}
+	
 	/**
 	 * Adds an Intersection by appending the provided object to the lookup
 	 * table and inserting row and column to the adjacency matrix.
@@ -121,6 +134,10 @@ public class StreetMap {
 	}
 	
 	// GETTER / SETTER
+	public ArrayList<Road> getRoads()
+	{
+		return roads;
+	}
 	
 	/**
 	 * Get the entire adjacency matrix.
