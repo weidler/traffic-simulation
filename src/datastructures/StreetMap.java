@@ -139,6 +139,10 @@ public class StreetMap {
 		return this.intersections.get(ID);
 	}
 	
+	public ArrayList<Intersection> getAllIntersections ()
+	{
+		return intersections;
+	}
 	/**
 	 * Get the Connection object storing information about the edge in the graph
 	 * connecting the start and end Intersections (provided as Integers)

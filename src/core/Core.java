@@ -1,6 +1,13 @@
 package core;
 
 import graphical_interface.GraphicalInterface;
+/**
+ * 
+ * @author thomas 
+ * main class
+ * it calls the interface
+ *
+ */
 
 public class Core {
 	
