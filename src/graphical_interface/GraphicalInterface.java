@@ -215,7 +215,7 @@ public class GraphicalInterface extends JFrame {
 				streetMap.addRoad(new Road(startX,startY,endX,endY));
 				Intersection in = new Intersection(endX, endY);
 				streetMap.addIntersection(in);
-				new CrossRoadDetection(streetMap.getAllIntersections(), streetMap.getRoads());
+				new CrossRoadDetection(streetMap.getAllIntersections(), streetMap.getRoads(),streetMap);
 				clickCounter = 0;
 				repaint();
 			}

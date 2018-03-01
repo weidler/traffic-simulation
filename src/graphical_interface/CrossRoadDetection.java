@@ -4,19 +4,21 @@ import java.util.ArrayList;
 
 import datastructures.Intersection;
 import datastructures.Road;
+import datastructures.StreetMap;
 
 public class CrossRoadDetection {
 
 	private ArrayList<Intersection> intersections;
 	private ArrayList<Road> roads;
-	
-	public CrossRoadDetection(ArrayList<Intersection> intersections, ArrayList<Road> roads)
+	private StreetMap streetMap;
+	public CrossRoadDetection(ArrayList<Intersection> intersections, ArrayList<Road> roads, StreetMap streetMap)
 	{
 		System.out.println("check for intersection");
 		boolean recheck = false;
 		int size = roads.size();
 		this.intersections = intersections;
 		this.roads = roads;
+		this.streetMap = streetMap;
 		
 		
 			for(int i = 0 ; i < size-2 ; i++)
@@ -24,7 +26,7 @@ public class CrossRoadDetection {
 				if(!recheck) 
 				{
 					recheck = lineIntersect(roads.get(size-1).getX1(), roads.get(size-1).getY1(), roads.get(size-1).getX2(), roads.get(size-1).getY2(), roads.get(i).getX1(), roads.get(i).getY1(), roads.get(i).getX2(), roads.get(i).getY2());
-					System.out.println("found an intersection "+ intersections.get(intersections.size()-1).getX_coord()+", "+intersections.get(intersections.size()-1).getY_coord());
+					System.out.println("found an intersection "+ intersections.get(intersections.size()-1).getX_coord()+", "+intersections.get(intersections.size()-1).getY_coord()+" "+recheck);
 				}
 			}
 		
@@ -50,7 +52,7 @@ public class CrossRoadDetection {
 		  if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) 
 		  {
 		        // Get the intersection point.
-			  intersections.add(new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1))));
+			  streetMap.addIntersection(new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1))));
 			 
 			  return true;
 		  }
