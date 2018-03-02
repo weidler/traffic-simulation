@@ -52,7 +52,11 @@ public class CrossRoadDetection {
 		  if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) 
 		  {
 		        // Get the intersection point.
-			  streetMap.addIntersection(new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1))));
+			  Intersection intersection = new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
+			  System.out.println(intersection.getX_coord()+" "+intersection.getY_coord());
+			  streetMap.addIntersection(intersection);
+			  //this visualize found intersection. remove when continue coding!!!!
+			  streetMap.addRoad(new Road(intersection.getX_coord(), intersection.getY_coord(), intersection.getX_coord(), intersection.getY_coord()));
 			 
 			  return true;
 		  }

@@ -14,20 +14,39 @@ import datastructures.StreetMap;
 
 public class Visuals extends JPanel{	
 	
-	StreetMap streetMap;
-	ArrayList<Road> roads;
+	private StreetMap streetMap;
+	public boolean isDrawLine() {
+		return drawLine;
+	}
+
+	
+
+	private ArrayList<Road> roads;
+	private boolean drawLine = false;
+	private int mousePosX=0;
+	private int mousePosY=0;
+	private int startPosX=0;
+	private int startPosY=0;
 	public Visuals(StreetMap streetMap) {
 		this.streetMap = streetMap;
 		roads = streetMap.getRoads();
+		
+		
 	}
 	
 	@Override
 	public void paintComponent (Graphics g)
 	{
 		
-		System.out.println("draw");
+		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.black);
+		
+		if (drawLine) 
+		{
+			
+			g2.drawLine(startPosX, startPosY, mousePosX, mousePosY);
+		}
 		
 		for(int i = 0 ; i< roads.size() ; i++ ) {
 			g2.draw(new Line2D.Double(
@@ -39,5 +58,40 @@ public class Visuals extends JPanel{
 		
 		
 		
+	}
+	public int getStartPosX() {
+		return startPosX;
+	}
+
+	public void setStartPosX(int startPosX) {
+		this.startPosX = startPosX;
+	}
+
+	public int getStartPosY() {
+		return startPosY;
+	}
+
+	public void setStartPosY(int startPosY) {
+		this.startPosY = startPosY;
+	}
+
+	public void setDrawLine(boolean drawLine) {
+		this.drawLine = drawLine;
+	}
+
+	public int getMousePosX() {
+		return mousePosX;
+	}
+
+	public void setMousePosX(int mousePosX) {
+		this.mousePosX = mousePosX;
+	}
+
+	public int getMousePosY() {
+		return mousePosY;
+	}
+
+	public void setMousePosY(int mousePosY) {
+		this.mousePosY = mousePosY;
 	}
 }
