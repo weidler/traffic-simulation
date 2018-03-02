@@ -287,7 +287,11 @@ public class GraphicalInterface extends JFrame {
 
 		@Override
 		public void mouseDragged(java.awt.event.MouseEvent e) {
-			// TODO
+			mouseX = e.getX();
+			mouseY = e.getY();
+			visuals.setMousePosX(mouseX);
+			visuals.setMousePosY(mouseY);
+			repaint();
 			
 		}
 
