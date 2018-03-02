@@ -40,14 +40,14 @@ public class Visuals extends JPanel{
 		
 		
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.black);
+		g2.setColor(Color.cyan);
 		
 		if (drawLine) 
 		{
 			
 			g2.drawLine(startPosX, startPosY, mousePosX, mousePosY);
 		}
-		
+		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {
 			g2.draw(new Line2D.Double(
 					roads.get(i).getX1(), roads.get(i).getY1(), roads.get(i).getX2(), roads.get(i).getY2()));
