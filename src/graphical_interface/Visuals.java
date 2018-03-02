@@ -41,6 +41,9 @@ public class Visuals extends JPanel{
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.cyan);
+		g2.setBackground(Color.CYAN);
+		System.out.println(g2.getBackground());
+		
 		
 		if (drawLine) 
 		{

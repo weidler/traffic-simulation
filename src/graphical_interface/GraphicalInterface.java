@@ -84,8 +84,6 @@ public class GraphicalInterface extends JFrame {
 		
 		JPanel drawPanel = visuals;
 		drawPanel.setBounds(10, 11, 639, 474);
-		
-		
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
@@ -93,9 +91,13 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.setBounds(659, 11, 167, 474);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
 		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		
 		contentPane.add(menuPanel);
+		menuPanel.setLayout(null);
 		
 		JButton undoButton = new JButton("undo");
+		undoButton.setBounds(10, 59, 147, 37);
+		undoButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(undoButton);
 		undoButton.addActionListener(new ActionListener() {
 			
@@ -109,14 +111,33 @@ public class GraphicalInterface extends JFrame {
 				}
 				else
 				{
-					//DO NOTHING
+					streetMap.getAllIntersections().clear();
+					streetMap.getRoads().clear();
 				}
+				repaint();
+				
+			}
+		});
+		
+		JButton clearButton = new JButton("clear");
+		clearButton.setLocation(10, 11);
+		clearButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		clearButton.setSize(147, 37);
+		menuPanel.add(clearButton);
+		clearButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				streetMap.getAllIntersections().clear();
+				streetMap.getRoads().clear();
+				repaint();
 				
 			}
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(34, 21, 89, 23);
+		startButton.setBounds(10, 426, 147, 37);
+		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
 			
