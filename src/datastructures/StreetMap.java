@@ -85,6 +85,11 @@ public class StreetMap {
 	 * Intersections with a higher index. Didn't come up with a better solution yet, sorry.
 	 * @param id
 	 */
+	public void removeRoad(int index) 
+	{
+		this.roads.remove(index);
+	}
+	
 	public void removeIntersection(int id) {
 		// lets start easy
 		this.intersections.remove(id);

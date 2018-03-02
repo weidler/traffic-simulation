@@ -266,7 +266,7 @@ public class GraphicalInterface extends JFrame {
 				clickCounter = 0;
 				
 				visuals.setDrawLine(false);
-				repaint();
+				
 			}
 			System.out.println(streetMap.getAllIntersections());
 			
@@ -275,7 +275,7 @@ public class GraphicalInterface extends JFrame {
 			System.out.println("y coordinate: "+y);
 			System.out.println("");
 			System.out.println("changed");
-			
+			repaint();
 			
 		}
 
