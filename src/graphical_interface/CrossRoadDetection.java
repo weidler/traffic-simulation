@@ -11,31 +11,63 @@ public class CrossRoadDetection {
 	private ArrayList<Intersection> intersections;
 	private ArrayList<Road> roads;
 	private StreetMap streetMap;
-	public CrossRoadDetection(ArrayList<Intersection> intersections, ArrayList<Road> roads, StreetMap streetMap)
+	
+	public CrossRoadDetection(StreetMap streetMap)
 	{
-		System.out.println("check for intersection");
-		boolean recheck = false;
-		int size = roads.size();
-		this.intersections = intersections;
-		this.roads = roads;
-		this.streetMap = streetMap;
+		boolean recheck = false;		
+		this.streetMap = streetMap;		
 		
-		
-			for(int i = 0 ; i < size-1 ; i++)
+			for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
 			{
 				if(!recheck) 
 				{
-					recheck = lineIntersect(roads.get(size-1).getX1(), roads.get(size-1).getY1(), roads.get(size-1).getX2(), roads.get(size-1).getY2(), roads.get(i).getX1(), roads.get(i).getY1(), roads.get(i).getX2(), roads.get(i).getY2(),i);
-					System.out.println("found an intersection "+ intersections.get(intersections.size()-1).getX_coord()+", "+intersections.get(intersections.size()-1).getY_coord()+" "+recheck);
+					recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-1).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-1);
 				}
 			}
-		
-		
+			
+			while(recheck) 
+			{
+				recheck = false;
+				
+					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
+					{
+						
+						recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-1).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-1);
+						
+					}
+				
+				
+					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
+					{
+						
+						recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-2).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-2).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-2).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-2).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-2);
+						
+					}
+				
+				
+					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
+					{
+						
+						recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-3).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-3).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-3).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-3).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-3);
+						
+					}
+				
+			
+					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
+					{
+						
+						recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-4).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-4).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-4).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-4).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-4);
+						
+					}
+				
+					break;
+			}	
 		
 	}
 	
-	public boolean lineIntersect(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int index) {
+	public boolean lineIntersect(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int index, int index2) {
 		
+	
 		  double denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 		  
 		  if (denom == 0.0)
@@ -48,21 +80,21 @@ public class CrossRoadDetection {
 		  
 		  if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) 
 		  {
-		        // Get the intersection point.
-			  Intersection newIntersection = new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
-			  Intersection intersection = newIntersection;
-			  System.out.println(intersection.getX_coord()+" "+intersection.getY_coord());
-			  streetMap.addIntersection(intersection);
-			  streetMap.removeRoad(index);
-			  streetMap.removeRoad(roads.size()-1);
-			  streetMap.addRoad(new Road(x3, y3, newIntersection.getX_coord() , newIntersection.getY_coord()));
-			  streetMap.addRoad(new Road(x4, y4, newIntersection.getX_coord() , newIntersection.getY_coord()));
-			  streetMap.addRoad(new Road(x1, y1, newIntersection.getX_coord() , newIntersection.getY_coord()));
-			  streetMap.addRoad(new Road(x2, y2, newIntersection.getX_coord() , newIntersection.getY_coord()));
-			  
-			 
-			  
-			  return true;
+		      if(y1 != y2 && y1 != y3 && y1 != y4 && y2 != y3 && y2 != y4 && y3 != y4 ) 
+		      {  
+				  Intersection newIntersection = new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
+				  streetMap.addIntersection(newIntersection);
+				  Road remove1 = streetMap.getRoads().get(index);
+				  Road remove2 = streetMap.getRoads().get(index2);
+				  streetMap.removeRoad(remove1);
+				  streetMap.removeRoad(remove2);
+				  streetMap.addRoad(new Road(x3, y3, newIntersection.getX_coord() , newIntersection.getY_coord()));
+				  streetMap.addRoad(new Road(x4, y4, newIntersection.getX_coord() , newIntersection.getY_coord()));
+				  streetMap.addRoad(new Road(x1, y1, newIntersection.getX_coord() , newIntersection.getY_coord()));
+				  streetMap.addRoad(new Road(x2, y2, newIntersection.getX_coord() , newIntersection.getY_coord()));					  
+				  
+				  return true;
+		      }
 		  }
 
 		  return false;

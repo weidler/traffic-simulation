@@ -18,9 +18,7 @@ public class Visuals extends JPanel{
 	public boolean isDrawLine() {
 		return drawLine;
 	}
-
 	
-
 	private ArrayList<Road> roads;
 	private boolean drawLine = false;
 	private int mousePosX=0;
