@@ -1,15 +1,11 @@
 package graphical_interface;
 
-import java.util.ArrayList;
-
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 
 public class CrossRoadDetection {
 
-	private ArrayList<Intersection> intersections;
-	private ArrayList<Road> roads;
 	private StreetMap streetMap;
 	
 	public CrossRoadDetection(StreetMap streetMap)
@@ -60,7 +56,6 @@ public class CrossRoadDetection {
 						
 					}
 				
-					break;
 			}	
 		
 	}
