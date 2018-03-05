@@ -90,13 +90,13 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(streetMap.getRoads().size()>0)
 				{
-					streetMap.getAllIntersections().remove(streetMap.getAllIntersections().size()-1);
+					streetMap.getIntersections().remove(streetMap.getIntersections().size()-1);
 					streetMap.getRoads().remove(streetMap.getRoads().size()-1);
 					repaint();
 				}
 				else
 				{
-					streetMap.getAllIntersections().clear();
+					streetMap.getIntersections().clear();
 					streetMap.getRoads().clear();
 				}
 				repaint();
@@ -113,7 +113,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				streetMap.getAllIntersections().clear();
+				streetMap.getIntersections().clear();
 				streetMap.getRoads().clear();
 				repaint();
 				
@@ -198,7 +198,7 @@ public class GraphicalInterface extends JFrame {
 					int nearestX = -1;
 					int nearestY = -1;
 					double distance = -1;
-					for(Intersection sec : streetMap.getAllIntersections())
+					for(Intersection sec : streetMap.getIntersections())
 					{
 						
 						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getX_coord(), 2) + (Math.pow(y - sec.getY_coord(), 2))));
@@ -235,7 +235,7 @@ public class GraphicalInterface extends JFrame {
 				int nearestX = -1;
 				int nearestY = -1;
 				double distance = -1;
-				for(Intersection sec : streetMap.getAllIntersections())
+				for(Intersection sec : streetMap.getIntersections())
 				{
 					
 					double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getX_coord(), 2) + (Math.pow(y - sec.getY_coord(), 2))));
@@ -273,7 +273,7 @@ public class GraphicalInterface extends JFrame {
 				
 				visuals.setDrawLine(false);
 			}
-			System.out.println(streetMap.getAllIntersections());
+			System.out.println(streetMap.getIntersections());
 			
 			
 			System.out.println("x coordinate: "+x);

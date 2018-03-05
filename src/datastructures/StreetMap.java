@@ -21,41 +21,84 @@ public class StreetMap {
 	private ArrayList<Intersection> intersections;
 	/**
 	 * 
-	 * list of all roads;
+	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
 	/**
 	 * Array List Matrix M storing Connection objects. A Connection at Mij 
 	 * connects the intersections with the IDs i and j.
 	 */
-	private ArrayList<ArrayList<Connection>> adjacency_matrix;
+	private ArrayList<ArrayList<Integer>> adjacency_matrix;
 
 	// CONSTRUCTORS
 	public StreetMap() {
 		this.intersections = new ArrayList<Intersection>();
 		this.roads = new ArrayList<Road>();
-		this.adjacency_matrix = new ArrayList<ArrayList<Connection>>();
+		this.adjacency_matrix = new ArrayList<ArrayList<Integer>>();
 	}
 
-	public StreetMap(ArrayList<Intersection> intersections, ArrayList<Road> roads) {
+	public StreetMap(ArrayList<Intersection> intersections, ArrayList<Road> roads, ArrayList<ArrayList<Integer>> adjacency_matrix) {
 		this.intersections = intersections;
 		this.roads = roads;
-		this.adjacency_matrix = new ArrayList<ArrayList<Connection>>();
+		this.adjacency_matrix = adjacency_matrix;
 	}
 	
 	// GRAPH MODIFICATION
 
 	/**
-	 * adds roads
-	 * @param r is a road
+	 * Adds a Road between intersections start and end.
+	 * 
+	 * @param start			ID of the starting intersection
+	 * @param end			ID of the ending intersection
+	 * @param road			Road object to be added	
 	 */
-	public void addRoad(Road r) {
-		roads.add(r);
+	public void addRoad(int start, int end, Road road) {
+		this.roads.add(road);
+		this.adjacency_matrix.get(start).set(end, this.roads.size() - 1);
+		this.adjacency_matrix.get(end).set(start, this.roads.size() - 1);
 	}
+	
+	/**
+	 * Removes a road identified by the connected intersections. Always choose this over
+	 * removing by ID if possible, since this is faster!
+	 * 
+	 * @param start		ID of one of the intersections
+	 * @param end		ID of the other intersection
+	 * @param road		ID of the road to be removed
+	 */
+	public void removeRoadBetween(int start, int end) {
+		int road = this.adjacency_matrix.get(start).get(end);
+		
+		this.adjacency_matrix.get(start).set(end, null);
+		this.adjacency_matrix.get(end).set(start, null);
+		
+		this.roads.remove(road);
+	}
+	
+	/**
+	 * Removes a road identified by its ID.
+	 * 
+	 * @param road
+	 */
+	public void removeRoadById(int road) {
+		int intersection_a = -1;
+		int intersection_b = -1;
 
-	public void removeRoad(Road r) 
-	{
-		this.roads.remove(r);
+		for (int row = 0; row < this.adjacency_matrix.size(); row++) {
+			for (int col = 0; row < this.adjacency_matrix.get(row).size(); col++) {
+				if (this.adjacency_matrix.get(row).get(col) == road) {
+					intersection_a = row;
+					intersection_b = col;
+					break;
+				}
+			}
+			
+			if (intersection_a >= 0 && intersection_b >= 0) {
+				break;
+			}
+		}
+		
+		this.removeRoadBetween(intersection_a, intersection_b);
 	}
 	
 	/**
@@ -69,7 +112,7 @@ public class StreetMap {
 		this.intersections.add(intersection);
 		
 		// now add new column and row to adjacency matrix -> a bit more chaotic
-		ArrayList<Connection> new_row = new ArrayList<Connection>();
+		ArrayList<Integer> new_row = new ArrayList<Integer>();
 		for (int i = 0; i < this.intersections.size() - 1; i++) {
 			new_row.add(null);
 		}
@@ -97,55 +140,16 @@ public class StreetMap {
 		}
 	}
 	
-	/**
-	 * Adds a Connection by adding the provided object to the adjacency matrix at
-	 * entry (start, end).
-	 * 
-	 * @param start
-	 * @param end
-	 * @param connection
-	 */
-	public void addConnection(int start, int end, Connection connection) {
-		// make things predictable
-		if (start < end) {
-			int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		
-		this.adjacency_matrix.get(start).set(end, connection);
-	}
-	
-	/**
-	 * Removes the connection of two Intersections with the indices start and end
-	 * by setting the entry in the Matrix to null.
-	 * 
-	 * @param start
-	 * @param end
-	 */
-	public void removeConnection(int start, int end) {
-		// make things predictable
-		if (start < end) {
-			int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		
-		this.adjacency_matrix.get(start).set(end, null);
+	public void clearMap() {
+		this.intersections.clear();
+		this.roads.clear();
+		this.adjacency_matrix.clear();
 	}
 	
 	// GETTER / SETTER
 	public ArrayList<Road> getRoads()
 	{
 		return roads;
-	}
-	
-	/**
-	 * Get the entire adjacency matrix.
-	 * @return
-	 */
-	public ArrayList<ArrayList<Connection>> getAdjacencyMatrix() {
-		return this.adjacency_matrix;
 	}
 	
 	/**
@@ -157,30 +161,42 @@ public class StreetMap {
 		return this.intersections.get(ID);
 	}
 	
-	public ArrayList<Intersection> getAllIntersections ()
+	public ArrayList<Intersection> getIntersections ()
 	{
 		return intersections;
 	}
+
 	/**
-	 * Get the Connection object storing information about the edge in the graph
-	 * connecting the start and end Intersections (provided as Integers)
+	 * Get the Road object connecting the start and end Intersections (provided as Integers)
 	 * @param start (integer)
 	 * @param end (integer)
-	 * @return Connection (object)
+	 * @return Road (object)
 	 */
-	public Connection getConnection(Integer start, Integer end) {
-		if (start < end) {
-			int tmp = start;
-			start = end;
-			end = tmp;
+	public Road getRoadBetween(int start, int end) {
+		return this.roads.get(this.adjacency_matrix.get(start).get(end));
+	}
+	
+	/**
+	 * Get the Road object identified by coordinates. If there is no road between these coordinates,
+	 * null is returned.
+	 * 
+	 * @param start (integer)
+	 * @param end (integer)
+	 * @return Road (object)
+	 */
+	public Road getRoadByCoordinates(int x_start, int y_start, int x_end, int y_end) {
+		for (Road road : this.roads) {
+			if (road.getX1() == x_start && road.getY1() == y_start && road.getX2() == x_end && road.getY2() == y_end) {
+				return road;
+			}
 		}
 		
-		return this.adjacency_matrix.get(start).get(end);
+		return null;
 	}
 	
 	/**
 	 * Returns a list of indices to neighbors (connected) Intersections.
-	 * TODO Fix the diagonally symmetric matrix problem.
+	 * 
 	 * @param base_intersection
 	 * @return
 	 */
@@ -196,6 +212,15 @@ public class StreetMap {
 		}
 		
 		return neighbors;
+	}
+	
+	// META INFORMATION
+	public int roadCount() {
+		return this.roads.size();
+	}
+	
+	public int intersectionCount() {
+		return this.intersections.size();
 	}
 	
 	// PATH FINDING
