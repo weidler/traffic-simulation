@@ -28,8 +28,6 @@ public class Visuals extends JPanel{
 	public Visuals(StreetMap streetMap) {
 		this.streetMap = streetMap;
 		roads = streetMap.getRoads();
-		
-		
 	}
 	
 	@Override

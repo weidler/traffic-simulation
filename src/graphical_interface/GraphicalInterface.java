@@ -272,7 +272,6 @@ public class GraphicalInterface extends JFrame {
 				clickCounter = 0;
 				
 				visuals.setDrawLine(false);
-				
 			}
 			System.out.println(streetMap.getAllIntersections());
 			

@@ -20,30 +20,26 @@ public class StreetMap {
 	 */
 	private ArrayList<Intersection> intersections;
 	/**
+	 * 
+	 * list of all roads;
+	 */
+	private ArrayList<Road> roads = new ArrayList<Road>();
+	/**
 	 * Array List Matrix M storing Connection objects. A Connection at Mij 
 	 * connects the intersections with the IDs i and j.
 	 */
 	private ArrayList<ArrayList<Connection>> adjacency_matrix;
-	
-	/**
-	 * 
-	 * list of all roads;
-	 */
-	private ArrayList<Road> roads = new ArrayList();
+
 	// CONSTRUCTORS
-	
-	public StreetMap(ArrayList<Intersection> intersections) {
-		this.intersections = intersections;
-		this.adjacency_matrix = new ArrayList<ArrayList<Connection>>();
-	}
-	
-	public StreetMap(ArrayList<ArrayList<Connection>> adjacency_matrix, ArrayList<Intersection> intersections) {
-		this.intersections = intersections;
-		this.adjacency_matrix = adjacency_matrix;
-	}
-	
 	public StreetMap() {
 		this.intersections = new ArrayList<Intersection>();
+		this.roads = new ArrayList<Road>();
+		this.adjacency_matrix = new ArrayList<ArrayList<Connection>>();
+	}
+
+	public StreetMap(ArrayList<Intersection> intersections, ArrayList<Road> roads) {
+		this.intersections = intersections;
+		this.roads = roads;
 		this.adjacency_matrix = new ArrayList<ArrayList<Connection>>();
 	}
 	
@@ -55,6 +51,11 @@ public class StreetMap {
 	 */
 	public void addRoad(Road r) {
 		roads.add(r);
+	}
+
+	public void removeRoad(Road r) 
+	{
+		this.roads.remove(r);
 	}
 	
 	/**
@@ -85,11 +86,6 @@ public class StreetMap {
 	 * Intersections with a higher index. Didn't come up with a better solution yet, sorry.
 	 * @param id
 	 */
-	public void removeRoad(Road r) 
-	{
-		this.roads.remove(r);
-	}
-	
 	public void removeIntersection(int id) {
 		// lets start easy
 		this.intersections.remove(id);

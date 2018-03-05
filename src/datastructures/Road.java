@@ -41,11 +41,11 @@ public class Road {
 		this.length = length;
 	}
 
-	public boolean isTwo_way() {
+	public boolean isTwoWay() {
 		return two_way;
 	}
 
-	public void setTwo_way(boolean two_way) {
+	public void setTwoWay(boolean two_way) {
 		this.two_way = two_way;
 	}
 
