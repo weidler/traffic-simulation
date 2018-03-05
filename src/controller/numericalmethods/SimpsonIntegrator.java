@@ -27,7 +27,7 @@ public class SimpsonIntegrator {
 
         if(n%2!=0) throw new IllegalArgumentException("Number of steps must be even!");
 
-        double h = (b-a)/n; //calculate time step
+        double h = (b-a)/(double) n; //calculate time step
 
         xS = new double[n+1];
 
@@ -74,4 +74,11 @@ public class SimpsonIntegrator {
         return sum;
     }
 
+    public Function getFunction() {
+        return function;
+    }
+
+    public void setFunction(Function function) {
+        this.function = function;
+    }
 }
