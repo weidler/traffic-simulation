@@ -8,6 +8,13 @@ public class Road {
 	private int y2;
 	private boolean two_way;
 	
+	public Road(Intersection intersection_from, Intersection intersection_to) {
+		this.x1 = intersection_from.getXCoord();
+		this.y1 = intersection_from.getYCoord();
+		this.x2 = intersection_to.getXCoord();
+		this.y2 = intersection_to.getYCoord();
+	}
+	
 	public Road(int x1, int y1, int x2, int y2)
 	{
 		this.x1 = x1;
@@ -38,6 +45,10 @@ public class Road {
 
 	public void setTwoWay(boolean two_way) {
 		this.two_way = two_way;
+	}
+	
+	public String toString() {
+		return "Road: (" + this.x1 + ", " + this.y1 + ") -> (" + this.x2 + ", " + this.y2 + ")";
 	}
 
 }

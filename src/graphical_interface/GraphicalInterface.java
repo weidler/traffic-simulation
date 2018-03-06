@@ -201,19 +201,19 @@ public class GraphicalInterface extends JFrame {
 					for(Intersection sec : streetMap.getIntersections())
 					{
 						
-						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getX_coord(), 2) + (Math.pow(y - sec.getY_coord(), 2))));
+						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 						System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 						if (distance == -1) {
 							distance = distance2;							
-							nearestX = sec.getX_coord();						
-							nearestY = sec.getY_coord();							
+							nearestX = sec.getXCoord();						
+							nearestY = sec.getYCoord();							
 						}
 						else if(distance2 < distance)
 						{
 							System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 							distance = distance2;
-							nearestX = sec.getX_coord();
-							nearestY = sec.getY_coord();							
+							nearestX = sec.getXCoord();
+							nearestY = sec.getYCoord();							
 						}	
 						
 					}
@@ -238,19 +238,19 @@ public class GraphicalInterface extends JFrame {
 				for(Intersection sec : streetMap.getIntersections())
 				{
 					
-					double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getX_coord(), 2) + (Math.pow(y - sec.getY_coord(), 2))));
+					double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 					System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 					if (distance == -1) {
 						distance = distance2;							
-						nearestX = sec.getX_coord();						
-						nearestY = sec.getY_coord();							
+						nearestX = sec.getXCoord();						
+						nearestY = sec.getYCoord();							
 					}
 					else if(distance2 < distance)
 					{
 						System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 						distance = distance2;
-						nearestX = sec.getX_coord();
-						nearestY = sec.getY_coord();							
+						nearestX = sec.getXCoord();
+						nearestY = sec.getYCoord();							
 					}	
 					
 				}
@@ -264,10 +264,9 @@ public class GraphicalInterface extends JFrame {
 					endY = y;
 				}
 				
-				
-				streetMap.addRoad(new Road(startX,startY,endX,endY));
 				Intersection in = new Intersection(endX, endY);
 				streetMap.addIntersection(in);
+				streetMap.addRoad(new Road(startX,startY,endX,endY));
 				new CrossRoadDetection(streetMap);
 				clickCounter = 0;
 				

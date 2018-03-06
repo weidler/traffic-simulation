@@ -79,14 +79,12 @@ public class CrossRoadDetection {
 		      {  
 				  Intersection newIntersection = new Intersection((int) (x1 + ua*(x2 - x1)), (int) (y1 + ua*(y2 - y1)));
 				  streetMap.addIntersection(newIntersection);
-				  Road remove1 = streetMap.getRoads().get(index);
-				  Road remove2 = streetMap.getRoads().get(index2);
-				  streetMap.removeRoad(remove1);
-				  streetMap.removeRoad(remove2);
-				  streetMap.addRoad(new Road(x3, y3, newIntersection.getX_coord() , newIntersection.getY_coord()));
-				  streetMap.addRoad(new Road(x4, y4, newIntersection.getX_coord() , newIntersection.getY_coord()));
-				  streetMap.addRoad(new Road(x1, y1, newIntersection.getX_coord() , newIntersection.getY_coord()));
-				  streetMap.addRoad(new Road(x2, y2, newIntersection.getX_coord() , newIntersection.getY_coord()));					  
+				  streetMap.removeRoadById(index);
+				  streetMap.removeRoadById(index2);
+				  streetMap.addRoad(new Road(x3, y3, newIntersection.getXCoord() , newIntersection.getYCoord()));
+				  streetMap.addRoad(new Road(x4, y4, newIntersection.getXCoord() , newIntersection.getYCoord()));
+				  streetMap.addRoad(new Road(x1, y1, newIntersection.getXCoord() , newIntersection.getYCoord()));
+				  streetMap.addRoad(new Road(x2, y2, newIntersection.getXCoord() , newIntersection.getYCoord()));					  
 				  
 				  return true;
 		      }
