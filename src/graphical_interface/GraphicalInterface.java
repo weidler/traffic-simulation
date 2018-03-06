@@ -5,6 +5,7 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
@@ -41,6 +42,7 @@ public class GraphicalInterface extends JFrame {
 	private int startY;
 	private int endX;
 	private int endY;
+	
 	/**
 	 * main panel.
 	 */
@@ -185,6 +187,35 @@ public class GraphicalInterface extends JFrame {
 			
 			if(clickCounter == 1) {
 				
+				if (e.getButton() == MouseEvent.BUTTON3)
+			    {
+					if(streetMap.getRoads().size() > 0) 
+					{
+						int nearestX = -1;
+						int nearestY = -1;
+						double distance = -1;
+						for(Intersection sec : streetMap.getIntersections())
+						{
+							
+							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+							System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+							if (distance == -1) {
+								distance = distance2;							
+								nearestX = sec.getXCoord();						
+								nearestY = sec.getYCoord();							
+							}
+							else if(distance2 < distance)
+							{
+								System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();							
+							}	
+							
+						}
+						
+					}
+			    }
 				
 				if(streetMap.getRoads().isEmpty()) {
 					startX = x;
@@ -230,7 +261,16 @@ public class GraphicalInterface extends JFrame {
 				
 				
 			}
+			// if second click
 			else {
+				
+				if (e.getButton() == MouseEvent.BUTTON3)
+			    {
+					visuals.setDrawLine(false);
+					clickCounter = 0;
+			    }
+				else
+				{
 				
 				int nearestX = -1;
 				int nearestY = -1;
@@ -280,6 +320,8 @@ public class GraphicalInterface extends JFrame {
 			System.out.println("");
 			System.out.println("changed");
 			repaint();
+			
+			}
 			
 		}
 
