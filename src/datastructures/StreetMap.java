@@ -95,6 +95,13 @@ public class StreetMap {
 		}
 	}
 	
+	public void removeRoadBetweenCoordinates(int x1, int y1, int x2, int y2) {
+		int intersection_a = this.getIntersectionIdByCoordinates(x1, y1);
+		int intersection_b = this.getIntersectionIdByCoordinates(x2, y2);
+		
+		this.removeRoadBetween(intersection_a, intersection_b);
+	}
+	
 	/**
 	 * Removes a road identified by its ID.
 	 * 
