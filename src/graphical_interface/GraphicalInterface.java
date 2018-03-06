@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import datastructures.Intersection;
 import datastructures.Road;
@@ -126,11 +127,16 @@ public class GraphicalInterface extends JFrame {
 		startButton.setBounds(10, 426, 147, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
-		startButton.addActionListener(new ActionListener() {
+		
+		JButton helpButton = new JButton("help");
+		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		helpButton.setBounds(10, 378, 147, 37);
+		menuPanel.add(helpButton);
+		helpButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println("start");
+				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
 			}
 			
 		});
@@ -352,6 +358,4 @@ public class GraphicalInterface extends JFrame {
 		}	
 		
 	}
-	
-	
 }

@@ -85,16 +85,14 @@ public class StreetMap {
 	
 		if (road_id >= 0) {
 			this.roads.remove(road_id);
-			// adjust intersection ids
-			for (Intersection intersection : this.intersections) {
-				intersection.adjustConnectionsAfterRoadRemoval(road_id);
-			}
 		} else {
 			System.out.println("Tried to remove inexistant road!");
 		}
 
-		
-		
+		// adjust intersection ids
+		for (Intersection intersection : this.intersections) {
+			intersection.adjustConnectionsAfterRoadRemoval(road_id);
+		}
 	}
 	
 	public void removeRoadBetweenCoordinates(int x1, int y1, int x2, int y2) {
