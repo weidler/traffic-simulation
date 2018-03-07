@@ -20,6 +20,7 @@ import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
+import javax.swing.JSlider;
 
 /**
  * 
@@ -125,6 +126,7 @@ public class GraphicalInterface extends JFrame {
 				streetMap.getIntersections().clear();
 				streetMap.getRoads().clear();
 				streetMap.getCarsList().clear();
+				visuals.resetZoomMultiplier();
 				repaint();
 				
 			}
@@ -165,7 +167,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(streetMap.getRoads().size()>0) {
+				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0) {
 					Random r = new Random();
 					int s = r.nextInt(streetMap.getIntersections().size());
 					int e = r.nextInt(streetMap.getIntersections().size());
@@ -181,6 +183,12 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
+		JSlider slider = new JSlider();
+		slider.setBounds(10, 198, 147, 19);
+		slider.setValue(50);
+		slider.setEnabled(false);
+		menuPanel.add(slider);
+		
 		JButton stopButton = new JButton("stop");
 		stopButton.setBounds(97, 426, 60, 37);
 		menuPanel.add(stopButton);
@@ -195,24 +203,37 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton zoomInButton = new JButton("+");
-		zoomInButton.setBounds(10, 150, 60, 37);
+		zoomInButton.setBounds(97, 150, 60, 37);
 		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				if(slider.getValue()<99) {
+				visuals.IncreaseZoomMultiplier();
+				System.out.println("zoom in");
+				slider.setValue((int)(50*visuals.getZoomMultiplier()));
+				repaint();
+				}
 			}
 		});
 		
 		JButton zoomOutButton = new JButton("-");
-		zoomOutButton.setBounds(97, 150, 60, 37);
+		zoomOutButton.setBounds(10, 150, 60, 37);
 		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				if(slider.getValue()>1) {
+				visuals.DecreaseZoomMultiplier();
+				System.out.println("zoom out");
+				slider.setValue((int)(50*visuals.getZoomMultiplier()));
+				repaint();
+			}
 			}
 		});
+		
+		
+		
 		
 		
 		
@@ -258,6 +279,8 @@ public class GraphicalInterface extends JFrame {
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 			
+			if(visuals.getZoomMultiplier() == 1.0) 
+			{
 			visuals.setDrawLine(true);
 			
 			clickCounter++;
@@ -398,6 +421,7 @@ public class GraphicalInterface extends JFrame {
 			System.out.println("changed");
 			repaint();
 			
+			}
 			}
 			
 		}
