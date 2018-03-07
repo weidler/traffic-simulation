@@ -53,7 +53,7 @@ public class Visuals extends JPanel{
 			g2.fillOval(roads.get(i).getX2()-5, roads.get(i).getY2()-5, 10, 10);
 		
 		}
-		g2.setColor(Color.BLUE);
+		g2.setColor(Color.MAGENTA);
 		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
 		{
 			g2.fillOval(streetMap.getCarsList().get(i).getPositionX()-3, streetMap.getCarsList().get(i).getPositionY()-3, 7, 7);

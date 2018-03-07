@@ -187,6 +187,7 @@ public class StreetMap {
 	public void clearMap() {
 		this.intersections.clear();
 		this.roads.clear();
+		this.cars.clear();
 	}
 	
 	// GETTER / SETTER
