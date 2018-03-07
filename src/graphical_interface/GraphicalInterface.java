@@ -135,7 +135,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(drawPanel,"started");
+				Simulation simulation = new Simulation();
 
 				
 			}
