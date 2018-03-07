@@ -5,9 +5,11 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import datastructures.Intersection;
 import datastructures.Road;
@@ -41,6 +43,7 @@ public class GraphicalInterface extends JFrame {
 	private int startY;
 	private int endX;
 	private int endY;
+	
 	/**
 	 * main panel.
 	 */
@@ -123,11 +126,20 @@ public class GraphicalInterface extends JFrame {
 		startButton.setBounds(10, 426, 147, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
-		startButton.addActionListener(new ActionListener() {
+		
+		JButton helpButton = new JButton("help");
+		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		helpButton.setBounds(10, 378, 147, 37);
+		menuPanel.add(helpButton);
+		
+		JButton addCar = new JButton("add car");
+		addCar.setBounds(10, 330, 147, 37);
+		menuPanel.add(addCar);
+		helpButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println("start");
+				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
 			}
 			
 		});
@@ -184,6 +196,35 @@ public class GraphicalInterface extends JFrame {
 			
 			if(clickCounter == 1) {
 				
+				if (e.getButton() == MouseEvent.BUTTON3)
+			    {
+					if(streetMap.getRoads().size() > 0) 
+					{
+						int nearestX = -1;
+						int nearestY = -1;
+						double distance = -1;
+						for(Intersection sec : streetMap.getIntersections())
+						{
+							
+							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+							System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+							if (distance == -1) {
+								distance = distance2;							
+								nearestX = sec.getXCoord();						
+								nearestY = sec.getYCoord();							
+							}
+							else if(distance2 < distance)
+							{
+								System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();							
+							}	
+							
+						}
+						
+					}
+			    }
 				
 				if(streetMap.getRoads().isEmpty()) {
 					startX = x;
@@ -226,8 +267,15 @@ public class GraphicalInterface extends JFrame {
 				visuals.setStartPosY(startY);
 				visuals.setDrawLine(true);
 			}
-
 			else {
+				
+				if (e.getButton() == MouseEvent.BUTTON3)
+			    {
+					visuals.setDrawLine(false);
+					clickCounter = 0;
+			    }
+				else
+				{
 				
 				int nearestX = -1;
 				int nearestY = -1;
@@ -278,6 +326,8 @@ public class GraphicalInterface extends JFrame {
 			System.out.println("changed");
 			repaint();
 			
+			}
+			
 		}
 
 		@Override
@@ -307,6 +357,4 @@ public class GraphicalInterface extends JFrame {
 		}	
 		
 	}
-	
-	
 }
