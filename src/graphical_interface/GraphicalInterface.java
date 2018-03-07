@@ -131,6 +131,15 @@ public class GraphicalInterface extends JFrame {
 		startButton.setBounds(10, 426, 147, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
+		startButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(drawPanel,"started");
+
+				
+			}
+		});
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
