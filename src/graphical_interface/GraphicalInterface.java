@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import core.Simulation;
 import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
