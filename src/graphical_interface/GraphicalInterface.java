@@ -159,7 +159,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 330, 147, 37);
+		addCar.setBounds(10, 216, 147, 37);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
@@ -174,7 +174,7 @@ public class GraphicalInterface extends JFrame {
 						e = r.nextInt(streetMap.getIntersections().size());
 					}
 					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
-					System.out.println("created new car " + streetMap.getIntersection(s).getXCoord()+", "+streetMap.getIntersection(s).getYCoord());
+					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
 					repaint();
 				}
 				
