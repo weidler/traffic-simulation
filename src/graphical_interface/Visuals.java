@@ -45,14 +45,48 @@ public class Visuals extends JPanel{
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
 			
-			g2.draw(new Line2D.Double(
-					roads.get(i).getX1()-2, roads.get(i).getY1()-2, roads.get(i).getX2()-2, roads.get(i).getY2()-2));
-			g2.draw(new Line2D.Double(
-					roads.get(i).getX1()+2, roads.get(i).getY1()+2, roads.get(i).getX2()+2, roads.get(i).getY2()));
+			g2.setColor(Color.black);
+			if(roads.get(i).getX1() > roads.get(i).getX2()) 
+			{
+				if(roads.get(i).getY1() < roads.get(i).getY2()) 
+				{	
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()-2, roads.get(i).getY1()-2, roads.get(i).getX2()-2, roads.get(i).getY2()-2));
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()+2, roads.get(i).getY1()+2, roads.get(i).getX2()+2, roads.get(i).getY2()+2));
+				}
+				else
+				{
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()+2, roads.get(i).getY1()-2, roads.get(i).getX2()+2, roads.get(i).getY2()-2));
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()-2, roads.get(i).getY1()+2, roads.get(i).getX2()-2, roads.get(i).getY2()+2));
+				}
+			}
+			else
+			{
+				if(roads.get(i).getY1() < roads.get(i).getY2())
+				{	
+					g2.draw(new Line2D.Double(
+						roads.get(i).getX1()+2, roads.get(i).getY1()-2, roads.get(i).getX2()+2, roads.get(i).getY2()-2));
+					g2.draw(new Line2D.Double(
+						roads.get(i).getX1()-2, roads.get(i).getY1()+2, roads.get(i).getX2()-2, roads.get(i).getY2()+2));
+				}
+				else
+				{
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()-2, roads.get(i).getY1()-2, roads.get(i).getX2()-2, roads.get(i).getY2()-2));
+					g2.draw(new Line2D.Double(
+							roads.get(i).getX1()+2, roads.get(i).getY1()+2, roads.get(i).getX2()+2, roads.get(i).getY2()+2));
+
+				}
+			}
+
 			g2.fillOval(roads.get(i).getX1()-5, roads.get(i).getY1()-5, 10, 10);
 			g2.fillOval(roads.get(i).getX2()-5, roads.get(i).getY2()-5, 10, 10);
 		
 		}
+
 		g2.setColor(Color.MAGENTA);
 		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
 		{
