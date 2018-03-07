@@ -30,9 +30,12 @@ import javax.swing.BorderFactory;
 
 public class GraphicalInterface extends JFrame {
 
+	private Simulation simulation = new Simulation();
+	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
+	
 	private int mouseX;
 	private int mouseY;
 
@@ -129,14 +132,14 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 426, 147, 37);
+		startButton.setBounds(10, 426, 60, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Simulation simulation = new Simulation();
+				simulation.start();
 
 				
 			}
@@ -172,12 +175,45 @@ public class GraphicalInterface extends JFrame {
 						e = r.nextInt(streetMap.getIntersections().size());
 					}
 					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
-					System.out.println("created new car " + streetMap.getIntersection(s).getXCoord()+", "+streetMap.getIntersection(s).getYCoord());
+					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
 					repaint();
 				}
 				
 			}
 		});
+		
+		JButton stopButton = new JButton("stop");
+		stopButton.setBounds(97, 426, 60, 37);
+		menuPanel.add(stopButton);
+		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		stopButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.stop();
+				
+			}
+		});
+		
+		JButton zoomInButton = new JButton("zoom in");
+		zoomInButton.setBounds(10, 150, 147, 37);
+		menuPanel.add(zoomInButton);
+		zoomInButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
+		JButton zoomOutButton = new JButton("zoom out");
+		zoomOutButton.setBounds(10, 198, 147, 37);
+		menuPanel.add(zoomOutButton);
+		zoomOutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
+		
 		
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
