@@ -257,17 +257,4 @@ public class StreetMap {
 		return this.intersections.size();
 	}
 	
-	// PATH FINDING
-	
-	public ArrayList<Integer> shortestPathAStar(int start, int end) {
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		
-		return path;
-	}
-	
-	public ArrayList<Integer> shortestPathDijkstra(int start, int end) {
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		
-		return path;
-	}
 }
