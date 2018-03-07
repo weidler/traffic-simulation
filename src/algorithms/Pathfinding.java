@@ -8,10 +8,10 @@ public class Pathfinding {
 	
 	ArrayList<Integer> distance = new ArrayList<Integer>();
 	
-	public int[] neighborDistance(int index) {
-		Intersection neighbors1 = new Intersection;
-		ArrayList<int[]> neighbors = getConnections();
-		neighbors1 = getConnections();
+	public int[] neighborDistance(int xCoordinate, int yCoordinate) {
+		Intersection intersections = new Intersection(xCoordinate, yCoordinate);
+		ArrayList<int[]> neighbors = intersections.getConnections();
+		neighbors1 = Intersection;
 	}
 	
 	
