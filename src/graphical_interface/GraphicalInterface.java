@@ -96,8 +96,7 @@ public class GraphicalInterface extends JFrame {
 				}
 				else
 				{
-					streetMap.getIntersections().clear();
-					streetMap.getRoads().clear();
+					streetMap.clearMap();
 				}
 				repaint();
 				
@@ -226,10 +225,8 @@ public class GraphicalInterface extends JFrame {
 				visuals.setStartPosX(startX);
 				visuals.setStartPosY(startY);
 				visuals.setDrawLine(true);
-			
-				
-				
 			}
+
 			else {
 				
 				int nearestX = -1;
