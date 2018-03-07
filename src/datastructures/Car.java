@@ -7,8 +7,8 @@ public class Car {
 
 	private Intersection startPoint;
 	private Intersection endPoint;
-	private int breakSpeed = 10; //assign the value you want
-	private int acceleration = 10;//assign the value you want
+	private int breakSpeed = 1; //assign the value you want
+	private int acceleration = 1;//assign the value you want
 	private long timeTraveled;
 	private long firstTime;
 	private int positionX;
@@ -24,6 +24,14 @@ public class Car {
 		positionY = startPoint.getYCoord();
 		this.list_of_cars = list_of_cars;
 		this.firstTime = System.currentTimeMillis();
+	}
+
+	public void update(){
+
+		move();
+
+		if(acceleration == 0 && !sensor())
+			acceleration = 1;
 	}
 
 	/**
