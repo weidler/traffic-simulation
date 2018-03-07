@@ -15,21 +15,17 @@ import java.util.ArrayList;
 public class StreetMap {
 	
 	/**
-	 * amount of cars in the entire graph.
-	 */
-	private final int CAR_NUMBER = 50;
-	
-	public int getCAR_NUMBER() 
-	{
-		return CAR_NUMBER;
-	}
-	/**
 	 * list of all cars.
 	 */
 	private ArrayList<Car> cars = new ArrayList();
 	public ArrayList<Car> getCarsList()
 	{
 		return cars;
+	}
+	public void addCar(Car car)
+	{
+		cars.add(car);
+		
 	}
 
 	/**

@@ -8,9 +8,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
@@ -126,15 +130,20 @@ public class GraphicalInterface extends JFrame {
 		startButton.setBounds(10, 426, 147, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
+		startButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(drawPanel,"started");
+
+				
+			}
+		});
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		helpButton.setBounds(10, 378, 147, 37);
 		menuPanel.add(helpButton);
-		
-		JButton addCar = new JButton("add car");
-		addCar.setBounds(10, 330, 147, 37);
-		menuPanel.add(addCar);
 		helpButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -142,6 +151,29 @@ public class GraphicalInterface extends JFrame {
 				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
 			}
 			
+		});
+		
+		JButton addCar = new JButton("add car");
+		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
+		addCar.setBounds(10, 330, 147, 37);
+		menuPanel.add(addCar);
+		addCar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(streetMap.getRoads().size()>0) {
+					Random r = new Random();
+					int s = r.nextInt(streetMap.getIntersections().size());
+					int e = r.nextInt(streetMap.getIntersections().size());
+					while(s == e)
+					{
+						e = r.nextInt(streetMap.getIntersections().size());
+					}
+					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e)));
+					System.out.println("created new car " + streetMap.getIntersection(s).getXCoord()+", "+streetMap.getIntersection(s).getYCoord());
+				}
+				
+			}
 		});
 		
 		Handlerclass handler = new Handlerclass();
