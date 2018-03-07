@@ -1,10 +1,8 @@
 package graphical_interface;
 
 import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
@@ -44,19 +42,21 @@ public class Visuals extends JPanel{
 		{			
 			g2.drawLine(startPosX, startPosY, mousePosX, mousePosY);
 		}
-		
+		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
 			
-			g2.setColor(Color.black);
 			g2.draw(new Line2D.Double(
 					roads.get(i).getX1()-2, roads.get(i).getY1()-2, roads.get(i).getX2()-2, roads.get(i).getY2()-2));
 			g2.draw(new Line2D.Double(
-					roads.get(i).getX1()+2, roads.get(i).getY1()+2, roads.get(i).getX2()+2, roads.get(i).getY2()+2));
-			g2.setPaint(new GradientPaint(0,0,Color.RED,100, 0,Color.WHITE));
-			g2.fill (new Ellipse2D.Double(0, 0, 20, 20));
+					roads.get(i).getX1()+2, roads.get(i).getY1()+2, roads.get(i).getX2()+2, roads.get(i).getY2()));
 			g2.fillOval(roads.get(i).getX1()-5, roads.get(i).getY1()-5, 10, 10);
 			g2.fillOval(roads.get(i).getX2()-5, roads.get(i).getY2()-5, 10, 10);
 		
+		}
+		g2.setColor(Color.BLUE);
+		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
+		{
+			g2.fillOval(streetMap.getCarsList().get(i).getPositionX()-3, streetMap.getCarsList().get(i).getPositionY()-3, 7, 7);
 		}
 		
 		

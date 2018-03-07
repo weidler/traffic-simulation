@@ -171,6 +171,7 @@ public class GraphicalInterface extends JFrame {
 					}
 					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
 					System.out.println("created new car " + streetMap.getIntersection(s).getXCoord()+", "+streetMap.getIntersection(s).getYCoord());
+					repaint();
 				}
 				
 			}
