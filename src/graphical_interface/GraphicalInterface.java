@@ -121,6 +121,7 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				streetMap.getIntersections().clear();
 				streetMap.getRoads().clear();
+				streetMap.getCarsList().clear();
 				repaint();
 				
 			}
