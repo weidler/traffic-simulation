@@ -159,7 +159,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 216, 147, 37);
+		addCar.setBounds(10, 330, 147, 37);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
@@ -193,6 +193,25 @@ public class GraphicalInterface extends JFrame {
 				
 			}
 		});
+		
+		JButton zoomInButton = new JButton("zoom in");
+		zoomInButton.setBounds(10, 150, 147, 37);
+		menuPanel.add(zoomInButton);
+		zoomInButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
+		JButton zoomOutButton = new JButton("zoom out");
+		zoomOutButton.setBounds(10, 198, 147, 37);
+		menuPanel.add(zoomOutButton);
+		zoomOutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
 		
 		
 		Handlerclass handler = new Handlerclass();
