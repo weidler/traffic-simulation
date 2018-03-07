@@ -13,13 +13,11 @@ public class Car {
 	private int positionX;
 	private int positionY;
 	
-	public Car(StreetMap streetMap)
+	public Car(Intersection startPoint , Intersection endPoint)
 	{
 		Random rand = new Random();
-		int  s = rand.nextInt(streetMap.getIntersections().size());
-		int  e = rand.nextInt(streetMap.getIntersections().size());
-		startPoint = streetMap.getIntersections().get(s);
-		endPoint = streetMap.getIntersections().get(e);
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
 		positionX = startPoint.getXCoord();
 		positionY = startPoint.getYCoord();		
 		

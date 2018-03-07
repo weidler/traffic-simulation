@@ -132,6 +132,10 @@ public class GraphicalInterface extends JFrame {
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		helpButton.setBounds(10, 378, 147, 37);
 		menuPanel.add(helpButton);
+		
+		JButton btnAddCar = new JButton("add car");
+		btnAddCar.setBounds(10, 330, 147, 37);
+		menuPanel.add(btnAddCar);
 		helpButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
