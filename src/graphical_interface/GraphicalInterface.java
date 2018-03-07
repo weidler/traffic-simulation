@@ -194,8 +194,9 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
-		JButton zoomInButton = new JButton("zoom in");
-		zoomInButton.setBounds(10, 150, 147, 37);
+		JButton zoomInButton = new JButton("+");
+		zoomInButton.setBounds(10, 150, 60, 37);
+		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -203,8 +204,9 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
-		JButton zoomOutButton = new JButton("zoom out");
-		zoomOutButton.setBounds(10, 198, 147, 37);
+		JButton zoomOutButton = new JButton("-");
+		zoomOutButton.setBounds(97, 150, 60, 37);
+		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
