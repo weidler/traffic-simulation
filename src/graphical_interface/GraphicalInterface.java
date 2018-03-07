@@ -135,7 +135,7 @@ public class GraphicalInterface extends JFrame {
 				repaint();
 				
 			}
-});
+		});
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(659, 11, 167, 474);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
@@ -207,7 +207,11 @@ public class GraphicalInterface extends JFrame {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
+				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road."
+						+ "\n"
+						+ "To move the graph, use the arrow keys. \n"
+						+ "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
+						+ "To change the graph again press the reset button.");
 			}
 			
 		});
