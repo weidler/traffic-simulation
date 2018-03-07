@@ -21,8 +21,13 @@ import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JSlider;
+import javax.swing.KeyStroke;
 
 /**
  * 
@@ -80,11 +85,57 @@ public class GraphicalInterface extends JFrame {
 		contentPane.setLayout(null);
 		setResizable(false);
 		
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		
 		JPanel drawPanel = visuals;
 		drawPanel.setBounds(10, 11, 639, 474);
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
+		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"up");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"down");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
+	
+		ActionMap am = drawPanel.getActionMap();
+		am.put("up", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeY(-1);
+				repaint();
+				
+			}
+		});
+		am.put("down", new AbstractAction() {
+					
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeY(1);
+				repaint();
+						
+			}
+		});
+		am.put("left", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeX(-1);
+				repaint();
+				
+			}
+		});
+		am.put("right", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeX(1);
+				repaint();
+				
+			}
+});
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(659, 11, 167, 474);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
@@ -169,7 +220,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0) {
+				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
 					Random r = new Random();
 					int s = r.nextInt(streetMap.getIntersections().size());
 					int e = r.nextInt(streetMap.getIntersections().size());
@@ -180,8 +231,7 @@ public class GraphicalInterface extends JFrame {
 					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
 					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
 					repaint();
-				}
-				
+				}				
 			}
 		});
 		
@@ -244,22 +294,17 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				visuals.resetPosition();
+				repaint();
 				
 			}
-		});
+		});		
 		
-		
-		
-		
-		
-		
-		
-		
+		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
 		drawPanel.addMouseMotionListener(handler);
-		drawPanel.addKeyListener(handler);
-			
+		drawPanel.setFocusable(true);
+		drawPanel.requestFocusInWindow();		
 	
 	}
 	
@@ -268,9 +313,9 @@ public class GraphicalInterface extends JFrame {
 	/**
 	 * 
 	 * @author thomas
-	 * this is the mouse listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
+	 * this is the mouse/key listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
 	 */
-	private class Handlerclass implements MouseListener,MouseMotionListener,KeyListener {
+	private class Handlerclass implements MouseListener,MouseMotionListener {
 
 		@Override
 		public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -289,16 +334,14 @@ public class GraphicalInterface extends JFrame {
 			// TODO Auto-generated method stub
 			
 		}
-		
-		
-		
+				
 		/**
 		 *  this is the only used method and registers the clicks.
 		 */
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 			
-			if(visuals.getZoomMultiplier() == 1.0) 
+			if(visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) 
 			{
 			visuals.setDrawLine(true);
 			
@@ -471,40 +514,7 @@ public class GraphicalInterface extends JFrame {
 			
 		}
 	
-		@Override
-		public void keyPressed(KeyEvent e) {
-			
-			if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_KP_UP) {
-				visuals.setChangeY(-1);
-				
-			}
-			if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_KP_DOWN) {
-				visuals.setChangeY(1);
-				
-				}
-			if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_KP_LEFT) {
-					visuals.setChangeX(-1);
-					
-				}
-			if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_KP_RIGHT) {
-				visuals.setChangeX(1);
-				
-				}
-			System.out.println("key pressed");
-			repaint();
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}	
+		
 		
 	}
 }

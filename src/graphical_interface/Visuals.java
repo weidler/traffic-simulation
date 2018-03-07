@@ -38,8 +38,9 @@ public class Visuals extends JPanel{
 		return changeX;
 	}
 
-	public void setChangeX(int i) {
+	public boolean setChangeX(int i) {
 		this.changeX = changeX+(10*i);
+		return true;
 	}
 
 	public int getChangeY() {
@@ -114,15 +115,15 @@ public class Visuals extends JPanel{
 				}
 			}
 
-			g2.fillOval((int)((roads.get(i).getX1()-5)*zoomMultiplier), (int)((roads.get(i).getY1()-5)*zoomMultiplier), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier));
-			g2.fillOval((int)((roads.get(i).getX2()-5)*zoomMultiplier), (int)((roads.get(i).getY2()-5)*zoomMultiplier), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier));
+			g2.fillOval((int)((roads.get(i).getX1()-5)*zoomMultiplier + changeX), (int)((roads.get(i).getY1()-5)*zoomMultiplier + changeY), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier ));
+			g2.fillOval((int)((roads.get(i).getX2()-5)*zoomMultiplier + changeX), (int)((roads.get(i).getY2()-5)*zoomMultiplier + changeY), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier ));
 		
 		}
  
 		g2.setColor(Color.MAGENTA);
 		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
 		{
-			g2.fillOval((int)((streetMap.getCarsList().get(i).getPositionX()-3)*zoomMultiplier), (int)((streetMap.getCarsList().get(i).getPositionY()-3)*zoomMultiplier), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
+			g2.fillOval((int)((streetMap.getCarsList().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((streetMap.getCarsList().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
 		}
 		
 		
