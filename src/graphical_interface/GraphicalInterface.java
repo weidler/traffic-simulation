@@ -294,6 +294,7 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				visuals.resetPosition();
+				visuals.resetZoomMultiplier();
 				repaint();
 				
 			}
