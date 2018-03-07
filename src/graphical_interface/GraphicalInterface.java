@@ -29,9 +29,12 @@ import javax.swing.BorderFactory;
 
 public class GraphicalInterface extends JFrame {
 
+	private Simulation simulation = new Simulation();
+	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
+	
 	private int mouseX;
 	private int mouseY;
 
@@ -128,14 +131,14 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 426, 147, 37);
+		startButton.setBounds(10, 426, 60, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Simulation simulation = new Simulation();
+				simulation.start();
 
 				
 			}
@@ -177,6 +180,20 @@ public class GraphicalInterface extends JFrame {
 				
 			}
 		});
+		
+		JButton stopButton = new JButton("stop");
+		stopButton.setBounds(97, 426, 60, 37);
+		menuPanel.add(stopButton);
+		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		stopButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.stop();
+				
+			}
+		});
+		
 		
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
