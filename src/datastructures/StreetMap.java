@@ -15,20 +15,6 @@ import java.util.ArrayList;
 public class StreetMap {
 	
 	/**
-	 * list of all cars.
-	 */
-	private ArrayList<Car> cars = new ArrayList();
-	public ArrayList<Car> getCarsList()
-	{
-		return cars;
-	}
-	public void addCar(Car car)
-	{
-		cars.add(car);
-		
-	}
-
-	/**
 	 * Array List storing Intersections of the map. Index represents ID of the Intersection
 	 * inside the AdjacencyMatrix.
 	 */
