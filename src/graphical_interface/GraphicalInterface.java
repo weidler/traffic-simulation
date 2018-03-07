@@ -93,6 +93,7 @@ public class GraphicalInterface extends JFrame {
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
+		//ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"up");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"down");
@@ -136,6 +137,8 @@ public class GraphicalInterface extends JFrame {
 				
 			}
 		});
+		
+		
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(659, 11, 167, 474);
 		menuPanel.setBackground(Color.LIGHT_GRAY);

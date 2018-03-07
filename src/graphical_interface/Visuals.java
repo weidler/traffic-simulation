@@ -33,13 +33,13 @@ public class Visuals extends JPanel{
 	
 	private int changeX = 0;
 	private int changeY = 0;
-	
+	private final int GRAPH_MOVED_DISTANCE = 25;
 	public int getChangeX() {
 		return changeX;
 	}
 
 	public boolean setChangeX(int i) {
-		this.changeX = changeX+(10*i);
+		this.changeX = changeX+(GRAPH_MOVED_DISTANCE*i);
 		return true;
 	}
 
@@ -53,7 +53,7 @@ public class Visuals extends JPanel{
 	}
 
 	public void setChangeY(int i) {
-		this.changeY = changeY+(10*i);
+		this.changeY = changeY+(GRAPH_MOVED_DISTANCE*i);
 	}
 
 	public Visuals(StreetMap streetMap) {
