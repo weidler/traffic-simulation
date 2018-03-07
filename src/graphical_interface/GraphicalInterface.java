@@ -5,6 +5,8 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -184,7 +186,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JSlider slider = new JSlider();
-		slider.setBounds(10, 198, 147, 19);
+		slider.setBounds(10, 203, 147, 19);
 		slider.setValue(50);
 		slider.setEnabled(false);
 		menuPanel.add(slider);
@@ -203,7 +205,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton zoomInButton = new JButton("+");
-		zoomInButton.setBounds(97, 150, 60, 37);
+		zoomInButton.setBounds(97, 155, 60, 37);
 		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
@@ -218,7 +220,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton zoomOutButton = new JButton("-");
-		zoomOutButton.setBounds(10, 150, 60, 37);
+		zoomOutButton.setBounds(10, 155, 60, 37);
 		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
@@ -233,6 +235,22 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		
+		JButton resetPositionButton = new JButton("reset position");
+		resetPositionButton.setBounds(10, 107, 147, 37);
+		resetPositionButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(resetPositionButton);
+		resetPositionButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				visuals.resetPosition();
+				
+			}
+		});
+		
+		
+		
+		
 		
 		
 		
@@ -240,6 +258,7 @@ public class GraphicalInterface extends JFrame {
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
 		drawPanel.addMouseMotionListener(handler);
+		drawPanel.addKeyListener(handler);
 			
 	
 	}
@@ -251,7 +270,7 @@ public class GraphicalInterface extends JFrame {
 	 * @author thomas
 	 * this is the mouse listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
 	 */
-	private class Handlerclass implements MouseListener,MouseMotionListener {
+	private class Handlerclass implements MouseListener,MouseMotionListener,KeyListener {
 
 		@Override
 		public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -449,6 +468,41 @@ public class GraphicalInterface extends JFrame {
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();
+			
+		}
+	
+		@Override
+		public void keyPressed(KeyEvent e) {
+			
+			if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_KP_UP) {
+				visuals.setChangeY(-1);
+				
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_KP_DOWN) {
+				visuals.setChangeY(1);
+				
+				}
+			if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_KP_LEFT) {
+					visuals.setChangeX(-1);
+					
+				}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_KP_RIGHT) {
+				visuals.setChangeX(1);
+				
+				}
+			System.out.println("key pressed");
+			repaint();
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
 			
 		}	
 		
