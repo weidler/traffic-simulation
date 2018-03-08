@@ -63,25 +63,34 @@ public class StreetMap {
 	 * @param road			Road object to be added	
 	 */
 	public void addRoad(int start, int end) {
-		// TODO legality check: does road really connect these intersections?
-		this.roads.add(new Road(this.intersections.get(start), this.intersections.get(end)));
+		Road new_road = new Road(this.intersections.get(start), this.intersections.get(end));
 		
-		this.intersections.get(start).addConnection(this.roads.size() - 1, end);
-		this.intersections.get(end).addConnection(this.roads.size() - 1, start);
+		if (this.roadAlreadyOccupied(new_road)) {
+			System.out.println("There already exists a road between these coordinates/intersections.");
+		} else {
+			this.roads.add(new_road);
+			
+			this.intersections.get(start).addConnection(this.roads.size() - 1, end);
+			this.intersections.get(end).addConnection(this.roads.size() - 1, start);
+		}
 	}
 	
 	public void addRoad(Road road) {
-		this.roads.add(road);
-		
-		int int_a_id = this.getIntersectionIdByCoordinates(road.getX1(), road.getY1());
-		int int_b_id = this.getIntersectionIdByCoordinates(road.getX2(), road.getY2());
+		if (this.roadAlreadyOccupied(new_road)) {
+			System.out.println("There already exists a road between these coordinates/intersections.");
+		} else {
+			this.roads.add(road);
+			
+			int int_a_id = this.getIntersectionIdByCoordinates(road.getX1(), road.getY1());
+			int int_b_id = this.getIntersectionIdByCoordinates(road.getX2(), road.getY2());
 
-		if (int_a_id < 0 || int_b_id < 0) {
-			System.out.println("You tried adding a road between at least one missing Intersection. Probably, you should create intersections first, THEN add the road.");
+			if (int_a_id < 0 || int_b_id < 0) {
+				System.out.println("You tried adding a road between at least one missing Intersection. Probably, you should create intersections first, THEN add the road.");
+			}
+			
+			this.intersections.get(int_a_id).addConnection(this.roads.size() - 1, int_b_id);
+			this.intersections.get(int_b_id).addConnection(this.roads.size() - 1, int_a_id);			
 		}
-		
-		this.intersections.get(int_a_id).addConnection(this.roads.size() - 1, int_b_id);
-		this.intersections.get(int_b_id).addConnection(this.roads.size() - 1, int_a_id);
 	}
 	
 	/**
@@ -283,5 +292,16 @@ public class StreetMap {
 		ArrayList<Integer> path = new ArrayList<Integer>();
 		
 		return path;
+	}
+	
+	// VALIDATORS
+	private boolean roadAlreadyOccupied(Road road) {
+		for (Road r : this.roads) {
+			if (road.equalCoordinatesWith(r)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
