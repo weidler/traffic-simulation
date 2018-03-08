@@ -71,6 +71,8 @@ public class Intersection {
 		return -1;
 	}
 	
+	
+	
 	public ArrayList<int[]> getConnections() {
 		return new ArrayList<int[]>(this.connections);
 	}
