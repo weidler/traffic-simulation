@@ -97,6 +97,10 @@ public class Intersection {
 		return this.connections.size();
 	}
 	
+	public boolean equalCoordinatesWith(Intersection intersection) {
+		return (intersection.getXCoord() == this.x_coord && intersection.getYCoord() == this.y_coord);
+	}
+	
 	public String toString() {
 		return "Intersection: (" + this.x_coord + ", " + this.y_coord + ")";
 	}

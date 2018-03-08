@@ -38,8 +38,6 @@ import javax.swing.KeyStroke;
 
 public class GraphicalInterface extends JFrame {
 
-	private Simulation simulation = new Simulation();
-	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
@@ -64,15 +62,14 @@ public class GraphicalInterface extends JFrame {
 	 * main panel.
 	 */
 	private JPanel contentPane = new JPanel();
-	/**
-	 * streetmap
-	 */
+	
 	StreetMap streetMap = new StreetMap();
+	private Simulation simulation = new Simulation(streetMap);
 	
 	/**
 	 * JPanel that shows the roads etc.
 	 */
-	Visuals visuals = new Visuals(streetMap);
+	Visuals visuals = new Visuals(simulation);
 	
 	/**
 	 * create interface. including buttons and listeners
@@ -164,6 +161,7 @@ public class GraphicalInterface extends JFrame {
 				}
 				else
 				{
+					simulation.reset();
 					streetMap.clearMap();
 				}
 				repaint();
@@ -180,9 +178,8 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				streetMap.getIntersections().clear();
-				streetMap.getRoads().clear();
-				streetMap.getCarsList().clear();
+				simulation.reset();
+				streetMap.clearMap();
 				visuals.resetZoomMultiplier();
 				repaint();
 				
@@ -229,15 +226,7 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
-					Random r = new Random();
-					int s = r.nextInt(streetMap.getIntersections().size());
-					int e = r.nextInt(streetMap.getIntersections().size());
-					while(s == e)
-					{
-						e = r.nextInt(streetMap.getIntersections().size());
-					}
-					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
-					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
+					simulation.addRandomCar();
 					repaint();
 				}				
 			}
@@ -322,7 +311,7 @@ public class GraphicalInterface extends JFrame {
 	/**
 	 * 
 	 * @author thomas
-	 * this is the mouse/key listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
+	 * this is the mouse/key listener. in here all the clicks and movement of the mouse are registered and roads and intersection are created.
 	 */
 	private class Handlerclass implements MouseListener,MouseMotionListener {
 
@@ -483,8 +472,9 @@ public class GraphicalInterface extends JFrame {
 				
 				visuals.setDrawLine(false);
 			}
+				
 			System.out.println(streetMap.getIntersections());
-			
+			System.out.println(streetMap.getRoads());
 			
 			System.out.println("x coordinate: "+x);
 			System.out.println("y coordinate: "+y);

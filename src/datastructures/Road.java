@@ -60,6 +60,10 @@ public class Road {
 			return true;
 		}
 		
+		if (this.x1 == road.getX2() && this.y1 == road.getY2() && this.x2 == road.getX1() && this.y2 == road.getY1()) {
+			return true;
+		}
+		
 		return false;
 	}
 	

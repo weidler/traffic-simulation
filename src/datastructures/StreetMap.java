@@ -15,20 +15,6 @@ import java.util.ArrayList;
 public class StreetMap {
 	
 	/**
-	 * list of all cars.
-	 */
-	private ArrayList<Car> cars = new ArrayList();
-	public ArrayList<Car> getCarsList()
-	{
-		return cars;
-	}
-	public void addCar(Car car)
-	{
-		cars.add(car);
-		
-	}
-
-	/**
 	 * Array List storing Intersections of the map. Index represents ID of the Intersection
 	 * inside the AdjacencyMatrix.
 	 */
@@ -66,7 +52,7 @@ public class StreetMap {
 		Road new_road = new Road(this.intersections.get(start), this.intersections.get(end));
 		
 		if (this.roadAlreadyOccupied(new_road)) {
-			System.out.println("There already exists a road between these coordinates/intersections.");
+			System.out.println("There already exists a road between these coordinates/intersections. Skipping addition.");
 		} else {
 			this.roads.add(new_road);
 			
@@ -76,8 +62,8 @@ public class StreetMap {
 	}
 	
 	public void addRoad(Road road) {
-		if (this.roadAlreadyOccupied(new_road)) {
-			System.out.println("There already exists a road between these coordinates/intersections.");
+		if (this.roadAlreadyOccupied(road)) {
+			System.out.println("There already exists a road between these coordinates/intersections. Skipping addition.");
 		} else {
 			this.roads.add(road);
 			
@@ -159,7 +145,11 @@ public class StreetMap {
 	 * @param intersection
 	 */
 	public void addIntersection(Intersection intersection) {
-		this.intersections.add(intersection);		
+		if (this.intersectionAlreadyExists(intersection)) {
+			System.out.println("Intersection already exists at these coordinates. Skipping addition.");		
+		} else {
+			this.intersections.add(intersection);
+		}
 	}
 	
 	/**
@@ -196,7 +186,6 @@ public class StreetMap {
 	public void clearMap() {
 		this.intersections.clear();
 		this.roads.clear();
-		this.cars.clear();
 	}
 	
 	// GETTER / SETTER
@@ -207,8 +196,6 @@ public class StreetMap {
 	
 	/**
 	 * Get an Intersection based on its ID.
-	 * @param ID
-	 * @return
 	 */
 	public Intersection getIntersection(int ID) {
 		return this.intersections.get(ID);
@@ -235,9 +222,6 @@ public class StreetMap {
 
 	/**
 	 * Get the Road object connecting the start and end Intersections (provided as Integers)
-	 * @param start (integer)
-	 * @param end (integer)
-	 * @return Road (object)
 	 */
 	public Road getRoadBetween(int start, int end) {
 		return this.roads.get(this.intersections.get(start).getRoadTo(end));
@@ -246,10 +230,6 @@ public class StreetMap {
 	/**
 	 * Get the Road object identified by coordinates. If there is no road between these coordinates,
 	 * null is returned.
-	 * 
-	 * @param start (integer)
-	 * @param end (integer)
-	 * @return Road (object)
 	 */
 	public Road getRoadByCoordinates(int x_start, int y_start, int x_end, int y_end) {
 		for (Road road : this.roads) {
@@ -260,18 +240,13 @@ public class StreetMap {
 		
 		return null;
 	}
-	
-	/**
-	 * Returns a list of indices to neighbors (connected) Intersections.
-	 * 
-	 * @param base_intersection
-	 * @return
-	 */
+
 	public ArrayList<Integer> getNeighbors(int intersection) {
 		return this.intersections.get(intersection).getConnectedIntersectionIds();
 	}
 	
 	// META INFORMATION
+
 	public int roadCount() {
 		return this.roads.size();
 	}
@@ -295,9 +270,20 @@ public class StreetMap {
 	}
 	
 	// VALIDATORS
+
 	private boolean roadAlreadyOccupied(Road road) {
 		for (Road r : this.roads) {
 			if (road.equalCoordinatesWith(r)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean intersectionAlreadyExists(Intersection intersection) {
+		for (Intersection is : this.intersections) {
+			if (intersection.equalCoordinatesWith(is)) {
 				return true;
 			}
 		}

@@ -9,20 +9,22 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-
-
+import core.Simulation;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 
 public class Visuals extends JPanel{	
 	
+
+	private Simulation simulation;
 	private StreetMap streetMap;
+	private ArrayList<Road> roads;
+	
 	public boolean isDrawLine() {
 		return drawLine;
 	}
 	
-	private ArrayList<Road> roads;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
 	private int mousePosY = 0;
@@ -56,8 +58,9 @@ public class Visuals extends JPanel{
 		this.changeY = changeY+(GRAPH_MOVED_DISTANCE*i);
 	}
 
-	public Visuals(StreetMap streetMap) {
-		this.streetMap = streetMap;
+	public Visuals(Simulation simulation) {
+		this.simulation = simulation;
+		this.streetMap = this.simulation.getStreetMap();
 		roads = streetMap.getRoads();
 	}
 	
@@ -121,9 +124,9 @@ public class Visuals extends JPanel{
 		}
  
 		g2.setColor(Color.MAGENTA);
-		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
+		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
-			g2.fillOval((int)((streetMap.getCarsList().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((streetMap.getCarsList().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
+			g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
 		}
 		
 		
