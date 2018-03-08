@@ -5,6 +5,8 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,7 +22,13 @@ import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.JSlider;
+import javax.swing.KeyStroke;
 
 /**
  * 
@@ -78,10 +86,59 @@ public class GraphicalInterface extends JFrame {
 		contentPane.setLayout(null);
 		setResizable(false);
 		
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		
 		JPanel drawPanel = visuals;
 		drawPanel.setBounds(10, 11, 639, 474);
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
+		
+		//ARROW KEY LISTENERS
+		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"up");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"down");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
+	
+		ActionMap am = drawPanel.getActionMap();
+		am.put("up", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeY(-1);
+				repaint();
+				
+			}
+		});
+		am.put("down", new AbstractAction() {
+					
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeY(1);
+				repaint();
+						
+			}
+		});
+		am.put("left", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeX(-1);
+				repaint();
+				
+			}
+		});
+		am.put("right", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				visuals.setChangeX(1);
+				repaint();
+				
+			}
+		});
+		
 		
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(659, 11, 167, 474);
@@ -126,6 +183,7 @@ public class GraphicalInterface extends JFrame {
 				streetMap.getIntersections().clear();
 				streetMap.getRoads().clear();
 				streetMap.getCarsList().clear();
+				visuals.resetZoomMultiplier();
 				repaint();
 				
 			}
@@ -153,7 +211,11 @@ public class GraphicalInterface extends JFrame {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
+				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road."
+						+ "\n"
+						+ "To move the graph, use the arrow keys. \n"
+						+ "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
+						+ "To change the graph again press the reset button.");
 			}
 			
 		});
@@ -166,7 +228,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(streetMap.getRoads().size()>0) {
+				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
 					Random r = new Random();
 					int s = r.nextInt(streetMap.getIntersections().size());
 					int e = r.nextInt(streetMap.getIntersections().size());
@@ -177,10 +239,15 @@ public class GraphicalInterface extends JFrame {
 					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
 					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
 					repaint();
-				}
-				
+				}				
 			}
 		});
+		
+		JSlider slider = new JSlider();
+		slider.setBounds(10, 203, 147, 19);
+		slider.setValue(50);
+		slider.setEnabled(false);
+		menuPanel.add(slider);
 		
 		JButton stopButton = new JButton("stop");
 		stopButton.setBounds(97, 426, 60, 37);
@@ -195,30 +262,58 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
-		JButton zoomInButton = new JButton("zoom in");
-		zoomInButton.setBounds(10, 150, 147, 37);
+		JButton zoomInButton = new JButton("+");
+		zoomInButton.setBounds(97, 155, 60, 37);
+		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				if(slider.getValue()<99) {
+				visuals.IncreaseZoomMultiplier();
+				System.out.println("zoom in");
+				slider.setValue((int)(50*visuals.getZoomMultiplier()));
+				repaint();
+				}
 			}
 		});
 		
-		JButton zoomOutButton = new JButton("zoom out");
-		zoomOutButton.setBounds(10, 198, 147, 37);
+		JButton zoomOutButton = new JButton("-");
+		zoomOutButton.setBounds(10, 155, 60, 37);
+		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				if(slider.getValue()>1) {
+				visuals.DecreaseZoomMultiplier();
+				System.out.println("zoom out");
+				slider.setValue((int)(50*visuals.getZoomMultiplier()));
+				repaint();
+			}
 			}
 		});
 		
 		
+		JButton resetPositionButton = new JButton("reset position");
+		resetPositionButton.setBounds(10, 107, 147, 37);
+		resetPositionButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(resetPositionButton);
+		resetPositionButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				visuals.resetPosition();
+				visuals.resetZoomMultiplier();
+				repaint();
+				
+			}
+		});		
 		
+		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
 		drawPanel.addMouseMotionListener(handler);
-			
+		drawPanel.setFocusable(true);
+		drawPanel.requestFocusInWindow();		
 	
 	}
 	
@@ -227,7 +322,7 @@ public class GraphicalInterface extends JFrame {
 	/**
 	 * 
 	 * @author thomas
-	 * this is the mouse listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
+	 * this is the mouse/key listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
 	 */
 	private class Handlerclass implements MouseListener,MouseMotionListener {
 
@@ -248,15 +343,15 @@ public class GraphicalInterface extends JFrame {
 			// TODO Auto-generated method stub
 			
 		}
-		
-		
-		
+				
 		/**
 		 *  this is the only used method and registers the clicks.
 		 */
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 			
+			if(visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) 
+			{
 			visuals.setDrawLine(true);
 			
 			clickCounter++;
@@ -398,6 +493,7 @@ public class GraphicalInterface extends JFrame {
 			repaint();
 			
 			}
+			}
 			
 		}
 
@@ -425,7 +521,9 @@ public class GraphicalInterface extends JFrame {
 			visuals.setMousePosY(mouseY);
 			repaint();
 			
-		}	
+		}
+	
+		
 		
 	}
 }
