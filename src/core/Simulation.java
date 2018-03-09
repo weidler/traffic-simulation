@@ -54,6 +54,16 @@ public class Simulation {
 	public void start() {
 		run = true;
 		System.out.println("start");
+		
+		int timesteps = 1000;
+		while (timesteps > 0) {
+
+			for (Car car : this.cars) {
+				car.update();
+			}
+			
+			timesteps--;
+		}
 	}
 
 	public void stop() {

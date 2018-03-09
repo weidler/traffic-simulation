@@ -65,6 +65,7 @@ public class Car {
 	public void update(){
 
 		move();
+		System.out.println(this);
 	}
 
 	/**
@@ -152,4 +153,8 @@ public class Car {
 	public double getVelocity(){ return velocity;}
 
 	public void setVelocity(double velocity){this.velocity = velocity;}
+	
+	public String toString() {
+		return "Car: (" + this.positionX + ", " + this.positionY + ")"; 
+	}
 }
