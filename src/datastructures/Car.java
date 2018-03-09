@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Car {
 
+
 	private Intersection startPoint;
 	private Intersection endPoint;
 	private int breakSpeed = 1; //assign the value you want
