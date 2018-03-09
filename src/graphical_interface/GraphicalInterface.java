@@ -189,7 +189,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 426, 60, 37);
+		startButton.setBounds(10, 378, 60, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
@@ -204,7 +204,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		helpButton.setBounds(10, 378, 147, 37);
+		helpButton.setBounds(10, 426, 147, 37);
 		menuPanel.add(helpButton);
 		helpButton.addActionListener(new ActionListener() {
 			
@@ -221,7 +221,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 330, 147, 37);
+		addCar.setBounds(10, 282, 147, 37);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
@@ -249,7 +249,7 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.add(slider);
 		
 		JButton stopButton = new JButton("stop");
-		stopButton.setBounds(97, 426, 60, 37);
+		stopButton.setBounds(97, 378, 60, 37);
 		menuPanel.add(stopButton);
 		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		stopButton.addActionListener(new ActionListener() {
@@ -302,10 +302,22 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				visuals.resetPosition();
 				visuals.resetZoomMultiplier();
+				slider.setValue(50);
 				repaint();
 				
 			}
-		});		
+		});	
+		
+		JButton saveButton = new JButton("save");
+		saveButton.setBounds(10, 330, 60, 37);
+		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(saveButton);
+		
+		JButton loadButton = new JButton("load");
+		loadButton.setBounds(97, 330, 60, 37);
+		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(loadButton);
+			
 		
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
