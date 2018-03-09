@@ -320,8 +320,9 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
-				System.out.println(file.getName());
-				
+				if(file!=null) {
+					System.out.println(file.getName());
+				}
 			}
 		});
 			
