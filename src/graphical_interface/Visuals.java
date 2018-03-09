@@ -24,6 +24,7 @@ public class Visuals extends JPanel{
 	public boolean isDrawLine() {
 		return drawLine;
 	}
+	private Intersection drawRed;
 	
 	private boolean drawLine = false;
 	private int mousePosX = 0;
@@ -67,10 +68,16 @@ public class Visuals extends JPanel{
 	@Override
 	public void paintComponent (Graphics g)
 	{
-		
-		
 		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.red);
+		if(drawRed!=null)
+		{
+			g2.fillOval((int)((drawRed.getXCoord()-8)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-8)*zoomMultiplier + changeY), (int)(15*zoomMultiplier), (int)(15*zoomMultiplier ));
+
+		}
 		g2.setColor(Color.cyan);
+		
+		
 				
 		if (drawLine) 
 		{	
@@ -183,5 +190,9 @@ public class Visuals extends JPanel{
 
 	public void setMousePosY(int mousePosY) {
 		this.mousePosY = mousePosY;
+	}
+	public void setDrawRed(Intersection drawRed)
+	{
+		this.drawRed = drawRed;
 	}
 }

@@ -519,6 +519,35 @@ public class GraphicalInterface extends JFrame {
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
+			if(streetMap.getIntersections().size()>0)
+			{
+				int nearestX = -1;
+				int nearestY = -1;
+				double distance = -1;
+				for(Intersection sec : streetMap.getIntersections())
+				{
+					
+					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - sec.getXCoord(), 2) + (Math.pow(mouseY - sec.getYCoord(), 2))));
+					System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+					if (distance == -1) {
+						distance = distance2;							
+						nearestX = sec.getXCoord();						
+						nearestY = sec.getYCoord();							
+					}
+					else if(distance2 < distance)
+					{
+						System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+						distance = distance2;
+						nearestX = sec.getXCoord();
+						nearestY = sec.getYCoord();							
+					}	
+					
+				}
+				
+				Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
+				visuals.setDrawRed(colorRed);
+			}
+			
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();
