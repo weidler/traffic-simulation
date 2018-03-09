@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -23,6 +24,7 @@ import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -38,6 +40,8 @@ import javax.swing.KeyStroke;
 
 public class GraphicalInterface extends JFrame {
 
+	private final JFileChooser fc = new JFileChooser();
+	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
@@ -238,6 +242,8 @@ public class GraphicalInterface extends JFrame {
 		slider.setEnabled(false);
 		menuPanel.add(slider);
 		
+		
+		
 		JButton stopButton = new JButton("stop");
 		stopButton.setBounds(97, 378, 60, 37);
 		menuPanel.add(stopButton);
@@ -298,6 +304,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});	
 		
+		
 		JButton saveButton = new JButton("save");
 		saveButton.setBounds(10, 330, 60, 37);
 		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -307,6 +314,16 @@ public class GraphicalInterface extends JFrame {
 		loadButton.setBounds(97, 330, 60, 37);
 		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(loadButton);
+		loadButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int returnVal = fc.showOpenDialog(drawPanel);
+				File file = fc.getSelectedFile();
+				System.out.println(file.getName());
+				
+			}
+		});
 			
 		
 		//ADDS MOUSE AND KEY LISTENER		
