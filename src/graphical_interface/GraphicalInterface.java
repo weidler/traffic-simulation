@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -23,6 +24,7 @@ import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -38,6 +40,8 @@ import javax.swing.KeyStroke;
 
 public class GraphicalInterface extends JFrame {
 
+	private final JFileChooser fc = new JFileChooser();
+	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
@@ -187,7 +191,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 426, 60, 37);
+		startButton.setBounds(10, 378, 60, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
@@ -202,7 +206,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		helpButton.setBounds(10, 378, 147, 37);
+		helpButton.setBounds(10, 426, 147, 37);
 		menuPanel.add(helpButton);
 		helpButton.addActionListener(new ActionListener() {
 			
@@ -219,7 +223,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 330, 147, 37);
+		addCar.setBounds(10, 282, 147, 37);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
@@ -238,8 +242,10 @@ public class GraphicalInterface extends JFrame {
 		slider.setEnabled(false);
 		menuPanel.add(slider);
 		
+		
+		
 		JButton stopButton = new JButton("stop");
-		stopButton.setBounds(97, 426, 60, 37);
+		stopButton.setBounds(97, 378, 60, 37);
 		menuPanel.add(stopButton);
 		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		stopButton.addActionListener(new ActionListener() {
@@ -292,10 +298,34 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				visuals.resetPosition();
 				visuals.resetZoomMultiplier();
+				slider.setValue(50);
 				repaint();
 				
 			}
-		});		
+		});	
+		
+		
+		JButton saveButton = new JButton("save");
+		saveButton.setBounds(10, 330, 60, 37);
+		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(saveButton);
+		
+		JButton loadButton = new JButton("load");
+		loadButton.setBounds(97, 330, 60, 37);
+		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(loadButton);
+		loadButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int returnVal = fc.showOpenDialog(drawPanel);
+				File file = fc.getSelectedFile();
+				if(file!=null) {
+					System.out.println(file.getName());
+				}
+			}
+		});
+			
 		
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
@@ -507,6 +537,42 @@ public class GraphicalInterface extends JFrame {
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
+			if(streetMap.getIntersections().size()>0)
+			{
+				int nearestX = -1;
+				int nearestY = -1;
+				double distance = -1;
+				for(Intersection sec : streetMap.getIntersections())
+				{
+					
+					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - sec.getXCoord(), 2) + (Math.pow(mouseY - sec.getYCoord(), 2))));
+					System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+					if (distance == -1) {
+						distance = distance2;							
+						nearestX = sec.getXCoord();						
+						nearestY = sec.getYCoord();							
+					}
+					else if(distance2 < distance)
+					{
+						System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+						distance = distance2;
+						nearestX = sec.getXCoord();
+						nearestY = sec.getYCoord();							
+					}	
+					
+				}
+				if(distance <= 20) 
+				{
+					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
+					visuals.setDrawRed(colorRed);
+				}
+				else
+				{
+					visuals.setDrawRed(null);
+				}
+				
+			}
+			
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();

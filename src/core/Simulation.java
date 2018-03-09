@@ -33,7 +33,7 @@ public class Simulation {
 			destination = r.nextInt(this.street_map.getIntersections().size());
 		} while (destination == origin);
 	
-		this.addCar(new Car(this.street_map.getIntersection(origin), this.street_map.getIntersection(destination), this.getCars()));
+		this.addCar(new Car(this.street_map.getIntersection(origin), this.street_map.getIntersection(destination)));
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 	
@@ -59,7 +59,7 @@ public class Simulation {
 		while (timesteps > 0) {
 
 			for (Car car : this.cars) {
-				car.update();
+				car.update(this.cars);
 			}
 			
 			timesteps--;

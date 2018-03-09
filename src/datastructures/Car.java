@@ -1,41 +1,54 @@
 package datastructures;
 
-
-
-import javax.swing.*;
 import java.util.List;
 
 public class Car {
+
 
 	private Intersection startPoint;
 	private Intersection endPoint;
 	private int breakSpeed = 1; //assign the value you want
 	private double velocity = 0; //initial velocity is zero
 	private int acceleration = 1;//assign the value you want
-	private int timeTraveled;
 	private int positionX;
 	private int positionY;
-	private List<Car> list_of_cars; //needs to get this from somewhere
+	protected double timeStep = 1;
 	public static final int REACTION_TIME = 1;
+	public static final int MAX_VELOCITY = 5;
 
-	public Car(Intersection startPoint , Intersection endPoint, List<Car> list_of_cars)
+	public Car(Intersection startPoint , Intersection endPoint)
 	{
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 		positionX = startPoint.getXCoord();
 		positionY = startPoint.getYCoord();
-		this.list_of_cars = list_of_cars;
 	}
 
 	/**
 	 *
-	 * @return the safe velocity for the car, SUMO formula
+	 * @param list_of_cars
+	 * @return the new position of the car
+	 * it does NOT automatically update the position!
 	 */
-	public double safeVelocity(){
+	public int update(List<Car> list_of_cars){
+
+		velocity = safeVelocity(list_of_cars);
+		positionX = (int)  (positionX +  velocity*timeStep +  0.5*acceleration*Math.pow(timeStep,2));
+
+		return positionX;
+	}
+
+	/**
+	 *@param list_of_cars
+	 * @return the safe velocity for the car, SUMO formula
+	 * if car is leading car returns maximum allowed velocity set to 5
+	 */
+	public double safeVelocity(List<Car> list_of_cars){
 
 		double safe_velocity = 0;
 		int index = -1; //keeps track of the index of the leading vehicle in the list
 		double tracker = Double.MAX_VALUE; //keeps track of the position of the car with the smallest distance
+		boolean leader = true; //keeps track if the vehicle is the leading vehicle
 
 		for(int i=0; i<list_of_cars.size(); i++){
 
@@ -48,7 +61,13 @@ public class Car {
 				tracker = list_of_cars.get(i).positionX;
 				index = i;
 			}
+
+			if(positionX - list_of_cars.get(i).positionX < 0)
+				leader = false;
 		}
+
+		if(leader)
+			return MAX_VELOCITY;
 
 		double leading_velocity = list_of_cars.get(index).velocity; //speed of leading vehicle
 
@@ -57,30 +76,6 @@ public class Car {
 		safe_velocity = leading_velocity + ((gap - leading_velocity*REACTION_TIME)/((velocity/breakSpeed)+REACTION_TIME));
 
 		return safe_velocity;
-	}
-
-	/**
-	 * Changes the position of the car
-	 */
-	public void update(){
-
-		move();
-		System.out.println(this);
-	}
-
-	/**
-	 * Gets the safe velocity for the car to have and applies it
-	 * I am assuming 0 acceleration right now, constant speed
-	 * Will change that depending how it fits the simulation
-	 * @return the new position of the car
-	 */
-	public double move(){
-
-		double v = safeVelocity();
-
-		positionX += v;
-
-		return v;
 	}
 
 	/**
@@ -124,14 +119,6 @@ public class Car {
 
 	public void setAccelaration(int accelaration) {
 		this.acceleration = accelaration;
-	}
-
-	public double getTimeTraveled() {
-		return timeTraveled;
-	}
-
-	public void setTimeTraveled(int timeTraveled) {
-		this.timeTraveled = timeTraveled;
 	}
 
 	public int getPositionX() {
