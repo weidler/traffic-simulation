@@ -543,9 +543,16 @@ public class GraphicalInterface extends JFrame {
 					}	
 					
 				}
+				if(distance <= 20) 
+				{
+					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
+					visuals.setDrawRed(colorRed);
+				}
+				else
+				{
+					visuals.setDrawRed(null);
+				}
 				
-				Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
-				visuals.setDrawRed(colorRed);
 			}
 			
 			visuals.setMousePosX(mouseX);
