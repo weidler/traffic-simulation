@@ -1,6 +1,8 @@
 package datastructures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Intersection {
 	
@@ -26,6 +28,7 @@ public class Intersection {
 	public int getYCoord() {
 		return y_coord;
 	}
+	
 	
 	public void addConnection(int road_id, int intersection_id) {
 		connections.add(new int[]{road_id, intersection_id});

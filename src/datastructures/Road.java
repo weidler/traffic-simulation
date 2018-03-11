@@ -16,6 +16,9 @@ public class Road {
 		this.y2 = intersection_to.getYCoord();
 		
 		this.length = this.calcLength(x1, y1, x2, y2);
+		Node node = new Node(x1,y1);
+		Node node2 = new Node(x2,y2);
+		node.addDestination(node2, length);
 	}
 	
 	public Road(int x1, int y1, int x2, int y2)

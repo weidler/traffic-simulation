@@ -1,6 +1,8 @@
 package datastructures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -24,6 +26,10 @@ public class StreetMap {
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
+	
+	//Nodes set
+	private Set<Node> nodes = new HashSet<>();
+
 
 	// CONSTRUCTORS
 	public StreetMap() {
@@ -137,6 +143,8 @@ public class StreetMap {
 	 */
 	public void addIntersection(Intersection intersection) {
 		this.intersections.add(intersection);		
+		Node node = new Node(intersection.getXCoord(), intersection.getYCoord());
+		addNode(node);
 	}
 	
 	/**
@@ -173,7 +181,7 @@ public class StreetMap {
 	public void clearMap() {
 		this.intersections.clear();
 		this.roads.clear();
-		this.cars.clear();
+		//this.cars.clear();
 	}
 	
 	// GETTER / SETTER
@@ -182,6 +190,14 @@ public class StreetMap {
 		return roads;
 	}
 	
+
+    public void addNode(Node nodeA) {
+        nodes.add(nodeA);
+    }
+    
+    public Set<Node> getNodes() {
+    	return nodes;
+    }
 	/**
 	 * Get an Intersection based on its ID.
 	 * @param ID
