@@ -21,8 +21,7 @@ public class Road {
 		node.addDestination(node2, length);
 	}
 	
-	public Road(int x1, int y1, int x2, int y2)
-	{
+	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
@@ -57,6 +56,18 @@ public class Road {
 	
 	public String toString() {
 		return "Road: (" + this.x1 + ", " + this.y1 + ") -> (" + this.x2 + ", " + this.y2 + ")";
+	}
+	
+	public boolean equalCoordinatesWith(Road road) {
+		if (this.x1 == road.getX1() && this.y1 == road.getY1() && this.x2 == road.getX2() && this.y2 == road.getY2()) {
+			return true;
+		}
+		
+		if (this.x1 == road.getX2() && this.y1 == road.getY2() && this.x2 == road.getX1() && this.y2 == road.getY1()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private int calcLength(int x1, int y1, int x2, int y2) {

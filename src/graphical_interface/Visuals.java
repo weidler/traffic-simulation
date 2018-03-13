@@ -9,20 +9,23 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-
-
+import core.Simulation;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 
 public class Visuals extends JPanel{	
 	
+
+	private Simulation simulation;
 	private StreetMap streetMap;
+	private ArrayList<Road> roads;
+	
 	public boolean isDrawLine() {
 		return drawLine;
 	}
+	private Intersection drawRed;
 	
-	private ArrayList<Road> roads;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
 	private int mousePosY = 0;
@@ -33,13 +36,13 @@ public class Visuals extends JPanel{
 	
 	private int changeX = 0;
 	private int changeY = 0;
-	
+	private final int GRAPH_MOVED_DISTANCE = 25;
 	public int getChangeX() {
 		return changeX;
 	}
 
 	public boolean setChangeX(int i) {
-		this.changeX = changeX+(10*i);
+		this.changeX = changeX+(GRAPH_MOVED_DISTANCE*i);
 		return true;
 	}
 
@@ -53,21 +56,28 @@ public class Visuals extends JPanel{
 	}
 
 	public void setChangeY(int i) {
-		this.changeY = changeY+(10*i);
+		this.changeY = changeY+(GRAPH_MOVED_DISTANCE*i);
 	}
 
-	public Visuals(StreetMap streetMap) {
-		this.streetMap = streetMap;
+	public Visuals(Simulation simulation) {
+		this.simulation = simulation;
+		this.streetMap = this.simulation.getStreetMap();
 		roads = streetMap.getRoads();
 	}
 	
 	@Override
 	public void paintComponent (Graphics g)
 	{
-		
-		
 		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.red);
+		if(drawRed!=null)
+		{
+			g2.fillOval((int)((drawRed.getXCoord()-8)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-8)*zoomMultiplier + changeY), (int)(15*zoomMultiplier), (int)(15*zoomMultiplier ));
+
+		}
 		g2.setColor(Color.cyan);
+		
+		
 				
 		if (drawLine) 
 		{	
@@ -121,9 +131,9 @@ public class Visuals extends JPanel{
 		}
  
 		g2.setColor(Color.MAGENTA);
-		for(int i = 0; i<streetMap.getCarsList().size(); i ++)
+		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
-			g2.fillOval((int)((streetMap.getCarsList().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((streetMap.getCarsList().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
+			g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
 		}
 		
 		
@@ -180,5 +190,9 @@ public class Visuals extends JPanel{
 
 	public void setMousePosY(int mousePosY) {
 		this.mousePosY = mousePosY;
+	}
+	public void setDrawRed(Intersection drawRed)
+	{
+		this.drawRed = drawRed;
 	}
 }

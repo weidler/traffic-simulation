@@ -10,18 +10,21 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import core.Simulation;
 import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -37,7 +40,7 @@ import javax.swing.KeyStroke;
 
 public class GraphicalInterface extends JFrame {
 
-	private Simulation simulation = new Simulation();
+	private final JFileChooser fc = new JFileChooser();
 	
 	/**
 	 * represent to position of the mouse at all times.
@@ -63,15 +66,14 @@ public class GraphicalInterface extends JFrame {
 	 * main panel.
 	 */
 	private JPanel contentPane = new JPanel();
-	/**
-	 * streetmap
-	 */
+	
 	StreetMap streetMap = new StreetMap();
+	private Simulation simulation = new Simulation(streetMap);
 	
 	/**
 	 * JPanel that shows the roads etc.
 	 */
-	Visuals visuals = new Visuals(streetMap);
+	Visuals visuals = new Visuals(simulation);
 	
 	/**
 	 * create interface. including buttons and listeners
@@ -93,6 +95,7 @@ public class GraphicalInterface extends JFrame {
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
+		//ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"up");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"down");
@@ -135,7 +138,9 @@ public class GraphicalInterface extends JFrame {
 				repaint();
 				
 			}
-});
+		});
+		
+		
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(659, 11, 167, 474);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
@@ -160,6 +165,7 @@ public class GraphicalInterface extends JFrame {
 				}
 				else
 				{
+					simulation.reset();
 					streetMap.clearMap();
 				}
 				repaint();
@@ -176,9 +182,8 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				streetMap.getIntersections().clear();
-				streetMap.getRoads().clear();
-				streetMap.getCarsList().clear();
+				simulation.reset();
+				streetMap.clearMap();
 				visuals.resetZoomMultiplier();
 				repaint();
 				
@@ -186,7 +191,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 426, 60, 37);
+		startButton.setBounds(10, 378, 60, 37);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
@@ -201,35 +206,31 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		helpButton.setBounds(10, 378, 147, 37);
+		helpButton.setBounds(10, 426, 147, 37);
 		menuPanel.add(helpButton);
 		helpButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road");
+				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road."
+						+ "\n"
+						+ "To move the graph, use the arrow keys. \n"
+						+ "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
+						+ "To change the graph again press the reset button.");
 			}
 			
 		});
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 330, 147, 37);
+		addCar.setBounds(10, 282, 147, 37);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
-					Random r = new Random();
-					int s = r.nextInt(streetMap.getIntersections().size());
-					int e = r.nextInt(streetMap.getIntersections().size());
-					while(s == e)
-					{
-						e = r.nextInt(streetMap.getIntersections().size());
-					}
-					streetMap.addCar(new Car(streetMap.getIntersection(s), streetMap.getIntersection(e),streetMap.getCarsList()));
-					System.out.println("created new car, x: " + streetMap.getIntersection(s).getXCoord()+", y: "+streetMap.getIntersection(s).getYCoord()+", total: "+streetMap.getCarsList().size());
+					simulation.addRandomCar();
 					repaint();
 				}				
 			}
@@ -241,8 +242,10 @@ public class GraphicalInterface extends JFrame {
 		slider.setEnabled(false);
 		menuPanel.add(slider);
 		
+		
+		
 		JButton stopButton = new JButton("stop");
-		stopButton.setBounds(97, 426, 60, 37);
+		stopButton.setBounds(97, 378, 60, 37);
 		menuPanel.add(stopButton);
 		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		stopButton.addActionListener(new ActionListener() {
@@ -295,10 +298,34 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				visuals.resetPosition();
 				visuals.resetZoomMultiplier();
+				slider.setValue(50);
 				repaint();
 				
 			}
-		});		
+		});	
+		
+		
+		JButton saveButton = new JButton("save");
+		saveButton.setBounds(10, 330, 60, 37);
+		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(saveButton);
+		
+		JButton loadButton = new JButton("load");
+		loadButton.setBounds(97, 330, 60, 37);
+		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(loadButton);
+		loadButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int returnVal = fc.showOpenDialog(drawPanel);
+				File file = fc.getSelectedFile();
+				if(file!=null) {
+					System.out.println(file.getName());
+				}
+			}
+		});
+			
 		
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
@@ -314,7 +341,7 @@ public class GraphicalInterface extends JFrame {
 	/**
 	 * 
 	 * @author thomas
-	 * this is the mouse/key listener. in here all the clickes and movement of the mouse are registered and roads and intersection are created.
+	 * this is the mouse/key listener. in here all the clicks and movement of the mouse are registered and roads and intersection are created.
 	 */
 	private class Handlerclass implements MouseListener,MouseMotionListener {
 
@@ -475,8 +502,9 @@ public class GraphicalInterface extends JFrame {
 				
 				visuals.setDrawLine(false);
 			}
+				
 			System.out.println(streetMap.getIntersections());
-			
+			System.out.println(streetMap.getRoads());
 			
 			System.out.println("x coordinate: "+x);
 			System.out.println("y coordinate: "+y);
@@ -509,6 +537,42 @@ public class GraphicalInterface extends JFrame {
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
+			if(streetMap.getIntersections().size()>0)
+			{
+				int nearestX = -1;
+				int nearestY = -1;
+				double distance = -1;
+				for(Intersection sec : streetMap.getIntersections())
+				{
+					
+					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - sec.getXCoord(), 2) + (Math.pow(mouseY - sec.getYCoord(), 2))));
+					System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+					if (distance == -1) {
+						distance = distance2;							
+						nearestX = sec.getXCoord();						
+						nearestY = sec.getYCoord();							
+					}
+					else if(distance2 < distance)
+					{
+						System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+						distance = distance2;
+						nearestX = sec.getXCoord();
+						nearestY = sec.getYCoord();							
+					}	
+					
+				}
+				if(distance <= 20) 
+				{
+					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
+					visuals.setDrawRed(colorRed);
+				}
+				else
+				{
+					visuals.setDrawRed(null);
+				}
+				
+			}
+			
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();

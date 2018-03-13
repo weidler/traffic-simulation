@@ -74,6 +74,8 @@ public class Intersection {
 		return -1;
 	}
 	
+	
+	
 	public ArrayList<int[]> getConnections() {
 		return new ArrayList<int[]>(this.connections);
 	}
@@ -96,6 +98,10 @@ public class Intersection {
 	
 	public int numbConnections() {
 		return this.connections.size();
+	}
+	
+	public boolean equalCoordinatesWith(Intersection intersection) {
+		return (intersection.getXCoord() == this.x_coord && intersection.getYCoord() == this.y_coord);
 	}
 	
 	public String toString() {
