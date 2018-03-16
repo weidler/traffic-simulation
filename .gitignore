@@ -1,3 +1,8 @@
+# OTHERS
+.directory
+.Rhistory
+
+# GRADLE
 .gradle
 /build/
 
