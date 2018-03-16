@@ -75,18 +75,22 @@ public class GraphicalInterface extends JFrame {
 	 */
 	private JPanel contentPane = new JPanel();
 	
-	StreetMap streetMap = new StreetMap();
-	private Simulation simulation = new Simulation(streetMap);
+	private StreetMap streetMap;
+	private Simulation simulation;;
 	
 	/**
 	 * JPanel that shows the roads etc.
 	 */
-	Visuals visuals = new Visuals(simulation);
+	private Visuals visuals;
 	
 	/**
 	 * create interface. including buttons and listeners
 	 */
-	public GraphicalInterface() {
+	public GraphicalInterface(Simulation simulation) {
+		this.simulation = simulation;
+		this.streetMap = simulation.getStreetMap();
+		this.visuals = new Visuals(simulation);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 848, 534);
 		

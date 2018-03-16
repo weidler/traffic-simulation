@@ -1,17 +1,17 @@
-package a_star_stuff;
+package algorithms;
 
 import java.util.ArrayList;
 
 import datastructures.Intersection;
 import datastructures.StreetMap;
 
-public class Astar2 {
+public class AStar {
 
 	private Intersection start;
 	private Intersection end;
 	private StreetMap streetMap;
 
-	public Astar2(StreetMap map)
+	public AStar(StreetMap map)
 	{		
 		streetMap = map;
 	}
