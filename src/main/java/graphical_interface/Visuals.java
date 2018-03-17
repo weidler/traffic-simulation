@@ -130,12 +130,12 @@ public class Visuals extends JPanel{
 		
 		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
 			Road road= streetMap.getTrafficLights().get(i).getRoad();
-			int midPointX = (int) (road.getX1() +((road.getX2()-road.getX1())/2));
-			int midPointY = (int) (road.getY1() +((road.getY2()-road.getY1())/2));
+			int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX) +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
+			int midPointY = (int) ((road.getY1()*zoomMultiplier+changeY) +(((road.getY2()*zoomMultiplier+changeY)-(road.getY1()*zoomMultiplier+changeY))/2));
 			g2.setColor(Color.cyan);
-			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX1(), road.getY1()));
+			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX1()*zoomMultiplier+changeX, road.getY1()*zoomMultiplier+changeY));
 			g2.setColor(Color.yellow);
-			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2(), road.getY2()));
+			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			
 		}
  
