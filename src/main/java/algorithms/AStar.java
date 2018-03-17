@@ -3,36 +3,12 @@ package algorithms;
 import java.util.ArrayList;
 
 import datastructures.Intersection;
-import datastructures.StreetMap;
 
-public class AStar {
-
-	private Intersection start;
-	private Intersection end;
-	private StreetMap streetMap;
-
-	public AStar(StreetMap map)
-	{		
-		streetMap = map;
-	}
+public final class AStar {
 	
-	public Intersection getStart() {
-		return start;
-	}
+	private AStar() {}
 
-	public void setStart(Intersection start) {
-		this.start = start;
-	}
-
-	public Intersection getEnd() {
-		return end;
-	}
-
-	public void setEnd(Intersection end) {
-		this.end = end;
-	}
-	
-	public ArrayList<Intersection> createPath()
+	public static ArrayList<Intersection> createPath(Intersection start, Intersection end)
 	{
 	
 		//int counter = 1;

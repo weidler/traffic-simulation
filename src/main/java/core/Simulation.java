@@ -17,12 +17,10 @@ public class Simulation {
 	
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
-	private AStar aStar;
-	
+
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
-		this.aStar = new AStar(map);
 		System.out.println("HAAAAAAALLOOOOO");
 	}
 	
@@ -59,11 +57,8 @@ public class Simulation {
 		} while (destination == origin);
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		
-		this.aStar.setStart(origin_intersection);
-		this.aStar.setEnd(destination_intersection);
-		
-		ArrayList<Intersection> shortest_path = this.aStar.createPath();
+				
+		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection);
 		System.out.println("Path: " + shortest_path);
 		
 		this.addCar(new Car(origin_intersection, destination_intersection, this.street_map));
