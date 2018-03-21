@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import algorithms.AStar;
@@ -13,8 +14,6 @@ import datastructures.Intersection;
 
 public class Simulation {
 
-	private boolean run = false;
-	
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 
@@ -36,12 +35,14 @@ public class Simulation {
 	// ACTIONS
 	
 	public void addCar(Car car) {
-		this.cars.add(car);	
-		for(Intersection intersection : street_map.getIntersections())
-		{
-			intersection.resetParent();
-			intersection.resetCost();
+		for ( Car c : this.cars) {
+			if (c.getPositionX() == car.getPositionX() && c.getPositionY() == car.getPositionY()) {
+				System.out.println("Already a car standing at that position and I ain't stackin' them!");
+				return;
+			}
 		}
+		
+		this.cars.add(car);					
 	}
 	
 	public void addRandomCar() {
@@ -56,8 +57,10 @@ public class Simulation {
 		} while (destination == origin);
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
+		System.out.println(origin_intersection);
+		System.out.println(destination_intersection);
 				
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection);
+		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
 		System.out.println("Path: " + shortest_path);
 		
 		this.addCar(new Car(shortest_path, this.street_map));
@@ -73,7 +76,6 @@ public class Simulation {
 	// SIMULATION
 	
 	public void start() {
-		run = true;
 		System.out.println("start");
 
 		// Initialize
@@ -87,19 +89,35 @@ public class Simulation {
 
 			System.out.println("\n--------T = " + t + "s---------");
 
+			ArrayList<Car> arrived_cars = new ArrayList<Car>();
 			for (Car car : this.cars) {
 				// update traffic light statuses
 				this.street_map.update();
 				// recalculate car positions
-				car.update(this.cars, delta_t);
+				if (car.update(this.cars, delta_t)) {
+					arrived_cars.add(car);
+				};
 				
 				System.out.println(car);
 			}
+			
+			// remove cars that reached their destination from the list
+			for (Car c : arrived_cars) {
+				this.cars.remove(c);
+			}
+			
+			// Wait for time step to be over
+			int ms_to_wait = (int) (delta_t * 1000);
+			try {
+				TimeUnit.MILLISECONDS.sleep(ms_to_wait);				
+			} catch(InterruptedException e) {
+				System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
+			}
+
 		}
 	}
 
 	public void stop() {
-		run = false;
 		System.out.println("stop");
 	}
 	

@@ -3,12 +3,13 @@ package algorithms;
 import java.util.ArrayList;
 
 import datastructures.Intersection;
+import datastructures.StreetMap;
 
 public final class AStar {
 	
 	private AStar() {}
 
-	public static ArrayList<Intersection> createPath(Intersection start, Intersection end)
+	public static ArrayList<Intersection> createPath(Intersection start, Intersection end, StreetMap streetmap)
 	{
 		ArrayList<Intersection> openList = new ArrayList<>();
 		ArrayList<Intersection> closedList = new ArrayList<>();
@@ -77,7 +78,12 @@ public final class AStar {
 		{
 			path.add(path.get(path.size()-1).getParent());
 		}
-			
+		
+		for(Intersection intersection : streetmap.getIntersections())
+		{
+			intersection.resetParent();
+			intersection.resetCost();
+		}
 
 		ArrayList<Intersection> path2 = new ArrayList<Intersection>();
 		while(!path.isEmpty())

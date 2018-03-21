@@ -19,6 +19,7 @@ public class Car {
 	private Road current_road;
 	private Intersection current_origin_intersection;
 	private Intersection current_destination_intersection;
+	private boolean reached_destination;
 	
 	// CONSTANTS
 	public final double REACTION_TIME = 1;
@@ -54,6 +55,8 @@ public class Car {
 		
 		this.current_velocity = 0;
 		this.desired_velocity = 13;
+		
+		this.reached_destination = false;
 	}
 	
 	public ArrayList<Intersection> getPath() {
@@ -120,10 +123,8 @@ public class Car {
 		this.desired_velocity = desired_velocity;
 	}
 
-	public void update(List<Car> list_of_cars, double delta_t){
-
+	public boolean update(List<Car> list_of_cars, double delta_t){
 		double acceleration;
-		System.out.println(this.isLeadingCar(list_of_cars));
 		if (this.isLeadingCar(list_of_cars)) {
 			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
@@ -132,16 +133,29 @@ public class Car {
 			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
 		}
 		
-		System.out.println("ACC " + acceleration);
 		this.current_velocity += acceleration * delta_t;
-		System.out.println("VEL " + current_velocity);
 		this.position_on_road += this.current_velocity * delta_t;
-		System.out.println("POS " + position_on_road);
 		
-		// update x and y based on position on road
-		double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
-		this.positionX = new_coordinates[0];
-		this.positionY = new_coordinates[1];
+		// Check if at destination
+		if (this.position_on_road >= this.current_road.getLength() && this.current_destination_intersection == this.path.get(this.path.size()-1)) {
+			this.reached_destination = true;
+		} else {
+
+			// Check if at new road
+			if (this.position_on_road >= this.current_road.getLength()) {
+				this.current_origin_intersection = this.current_destination_intersection;
+				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
+				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
+				this.position_on_road = this.position_on_road -this.current_road.getLength();
+			}
+
+			// update x and y based on position on road
+			double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
+			this.positionX = new_coordinates[0];
+			this.positionY = new_coordinates[1];
+		}
+				
+		return this.reached_destination;
 	}
 
 	/**
@@ -201,13 +215,18 @@ public class Car {
 				continue;
 
 
-			if(list_of_cars.get(i).getPositionX() < currentClosestPosition){
-				currentClosestPosition = list_of_cars.get(i).getPositionX();
+			if(list_of_cars.get(i).getPositionOnRoad() < currentClosestPosition){
+				currentClosestPosition = list_of_cars.get(i).getPositionOnRoad();
 				index = i;
 			}
 		}
 
-		return list_of_cars.get(index).getCurrentVelocity();
+		if (index > 0) {
+			return list_of_cars.get(index).getCurrentVelocity();			
+		} else {
+			return Double.NaN;
+		}
+
 	}
 
 	public double getLeadingCarDistance(List<Car> list_of_cars){
@@ -230,19 +249,20 @@ public class Car {
 			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
 				continue;
 
-			if(list_of_cars.get(i).getPositionX() < currentClosestPosition){
-				currentClosestPosition = list_of_cars.get(i).getPositionX();
+			if(list_of_cars.get(i).getPositionOnRoad() < currentClosestPosition){
+				currentClosestPosition = list_of_cars.get(i).getPositionOnRoad();
 				index = i;
 			}
 		}
 
-		return Math.abs(this.getPositionX() - list_of_cars.get(index).getPositionX());
+		if (index > 0) {
+			return Math.abs(this.getPositionOnRoad() - list_of_cars.get(index).getPositionOnRoad());			
+		} else {
+			return Double.NaN;
+		}
 	}
 
 	private double getPositionOnRoad() {
-		System.out.println(this.positionX);
-		System.out.println(this.positionY);
-		System.out.println(this.current_road);
 		return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) + Math.pow(this.positionY - this.current_road.getY1(), 2));
 	}
 	
@@ -259,7 +279,7 @@ public class Car {
 		
 		return coordinates;
 	}
-	
+
 	public String toString() {
 		return "Car: (x=" + this.positionX + ", y=" + this.positionY + ", v=" + this.current_velocity + ")";
 	}
