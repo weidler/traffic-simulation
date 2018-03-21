@@ -106,11 +106,17 @@ public class Car {
 	}
 
 	public void update(List<Car> list_of_cars, double delta_t){
-		double dist_leading = this.getLeadingCarDistance(list_of_cars);
-		double leading_velocity = this.getLeadingCarVelocity(list_of_cars);
 		double current_position_on_road = this.getPositionOnRoad();
-		
-		double acceleration = IntelligentDriverModel.getAcceleration(this.current_velocity, this.desired_velocity, this.MAX_ACCELERATION, dist_leading, leading_velocity, this.DECCELARATION);
+
+		double acceleration;
+		if (this.isLeadingCar(list_of_cars, this)) {
+			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
+		} else {
+			double dist_leading = this.getLeadingCarDistance(list_of_cars);
+			double leading_velocity = this.getLeadingCarVelocity(list_of_cars);		
+			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
+		}
+
 		this.current_velocity += acceleration * delta_t;	
 		current_position_on_road += this.current_velocity * delta_t;
 		
@@ -215,6 +221,9 @@ public class Car {
 	}
 
 	private double getPositionOnRoad() {
+		System.out.println(this.positionX);
+		System.out.println(this.positionY);
+		System.out.println(this.road);
 		return Math.sqrt(Math.pow((this.positionX - this.road.getX1()), 2) + Math.pow(this.positionY - this.road.getY1(), 2));
 	}
 	
@@ -230,22 +239,6 @@ public class Car {
 		coordinates[1] = this.road.getY1() + (position/this.road.getLength()) * y_delta;		
 		
 		return coordinates;
-	}
-	
-	/**
-	 * Use after getting the x-coordinate
-	 * @return the y coordinate of the new point
-	 */
-	private double getY(){
-
-		//distance between start point and end point
-		double road_length = Math.sqrt(Math.pow(endPoint.getXCoord() - startPoint.getXCoord(), 2) + Math.pow(endPoint.getYCoord() - startPoint.getYCoord(),2));
-
-		double ratio_of_distances = (Math.abs(getPositionX() - startPoint.getYCoord()))/road_length;
-
-		double y = (1 - ratio_of_distances)*startPoint.getYCoord() + ratio_of_distances*endPoint.getYCoord();
-
-		return y;
 	}
 	
 	public String toString() {

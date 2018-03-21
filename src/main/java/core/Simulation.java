@@ -21,7 +21,6 @@ public class Simulation {
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
-		System.out.println("HAAAAAAALLOOOOO");
 	}
 	
 	// GETTERS / SETTERS
@@ -82,15 +81,15 @@ public class Simulation {
 			is.initializeTrafficLightSettings();
 		}
 		
-		int t = 1;
-		int timesteps = 1000;
-		while (t < timesteps) { // ultimately, have some sort of "simulation finished" function here checking if everybody arrived
+		double delta_t = 0.1;
+		int simulated_seconds = 1000;
+		for (double t = 0; t <= simulated_seconds; t += delta_t) {
 
 			for (Car car : this.cars) {
 				// update traffic light statuses
 				this.street_map.update();
 				// recalculate car positions
-				car.update(this.cars, t);
+				car.update(this.cars, delta_t);
 				
 				System.out.println(car);
 			}
