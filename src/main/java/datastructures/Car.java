@@ -17,6 +17,8 @@ public class Car {
 	// LOCALIZATION
 	private ArrayList<Intersection> path;
 	private Road current_road;
+	private Intersection current_origin_intersection;
+	private Intersection current_destination_intersection;
 	
 	// CONSTANTS
 	public final double REACTION_TIME = 1;
@@ -40,15 +42,18 @@ public class Car {
 	 */
 	public Car(ArrayList<Intersection> path, StreetMap streetMap) {
 		this.path = path;
-		this.positionX = (double) path.get(0).getXCoord();
-		this.positionY = (double) path.get(0).getYCoord();
-		System.out.println(path.get(0).getXCoord() + " " + path.get(0).getYCoord() + " " + path.get(1).getXCoord() + " " + path.get(1).getYCoord());
-		this.current_road = streetMap.getRoadByCoordinates(path.get(0).getXCoord(), path.get(0).getYCoord(), path.get(1).getXCoord(), path.get(1).getYCoord());
-		System.out.println(current_road);
+
+		this.current_origin_intersection = path.get(0);
+		this.current_destination_intersection = path.get(1);
 		
+		this.positionX = (double) current_origin_intersection.getXCoord();
+		this.positionY = (double) current_origin_intersection.getYCoord();
+
+		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
+		System.out.println(current_road);		
 		
 		this.current_velocity = 0;
-		this.desired_velocity = 50;
+		this.desired_velocity = 13;
 	}
 	
 	public ArrayList<Intersection> getPath() {
@@ -65,6 +70,22 @@ public class Car {
 
 	public void setCurrentRoad(Road current_road) {
 		this.current_road = current_road;
+	}
+
+	public Intersection getCurrentOriginIntersection() {
+		return current_origin_intersection;
+	}
+
+	public void setCurrentOriginIntersection(Intersection current_origin_intersection) {
+		this.current_origin_intersection = current_origin_intersection;
+	}
+
+	public Intersection getCurrentDestinationIntersection() {
+		return current_destination_intersection;
+	}
+
+	public void setCurrentDestinationIntersection(Intersection current_destination_intersection) {
+		this.current_destination_intersection = current_destination_intersection;
 	}
 
 	public double getCurrentVelocity() {
@@ -102,16 +123,20 @@ public class Car {
 	public void update(List<Car> list_of_cars, double delta_t){
 
 		double acceleration;
-		if (this.isLeadingCar(list_of_cars, this)) {
+		System.out.println(this.isLeadingCar(list_of_cars));
+		if (this.isLeadingCar(list_of_cars)) {
 			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			double dist_leading = this.getLeadingCarDistance(list_of_cars);
 			double leading_velocity = this.getLeadingCarVelocity(list_of_cars);		
 			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
 		}
-
-		this.current_velocity += acceleration * delta_t;	
+		
+		System.out.println("ACC " + acceleration);
+		this.current_velocity += acceleration * delta_t;
+		System.out.println("VEL " + current_velocity);
 		this.position_on_road += this.current_velocity * delta_t;
+		System.out.println("POS " + position_on_road);
 		
 		// update x and y based on position on road
 		double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
@@ -125,22 +150,24 @@ public class Car {
 	 * @param car
 	 * @return true if there is no car on the same road that has bigger x coordinate than the car passed to the method
 	 */
-	public boolean isLeadingCar(List<Car> list_of_cars, Car car){
+	public boolean isLeadingCar(List<Car> list_of_cars){
 
 		for(int i=0; i<list_of_cars.size(); i++){
 
 			//for the case it compares with itself skip to next iteration
-			if(list_of_cars.get(i).equals(car))
-				continue;
+			if(list_of_cars.get(i).equals(this)) {
+				continue;	
+			}
 
-			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getCurrentRoad().equals(car.getCurrentRoad()))){
+			// in case it compares with a car on a different road or a different direction, skip to next iteration
+			// that is, skip if you do not have the same destination
+			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
 			}
 
-			//if there is one car of the same road with bigger x, then this car is not a leader
-			if(car.getPositionX() <= list_of_cars.get(i).getPositionX())
+			if(this.getPositionOnRoad() <= list_of_cars.get(i).getPositionOnRoad()) {
 				return false;
+			}
 		}
 
 		//no car in the list was found to be on the same road with bigger x coordinate than this car
@@ -165,12 +192,12 @@ public class Car {
 				continue;
 
 			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad())))
+			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
-
+			}
 
 			//in case it compares with a car that is behind it, skip to the next iteration
-			if(list_of_cars.get(i).getPositionX() - this.getPositionX() <= 0)
+			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
 				continue;
 
 
@@ -195,14 +222,13 @@ public class Car {
 				continue;
 
 			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad())))
+			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
-
+			}
 
 			//in case it compares with a car that is behind it, skip to the next iteration
-			if(list_of_cars.get(i).getPositionX() - this.getPositionX() <= 0)
+			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
 				continue;
-
 
 			if(list_of_cars.get(i).getPositionX() < currentClosestPosition){
 				currentClosestPosition = list_of_cars.get(i).getPositionX();
@@ -224,12 +250,12 @@ public class Car {
 	 * https://math.stackexchange.com/questions/2045174/how-to-find-a-point-between-two-points-with-given-distance
 	 */
 	private double[] getCoordinatesFromPosition(double position) {
-		double x_delta = this.current_road.getX2() - this.current_road.getX1();
-		double y_delta = this.current_road.getY2() - this.current_road.getY1();
+		double x_delta = this.current_destination_intersection.getXCoord() - this.current_origin_intersection.getXCoord();
+		double y_delta = this.current_destination_intersection.getYCoord() - this.current_origin_intersection.getYCoord();
 				
 		double[] coordinates = new double[2];
-		coordinates[0] = this.current_road.getX1() + (position/this.current_road.getLength()) * x_delta;
-		coordinates[1] = this.current_road.getY1() + (position/this.current_road.getLength()) * y_delta;		
+		coordinates[0] = this.current_origin_intersection.getXCoord() + (position/this.current_road.getLength()) * x_delta;
+		coordinates[1] = this.current_origin_intersection.getYCoord() + (position/this.current_road.getLength()) * y_delta;		
 		
 		return coordinates;
 	}

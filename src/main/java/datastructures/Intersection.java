@@ -111,10 +111,10 @@ public class Intersection {
 		return intersections;
 	}
 	
-	public Intersection getRoadTo(Intersection destination) {
+	public Road getRoadTo(Intersection destination) {
 		for (Connection c : this.connections) {
 			if (c.getDestination() == destination) {
-				return c.getDestination();
+				return c.getRoad();
 			}
 		}
 		
