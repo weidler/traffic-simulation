@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import algorithms.AStar;
 import datastructures.StreetMap;
+import graphical_interface.GraphicalInterface;
 import datastructures.Car;
 import datastructures.Intersection;
 
@@ -16,10 +17,16 @@ public class Simulation {
 
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
+	private GraphicalInterface gui;
 
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
+		this.gui = gui;
+	}
+	public void setGUI(GraphicalInterface gui)
+	{
+		this.gui = gui;
 	}
 	
 	// GETTERS / SETTERS
@@ -99,6 +106,7 @@ public class Simulation {
 				};
 				
 				System.out.println(car);
+				gui.redraw();
 			}
 			
 			// remove cars that reached their destination from the list
@@ -113,7 +121,6 @@ public class Simulation {
 			} catch(InterruptedException e) {
 				System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 			}
-
 		}
 	}
 

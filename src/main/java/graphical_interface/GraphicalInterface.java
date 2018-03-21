@@ -612,4 +612,10 @@ public class GraphicalInterface extends JFrame {
 		
 		
 	}
+	
+	public void redraw()
+	{
+		repaint();
+	}
+	
 }
