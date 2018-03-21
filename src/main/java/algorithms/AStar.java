@@ -10,20 +10,22 @@ public final class AStar {
 
 	public static ArrayList<Intersection> createPath(Intersection start, Intersection end)
 	{
-	
-		//int counter = 1;
 		ArrayList<Intersection> openList = new ArrayList<>();
 		ArrayList<Intersection> closedList = new ArrayList<>();
+		
 		closedList.add(start);
 		start.setParent(start);
+		
 		start.setG(0);
 		start.setH(Math.sqrt(Math.pow(start.getXCoord() - end.getXCoord(), 2) + Math.pow(start.getYCoord() - end.getYCoord(), 2)));
+		
 		boolean foundTarget = false;
 		
 		while(!foundTarget)
 		{
 			Intersection currentParent = null;
 			currentParent = closedList.get(closedList.size()-1);
+			
 			for(int i = 0; i < currentParent.getConnections().size(); i++)
 			{
 				Intersection currentConnected = currentParent.getConnections().get(i).getDestination();
@@ -44,14 +46,6 @@ public final class AStar {
 					}
 				}
 			}
-			
-			/*
-			for(int i = 0; i < openList.size(); i++)
-			{
-				System.out.println("Open " + counter +" x: " + openList.get(i).getXCoord() + " y: " + openList.get(i).getYCoord());
-			}
-			counter++;	
-			*/
 			Intersection lowestOpen = null;
 			
 			for(int i = 0; i < openList.size()-1; i++)
@@ -76,6 +70,7 @@ public final class AStar {
 				foundTarget = true;
 			}
 		}
+		
 		ArrayList<Intersection> path = new ArrayList<Intersection>();
 		path.add(end);
 		while(!(path.get(path.size()-1).getParent() == path.get(path.size()-1)))
@@ -83,18 +78,13 @@ public final class AStar {
 			path.add(path.get(path.size()-1).getParent());
 		}
 			
-		for(int i = 0; i< path.size() ; i++)
-		{
-			System.out.println("path: x: "+path.get(i).getXCoord()+", y: "+ path.get(i).getYCoord());
-		}
+
 		ArrayList<Intersection> path2 = new ArrayList<Intersection>();
 		while(!path.isEmpty())
 		{
 			path2.add(path.get(path.size()-1));
 			path.remove(path.get(path.size()-1));
 		}
-		
-		return path2;
-		
+		return path2;		
 	}
 }
