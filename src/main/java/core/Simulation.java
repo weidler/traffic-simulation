@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import algorithms.AStar;
 import datastructures.StreetMap;
+import graphical_interface.GraphicalInterface;
 import datastructures.Car;
 import datastructures.Intersection;
 
@@ -17,10 +18,16 @@ public class Simulation {
 	
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
+	private GraphicalInterface gui;
 
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
+		this.gui = gui;
+	}
+	public void setGUI(GraphicalInterface gui)
+	{
+		this.gui = gui;
 	}
 	
 	// GETTERS / SETTERS
@@ -94,7 +101,9 @@ public class Simulation {
 				car.update(this.cars, delta_t);
 				
 				System.out.println(car);
+				gui.redraw();
 			}
+			
 		}
 	}
 
