@@ -10,15 +10,18 @@ public class IntelligentDriverModel{
 	
 	public static double getAcceleration(Car car, double dist_leading, double leading_velocity) {
 		double acceleration_free = car.MAX_ACCELERATION * ( 1 - Math.pow((car.getCurrentVelocity() / car.getDesiredVelocity()), delta));
-
+		System.out.println(acceleration_free);
+		
 		// if the car can't see any cars in front of it, just use free road term
-		if (dist_leading == Double.NaN || leading_velocity == Double.NaN) {
+		if (Double.isNaN(dist_leading) || Double.isNaN(leading_velocity)) {
+			System.out.println("HALLLOOO");
 			return acceleration_free;
 		}
 
 		double s_star =  MIN_SPACING + car.getCurrentVelocity() * MIN_HEADWAY + (car.getCurrentVelocity() * (car.getCurrentVelocity() - leading_velocity))/(2 * Math.sqrt(car.MAX_ACCELERATION * car.DECCELARATION));
 		double acceleration_interaction = (-car.MAX_ACCELERATION) * Math.pow(s_star / dist_leading, 2);
 		
-		return acceleration_free + acceleration_interaction;
+		double acceleration = acceleration_free + acceleration_interaction;
+		return acceleration;
 	}
 }

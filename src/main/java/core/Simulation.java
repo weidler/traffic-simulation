@@ -82,7 +82,7 @@ public class Simulation {
 		}
 		
 		double delta_t = 0.1;
-		int simulated_seconds = 1000;
+		int simulated_seconds = 10;
 		for (double t = 0; t <= simulated_seconds; t += delta_t) {
 
 			System.out.println("\n--------T = " + t + "s---------");
@@ -95,8 +95,6 @@ public class Simulation {
 				
 				System.out.println(car);
 			}
-						
-			t++;
 		}
 	}
 
