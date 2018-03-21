@@ -138,15 +138,21 @@ public class Visuals extends JPanel{
 			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			
 		}
-		Random rand = new Random();
-		float red = rand.nextFloat();
-		float green = rand.nextFloat();
-		float blue = rand.nextFloat();
-		Color random = new Color(red,green,blue);
-		g2.setColor(random);
+
+
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
-			g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
+			if(i%2 == 0)
+			{
+				g2.setColor(Color.RED);
+				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
+			}
+			else
+			{
+				g2.setColor(Color.BLUE);
+				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
+
+			}
 		}		
 	}
 	
