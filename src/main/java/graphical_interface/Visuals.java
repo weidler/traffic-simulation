@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -109,17 +110,16 @@ public class Visuals extends JPanel{
 				if(roads.get(i).getY1() < roads.get(i).getY2())
 				{	
 					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
-					g2.draw(new Line2D.Double(
 							(int)(roads.get(i).getX1()-2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+ changeY));
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
 				}
 				else
 				{
 					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));
-					g2.draw(new Line2D.Double(
 							(int)(roads.get(i).getX1()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+changeY));
-				
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));					
 				}
 			}
 
@@ -138,11 +138,15 @@ public class Visuals extends JPanel{
 			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			
 		}
- 
-		g2.setColor(Color.MAGENTA);
+		Random rand = new Random();
+		float red = rand.nextFloat();
+		float green = rand.nextFloat();
+		float blue = rand.nextFloat();
+		Color random = new Color(red,green,blue);
+		g2.setColor(random);
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
-			g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(7*zoomMultiplier), (int)(7*zoomMultiplier));
+			g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
 		}		
 	}
 	
