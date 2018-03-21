@@ -36,6 +36,8 @@ but I guess thats up to you.
 	Traffic Math from Real Life Data
 - https://arxiv.org/pdf/1012.4913.pdf                            
 	Traffic Simulation Math & Example Simulation
+- https://arxiv.org/pdf/cond-mat/0002177.pdf
+	Intelligent Driver Model Paper
 
 ##### Code Examples
 
