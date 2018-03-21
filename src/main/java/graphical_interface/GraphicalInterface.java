@@ -92,7 +92,7 @@ public class GraphicalInterface extends JFrame {
 		this.visuals = new Visuals(simulation);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 848, 534);
+		setBounds(100, 100, 1200, 700);
 		
 		contentPane.setBorder(BorderFactory.createRaisedBevelBorder());
 		setContentPane(contentPane);
@@ -103,7 +103,7 @@ public class GraphicalInterface extends JFrame {
 		this.requestFocusInWindow();
 		
 		JPanel drawPanel = visuals;
-		drawPanel.setBounds(10, 11, 639, 474);
+		drawPanel.setBounds(10, 11, 991, 640);
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
@@ -154,7 +154,7 @@ public class GraphicalInterface extends JFrame {
 		
 		
 		JPanel menuPanel = new JPanel();
-		menuPanel.setBounds(659, 11, 167, 474);
+		menuPanel.setBounds(1011, 11, 167, 640);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
 		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		
