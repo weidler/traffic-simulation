@@ -60,7 +60,7 @@ public class Simulation {
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection);
 		System.out.println("Path: " + shortest_path);
 		
-		this.addCar(new Car(origin_intersection, destination_intersection, this.street_map));
+		this.addCar(new Car(shortest_path, this.street_map));
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 	
@@ -85,6 +85,8 @@ public class Simulation {
 		int simulated_seconds = 1000;
 		for (double t = 0; t <= simulated_seconds; t += delta_t) {
 
+			System.out.println("\n--------T = " + t + "s---------");
+
 			for (Car car : this.cars) {
 				// update traffic light statuses
 				this.street_map.update();
@@ -93,7 +95,7 @@ public class Simulation {
 				
 				System.out.println(car);
 			}
-			
+						
 			t++;
 		}
 	}

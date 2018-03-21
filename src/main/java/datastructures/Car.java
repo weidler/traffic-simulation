@@ -15,9 +15,8 @@ import models.IntelligentDriverModel;
 public class Car {
 
 	// LOCALIZATION
-	private Intersection startPoint;
-	private Intersection endPoint;
-	private Road road;
+	private ArrayList<Intersection> path;
+	private Road current_road;
 	
 	// CONSTANTS
 	public final double REACTION_TIME = 1;
@@ -28,6 +27,7 @@ public class Car {
 	private double current_velocity;
 	private double positionX;
 	private double positionY;
+	private double position_on_road;
 
 	// CONSTRAINTS
 	private double desired_velocity;
@@ -38,39 +38,33 @@ public class Car {
 	 * @param endPoint
 	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
 	 */
-	public Car(Intersection startPoint , Intersection endPoint, StreetMap streetMap) {
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
-		this.positionX = (double) startPoint.getXCoord();
-		this.positionY = (double) startPoint.getYCoord();
-		this.road = streetMap.getRoadByCoordinates(startPoint.getXCoord(), startPoint.getYCoord(), endPoint.getXCoord(), endPoint.getYCoord());
+	public Car(ArrayList<Intersection> path, StreetMap streetMap) {
+		this.path = path;
+		this.positionX = (double) path.get(0).getXCoord();
+		this.positionY = (double) path.get(0).getYCoord();
+		System.out.println(path.get(0).getXCoord() + " " + path.get(0).getYCoord() + " " + path.get(1).getXCoord() + " " + path.get(1).getYCoord());
+		this.current_road = streetMap.getRoadByCoordinates(path.get(0).getXCoord(), path.get(0).getYCoord(), path.get(1).getXCoord(), path.get(1).getYCoord());
+		System.out.println(current_road);
+		
 		
 		this.current_velocity = 0;
 		this.desired_velocity = 50;
 	}
-
-	public Intersection getStartPoint() {
-		return startPoint;
+	
+	public ArrayList<Intersection> getPath() {
+		return path;
 	}
 
-	public void setStartPoint(Intersection startPoint) {
-		this.startPoint = startPoint;
+	public void setPath(ArrayList<Intersection> path) {
+		this.path = path;
 	}
 
-	public Intersection getEndPoint() {
-		return endPoint;
+	public Road getCurrentRoad() {
+		return current_road;
 	}
 
-	public void setEndPoint(Intersection endPoint) {
-		this.endPoint = endPoint;
-	}
-
-	public Road getRoad() {
-		return road;
-	}
-
-	public void setRoad(Road road) {
-		this.road = road;
+	public void setCurrentRoad(Road current_road) {
+		this.current_road = current_road;
 	}
 
 	public double getCurrentVelocity() {
@@ -106,7 +100,6 @@ public class Car {
 	}
 
 	public void update(List<Car> list_of_cars, double delta_t){
-		double current_position_on_road = this.getPositionOnRoad();
 
 		double acceleration;
 		if (this.isLeadingCar(list_of_cars, this)) {
@@ -118,10 +111,10 @@ public class Car {
 		}
 
 		this.current_velocity += acceleration * delta_t;	
-		current_position_on_road += this.current_velocity * delta_t;
+		this.position_on_road += this.current_velocity * delta_t;
 		
 		// update x and y based on position on road
-		double[] new_coordinates = this.getCoordinatesFromPosition(current_position_on_road);
+		double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
 		this.positionX = new_coordinates[0];
 		this.positionY = new_coordinates[1];
 	}
@@ -141,7 +134,7 @@ public class Car {
 				continue;
 
 			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getRoad().equals(car.getRoad()))){
+			if(!(list_of_cars.get(i).getCurrentRoad().equals(car.getCurrentRoad()))){
 				continue;
 			}
 
@@ -172,7 +165,7 @@ public class Car {
 				continue;
 
 			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getRoad().equals(this.getRoad())))
+			if(!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad())))
 				continue;
 
 
@@ -202,7 +195,7 @@ public class Car {
 				continue;
 
 			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getRoad().equals(this.getRoad())))
+			if(!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad())))
 				continue;
 
 
@@ -223,20 +216,20 @@ public class Car {
 	private double getPositionOnRoad() {
 		System.out.println(this.positionX);
 		System.out.println(this.positionY);
-		System.out.println(this.road);
-		return Math.sqrt(Math.pow((this.positionX - this.road.getX1()), 2) + Math.pow(this.positionY - this.road.getY1(), 2));
+		System.out.println(this.current_road);
+		return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) + Math.pow(this.positionY - this.current_road.getY1(), 2));
 	}
 	
 	/**
 	 * https://math.stackexchange.com/questions/2045174/how-to-find-a-point-between-two-points-with-given-distance
 	 */
 	private double[] getCoordinatesFromPosition(double position) {
-		double x_delta = this.road.getX2() - this.road.getX1();
-		double y_delta = this.road.getY2() - this.road.getY1();
+		double x_delta = this.current_road.getX2() - this.current_road.getX1();
+		double y_delta = this.current_road.getY2() - this.current_road.getY1();
 				
 		double[] coordinates = new double[2];
-		coordinates[0] = this.road.getX1() + (position/this.road.getLength()) * x_delta;
-		coordinates[1] = this.road.getY1() + (position/this.road.getLength()) * y_delta;		
+		coordinates[0] = this.current_road.getX1() + (position/this.current_road.getLength()) * x_delta;
+		coordinates[1] = this.current_road.getY1() + (position/this.current_road.getLength()) * y_delta;		
 		
 		return coordinates;
 	}

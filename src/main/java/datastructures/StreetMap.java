@@ -75,7 +75,8 @@ public class StreetMap {
 	 */
 	public Road getRoadByCoordinates(int x_start, int y_start, int x_end, int y_end) {
 		for (Road road : this.roads) {
-			if (road.getX1() == x_start && road.getY1() == y_start && road.getX2() == x_end && road.getY2() == y_end) {
+			if (road.getX1() == x_start && road.getY1() == y_start && road.getX2() == x_end && road.getY2() == y_end
+					|| road.getX2() == x_start && road.getY2() == y_start && road.getX1() == x_end && road.getY1() == y_end) {
 				return road;
 			}
 		}
