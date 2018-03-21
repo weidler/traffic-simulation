@@ -87,7 +87,14 @@ public final class AStar {
 		{
 			System.out.println("path: x: "+path.get(i).getXCoord()+", y: "+ path.get(i).getYCoord());
 		}
-		return path;
+		ArrayList<Intersection> path2 = new ArrayList<Intersection>();
+		while(!path.isEmpty())
+		{
+			path2.add(path.get(path.size()-1));
+			path.remove(path.get(path.size()-1));
+		}
+		
+		return path2;
 		
 	}
 }
