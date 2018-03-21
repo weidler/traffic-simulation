@@ -106,7 +106,6 @@ public class Simulation {
 				};
 				
 				System.out.println(car);
-				gui.redraw();
 			}
 			
 			// remove cars that reached their destination from the list
@@ -121,6 +120,8 @@ public class Simulation {
 			} catch(InterruptedException e) {
 				System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 			}
+			
+			gui.redraw();
 		}
 	}
 
