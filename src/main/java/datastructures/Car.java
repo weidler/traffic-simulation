@@ -35,6 +35,11 @@ public class Car {
 	// CONSTRAINTS
 	private double desired_velocity;
 	
+	// A THING NEEDED
+	private int offsetX;
+	private int offsetY;
+	
+	
 	/**
 	 *
 	 * @param startPoint
@@ -121,6 +126,45 @@ public class Car {
 
 	public void setDesiredVelocity(double desired_velocity) {
 		this.desired_velocity = desired_velocity;
+	}
+	
+	public int getOffsetX(){
+		
+		return offsetX;
+	}
+	
+	public int getOffsetY(){
+		
+		return offsetY;
+	}
+	
+	public void calculateOffset(Intersection start, Intersection end) {
+		if(start.getXCoord() > end.getXCoord())
+		{
+			if(start.getYCoord() <end.getYCoord())
+			{
+				offsetX = -4;
+				offsetY = -4;
+			}
+			else
+			{
+				offsetX = 4;
+				offsetY = -4;
+			}
+		}
+		else
+		{
+			if(start.getYCoord() <end.getYCoord())
+			{
+				offsetX = -4;
+				offsetY = 4;
+			}
+			else
+			{
+				offsetX = 4;
+				offsetY = 4;
+			}
+		}
 	}
 
 	public boolean update(List<Car> list_of_cars, double delta_t){
