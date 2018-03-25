@@ -140,6 +140,39 @@ public class Visuals extends JPanel{
 			g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			
 		}
+		
+		
+		
+		/*
+		for (int i = 0; i < streetMap.getIntersections().size(); i++)
+		{
+			int counter = 0;
+
+			for(int j = 0; j < streetMap.getIntersections().get(i).getTrafficLights().size(); j++)
+			{		
+				Road road= streetMap.getIntersections().get(i).getTrafficLights().get(j).getRoad();
+				int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX) +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
+				int midPointY = (int) ((road.getY1()*zoomMultiplier+changeY) +(((road.getY2()*zoomMultiplier+changeY)-(road.getY1()*zoomMultiplier+changeY))/2));
+
+				if (streetMap.getIntersections().get(i).getTrafficLights().get(j).getStatus() == "R")
+					g2.setColor(Color.RED);
+				else
+					g2.setColor(Color.GREEN);
+				
+				if(counter == 0)
+				{
+					g2.draw(new Line2D.Double(midPointX, midPointY, road.getX1()*zoomMultiplier+changeX, road.getY1()*zoomMultiplier+changeY));				
+					counter++;
+				}
+				else
+				{
+					g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
+					counter = 0;
+				}
+			}
+		}
+	
+		*/
 
 
 		for(int i = 0; i<simulation.getCars().size(); i ++)
