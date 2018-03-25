@@ -1,5 +1,6 @@
 package datastructures;
 
+import java.awt.Color;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class Car {
 	private int offsetX;
 	private int offsetY;
 	
+	private int counter;
+	private Color color;
 	
 	/**
 	 *
@@ -46,9 +49,15 @@ public class Car {
 	 * @param endPoint
 	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
 	 */
-	public Car(ArrayList<Intersection> path, StreetMap streetMap) {
+	public Car(ArrayList<Intersection> path, StreetMap streetMap, int counter) {
 		this.path = path;
+		this.counter = counter;
 
+		if(counter % 2 == 0)
+			color = Color.RED;
+		else
+			color = Color.BLUE;
+		
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
 		
@@ -136,6 +145,11 @@ public class Car {
 	public int getOffsetY(){
 		
 		return offsetY;
+	}
+	
+	public Color getColor()
+	{
+		return color;
 	}
 	
 	public void calculateOffset(Intersection start, Intersection end) {
