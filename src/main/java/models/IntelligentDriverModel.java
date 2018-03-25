@@ -9,7 +9,7 @@ public class IntelligentDriverModel{
 	final static double delta = 4; // this is common practice for this model
 	
 	public static double getAcceleration(Car car, double dist_leading, double leading_velocity) {
-		double acceleration_free = car.MAX_ACCELERATION * ( 1 - Math.pow((car.getCurrentVelocity() / car.getDesiredVelocity()), delta));
+		double acceleration_free = car.MAX_ACCELERATION * (1 - Math.pow((car.getCurrentVelocity() / car.getDesiredVelocity()), delta));
 		
 		// if the car can't see any cars in front of it, just use free road term
 		if (Double.isNaN(dist_leading) || Double.isNaN(leading_velocity)) {

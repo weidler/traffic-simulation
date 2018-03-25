@@ -25,6 +25,8 @@ public class Visuals extends JPanel{
 	}
 	private Intersection drawRed;
 	
+	final int car_size = 10;
+	
 	private boolean drawLine = false;
 	private int mousePosX = 0;
 	private int mousePosY = 0;
@@ -143,15 +145,13 @@ public class Visuals extends JPanel{
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
 			simulation.getCars().get(i).calculateOffset(simulation.getCars().get(i).getCurrentOriginIntersection(), simulation.getCars().get(i).getCurrentDestinationIntersection());
-			if(i%2 == 0)
-			{
+			if(i%2 == 0) {
 				g2.setColor(Color.RED);
-				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
+				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
 			}
-			else
-			{
+			else {
 				g2.setColor(Color.BLUE);
-				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX) + simulation.getCars().get(i).getOffsetX(), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(5*zoomMultiplier), (int)(5*zoomMultiplier));
+				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX) + simulation.getCars().get(i).getOffsetX(), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
 
 			}
 		}		

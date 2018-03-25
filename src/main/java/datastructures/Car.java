@@ -189,8 +189,8 @@ public class Car {
 			if (this.position_on_road >= this.current_road.getLength()) {
 				this.current_origin_intersection = this.current_destination_intersection;
 				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
+				this.position_on_road = this.position_on_road - this.current_road.getLength();
 				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
-				this.position_on_road = this.position_on_road -this.current_road.getLength();
 			}
 
 			// update x and y based on position on road
@@ -249,8 +249,11 @@ public class Car {
 			if(list_of_cars.get(i).equals(this))
 				continue;
 
-			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
+				continue;					
+			}
+			
+			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
 			}
 
@@ -275,7 +278,7 @@ public class Car {
 
 	public double getLeadingCarDistance(List<Car> list_of_cars){
 
-		double currentClosestPosition = Double.MAX_VALUE; //initially infinity
+		double currentClosestPosition = Double.NaN; //initially infinity
 		int index = -1; //keeps track of the index of the closest car in the list
 
 		for(int i=0; i<list_of_cars.size(); i++){
@@ -284,8 +287,12 @@ public class Car {
 			if(list_of_cars.get(i).equals(this))
 				continue;
 
-			//in case it compares with a car on a different road, skip to next iteration
-			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+			// check if on road in same direction
+			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
+				continue;					
+			}
+			
+			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
 			}
 
