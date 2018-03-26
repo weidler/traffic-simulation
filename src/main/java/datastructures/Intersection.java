@@ -9,8 +9,8 @@ public class Intersection {
 	private int y_coord;
 	
 	// Traffic Lights
-	private int tl_phase_length;
-	private int time_till_toggle;
+	private double tl_phase_length;
+	private double time_till_toggle;
 	
 	// A Star stuff
 	private double cost;
@@ -30,49 +30,10 @@ public class Intersection {
 		this.x_coord = x;
 		this.y_coord = y;
 		
-		this.tl_phase_length = 120;
+		this.tl_phase_length = 5;
 		this.time_till_toggle = this.tl_phase_length;
 		
 		this.connections = new ArrayList<Connection>();
-	}
-	
-	public void setTrafficLightActivity()
-	{
-		System.out.println("size "+ getTrafficLights().size());
-		if(getTrafficLights().size()<=2)
-		{
-			for(TrafficLight t : getTrafficLights())
-			{
-				System.out.println("is green becuase only two or less roads");
-				t.setStatus("G");
-				
-			}
-		}
-		else
-		{
-			for(int i = 0;i< getTrafficLights().size();i++)
-			{
-				if(i == activeLight)
-				{
-					System.out.println("is green becuase is supposed to be active");
-					getTrafficLights().get(i).setStatus("G");
-				}
-				else 
-				{
-					getTrafficLights().get(i).setStatus("R");
-				}
-			}			
-		}
-		activeLight++;
-		if(activeLight < getTrafficLights().size()) 
-		{
-			
-		}
-		else
-		{
-			activeLight = 0;
-		}
-		
 	}
 	
 	// GETTERS / SETTERS
@@ -85,11 +46,11 @@ public class Intersection {
 		return y_coord;
 	}
 	
-	public int getTlPhaseLength() {
+	public double getTlPhaseLength() {
 		return tl_phase_length;
 	}
 
-	public void setTlPhaseLength(int tl_phase_length) {
+	public void setTlPhaseLength(double tl_phase_length) {
 		this.tl_phase_length = tl_phase_length;
 	}
 
@@ -177,9 +138,31 @@ public class Intersection {
 		return traffic_lights;
 	}
 	
+	public TrafficLight getTrafficLightFrom(Intersection origin_intersection) {
+		if (this.getConnectedIntersections().contains(origin_intersection)) {
+			for (Connection c : this.connections) {
+				if (c.getDestination() == origin_intersection) {
+					return c.getTrafficlight();
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	// MODIFICATION
 	
+	/**
+	 * 
+	 * @param road
+	 * @param intersection the intersection which this intersection has a new connection to and from
+	 * @param trafficlight the trafficlight that regulates cars coming INTO this intersection FROM the parameter intersection
+	 */
 	public void addConnection(Road road, Intersection intersection, TrafficLight trafficlight) {
+		if (trafficlight == null) {
+			trafficlight = new TrafficLight(road, this);
+		}
+
 		connections.add(new Connection(road, intersection, trafficlight));
 	}
 	
@@ -226,17 +209,40 @@ public class Intersection {
 	}
 
 	// ACTIONS
-	
-	public void updateTrafficLights() {
-		if (this.time_till_toggle == 0) {
-			for (TrafficLight tl : this.getTrafficLights()) {
-				tl.toggle();
+
+	public void setTrafficLightActivity() {
+		System.out.println("size "+ getTrafficLights().size());
+
+		if(getTrafficLights().size() <= 2) {
+			for(TrafficLight t : getTrafficLights()) {
+				t.setStatus("G");
 			}
-			
-			this.time_till_toggle = this.tl_phase_length;
+		} else {
+			for (int i = 0; i < getTrafficLights().size(); i++) {
+				if(i == activeLight) {
+					System.out.println("is green becuase is supposed to be active");
+					getTrafficLights().get(i).setStatus("G");
+				} else {
+					getTrafficLights().get(i).setStatus("R");
+				}
+			}
 		}
 		
-		this.time_till_toggle--;
+		activeLight++;
+		if(activeLight > getTrafficLights().size()) {
+			activeLight = 0;
+		}
+		
+	}
+
+	public void updateTrafficLights(double delta_t) {
+		System.out.println(this.getTrafficLights());
+		this.time_till_toggle = this.time_till_toggle - delta_t;
+		
+		if(this.time_till_toggle <= 0) {
+			this.setTrafficLightActivity();
+			this.time_till_toggle = this.tl_phase_length;
+		}
 	}
 	
 	public void initializeTrafficLightSettings() {

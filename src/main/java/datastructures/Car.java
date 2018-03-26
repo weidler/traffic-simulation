@@ -24,8 +24,9 @@ public class Car {
 	
 	// CONSTANTS
 	public final double REACTION_TIME = 1;
-	public final double MAX_ACCELERATION = 0.8;
+	public final double MAX_ACCELERATION = 1.2;
 	public final double DECCELARATION = 1.8;
+	public final double SIGHT_DISTANCE = 10;
 	
 	// DYNAMIC VALUES
 	private double current_velocity;
@@ -192,6 +193,10 @@ public class Car {
 		}
 		
 		this.current_velocity += acceleration * delta_t;
+		if (this.getApproachedTrafficlight().getStatus() == "R" && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
+			this.current_velocity = 0;
+		}
+		
 		this.position_on_road += this.current_velocity * delta_t;
 		
 		// Check if at destination
@@ -216,6 +221,14 @@ public class Car {
 		return this.reached_destination;
 	}
 
+	public TrafficLight getApproachedTrafficlight() {
+		return this.current_destination_intersection.getTrafficLightFrom(this.current_origin_intersection);
+	}
+	
+	public double getApproachedIntersectionDistance() {
+		return this.current_road.getLength() - this.position_on_road;
+	}
+	
 	/**
 	 *
 	 * @param list_of_cars

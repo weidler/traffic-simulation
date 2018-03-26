@@ -9,12 +9,7 @@ public class Connection {
 	public Connection(Road road, Intersection destination, TrafficLight trafficlight) {
 		this.road = road;
 		this.destination = destination;
-		
-		if (trafficlight == null) {
-			this.trafficlight = new TrafficLight(road, destination);
-		} else {
-			this.trafficlight = trafficlight;
-		}
+		this.trafficlight = trafficlight;
 	}
 
 	// GETTER / SETTER

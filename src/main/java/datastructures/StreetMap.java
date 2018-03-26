@@ -228,9 +228,9 @@ public class StreetMap {
 	
 	// ACTIONS
 	
-	public void update() {
+	public void update(double delta_t) {
 		for (Intersection intersection : this.intersections) {
-			intersection.updateTrafficLights();			
+			intersection.updateTrafficLights(delta_t);			
 		}
 	}
 	

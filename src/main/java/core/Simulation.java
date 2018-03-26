@@ -104,30 +104,19 @@ public class Simulation {
 					
 			double delta_t = 0.01;
 			while (this.is_running) {
-
-				refreshLights = refreshLights + delta_t;
 				
-				if(refreshLights >= 2.00)
-				{					
-					for(Intersection i :street_map.getIntersections())
-					{
-						i.setTrafficLightActivity();
-					}
-					refreshLights = 0.00;
-					
-				}
+				System.out.println("\n--------T = " + this.current_time + "s---------");
 				
-				//System.out.println("\n--------T = " + this.current_time + "s---------");
+				// update traffic light statuses
+				this.street_map.update(delta_t);
 
+				
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
-					// update traffic light statuses
-					this.street_map.update();
 					// recalculate car positions
 					if (car.update(this.cars, delta_t)) {
 						arrived_cars.add(car);
-					};
-					
+					};					
 					//System.out.println(car);
 				}
 				

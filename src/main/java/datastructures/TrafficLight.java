@@ -32,8 +32,6 @@ public class TrafficLight {
 	{
 		return intersection;
 	}
-	
-	
 
 	// ACTIONS
 	
@@ -43,5 +41,10 @@ public class TrafficLight {
 		} else if (this.status == "G") {
 			this.setStatus("R");
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "TrafficLight [status=" + status + ", intersection=" + intersection + "]";
 	}
 }
