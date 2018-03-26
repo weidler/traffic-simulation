@@ -229,7 +229,7 @@ public class Intersection {
 		}
 		
 		activeLight++;
-		if(activeLight >= getTrafficLights().size()-1) {
+		if(activeLight > getTrafficLights().size()-1) {
 			activeLight = 0;
 		}
 		
