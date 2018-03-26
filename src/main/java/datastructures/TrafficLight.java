@@ -19,6 +19,7 @@ public class TrafficLight {
 	
 	public Road getRoad() {
 		return road;
+		
 	}
 	
 	public void setStatus(String status) {
@@ -26,6 +27,10 @@ public class TrafficLight {
 			System.out.println("Illegal status '" + status + "'");
 		}
 		this.status = status;
+	}
+	public Intersection getIntersection()
+	{
+		return intersection;
 	}
 	
 	

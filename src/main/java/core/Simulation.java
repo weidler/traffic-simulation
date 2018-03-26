@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import algorithms.AStar;
 import datastructures.StreetMap;
+import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
+import graphical_interface.Visuals;
 import datastructures.Car;
 import datastructures.Intersection;
 
@@ -18,6 +20,7 @@ public class Simulation {
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
+	private double refreshLights = 2.01;
 	
 	private boolean is_running;
 	private double current_time;
@@ -92,17 +95,29 @@ public class Simulation {
 		this.is_running = true;
 		
 		Thread th = new Thread(()-> {
-			System.out.println("start");
-
+			System.out.println("start");			
+			
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
 				is.initializeTrafficLightSettings();
 			}
-			
+					
 			double delta_t = 0.01;
 			while (this.is_running) {
 
-				System.out.println("\n--------T = " + this.current_time + "s---------");
+				refreshLights = refreshLights + delta_t;
+				
+				if(refreshLights >= 2.00)
+				{					
+					for(Intersection i :street_map.getIntersections())
+					{
+						i.setTrafficLightActivity();
+					}
+					refreshLights = 0.00;
+					
+				}
+				
+				//System.out.println("\n--------T = " + this.current_time + "s---------");
 
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
@@ -113,7 +128,7 @@ public class Simulation {
 						arrived_cars.add(car);
 					};
 					
-					System.out.println(car);
+					//System.out.println(car);
 				}
 				
 				// remove cars that reached their destination from the list
@@ -126,7 +141,7 @@ public class Simulation {
 				try {
 					TimeUnit.MILLISECONDS.sleep(ms_to_wait);				
 				} catch(InterruptedException e) {
-					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
+					//System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 				}
 				
 				gui.redraw();

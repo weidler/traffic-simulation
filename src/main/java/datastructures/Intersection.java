@@ -18,6 +18,9 @@ public class Intersection {
 	private double g;
 	private double h;
 	
+	private int activeLight = 0;
+	
+	
 	// Connections
 	private ArrayList<Connection> connections;
 	
@@ -31,6 +34,45 @@ public class Intersection {
 		this.time_till_toggle = this.tl_phase_length;
 		
 		this.connections = new ArrayList<Connection>();
+	}
+	
+	public void setTrafficLightActivity()
+	{
+		System.out.println("size "+ getTrafficLights().size());
+		if(getTrafficLights().size()<=2)
+		{
+			for(TrafficLight t : getTrafficLights())
+			{
+				System.out.println("is green becuase only two or less roads");
+				t.setStatus("G");
+				
+			}
+		}
+		else
+		{
+			for(int i = 0;i< getTrafficLights().size();i++)
+			{
+				if(i == activeLight)
+				{
+					System.out.println("is green becuase is supposed to be active");
+					getTrafficLights().get(i).setStatus("G");
+				}
+				else 
+				{
+					getTrafficLights().get(i).setStatus("R");
+				}
+			}			
+		}
+		activeLight++;
+		if(activeLight < getTrafficLights().size()) 
+		{
+			
+		}
+		else
+		{
+			activeLight = 0;
+		}
+		
 	}
 	
 	// GETTERS / SETTERS
@@ -130,6 +172,7 @@ public class Intersection {
 		for (Connection c : this.connections) {
 			traffic_lights.add(c.getTrafficlight());
 		}
+		
 		
 		return traffic_lights;
 	}

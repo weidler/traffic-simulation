@@ -599,6 +599,7 @@ public class GraphicalInterface extends JFrame {
 				else
 				{
 					visuals.setDrawRed(null);
+					
 				}
 				
 			}
