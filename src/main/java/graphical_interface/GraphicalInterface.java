@@ -76,7 +76,7 @@ public class GraphicalInterface extends JFrame {
 	private JPanel contentPane = new JPanel();
 	
 	private StreetMap streetMap;
-	private Simulation simulation;;
+	private Simulation simulation;
 	
 	/**
 	 * JPanel that shows the roads etc.
