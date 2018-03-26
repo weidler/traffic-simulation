@@ -193,7 +193,7 @@ public class Car {
 		}
 		
 		this.current_velocity += acceleration * delta_t;
-		if (this.getApproachedTrafficlight().getStatus() == "R" && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
+		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
 			this.current_velocity = 0;
 		}
 		

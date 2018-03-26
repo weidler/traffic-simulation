@@ -32,6 +32,22 @@ public class TrafficLight {
 	{
 		return intersection;
 	}
+	
+	public boolean isRed() {
+		if (this.status == "R") {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isGreen() {
+		if (this.status == "G") {
+			return true;
+		}
+		
+		return false;
+	}
 
 	// ACTIONS
 	

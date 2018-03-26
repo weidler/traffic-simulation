@@ -1,6 +1,7 @@
 package datastructures;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Intersection {
 	
@@ -18,7 +19,7 @@ public class Intersection {
 	private double g;
 	private double h;
 	
-	private int activeLight = 0;
+	private int active_light = 0;
 	
 	
 	// Connections
@@ -211,16 +212,13 @@ public class Intersection {
 	// ACTIONS
 
 	public void setTrafficLightActivity() {
-		System.out.println("size "+ getTrafficLights().size());
-
 		if(getTrafficLights().size() <= 2) {
 			for(TrafficLight t : getTrafficLights()) {
 				t.setStatus("G");
 			}
 		} else {
 			for (int i = 0; i < getTrafficLights().size(); i++) {
-				if(i == activeLight) {
-					System.out.println("is green becuase is supposed to be active");
+				if(i == active_light) {
 					getTrafficLights().get(i).setStatus("G");
 				} else {
 					getTrafficLights().get(i).setStatus("R");
@@ -228,15 +226,14 @@ public class Intersection {
 			}
 		}
 		
-		activeLight++;
-		if(activeLight > getTrafficLights().size()) {
-			activeLight = 0;
+		active_light++;
+		if(active_light > getTrafficLights().size()) {
+			active_light = 0;
 		}
 		
 	}
 
 	public void updateTrafficLights(double delta_t) {
-		System.out.println(this.getTrafficLights());
 		this.time_till_toggle = this.time_till_toggle - delta_t;
 		
 		if(this.time_till_toggle <= 0) {
@@ -247,6 +244,8 @@ public class Intersection {
 	
 	public void initializeTrafficLightSettings() {
 		// TODO make it so that facing roads have same initial status etc.
+		this.active_light = ThreadLocalRandom.current().nextInt(0, this.getTrafficLights().size());
+		this.setTrafficLightActivity();
 	}
 
 	// OTHER
