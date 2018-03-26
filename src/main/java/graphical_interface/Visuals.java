@@ -155,20 +155,46 @@ public class Visuals extends JPanel{
 			}			
 			
 		}
+		
+		
+		
+		/*
+		for (int i = 0; i < streetMap.getIntersections().size(); i++)
+		{
+			int counter = 0;
+
+			for(int j = 0; j < streetMap.getIntersections().get(i).getTrafficLights().size(); j++)
+			{		
+				Road road= streetMap.getIntersections().get(i).getTrafficLights().get(j).getRoad();
+				int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX) +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
+				int midPointY = (int) ((road.getY1()*zoomMultiplier+changeY) +(((road.getY2()*zoomMultiplier+changeY)-(road.getY1()*zoomMultiplier+changeY))/2));
+
+				if (streetMap.getIntersections().get(i).getTrafficLights().get(j).getStatus() == "R")
+					g2.setColor(Color.RED);
+				else
+					g2.setColor(Color.GREEN);
+				
+				if(counter == 0)
+				{
+					g2.draw(new Line2D.Double(midPointX, midPointY, road.getX1()*zoomMultiplier+changeX, road.getY1()*zoomMultiplier+changeY));				
+					counter++;
+				}
+				else
+				{
+					g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
+					counter = 0;
+				}
+			}
+		}
+	
+		*/
 
 		// draws the cars
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
 			simulation.getCars().get(i).calculateOffset(simulation.getCars().get(i).getCurrentOriginIntersection(), simulation.getCars().get(i).getCurrentDestinationIntersection());
-			if(i%2 == 0) {
-				g2.setColor(Color.RED);
+				g2.setColor(simulation.getCars().get(i).getColor());
 				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
-			}
-			else {
-				g2.setColor(Color.BLUE);
-				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX) + simulation.getCars().get(i).getOffsetX(), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
-
-			}
 		}		
 	}
 	

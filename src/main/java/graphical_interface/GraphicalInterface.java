@@ -70,6 +70,8 @@ public class GraphicalInterface extends JFrame {
 	private int endX;
 	private int endY;
 	
+	private int counter = 0;
+	
 	/**
 	 * main panel.
 	 */
@@ -219,7 +221,8 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
-					simulation.addRandomCar();
+					simulation.addRandomCar(counter);
+					counter++;
 					repaint();
 				}				
 			}

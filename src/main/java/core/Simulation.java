@@ -61,7 +61,7 @@ public class Simulation {
 		this.cars.add(car);					
 	}
 	
-	public void addRandomCar() {
+	public void addRandomCar(int counter) {
 		this.street_map.getIntersections();
 		this.street_map.getRoads();
 		
@@ -79,16 +79,16 @@ public class Simulation {
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
 		System.out.println("Path: " + shortest_path);
 		
-		this.addCar(new Car(shortest_path, this.street_map));
+		this.addCar(new Car(shortest_path, this.street_map,counter));
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 	
-	public void generateRandomCars(int n_cars) {
+/*	public void generateRandomCars(int n_cars) {
 		for (int i = 0; i < n_cars; i++) {
-			this.addRandomCar();
+			this.addRandomCar(counter);
 		}
 	}
-	
+*/	
 	// SIMULATION
 	
 	public void start() {
