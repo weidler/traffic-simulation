@@ -316,7 +316,7 @@ public class Car {
 
 			// check if on road in same direction
 			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
-				continue;					
+				continue;
 			}
 			
 			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {

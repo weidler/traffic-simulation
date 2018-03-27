@@ -20,7 +20,7 @@ public class Simulation {
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
-	private double refreshLights = 2.01;
+	
 	
 	private boolean is_running;
 	private double current_time;

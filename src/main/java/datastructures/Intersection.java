@@ -31,7 +31,7 @@ public class Intersection {
 		this.x_coord = x;
 		this.y_coord = y;
 		
-		this.tl_phase_length = 5;
+		this.tl_phase_length = 10;
 		this.time_till_toggle = this.tl_phase_length;
 		
 		this.connections = new ArrayList<Connection>();
@@ -227,7 +227,7 @@ public class Intersection {
 		}
 		
 		active_light++;
-		if(active_light > getTrafficLights().size()) {
+		if(active_light >= getTrafficLights().size()) {
 			active_light = 0;
 		}
 		
