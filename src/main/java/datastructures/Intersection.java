@@ -244,7 +244,9 @@ public class Intersection {
 	
 	public void initializeTrafficLightSettings() {
 		// TODO make it so that facing roads have same initial status etc.
-		this.active_light = ThreadLocalRandom.current().nextInt(0, this.getTrafficLights().size());
+		if (this.getTrafficLights().size() > 2) {
+			this.active_light = ThreadLocalRandom.current().nextInt(0, this.getTrafficLights().size());			
+		}
 		this.setTrafficLightActivity();
 	}
 
