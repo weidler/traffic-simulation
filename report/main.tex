@@ -22,7 +22,8 @@
 \author{Thomas van den Broek, Vincent Van Driel, Zsolt Harsànyi, Tonio Weidler\\
 	Department of Data Science \& Knowledge Engineering\\
 	Maastricht, The Netherlands\\
-	vincevandriel@gmail.com, thomasbuo@gmail.com, zsharsany@gmail.com, uni@tonioweidler.de
+	\tt \small vincevandriel@gmail.com, thomasbuo@gmail.com,\\
+	\tt \small zsharsany@gmail.com, uni@tonioweidler.de
 }
   
 \begin{document}
@@ -34,9 +35,7 @@
 \end{abstract}
 
 \section{Introduction}
-TODO
-
-\subsection{Motivation}
+An intelligent traffic control system is a system that adjusts traffic in order to assure all people reach their destinations in the most optimal time and distance.  These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problem areas.  With advancements in technology and artificial intelligence, it is important to constantly keep these systems updated to assure optimal performance and safety of the general public.
 
 \subsection{Goal}
 
@@ -63,9 +62,7 @@ In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space
 
 In order to simulate a time-continuous model, we need to numerically approximate the integration of the differential equations in \ref{eq:free-road-term} and \ref{eq:int-term}. For that, we choose a small time step $\Delta t$ and repetitively update the velocity as $v(t + \Delta t) = v(t) + \dot{v}(t)$.
 
-\section{Theoretical Background}
-	
-\section{System Architecture}
+\section{Implementation}
 
 \subsection{Graphical User Interface}
 The Graphical User Interface (GUI) is designed for simplicity. The left panel is used to show and create interactive maps. These maps can be interactively created by clicking and dragging on the panel, which creates intersections and the connecting roads. If the right mouse button is clicked the creating of the road will be cancelled. The roads currently have two sides, one for each direction. In the next phase there will be more lanes available. In between the two lanes there is a coloured bar, representing the traffic light. On the right side of the screen there is a button panel.
