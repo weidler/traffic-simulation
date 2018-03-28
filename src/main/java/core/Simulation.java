@@ -117,7 +117,7 @@ public class Simulation {
 					if (car.update(this.cars, delta_t)) {
 						arrived_cars.add(car);
 					};					
-					//System.out.println(car);
+					System.out.println(car);
 				}
 				
 				// remove cars that reached their destination from the list

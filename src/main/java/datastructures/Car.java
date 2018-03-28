@@ -192,13 +192,14 @@ public class Car {
 			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
 		}
 		
-		this.current_velocity += acceleration * delta_t;
 		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
 			this.current_velocity = 0;
+			acceleration = 0;
 		}
 		
-		this.position_on_road += this.current_velocity * delta_t;
-		
+		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
+		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
+				
 		// Check if at destination
 		if (this.position_on_road >= this.current_road.getLength() && this.current_destination_intersection == this.path.get(this.path.size()-1)) {
 			this.reached_destination = true;
@@ -240,15 +241,19 @@ public class Car {
 		for(int i=0; i<list_of_cars.size(); i++){
 
 			//for the case it compares with itself skip to next iteration
-			if(list_of_cars.get(i).equals(this)) {
-				continue;	
-			}
+			if(list_of_cars.get(i).equals(this))
+				continue;
 
-			// in case it compares with a car on a different road or a different direction, skip to next iteration
-			// that is, skip if you do not have the same destination
-			if(!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+			// only compare if driving on the same road
+			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
 				continue;
 			}
+			
+			// only compare if driving to the same intersection...
+			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+				continue;
+			}
+
 
 			if(this.getPositionOnRoad() <= list_of_cars.get(i).getPositionOnRoad()) {
 				return false;
@@ -276,18 +281,19 @@ public class Car {
 			if(list_of_cars.get(i).equals(this))
 				continue;
 
+			// only compare if driving on the same road
 			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
-				continue;					
+				continue;
 			}
 			
+			// only compare if driving to the same intersection...
 			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
 			}
 
-			//in case it compares with a car that is behind it, skip to the next iteration
+			// only compare to cars in front
 			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
 				continue;
-
 
 			if(list_of_cars.get(i).getPositionOnRoad() < currentClosestPosition){
 				currentClosestPosition = list_of_cars.get(i).getPositionOnRoad();
@@ -305,30 +311,31 @@ public class Car {
 
 	public double getLeadingCarDistance(List<Car> list_of_cars){
 
-		double currentClosestPosition = Double.NaN; //initially infinity
+		double current_closest_position = Double.NaN; //initially infinity
 		int index = -1; //keeps track of the index of the closest car in the list
 
-		for(int i=0; i<list_of_cars.size(); i++){
+		for(int i = 0; i < list_of_cars.size(); i++){
 
 			//for the case it compares with itself skip to next iteration
 			if(list_of_cars.get(i).equals(this))
 				continue;
 
-			// check if on road in same direction
+			// only compare if driving on the same road
 			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
 				continue;
 			}
 			
+			// only compare if driving to the same intersection...
 			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
 				continue;
 			}
 
-			//in case it compares with a car that is behind it, skip to the next iteration
+			// only compare to cars in front
 			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
 				continue;
 
-			if(list_of_cars.get(i).getPositionOnRoad() < currentClosestPosition){
-				currentClosestPosition = list_of_cars.get(i).getPositionOnRoad();
+			if(Double.isNaN(current_closest_position) || list_of_cars.get(i).getPositionOnRoad() < current_closest_position){
+				current_closest_position = list_of_cars.get(i).getPositionOnRoad();
 				index = i;
 			}
 		}

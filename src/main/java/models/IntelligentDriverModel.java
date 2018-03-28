@@ -16,15 +16,12 @@ public class IntelligentDriverModel{
 		if (Double.isNaN(dist_leading) || Double.isNaN(leading_velocity)) {
 			return free_term;
 		}
-		
-		// TRAFFIC LIGHT TERM (deccelerate if there is a red trafficlight in front)
-		double light_term = 0;
 
 		// INTERACTION TERM (adjust to the speed of the leading car
-		double s_star =  MIN_SPACING + car.getCurrentVelocity() * MIN_HEADWAY + (car.getCurrentVelocity() * (car.getCurrentVelocity() - leading_velocity))/(2 * Math.sqrt(car.MAX_ACCELERATION * car.DECCELARATION));
-		double interaction_term = (-car.MAX_ACCELERATION) * Math.pow(s_star / dist_leading, 2);
+		double desired_distance =  MIN_SPACING + car.getCurrentVelocity() * MIN_HEADWAY + (car.getCurrentVelocity() * (car.getCurrentVelocity() - leading_velocity))/(2 * Math.sqrt(car.MAX_ACCELERATION * car.DECCELARATION));
+		double interaction_term = (-car.MAX_ACCELERATION) * Math.pow(desired_distance / dist_leading, 2);
 		
-		double acceleration = free_term + interaction_term + light_term;
+		double acceleration = free_term + interaction_term;
 		return acceleration;
 	}
 }
