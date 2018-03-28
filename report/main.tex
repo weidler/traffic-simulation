@@ -21,7 +21,7 @@
 
 \author{Great People \\
 	Department of Data Science \& Knowledge Engineering\\
-	WHATEVER Maastricht, The Netherlands\\
+	Maastricht, The Netherlands\\
 	{\tt mails}
   }
   
@@ -42,28 +42,33 @@ An intelligent traffic control system is a system that adjusts traffic in order 
 \subsection{Goal}
 
 \subsection{Approach}
-In order to test the 
+In order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this work, maps are realised as undirected graphs in which vertices represent intersections and roads appear as edges between those. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Car dynamics are modeled using the \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a cars intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
+
+\begin{equation}
+	v_{free} = a ( 1 - ( \frac{v_a}{v_0} )^\delta),
+\end{equation}
+
+where $a$ refers to a cars maximum acceleration, $v_a$ is its current velocity and $v_0$ the desired velocity. When a car approaches a leading vehicle, it is supposed to slow down in order to avoid collision. This behaviour is modeled by an \textit{interaction term} which incorporates the distance to the leading vehical and its speed \citep{treiber2000congested}. 
+
+\begin{equation}
+	v_{int} = - a ( \frac{s_0 + v_a T}{s_a} + \frac{v_a \Delta v_a}{2 \sqrt{ab} s_a} )^2
+\end{equation}
+
+In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space and time respectively.
 
 \section{Theoretical Backgroud}
-TODO
 	
 \section{System Architecture}
-\lipsum[2-3]
 	
 \section{Methodology}
-\lipsum[2-3]
 
 \section{Results}
-\lipsum[2-3]
 
 \section{Related Work}
-\lipsum[2-3]
 
 \section{Discussion}
-\lipsum[2-3]
 	
 \section{Conclusion}
-\lipsum[2-3]
 
 {\tiny\printbibliography}
 
