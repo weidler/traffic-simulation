@@ -92,6 +92,11 @@ public class Simulation {
 	// SIMULATION
 	
 	public void start() {
+		if (this.is_running) {
+			System.out.println("Already Running.");
+			return;
+		}
+		
 		this.is_running = true;
 		
 		Thread th = new Thread(()-> {
