@@ -21,7 +21,6 @@ public class Simulation {
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
 	
-	
 	private boolean is_running;
 	private double current_time;
 	private int slow_mo_factor = 1;
@@ -33,8 +32,8 @@ public class Simulation {
 		this.is_running = false;
 		this.current_time = 0;
 	}
-	public void setGUI(GraphicalInterface gui)
-	{
+	
+	public void setGUI(GraphicalInterface gui) {
 		this.gui = gui;
 	}
 	
@@ -107,7 +106,7 @@ public class Simulation {
 				is.initializeTrafficLightSettings();
 			}
 					
-			double delta_t = 0.01;
+			double delta_t = 0.001;
 			while (this.is_running) {
 				
 				System.out.println("\n--------T = " + this.current_time + "s---------");
@@ -135,7 +134,7 @@ public class Simulation {
 				try {
 					TimeUnit.MILLISECONDS.sleep(ms_to_wait);				
 				} catch(InterruptedException e) {
-					//System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
+					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 				}
 				
 				gui.redraw();

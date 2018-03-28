@@ -185,6 +185,7 @@ public class Car {
 	public boolean update(List<Car> list_of_cars, double delta_t){
 		double acceleration;
 		if (this.isLeadingCar(list_of_cars)) {
+			System.out.println("IS LEADING");
 			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			double dist_leading = this.getLeadingCarDistance(list_of_cars);

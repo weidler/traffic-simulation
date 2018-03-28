@@ -21,7 +21,6 @@ public class IntelligentDriverModel{
 		double desired_distance =  MIN_SPACING + car.getCurrentVelocity() * MIN_HEADWAY + (car.getCurrentVelocity() * (car.getCurrentVelocity() - leading_velocity))/(2 * Math.sqrt(car.MAX_ACCELERATION * car.DECCELARATION));
 		double interaction_term = (-car.MAX_ACCELERATION) * Math.pow(desired_distance / dist_leading, 2);
 		
-		double acceleration = free_term + interaction_term;
-		return acceleration;
+		return free_term + interaction_term;
 	}
 }

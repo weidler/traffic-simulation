@@ -19,11 +19,11 @@
 \addbibresource{references.bib}
 \AtBeginBibliography{\small}
 
-\author{Great People \\
+\author{Thomas van den Broek, Vincent Van Driel, Zsolt Harsànyi, Tonio Weidler\\
 	Department of Data Science \& Knowledge Engineering\\
 	Maastricht, The Netherlands\\
-	{\tt mails}
-  }
+	vincevandriel@gmail.com, thomasbuo@gmail.com, zsharsany@gmail.com, uni@tonioweidler.de
+}
   
 \begin{document}
 
@@ -41,23 +41,48 @@ TODO
 \subsection{Goal}
 
 \subsection{Approach}
-In order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this work, maps are realised as undirected graphs in which vertices represent intersections and roads appear as edges between those. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Car dynamics are modeled using the \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a cars intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
+In order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this work, maps are realised as undirected graphs in which vertices represent intersections and roads appear as edges between those. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Car dynamics are modelled using the \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a cars intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
 
 \begin{equation}
-	v_{free} = a ( 1 - ( \frac{v_a}{v_0} )^\delta),
+	\label{eq:free-road-term}
+	\dot{v}_a^{free}(t) = a ( 1 - ( \frac{v_a}{v_0} )^\delta),
 \end{equation}
 
-where $a$ refers to a cars maximum acceleration, $v_a$ is its current velocity and $v_0$ the desired velocity. When a car approaches a leading vehicle, it is supposed to slow down in order to avoid collision. This behaviour is modeled by an \textit{interaction term} which incorporates the distance to the leading vehical and its speed \citep{treiber2000congested}. 
+where $a$ refers to a cars maximum acceleration, $v_a$ is its current velocity and $v_0$ the desired velocity. When a car approaches a leading vehicle, it is supposed to slow down in order to avoid collision. This behaviour is modelled by an \textit{interaction term} which incorporates the distance to the leading vehicle and its speed \citep{treiber2000congested}. 
 
 \begin{equation}
-	v_{int} = - a ( \frac{s_0 + v_a T}{s_a} + \frac{v_a \Delta v_a}{2 \sqrt{ab} s_a} )^2
+	\label{eq:int-term}
+	\dot{v}_a^{int}(t) = - a ( \frac{s_0 + v_a T}{s_a} + \frac{v_a \Delta v_a}{2 \sqrt{ab} s_a} )^2
 \end{equation}
 
-In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space and time respectively.
+In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space and time respectively. The interaction term will hence attenuate the free road term when approaching other cars, given by the complete equation for acceleration $\dot{v}(t)$
 
-\section{Theoretical Backgroud}
+\begin{equation}
+	\dot{v}(t) = \dot{v}_a^{int}(t) + \dot{v}_a^{int}(t)
+\end{equation}
+
+In order to simulate a time-continuous model, we need to numerically approximate the integration of the differential equations in \ref{eq:free-road-term} and \ref{eq:int-term}. For that, we choose a small time step $\Delta t$ and repetitively update the velocity as $v(t + \Delta t) = v(t) + \dot{v}(t)$.
+
+\section{Theoretical Background}
 	
 \section{System Architecture}
+
+\subsection{Graphical User Interface}
+The Graphical User Interface (GUI) is designed for simplicity. The left panel is used to show and create interactive maps. These maps can be interactively created by clicking and dragging on the panel, which creates intersections and the connecting roads. If the right mouse button is clicked the creating of the road will be cancelled. The roads currently have two sides, one for each direction. In the next phase there will be more lanes available. In between the two lanes there is a coloured bar, representing the traffic light. On the right side of the screen there is a button panel.
+
+From top to bottom the buttons are:
+\begin{itemize}
+	\setlength\itemsep{0.2em}
+	\item \textit{Clear}: clears the panel and triggers a model reset.
+	\item \textit{Reset Position}: resets the graph to its original location and size should this have been altered.
+	\item \textit{Plus and Minus}: allow the user to zoom in and out; arrow keys allow the user to move the graph.
+	\item \textit{Add car}: randomly places cars on the map.
+	\item \textit{Save and Load}: save and load road maps. 
+	\item \textit{Start and Pause}: start and pause the simulation.
+	\item \textit{Help}: provides explanation about the interface
+\end{itemize}
+
+During the interactive creation of a map, certain checks are run. Every intersection is restricted to not have more than four roads connected. If during two roads would cross each other, than at this crossing a new intersection is created.
 	
 \section{Methodology}
 
