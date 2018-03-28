@@ -7,6 +7,7 @@ package controller.numericalmethods;
  */
 public class Differentiator {
 
+	int q=1;
     Function function;
     double[] xS;
     double[] yS;

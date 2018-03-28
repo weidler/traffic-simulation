@@ -14,7 +14,13 @@ import datastructures.*;
 public class Core {
 	
 	public static void main(String[] args) {
-		GraphicalInterface gui = new GraphicalInterface();
+		
+		StreetMap street_map = new StreetMap();
+		Simulation simulation = new Simulation(street_map);		
+		GraphicalInterface gui = new GraphicalInterface(simulation);
+		simulation.setGUI(gui);
+		
+		
 		gui.setVisible(true);
 	}
 }

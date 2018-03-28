@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import sun.plugin.dom.core.Node;
+
 /**
  * 
  * @author weidler

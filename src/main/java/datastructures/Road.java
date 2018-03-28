@@ -7,18 +7,28 @@ public class Road {
 	private int x2;
 	private int y2;
 	private int length;
+	private Intersection intersectionTo;
+	private Intersection intersectionFrom;
+	
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
 	private boolean two_way;
 	
 	public Road(Intersection intersection_from, Intersection intersection_to) {
 		this.x1 = intersection_from.getXCoord();
 		this.y1 = intersection_from.getYCoord();
+		this.intersectionFrom = intersection_from;
 		this.x2 = intersection_to.getXCoord();
 		this.y2 = intersection_to.getYCoord();
+		this.intersectionTo = intersection_to;
 		
 		this.length = this.calcLength(x1, y1, x2, y2);
-		Node node = new Node(x1,y1);
-		Node node2 = new Node(x2,y2);
-		node.addDestination(node2, length);
 	}
 	
 	public Road(int x1, int y1, int x2, int y2) {
@@ -55,7 +65,7 @@ public class Road {
 	}
 	
 	public String toString() {
-		return "Road: (" + this.x1 + ", " + this.y1 + ") -> (" + this.x2 + ", " + this.y2 + ")";
+		return "Road: (" + this.x1 + ", " + this.y1 + ") <-> (" + this.x2 + ", " + this.y2 + ")";
 	}
 	
 	public boolean equalCoordinatesWith(Road road) {
@@ -72,6 +82,15 @@ public class Road {
 	
 	private int calcLength(int x1, int y1, int x2, int y2) {
 		return (int) Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+	}
+	
+	public Intersection getInterFrom()
+	{
+		return intersectionFrom;
+	}
+	public Intersection getInterTo()
+	{
+		return intersectionTo;
 	}
 
 }
