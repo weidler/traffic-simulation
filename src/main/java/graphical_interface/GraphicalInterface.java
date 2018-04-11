@@ -327,9 +327,13 @@ public class GraphicalInterface extends JFrame {
 					e.printStackTrace();
 				}
 				*/
-				
+				File f = new File("./streetmap"+count+".xml");
 				try 
 				{
+					while(f.exists() && !f.isDirectory()) {
+						count++;
+						f = new File("./streetmap"+count+".xml");
+					}
 					FileOutputStream fos = new FileOutputStream(new File("./streetmap" + count +".xml"));
 					XMLEncoder encoder = new XMLEncoder(fos);
 					encoder.writeObject(streetMap);
