@@ -37,6 +37,8 @@ import javax.swing.KeyStroke;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.gson.Gson;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
 
 /**
  * 
@@ -82,6 +84,8 @@ public class GraphicalInterface extends JFrame {
 	 * JPanel that shows the roads etc.
 	 */
 	private Visuals visuals;
+	private JTextField txtMinNumberOf;
+	private JTextField txtMaxNumberOf;
 	
 	/**
 	 * create interface. including buttons and listeners
@@ -363,27 +367,52 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
+		txtMinNumberOf = new JTextField();
+		txtMinNumberOf.setText("0");
+		txtMinNumberOf.setBounds(61, 559, 96, 20);
+		menuPanel.add(txtMinNumberOf);
+		txtMinNumberOf.setColumns(10);
+		
+		txtMaxNumberOf = new JTextField();
+		txtMaxNumberOf.setBounds(61, 590, 96, 20);
+		txtMaxNumberOf.setText("0");
+		menuPanel.add(txtMaxNumberOf);
+		txtMaxNumberOf.setColumns(10);
+		
 		JButton randomGraphButton = new JButton("random graph");
 		Random rnd = new Random();
 		int maxX = 991;
 		int minX = 10;
 		int maxY = 640;
 		int minY = 11;
-		int maxNumberOfRoads = 10;
-		int minNumberOfRoads = 5;
-		randomGraphButton.setBounds(10, 561, 147, 37);
+		
+		randomGraphButton.setBounds(10, 511, 147, 37);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		
+		JLabel lblMin = new JLabel("Min");
+		lblMin.setBounds(10, 562, 28, 14);
+		menuPanel.add(lblMin);
+		
+		JLabel lblMax = new JLabel("Max");
+		lblMax.setBounds(10, 596, 28, 14);
+		menuPanel.add(lblMax);
+		
+		
 		randomGraphButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
 				clearMap();
+				int maxNumberOfRoads = Integer.parseInt(txtMaxNumberOf.getText());
+				int minNumberOfRoads = Integer.parseInt(txtMinNumberOf.getText());
+				
 				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
 				
-				for(int i = 0; i < numberOfRoads*2; i++)
+				for(int i = 0; i < numberOfRoads; i++)
 				{
-					if(streetMap.getIntersections().size()<2) 
+					if(streetMap.getIntersections().size()==0) 
 					{
 						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
@@ -391,7 +420,7 @@ public class GraphicalInterface extends JFrame {
 						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
 						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
-						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-1)));
+						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2)));
 					}
 					else 
 					{
