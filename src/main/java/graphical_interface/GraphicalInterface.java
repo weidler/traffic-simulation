@@ -49,6 +49,7 @@ import javax.swing.JLabel;
 public class GraphicalInterface extends JFrame {
 
 	private final JFileChooser fc = new JFileChooser();
+	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 	
 	/**
 	 * represent to position of the mouse at all times.
@@ -410,6 +411,7 @@ public class GraphicalInterface extends JFrame {
 				
 				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
 				
+			
 				for(int i = 0; i < numberOfRoads; i++)
 				{
 					if(streetMap.getIntersections().size()==0) 
@@ -418,6 +420,21 @@ public class GraphicalInterface extends JFrame {
 						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
 						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
+						boolean oke = false;
+						while(!oke)
+						{
+							double distance2 = (double)(Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2) + (Math.pow(coordinateY1 - coordinateY2, 2))));
+							if(distance2 > DISTANCE_BETWEEN_INTERSECTIONS)
+							{
+								oke = true;
+							}
+							else
+							{
+								coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
+								coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
+							}
+						}
+												
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
 						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
 						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2)));
@@ -427,6 +444,22 @@ public class GraphicalInterface extends JFrame {
 						Intersection startIntersection = streetMap.getIntersections().get(rnd.nextInt((streetMap.getIntersections().size()-1) - 0 + 1) + 0);
 						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+						
+						boolean oke = false;
+						while(!oke)
+						{
+							double distance2 = (double)(Math.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2) + (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
+							if(distance2 > DISTANCE_BETWEEN_INTERSECTIONS)
+							{
+								oke = true;
+							}
+							else
+							{
+								coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+								coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+							}
+						}
+						
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
 						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection));
 					}	
