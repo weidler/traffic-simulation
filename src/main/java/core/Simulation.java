@@ -26,6 +26,10 @@ public class Simulation {
 	private double current_time;
 	private int slow_mo_factor = 1;
 
+	public boolean getIsRunning()
+	{
+		return is_running;
+	}
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
