@@ -33,7 +33,7 @@ public class StreetMap {
 			result = result.concat(in.toString());
 		}
 		
-		
+		result = result.concat("#,");
 		
 		for(Road r : roads)
 		{

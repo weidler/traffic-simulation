@@ -11,10 +11,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.beans.XMLEncoder;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -328,19 +333,16 @@ public class GraphicalInterface extends JFrame {
 					e.printStackTrace();
 				}
 				*/
-				File f = new File("./streetmap"+count+".xml");
+				BufferedWriter bw = null;
+				FileWriter fw = null;
 				try 
 				{
-					while(f.exists() && !f.isDirectory()) {
-						count++;
-						f = new File("./streetmap"+count+".xml");
-					}
-					FileOutputStream fos = new FileOutputStream(new File("./streetmap" + count +".xml"));
-					XMLEncoder encoder = new XMLEncoder(fos);
-					encoder.writeObject(streetMap);
-					encoder.close();
-					fos.close();
-					System.out.println("file saved");
+					fw = new FileWriter("./streetmap"+count+".txt");
+					bw = new BufferedWriter(fw);
+					bw.write(streetMap.toString());	
+					bw.close();
+					fw.close();
+					System.out.println("saved: "+"./streetmap"+count+".txt");
 				}
 				catch(IOException ex)
 				{
@@ -356,15 +358,52 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				clearMap();
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
-				 Gson gson = new Gson();
 				if(file!=null) {
-					ObjectMapper mapper = new ObjectMapper();
-
+					
 					//JSON from file to Object
 					try {
-						StreetMap map = mapper.readValue(new File(file.getPath()), StreetMap.class);
+						
+						Scanner sc = new Scanner(file);						 
+					    sc.useDelimiter(",");
+					    String next = sc.next();
+					    Boolean change = false;
+					    while(next != null)
+					    {
+					    	
+					    	if(next.equals("#"))
+					    	{
+					    		change = true;
+					    		next = sc.next();
+					    	}
+					    	else if(!change)
+					    	{
+					    		int x = Integer.parseInt(next);
+					    		next = sc.next();
+					    		int y = Integer.parseInt(next);					    		
+					    		streetMap.addIntersection(new Intersection(x, y));
+					    		next = sc.next();
+					    	}	
+					    	else 
+					    	{
+					    		int x1 = Integer.parseInt(next);
+					    		next = sc.next();
+					    		int y1 = Integer.parseInt(next);	
+					    		next = sc.next();
+					    		int x2 = Integer.parseInt(next);
+					    		next = sc.next();
+					    		int y2 = Integer.parseInt(next);	
+					    		Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
+					    		Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
+					    		streetMap.addRoad(start, end);
+					    		next = sc.next();
+					    	}
+					    	System.out.println("loading..."+ next);
+					    }
+					    System.out.println("loaded");
+					    repaint();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
