@@ -335,9 +335,16 @@ public class GraphicalInterface extends JFrame {
 				*/
 				BufferedWriter bw = null;
 				FileWriter fw = null;
+				File f = new File("./streetmap"+count+".txt");
 				try 
 				{
-					fw = new FileWriter("./streetmap"+count+".txt");
+					while(f.exists() && !f.isDirectory()) 
+					{
+						count++;
+						f = new File("./streetmap"+count+".txt");
+					}
+					
+					fw = new FileWriter(f);
 					bw = new BufferedWriter(fw);
 					bw.write(streetMap.toString());	
 					bw.close();
