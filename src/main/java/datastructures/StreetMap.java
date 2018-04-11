@@ -116,10 +116,10 @@ public class StreetMap {
 					+ "Probably, you should create intersections first, THEN add the road.");
 		} else if (this.roadAlreadyOccupied(road)) {
 			System.out.println("There already exists a road between these coordinates/intersections. Skipping addition.");
-		} else if (!int_a.connectionCanBeAdded() || !int_b.connectionCanBeAdded()) {
+		} /*else if (!int_a.connectionCanBeAdded() || !int_b.connectionCanBeAdded()) {
 			// TODO handle empty intersection leftovers
 			System.out.println("One of the intersections you are planning to connect can't have more connections added.");
-		} else {
+		}*/ else {
 			this.roads.add(road);					
 			int_a.addConnection(road, int_b, null);
 			int_b.addConnection(road, int_a, null);			

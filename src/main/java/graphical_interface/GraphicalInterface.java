@@ -174,11 +174,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				simulation.reset();
-				streetMap.clearMap();
-				visuals.resetZoomMultiplier();
-				repaint();
-				
+				clearMap();				
 			}
 		});
 		
@@ -221,7 +217,7 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(simulation.getIsRunning()) 
+				if(!simulation.getIsRunning()) 
 				{
 					if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
 						simulation.addRandomCar(counter);
@@ -299,6 +295,7 @@ public class GraphicalInterface extends JFrame {
 				
 			}
 		});	
+	
 		
 		
 		JButton saveButton = new JButton("save");
@@ -352,7 +349,53 @@ public class GraphicalInterface extends JFrame {
 				}
 			}
 		});
+		
+		JButton randomGraphButton = new JButton("random graph");
+		Random rnd = new Random();
+		int maxX = 991;
+		int minX = 10;
+		int maxY = 640;
+		int minY = 11;
+		int maxNumberOfRoads = 10;
+		int minNumberOfRoads = 5;
+		randomGraphButton.setBounds(10, 561, 147, 37);
+		menuPanel.add(randomGraphButton);
+		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		randomGraphButton.addActionListener(new ActionListener() {
 			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				clearMap();
+				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
+				
+				for(int i = 0; i < numberOfRoads*2; i++)
+				{
+					if(streetMap.getIntersections().size()<2) 
+					{
+						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
+						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
+						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
+						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
+						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-1)));
+					}
+					else 
+					{
+						Intersection startIntersection = streetMap.getIntersections().get(rnd.nextInt((streetMap.getIntersections().size()-1) - 0 + 1) + 0);
+						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
+						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection));
+					}	
+					new CrossRoadDetection(streetMap);
+				}
+				
+				repaint();
+			}
+		});
+		
+		
 		
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
@@ -363,7 +406,13 @@ public class GraphicalInterface extends JFrame {
 	
 	}
 	
-	
+	public void clearMap()
+	{
+		simulation.reset();
+		streetMap.clearMap();
+		visuals.resetZoomMultiplier();
+		repaint();
+	}
 	
 	/**
 	 * 
@@ -625,5 +674,4 @@ public class GraphicalInterface extends JFrame {
 	{
 		repaint();
 	}
-	
 }
