@@ -747,6 +747,7 @@ public class GraphicalInterface extends JFrame {
 
 		@Override
 		public void mouseMoved(java.awt.event.MouseEvent e) {
+			
 			mouseX = e.getX();
 			mouseY = e.getY();
 			if(streetMap.getIntersections().size()>0)
