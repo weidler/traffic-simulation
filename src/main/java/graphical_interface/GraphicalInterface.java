@@ -7,15 +7,13 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.beans.XMLEncoder;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -23,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import core.Simulation;
-import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
@@ -307,6 +304,7 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				count++;
+				/*
 		        Gson gson = new Gson();
 		        String json = gson.toJson(streetMap);
 		        System.out.println(json);
@@ -322,6 +320,21 @@ public class GraphicalInterface extends JFrame {
 				} catch (IOException e) {
 
 					e.printStackTrace();
+				}
+				*/
+				
+				try 
+				{
+					FileOutputStream fos = new FileOutputStream(new File("./streetmap" + count +".xml"));
+					XMLEncoder encoder = new XMLEncoder(fos);
+					encoder.writeObject(streetMap);
+					encoder.close();
+					fos.close();
+					System.out.println("file saved");
+				}
+				catch(IOException ex)
+				{
+					ex.printStackTrace();
 				}
 			} 
 		});
