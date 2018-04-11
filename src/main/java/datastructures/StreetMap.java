@@ -24,6 +24,24 @@ public class StreetMap {
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
+	@Override
+	public String toString()
+	{
+		String result = "";
+		for(Intersection in : intersections)
+		{
+			result = result.concat(in.toString());
+		}
+		
+		
+		
+		for(Road r : roads)
+		{
+			result = result.concat(r.toString());
+		}
+		System.out.println(result);
+		return result;
+	}
 
 	// CONSTRUCTORS
 
