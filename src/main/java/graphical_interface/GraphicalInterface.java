@@ -365,14 +365,14 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				clearMap();
+				
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
 				if(file!=null) {
 					
 					//JSON from file to Object
 					try {
-						
+						clearMap();
 						Scanner sc = new Scanner(file);						 
 					    sc.useDelimiter(",");
 					    String next = sc.next();
