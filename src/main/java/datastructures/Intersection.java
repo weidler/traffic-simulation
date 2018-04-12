@@ -20,7 +20,16 @@ public class Intersection {
 	private double h;
 	
 	private int active_light = 0;
+	private IntersectionTypes type;
 	
+	public IntersectionTypes getType()
+	{
+		return type;
+	}
+	public void setType(IntersectionTypes t)
+	{
+		type = t;
+	}
 	
 	// Connections
 	private ArrayList<Connection> connections;

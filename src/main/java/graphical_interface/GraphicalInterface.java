@@ -187,7 +187,7 @@ public class GraphicalInterface extends JFrame {
 		JButton clearButton = new JButton("clear");
 		clearButton.setLocation(10, 11);
 		clearButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		clearButton.setSize(147, 37);
+		clearButton.setSize(147, 20);
 		menuPanel.add(clearButton);
 		clearButton.addActionListener(new ActionListener() {
 			
@@ -199,7 +199,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 378, 60, 37);
+		startButton.setBounds(10, 466, 60, 20);
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
@@ -214,7 +214,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		helpButton.setBounds(10, 426, 147, 37);
+		helpButton.setBounds(10, 497, 147, 20);
 		menuPanel.add(helpButton);
 		helpButton.addActionListener(new ActionListener() {
 			
@@ -231,7 +231,7 @@ public class GraphicalInterface extends JFrame {
 		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 282, 147, 37);
+		addCar.setBounds(10, 131, 147, 20);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 			
@@ -254,7 +254,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JSlider slider = new JSlider();
-		slider.setBounds(10, 203, 147, 19);
+		slider.setBounds(10, 101, 147, 19);
 		slider.setValue(50);
 		slider.setEnabled(false);
 		menuPanel.add(slider);
@@ -262,7 +262,7 @@ public class GraphicalInterface extends JFrame {
 		
 		
 		JButton stopButton = new JButton("stop");
-		stopButton.setBounds(97, 378, 60, 37);
+		stopButton.setBounds(97, 466, 60, 20);
 		menuPanel.add(stopButton);
 		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		stopButton.addActionListener(new ActionListener() {
@@ -275,7 +275,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton zoomInButton = new JButton("+");
-		zoomInButton.setBounds(97, 155, 60, 37);
+		zoomInButton.setBounds(97, 70, 60, 20);
 		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
@@ -290,7 +290,7 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		JButton zoomOutButton = new JButton("-");
-		zoomOutButton.setBounds(10, 155, 60, 37);
+		zoomOutButton.setBounds(10, 70, 60, 20);
 		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
@@ -306,7 +306,7 @@ public class GraphicalInterface extends JFrame {
 		
 		
 		JButton resetPositionButton = new JButton("reset position");
-		resetPositionButton.setBounds(10, 107, 147, 37);
+		resetPositionButton.setBounds(10, 39, 147, 20);
 		resetPositionButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(resetPositionButton);
 		resetPositionButton.addActionListener(new ActionListener() {
@@ -324,7 +324,7 @@ public class GraphicalInterface extends JFrame {
 		
 		
 		JButton saveButton = new JButton("save");
-		saveButton.setBounds(10, 330, 60, 37);
+		saveButton.setBounds(10, 435, 60, 20);
 		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
@@ -376,7 +376,7 @@ public class GraphicalInterface extends JFrame {
 			} 
 		});
 		JButton loadButton = new JButton("load");
-		loadButton.setBounds(97, 330, 60, 37);
+		loadButton.setBounds(97, 435, 60, 20);
 		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(loadButton);
 		loadButton.addActionListener(new ActionListener() {
@@ -464,7 +464,7 @@ public class GraphicalInterface extends JFrame {
 		int maxY = drawPanel.getY() + drawPanel.getBounds().height-10;
 		int minY = drawPanel.getY();
 		
-		randomGraphButton.setBounds(10, 511, 147, 37);
+		randomGraphButton.setBounds(10, 528, 147, 20);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		randomGraphButton.addActionListener(new ActionListener() {

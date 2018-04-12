@@ -9,6 +9,16 @@ public class Road {
 	private int length;
 	private Intersection intersectionTo;
 	private Intersection intersectionFrom;
+	private RoadTypes type;
+	
+	public RoadTypes getType()
+	{
+		return type;
+	}
+	public void setType(RoadTypes t)
+	{
+		type = t;
+	}
 	
 	public int getLength() {
 		return length;

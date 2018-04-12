@@ -15,6 +15,7 @@ import javax.swing.ToolTipManager;
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.Road;
+import datastructures.RoadTypes;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 
@@ -70,6 +71,7 @@ public class Visuals extends JPanel{
 		roads = streetMap.getRoads();
 	}
 	
+	
 	@Override
 	public void paintComponent (Graphics g)
 	{
@@ -93,10 +95,23 @@ public class Visuals extends JPanel{
 			g2.setStroke(new BasicStroke());
 		}
 		// draws the roads
+		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
 			
-			g2.setColor(Color.black);
+			if(roads.get(i).getType() == RoadTypes.ROAD)
+			{
+				g2.setColor(Color.black);
+			}
+			else if(roads.get(i).getType() == RoadTypes.DIRT_ROAD)
+			{
+				g2.setColor(Color.ORANGE);
+			}
+			else if(roads.get(i).getType() == RoadTypes.HIGHWAY)
+			{
+				g2.setColor(Color.BLUE);
+			}
+			
 			if(roads.get(i).getX1() > roads.get(i).getX2()) 
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2()) 
