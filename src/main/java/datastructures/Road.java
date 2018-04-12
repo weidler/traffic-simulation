@@ -9,7 +9,7 @@ public class Road {
 	private int length;
 	private Intersection intersectionTo;
 	private Intersection intersectionFrom;
-	private RoadTypes type;
+	private RoadTypes type = RoadTypes.ROAD;
 	
 	public RoadTypes getType()
 	{

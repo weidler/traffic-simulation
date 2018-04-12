@@ -30,6 +30,7 @@ import core.Simulation;
 import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
+import datastructures.RoadTypes;
 import datastructures.StreetMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -90,6 +91,7 @@ public class GraphicalInterface extends JFrame {
 	private StreetMap streetMap;
 	private Simulation simulation;
 	
+	private String roadTypeToAdd = RoadTypes.ROAD + "";
 	/**
 	 * JPanel that shows the roads etc.
 	 */
@@ -183,6 +185,56 @@ public class GraphicalInterface extends JFrame {
 		contentPane.add(menuPanel);
 		menuPanel.setLayout(null);
 		
+		
+		
+				
+		JLabel roadTypeLabel = new JLabel(RoadTypes.ROAD + "");
+		roadTypeLabel.setBounds(10, 192, 147, 19);
+		menuPanel.add(roadTypeLabel);
+		roadTypeLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+		
+		JButton roadTypeButton = new JButton("Road Type");
+		roadTypeButton.setBounds(10, 162, 147, 19);
+		menuPanel.add(roadTypeButton);
+		roadTypeButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		roadTypeButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int typeCounter =0;
+				for(int i = 0; i<RoadTypes.values().length;i++)
+				{
+					if((RoadTypes.values()[i]+"").equals(roadTypeLabel.getText()))
+					{
+						if(i == RoadTypes.values().length-1)
+						{
+							typeCounter = 0;
+						}
+						else 
+						{
+							typeCounter = i+1;
+						}
+						
+					}
+				}
+				roadTypeLabel.setText(RoadTypes.values()[typeCounter]+"");
+				roadTypeToAdd = RoadTypes.values()[typeCounter]+"";
+				if(roadTypeLabel.getText().equals(RoadTypes.ROAD+""))
+				{
+					roadTypeLabel.setForeground (Color.black);
+				}
+				else if(roadTypeLabel.getText().equals(RoadTypes.DIRT_ROAD+""))
+				{
+					roadTypeLabel.setForeground (Color.ORANGE);
+				}
+				else if(roadTypeLabel.getText().equals(RoadTypes.HIGHWAY+""))
+				{
+					roadTypeLabel.setForeground (Color.BLUE);
+				}
+				
+			}
+		});
 		
 		JButton clearButton = new JButton("clear");
 		clearButton.setLocation(10, 11);
@@ -726,7 +778,18 @@ public class GraphicalInterface extends JFrame {
 				
 				Intersection in = new Intersection(endX, endY);
 				streetMap.addIntersection(in);
-				streetMap.addRoad(new Road(startX,startY,endX,endY));
+				int typeCounter =0;
+				for(int i = 0; i<RoadTypes.values().length;i++)
+				{
+					if((RoadTypes.values()[i]+"").equals(roadTypeToAdd))
+					{
+						typeCounter = i;
+						
+					}
+				}
+				Road r = new Road(startX,startY,endX,endY);
+				r.setType(RoadTypes.values()[typeCounter]);
+				streetMap.addRoad(r);
 				new CrossRoadDetection(streetMap);
 				clickCounter = 0;
 				
