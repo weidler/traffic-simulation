@@ -78,7 +78,7 @@ public class Visuals extends JPanel{
 		g2.setColor(Color.red);
 		if(drawRed!=null)
 		{
-			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"heyyyyyyyyyyyytyyyyyyyyyyyyyyyyyyy";
+			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
 			g2.fillOval((int)((drawRed.getXCoord()-8)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-8)*zoomMultiplier + changeY), (int)(15*zoomMultiplier), (int)(15*zoomMultiplier ));
 			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
 		}

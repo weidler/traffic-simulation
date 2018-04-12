@@ -2,6 +2,7 @@ package datastructures;
 
 import java.awt.Color;
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -366,6 +367,9 @@ public class Car {
 	}
 
 	public String toString() {
-		return "Car: (x=" + this.positionX + ", y=" + this.positionY + ", v=" + this.current_velocity + ")";
+		
+		DecimalFormat df = new DecimalFormat(".##");
+		
+		return "Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
 	}
 }

@@ -24,8 +24,10 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import core.Simulation;
+import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.Road;
 import datastructures.StreetMap;
@@ -44,6 +46,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.google.gson.Gson;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 /**
  * 
@@ -92,6 +95,7 @@ public class GraphicalInterface extends JFrame {
 	private Visuals visuals;
 	private JTextField txtMinNumberOf;
 	private JTextField txtMaxNumberOf;
+	private Car lastHovered;
 	
 	/**
 	 * create interface. including buttons and listeners
@@ -100,6 +104,18 @@ public class GraphicalInterface extends JFrame {
 		this.simulation = simulation;
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(772, 11, 229, 190);
+		contentPane.add(scrollPane);
+		
+		JTextArea carsTextArea = new JTextArea();
+		scrollPane.setViewportView(carsTextArea);
+		carsTextArea.setText("cars");
+		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
+		carsTextArea.setText("");		
+		simulation.setTextArea(carsTextArea);
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
@@ -181,7 +197,8 @@ public class GraphicalInterface extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				clearMap();				
+				clearMap();	
+				simulation.stop();
 			}
 		});
 		
@@ -229,6 +246,11 @@ public class GraphicalInterface extends JFrame {
 					if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
 						simulation.addRandomCar(counter);
 						counter++;
+						carsTextArea.setText("");
+						for(Car car : simulation.getCars())
+						{
+							carsTextArea.append(car.toString()+"\n");
+						}
 						repaint();
 					}	
 				}							
@@ -748,6 +770,7 @@ public class GraphicalInterface extends JFrame {
 		@Override
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 			
+			
 			mouseX = e.getX();
 			mouseY = e.getY();
 			if(streetMap.getIntersections().size()>0)
@@ -783,6 +806,50 @@ public class GraphicalInterface extends JFrame {
 				{
 					visuals.setDrawRed(null);
 					
+				}
+				
+			}
+			
+			if(simulation.getCars().size()>0)
+			{
+				int nearestX = -1;
+				int nearestY = -1;
+				double distance = -1;
+				for(Car car : simulation.getCars())
+				{
+					
+					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - car.getPositionX(), 2) + (Math.pow(mouseY - car.getPositionY(), 2))));
+					// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+					if (distance == -1) {
+						distance = distance2;							
+						nearestX = (int)car.getPositionX();						
+						nearestY = (int)car.getPositionY();							
+					}
+					else if(distance2 < distance)
+					{
+						// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+						distance = distance2;
+						nearestX = (int)car.getPositionX();						
+						nearestY = (int)car.getPositionY();								
+					}	
+					
+				}
+				if(distance <= 20) 
+				{
+					Car nearestCar = null;
+					for(Car car: simulation.getCars())
+					{
+						if((int)car.getPositionX() == nearestX && (int)car.getPositionY() == nearestY)
+						{
+							nearestCar = car;
+							break;
+						}
+					}
+					simulation.setLastHoveredCar(nearestCar);
+				}
+				else
+				{
+								
 				}
 				
 			}

@@ -7,6 +7,9 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+
 import algorithms.AStar;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
@@ -20,7 +23,8 @@ public class Simulation {
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
-	
+	private JTextArea carsTextPane;
+	private Car lastHoveredCar;
 	
 	private boolean is_running;
 	private double current_time;
@@ -134,6 +138,21 @@ public class Simulation {
 					this.cars.remove(c);
 				}
 				
+				//lists the cars
+				carsTextPane.setText("");
+				for(Car car : getCars())
+				{
+					if(lastHoveredCar == car)
+					{
+						carsTextPane.setText(carsTextPane.getText()+ "current: " + car.toString() +"\n");
+					}
+					else
+					{
+						carsTextPane.setText(carsTextPane.getText()+ car.toString() +"\n");
+					}
+					
+				}
+				
 				// Wait for time step to be over
 				int ms_to_wait = (int) (delta_t * 1000 * this.slow_mo_factor);
 				try {
@@ -150,6 +169,14 @@ public class Simulation {
 		th.start();
 	}
 
+	public void setTextArea(JTextArea p)
+	{
+		carsTextPane = p;
+	}
+	public void setLastHoveredCar(Car c)
+	{
+		lastHoveredCar = c;
+	}
 	public void stop() {
 		this.is_running = false;
 		System.out.println("stop");
