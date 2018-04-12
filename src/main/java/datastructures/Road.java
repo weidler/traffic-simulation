@@ -10,7 +10,23 @@ public class Road {
 	private Intersection intersectionTo;
 	private Intersection intersectionFrom;
 	private RoadTypes type = RoadTypes.ROAD;
+	private int lanes = 1;
 	
+	public void setLanes(int l)
+	{
+		if(l >= 1)
+		{
+			lanes = l;
+		}
+		else 
+		{
+			System.out.println("number of lanes is not allowed");
+		}		
+	}
+	public int getLanes()
+	{
+		return lanes;
+	}
 	public RoadTypes getType()
 	{
 		return type;
