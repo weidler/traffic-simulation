@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.JRadioButton;
 
 /**
  * 
@@ -105,17 +106,12 @@ public class GraphicalInterface extends JFrame {
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(772, 11, 229, 190);
-		contentPane.add(scrollPane);
-		
 		JTextArea carsTextArea = new JTextArea();
-		scrollPane.setViewportView(carsTextArea);
-		carsTextArea.setText("cars");
+		carsTextArea.setText("");
+		carsTextArea.setBounds(782, 11, 219, 640);
 		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
-		carsTextArea.setText("");		
+		contentPane.add(carsTextArea);
 		simulation.setTextArea(carsTextArea);
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
@@ -129,7 +125,7 @@ public class GraphicalInterface extends JFrame {
 		this.requestFocusInWindow();
 		
 		JPanel drawPanel = visuals;
-		drawPanel.setBounds(10, 11, 991, 640);
+		drawPanel.setBounds(10, 11, 762, 640);
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 		
@@ -453,17 +449,6 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.add(txtMaxNumberOf);
 		txtMaxNumberOf.setColumns(10);
 		
-		JButton randomGraphButton = new JButton("random graph");
-		Random rnd = new Random();
-		int maxX = 991;
-		int minX = 10;
-		int maxY = 640;
-		int minY = 11;
-		
-		randomGraphButton.setBounds(10, 511, 147, 37);
-		menuPanel.add(randomGraphButton);
-		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		
 		JLabel lblMin = new JLabel("Min");
 		lblMin.setBounds(10, 562, 28, 14);
 		menuPanel.add(lblMin);
@@ -472,7 +457,16 @@ public class GraphicalInterface extends JFrame {
 		lblMax.setBounds(10, 596, 28, 14);
 		menuPanel.add(lblMax);
 		
+		JButton randomGraphButton = new JButton("random graph");
+		Random rnd = new Random();
+		int maxX = drawPanel.getX() + drawPanel.getBounds().width-10;
+		int minX = drawPanel.getX();
+		int maxY = drawPanel.getY() + drawPanel.getBounds().height-10;
+		int minY = drawPanel.getY();
 		
+		randomGraphButton.setBounds(10, 511, 147, 37);
+		menuPanel.add(randomGraphButton);
+		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		randomGraphButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -550,6 +544,8 @@ public class GraphicalInterface extends JFrame {
 		drawPanel.addMouseListener(handler);
 		drawPanel.addMouseMotionListener(handler);
 		drawPanel.setFocusable(true);
+		
+		
 		drawPanel.requestFocusInWindow();		
 	
 	}

@@ -27,6 +27,7 @@ public class StreetMap {
 	@Override
 	public String toString()
 	{
+		
 		String result = "";
 		for(Intersection in : intersections)
 		{
