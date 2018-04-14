@@ -99,6 +99,7 @@ public class GraphicalInterface extends JFrame {
 	private JTextField txtMinNumberOf;
 	private JTextField txtMaxNumberOf;
 	private Car lastHovered;
+	private JTextField lanesTextField;
 	
 	/**
 	 * create interface. including buttons and listeners
@@ -519,7 +520,7 @@ public class GraphicalInterface extends JFrame {
 		randomGraphButton.setBounds(10, 528, 147, 20);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		randomGraphButton.addActionListener(new ActionListener() {
+randomGraphButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -588,6 +589,18 @@ public class GraphicalInterface extends JFrame {
 				repaint();
 			}
 		});
+		
+		
+		lanesTextField = new JTextField();
+		lanesTextField.setText("1");
+		lanesTextField.setBounds(61, 222, 96, 20);
+		menuPanel.add(lanesTextField);
+		lanesTextField.setColumns(10);
+		
+		JLabel lanesLabel = new JLabel("lanes:");
+		lanesLabel.setBounds(10, 225, 49, 14);
+		menuPanel.add(lanesLabel);
+		
 		
 		
 		
@@ -789,6 +802,8 @@ public class GraphicalInterface extends JFrame {
 				}
 				Road r = new Road(startX,startY,endX,endY);
 				r.setType(RoadTypes.values()[typeCounter]);
+				int l = Integer.parseInt(lanesTextField.getText());
+				r.setLanes(l);
 				streetMap.addRoad(r);
 				new CrossRoadDetection(streetMap);
 				clickCounter = 0;

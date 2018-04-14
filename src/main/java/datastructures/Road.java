@@ -14,7 +14,7 @@ public class Road {
 	
 	public void setLanes(int l)
 	{
-		if(l >= 1)
+		if(l >= 1 && l < 4)
 		{
 			lanes = l;
 		}

@@ -116,34 +116,46 @@ public class Visuals extends JPanel{
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2()) 
 				{	
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+					}
 				}
 				else
 				{
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+ changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+					}
 				}
 			}
 			else
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2())
 				{	
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+ changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+					}
 				}
 				else
 				{
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));					
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+					}
 				}
 			}
 			//draws the intersections
