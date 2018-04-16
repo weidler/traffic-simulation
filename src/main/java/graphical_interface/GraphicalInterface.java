@@ -81,8 +81,6 @@ public class GraphicalInterface extends JFrame {
 	private int endX;
 	private int endY;
 	
-	private int counter = 0;
-	
 	/**
 	 * main panel.
 	 */
@@ -293,8 +291,7 @@ public class GraphicalInterface extends JFrame {
 				if(!simulation.getIsRunning()) 
 				{
 					if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
-						simulation.addRandomCar(counter);
-						counter++;
+						simulation.addRandomCar();
 						carsTextArea.setText("");
 						for(Car car : simulation.getCars())
 						{
@@ -406,13 +403,13 @@ public class GraphicalInterface extends JFrame {
 				*/
 				BufferedWriter bw = null;
 				FileWriter fw = null;
-				File f = new File("./streetmap"+count+".txt");
+				File f = new File("./savefiles/streetmap"+count+".txt");
 				try 
 				{
 					while(f.exists() && !f.isDirectory()) 
 					{
 						count++;
-						f = new File("./streetmap"+count+".txt");
+						f = new File("./savefiles/streetmap"+count+".txt");
 					}
 					
 					fw = new FileWriter(f);
@@ -420,7 +417,7 @@ public class GraphicalInterface extends JFrame {
 					bw.write(streetMap.toString());	
 					bw.close();
 					fw.close();
-					System.out.println("saved: "+"./streetmap"+count+".txt");
+					System.out.println("saved: "+"./savefiles/streetmap"+count+".txt");
 				}
 				catch(IOException ex)
 				{
@@ -437,6 +434,7 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+				fc.setCurrentDirectory(new File ("./savefiles/"));
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
 				if(file!=null) {

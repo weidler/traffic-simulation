@@ -19,8 +19,6 @@ public class Core {
 		Simulation simulation = new Simulation(street_map);		
 		GraphicalInterface gui = new GraphicalInterface(simulation);
 		simulation.setGUI(gui);
-		
-		
 		gui.setVisible(true);
 	}
 }
