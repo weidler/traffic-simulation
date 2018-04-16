@@ -31,11 +31,6 @@ public class Simulation {
 	private double current_time;
 	private int slow_mo_factor = 1;
 
-	public boolean getIsRunning()
-	{
-		return is_running;
-	}
-
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
@@ -44,11 +39,16 @@ public class Simulation {
 		this.current_time = 0;
 	}
 	
+	// GETTERS / SETTERS
+	
 	public void setGUI(GraphicalInterface gui) {
 		this.gui = gui;
 	}
 	
-	// GETTERS / SETTERS
+	public boolean getIsRunning()
+	{
+		return is_running;
+	}
 	
 	public ArrayList<Car> getCars() {
 		return this.cars;
@@ -71,7 +71,7 @@ public class Simulation {
 		this.cars.add(car);					
 	}
 	
-	public void addRandomCar(int counter) {
+	public void addRandomCar() {
 		this.street_map.getIntersections();
 		this.street_map.getRoads();
 		
@@ -81,15 +81,17 @@ public class Simulation {
 		do {
 			destination = r.nextInt(this.street_map.getIntersections().size());
 		} while (destination == origin);
+
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
 		System.out.println(origin_intersection);
 		System.out.println(destination_intersection);
 				
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
-		System.out.println("Path: " + shortest_path);
-		
-		this.addCar(new Car(shortest_path, this.street_map,counter));
+		Car random_car = new Car(shortest_path, this.street_map);
+		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
+
+		this.addCar(random_car);
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 	

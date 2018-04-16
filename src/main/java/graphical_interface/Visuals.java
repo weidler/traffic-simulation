@@ -184,9 +184,7 @@ public class Visuals extends JPanel{
 				g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			}			
 			
-		}
-		
-		
+		}		
 		
 		/*
 		for (int i = 0; i < streetMap.getIntersections().size(); i++)
@@ -236,7 +234,7 @@ public class Visuals extends JPanel{
 		}
 		String[] list = text.split("\n");
 		int max = 0;
-		for(String s : list)
+		for(String s : list) 
 		{
 			if(s.length()>max)
 			{

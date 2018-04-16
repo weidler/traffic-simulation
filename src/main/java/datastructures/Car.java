@@ -41,8 +41,7 @@ public class Car {
 	// A THING NEEDED
 	private int offsetX;
 	private int offsetY;
-	
-	private int counter;
+
 	private Color color;
 	
 	/**
@@ -51,14 +50,10 @@ public class Car {
 	 * @param endPoint
 	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
 	 */
-	public Car(ArrayList<Intersection> path, StreetMap streetMap, int counter) {
+	public Car(ArrayList<Intersection> path, StreetMap streetMap) {
 		this.path = path;
-		this.counter = counter;
 
-		if(counter % 2 == 0)
-			color = Color.RED;
-		else
-			color = Color.BLUE;
+		color = Color.blue;
 		
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
@@ -75,6 +70,17 @@ public class Car {
 		this.reached_destination = false;
 	}
 	
+	public double getPositionOnRoad() {
+		return position_on_road;
+	}
+
+	public void setPositionOnRoad(double position_on_road) {
+		this.position_on_road = position_on_road;
+		double[] new_coordinates = this.getCoordinatesFromPosition(position_on_road);
+		this.setPositionX(new_coordinates[0]);
+		this.setPositionY(new_coordinates[1]);
+	}
+
 	public ArrayList<Intersection> getPath() {
 		return path;
 	}
@@ -183,10 +189,12 @@ public class Car {
 		}
 	}
 
-	public boolean update(List<Car> list_of_cars, double delta_t){
+	public boolean update(ArrayList<Car> list_of_cars, double delta_t){
 		double acceleration;
-		if (this.isLeadingCar(list_of_cars)) {
-			System.out.println("IS LEADING");
+		
+		// Check if leading car, else incorporate leaders speed etc.
+		if (!this.hasLeadingCar(list_of_cars)) {
+			this.color = Color.red;
 			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			double dist_leading = this.getLeadingCarDistance(list_of_cars);
@@ -194,11 +202,13 @@ public class Car {
 			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
 		}
 		
+		// React to traffic lights
 		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
 		
+		// Update speed and position
 		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
 				
@@ -238,119 +248,80 @@ public class Car {
 	 * @param car
 	 * @return true if there is no car on the same road that has bigger x coordinate than the car passed to the method
 	 */
-	public boolean isLeadingCar(List<Car> list_of_cars){
-
-		for(int i=0; i<list_of_cars.size(); i++){
-
-			//for the case it compares with itself skip to next iteration
-			if(list_of_cars.get(i).equals(this))
-				continue;
-
-			// only compare if driving on the same road
-			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
-				continue;
-			}
-			
-			// only compare if driving to the same intersection...
-			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
-				continue;
-			}
-
-
-			if(this.getPositionOnRoad() <= list_of_cars.get(i).getPositionOnRoad()) {
-				return false;
-			}
-		}
-
-		//no car in the list was found to be on the same road with bigger x coordinate than this car
+	public boolean hasLeadingCar(ArrayList<Car> list_of_cars){
+		if (this.getLeadingCar(list_of_cars) == null) return false;
 		return true;
 	}
 
+	public Car getLeadingCar(ArrayList<Car> list_of_cars) {
+		Car current_leading_car = null;
+		for(Car c : list_of_cars){
+
+			//for the case it compares with itself skip to next iteration
+			if(this.equals(c)) continue;
+
+			// only compare if driving on cars path
+			if (c.isOnPath(this.path, 3)) {
+				// only compare if driving in the same direction...
+				if ((c.getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+					// only compare to cars in front
+					if(this.getPositionOnRoad() <= c.getPositionOnRoad())
+						// If car is closer than previous then update
+						if (current_leading_car == null) {
+							current_leading_car = c;
+						} else if(c.getPositionOnRoad() < current_leading_car.getPositionOnRoad()){
+							current_leading_car = c;
+						}
+				}
+			}
+		}
+		
+		return current_leading_car;
+	}
+	
 	/**
 	 *
 	 * @param list_of_cars
 	 * @param car the car for which we want to find the velocity of the car directly in front of it
 	 * @return the leading cars velocity
 	 */
-	public double getLeadingCarVelocity(List<Car> list_of_cars){
-
-		double currentClosestPosition = Double.MAX_VALUE; //initially infinity
-		int index = -1; //keeps track of the index of the closest car in the list
-
-		for(int i=0; i<list_of_cars.size(); i++){
-
-			//for the case it compares with itself skip to next iteration
-			if(list_of_cars.get(i).equals(this))
-				continue;
-
-			// only compare if driving on the same road
-			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
-				continue;
-			}
-			
-			// only compare if driving to the same intersection...
-			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
-				continue;
-			}
-
-			// only compare to cars in front
-			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
-				continue;
-
-			if(list_of_cars.get(i).getPositionOnRoad() < currentClosestPosition){
-				currentClosestPosition = list_of_cars.get(i).getPositionOnRoad();
-				index = i;
-			}
-		}
-
-		if (index > 0) {
-			return list_of_cars.get(index).getCurrentVelocity();			
+	public double getLeadingCarVelocity(ArrayList<Car> list_of_cars){
+		Car leading_car = this.getLeadingCar(list_of_cars);
+		if (leading_car != null) {
+			return leading_car.getCurrentVelocity();			
 		} else {
 			return Double.NaN;
 		}
 
 	}
 
-	public double getLeadingCarDistance(List<Car> list_of_cars){
-
-		double current_closest_position = Double.NaN; //initially infinity
-		int index = -1; //keeps track of the index of the closest car in the list
-
-		for(int i = 0; i < list_of_cars.size(); i++){
-
-			//for the case it compares with itself skip to next iteration
-			if(list_of_cars.get(i).equals(this))
-				continue;
-
-			// only compare if driving on the same road
-			if (!(list_of_cars.get(i).getCurrentRoad().equals(this.getCurrentRoad()))) {
-				continue;
-			}
-			
-			// only compare if driving to the same intersection...
-			if (!(list_of_cars.get(i).getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
-				continue;
-			}
-
-			// only compare to cars in front
-			if(list_of_cars.get(i).getPositionOnRoad() <= this.getPositionOnRoad())
-				continue;
-
-			if(Double.isNaN(current_closest_position) || list_of_cars.get(i).getPositionOnRoad() < current_closest_position){
-				current_closest_position = list_of_cars.get(i).getPositionOnRoad();
-				index = i;
-			}
-		}
-
-		if (index > 0) {
-			return Math.abs(this.getPositionOnRoad() - list_of_cars.get(index).getPositionOnRoad());			
+	public double getLeadingCarDistance(ArrayList<Car> list_of_cars){
+		Car leading_car = this.getLeadingCar(list_of_cars);
+		if (leading_car != null) {
+			return Math.abs(this.getPositionOnRoad() - leading_car.getPositionOnRoad());		
 		} else {
 			return Double.NaN;
 		}
 	}
 
-	private double getPositionOnRoad() {
-		return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) + Math.pow(this.positionY - this.current_road.getY1(), 2));
+//	public double getPositionOnRoad() {
+//		return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) + Math.pow(this.positionY - this.current_road.getY1(), 2));
+//	}
+	
+	// CHECKS
+	
+	public boolean isOnPath(ArrayList<Intersection> path, int look_ahead) {
+		Intersection last_intersection = null;
+		int looked_at = 0;
+		for (Intersection inter : path) {
+			if (last_intersection != null) {
+				if (this.current_road.equals(last_intersection.getRoadTo(inter))) return true;
+			}
+			
+			if (looked_at + 1 >= look_ahead) break;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -368,9 +339,7 @@ public class Car {
 	}
 
 	public String toString() {
-		
 		DecimalFormat df = new DecimalFormat(".##");
-		
 		return "Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
 	}
 }
