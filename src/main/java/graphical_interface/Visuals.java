@@ -4,15 +4,18 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.Road;
+import datastructures.RoadTypes;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 
@@ -68,6 +71,7 @@ public class Visuals extends JPanel{
 		roads = streetMap.getRoads();
 	}
 	
+	
 	@Override
 	public void paintComponent (Graphics g)
 	{
@@ -76,8 +80,9 @@ public class Visuals extends JPanel{
 		g2.setColor(Color.red);
 		if(drawRed!=null)
 		{
+			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
 			g2.fillOval((int)((drawRed.getXCoord()-8)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-8)*zoomMultiplier + changeY), (int)(15*zoomMultiplier), (int)(15*zoomMultiplier ));
-
+			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
 		}
 		g2.setColor(Color.cyan);
 		
@@ -90,42 +95,67 @@ public class Visuals extends JPanel{
 			g2.setStroke(new BasicStroke());
 		}
 		// draws the roads
+		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
 			
-			g2.setColor(Color.black);
+			if(roads.get(i).getType() == RoadTypes.ROAD)
+			{
+				g2.setColor(Color.black);
+			}
+			else if(roads.get(i).getType() == RoadTypes.DIRT_ROAD)
+			{
+				g2.setColor(Color.ORANGE);
+			}
+			else if(roads.get(i).getType() == RoadTypes.HIGHWAY)
+			{
+				g2.setColor(Color.BLUE);
+			}
+			
 			if(roads.get(i).getX1() > roads.get(i).getX2()) 
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2()) 
 				{	
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+					}
 				}
 				else
 				{
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+ changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+					}
 				}
 			}
 			else
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2())
 				{	
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+ changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+ changeY));
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+					}
 				}
 				else
 				{
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+2)*zoomMultiplier+changeY));
-					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-2)*zoomMultiplier+changeY));					
+					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					{
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+						g2.draw(new Line2D.Double(
+								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+					}
 				}
 			}
 			//draws the intersections
@@ -192,10 +222,40 @@ public class Visuals extends JPanel{
 		// draws the cars
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
-			simulation.getCars().get(i).calculateOffset(simulation.getCars().get(i).getCurrentOriginIntersection(), simulation.getCars().get(i).getCurrentDestinationIntersection());
+				simulation.getCars().get(i).calculateOffset(simulation.getCars().get(i).getCurrentOriginIntersection(), simulation.getCars().get(i).getCurrentDestinationIntersection());
 				g2.setColor(simulation.getCars().get(i).getColor());
 				g2.fillOval((int)((simulation.getCars().get(i).getPositionX()-3)*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY()-3)*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
 		}		
+	}
+	
+	public void drawToolTip(Graphics2D graphics, String text, int x,int y) {
+		int i = 0;
+		if(i==0)
+		{
+			i=1;
+		}
+		String[] list = text.split("\n");
+		int max = 0;
+		for(String s : list)
+		{
+			if(s.length()>max)
+			{
+				max = s.length();
+			}
+		}
+		i = list.length;
+		int lastX = x+10;
+		int lastY = y-10;
+	    Rectangle r = new Rectangle();
+	    r.setBounds(x+8, y-22, max*6, i*13);
+	    graphics.draw(r);
+	    graphics.setColor(Color.PINK);
+	    for(String s : list)
+		{
+	    	 graphics.drawString(s, lastX, lastY);
+	    	 lastY = lastY + 10;
+		}
+	   
 	}
 	
 	public void IncreaseZoomMultiplier() {

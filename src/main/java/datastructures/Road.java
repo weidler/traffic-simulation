@@ -9,6 +9,32 @@ public class Road {
 	private int length;
 	private Intersection intersectionTo;
 	private Intersection intersectionFrom;
+	private RoadTypes type = RoadTypes.ROAD;
+	private int lanes = 1;
+	
+	public void setLanes(int l)
+	{
+		if(l >= 1 && l < 4)
+		{
+			lanes = l;
+		}
+		else 
+		{
+			System.out.println("number of lanes is not allowed");
+		}		
+	}
+	public int getLanes()
+	{
+		return lanes;
+	}
+	public RoadTypes getType()
+	{
+		return type;
+	}
+	public void setType(RoadTypes t)
+	{
+		type = t;
+	}
 	
 	public int getLength() {
 		return length;
@@ -65,7 +91,7 @@ public class Road {
 	}
 	
 	public String toString() {
-		return "Road: (" + this.x1 + ", " + this.y1 + ") <-> (" + this.x2 + ", " + this.y2 + ")";
+		return this.x1 + "," + this.y1 +","+ this.x2 + "," + this.y2 + ",";
 	}
 	
 	public boolean equalCoordinatesWith(Road road) {

@@ -20,7 +20,16 @@ public class Intersection {
 	private double h;
 	
 	private int active_light = 0;
+	private IntersectionTypes type;
 	
+	public IntersectionTypes getType()
+	{
+		return type;
+	}
+	public void setType(IntersectionTypes t)
+	{
+		type = t;
+	}
 	
 	// Connections
 	private ArrayList<Connection> connections;
@@ -31,7 +40,7 @@ public class Intersection {
 		this.x_coord = x;
 		this.y_coord = y;
 		
-		this.tl_phase_length = 10;
+		this.tl_phase_length = 5;
 		this.time_till_toggle = this.tl_phase_length;
 		
 		this.connections = new ArrayList<Connection>();
@@ -255,9 +264,9 @@ public class Intersection {
 	public int numbConnections() {
 		return this.connections.size();
 	}
-	
+	@Override
 	public String toString() {
-		return "Intersection: (" + this.x_coord + ", " + this.y_coord + ")";
+		return this.x_coord + "," + this.y_coord+",";
 	}
 
 	

@@ -24,6 +24,25 @@ public class StreetMap {
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
+	@Override
+	public String toString()
+	{
+		
+		String result = "";
+		for(Intersection in : intersections)
+		{
+			result = result.concat(in.toString());
+		}
+		
+		result = result.concat("#,");
+		
+		for(Road r : roads)
+		{
+			result = result.concat(r.toString());
+		}
+		System.out.println(result);
+		return result;
+	}
 
 	// CONSTRUCTORS
 
@@ -116,10 +135,10 @@ public class StreetMap {
 					+ "Probably, you should create intersections first, THEN add the road.");
 		} else if (this.roadAlreadyOccupied(road)) {
 			System.out.println("There already exists a road between these coordinates/intersections. Skipping addition.");
-		} else if (!int_a.connectionCanBeAdded() || !int_b.connectionCanBeAdded()) {
+		} /*else if (!int_a.connectionCanBeAdded() || !int_b.connectionCanBeAdded()) {
 			// TODO handle empty intersection leftovers
 			System.out.println("One of the intersections you are planning to connect can't have more connections added.");
-		} else {
+		}*/ else {
 			this.roads.add(road);					
 			int_a.addConnection(road, int_b, null);
 			int_b.addConnection(road, int_a, null);			
