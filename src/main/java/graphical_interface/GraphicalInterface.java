@@ -406,13 +406,13 @@ public class GraphicalInterface extends JFrame {
 				*/
 				BufferedWriter bw = null;
 				FileWriter fw = null;
-				File f = new File("./streetmap"+count+".txt");
+				File f = new File("./savefiles/streetmap"+count+".txt");
 				try 
 				{
 					while(f.exists() && !f.isDirectory()) 
 					{
 						count++;
-						f = new File("./streetmap"+count+".txt");
+						f = new File("./savefiles/streetmap"+count+".txt");
 					}
 					
 					fw = new FileWriter(f);
@@ -420,7 +420,7 @@ public class GraphicalInterface extends JFrame {
 					bw.write(streetMap.toString());	
 					bw.close();
 					fw.close();
-					System.out.println("saved: "+"./streetmap"+count+".txt");
+					System.out.println("saved: "+"./savefiles/streetmap"+count+".txt");
 				}
 				catch(IOException ex)
 				{
@@ -437,6 +437,7 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+				fc.setCurrentDirectory(new File ("./savefiles/"));
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
 				if(file!=null) {
