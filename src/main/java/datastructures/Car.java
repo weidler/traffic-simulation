@@ -25,9 +25,10 @@ public class Car {
 	
 	// CONSTANTS
 	public final double REACTION_TIME = 1;
-	public final double MAX_ACCELERATION = 1.2;
-	public final double DECCELARATION = 1.8;
+	public final double MAX_ACCELERATION = 10;
+	public final double DECCELARATION = 3;
 	public final double SIGHT_DISTANCE = 10;
+	public final double DESIRED_VELOCITY = 400;
 	
 	// DYNAMIC VALUES
 	private double current_velocity;
@@ -62,10 +63,9 @@ public class Car {
 		this.positionY = (double) current_origin_intersection.getYCoord();
 
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
-		System.out.println(current_road);		
 		
 		this.current_velocity = 0;
-		this.desired_velocity = 13;
+		this.desired_velocity = this.DESIRED_VELOCITY;
 		
 		this.reached_destination = false;
 	}
@@ -193,12 +193,14 @@ public class Car {
 		double acceleration;
 		
 		// Check if leading car, else incorporate leaders speed etc.
-		if (!this.hasLeadingCar(list_of_cars)) {
+		Car leading_car = this.getLeadingCar(list_of_cars);
+		if (leading_car == null) {
 			this.color = Color.red;
 			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
-			double dist_leading = this.getLeadingCarDistance(list_of_cars);
-			double leading_velocity = this.getLeadingCarVelocity(list_of_cars);		
+			this.color = Color.blue;
+			double dist_leading = this.getDistanceToCar(leading_car);
+			double leading_velocity = leading_car.getCurrentVelocity();
 			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
 		}
 		
@@ -255,21 +257,21 @@ public class Car {
 
 	public Car getLeadingCar(ArrayList<Car> list_of_cars) {
 		Car current_leading_car = null;
-		for(Car c : list_of_cars){
 
+		for(Car c : list_of_cars){
 			//for the case it compares with itself skip to next iteration
 			if(this.equals(c)) continue;
 
 			// only compare if driving on cars path
-			if (c.isOnPath(this.path, 3)) {
+			if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())), 1)) {
 				// only compare if driving in the same direction...
-				if ((c.getCurrentDestinationIntersection().equals(this.getCurrentDestinationIntersection()))) {
+				if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
 					// only compare to cars in front
-					if(this.getPositionOnRoad() <= c.getPositionOnRoad())
+					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad())
 						// If car is closer than previous then update
 						if (current_leading_car == null) {
 							current_leading_car = c;
-						} else if(c.getPositionOnRoad() < current_leading_car.getPositionOnRoad()){
+						} else if(this.getDistanceToCar(c) < this.getDistanceToCar(current_leading_car)){
 							current_leading_car = c;
 						}
 				}
@@ -278,29 +280,24 @@ public class Car {
 		
 		return current_leading_car;
 	}
-	
-	/**
-	 *
-	 * @param list_of_cars
-	 * @param car the car for which we want to find the velocity of the car directly in front of it
-	 * @return the leading cars velocity
-	 */
-	public double getLeadingCarVelocity(ArrayList<Car> list_of_cars){
-		Car leading_car = this.getLeadingCar(list_of_cars);
-		if (leading_car != null) {
-			return leading_car.getCurrentVelocity();			
-		} else {
-			return Double.NaN;
-		}
 
-	}
-
-	public double getLeadingCarDistance(ArrayList<Car> list_of_cars){
-		Car leading_car = this.getLeadingCar(list_of_cars);
-		if (leading_car != null) {
-			return Math.abs(this.getPositionOnRoad() - leading_car.getPositionOnRoad());		
+	public double getDistanceToCar(Car other_car){
+		// on same road
+		if (this.current_destination_intersection.equals(other_car.current_destination_intersection)) {
+			return Math.abs(this.getPositionOnRoad() - other_car.getPositionOnRoad());
 		} else {
-			return Double.NaN;
+			// get distance over multiple roads
+			double distance = 0;
+			for (int i = this.path.indexOf(this.current_destination_intersection); i <= this.path.indexOf(other_car.current_destination_intersection); i++) {
+				if (i == this.path.indexOf(this.current_destination_intersection)) {
+					distance += this.current_road.getLength() - this.getPositionOnRoad();
+				} else if (i == this.path.indexOf(other_car.current_destination_intersection)) {
+					distance += other_car.getPositionOnRoad();
+				} else {
+					distance += this.path.get(i).getRoadTo(this.path.get(i)).getLength();
+				}
+			}
+			return distance;
 		}
 	}
 
@@ -315,10 +312,13 @@ public class Car {
 		int looked_at = 0;
 		for (Intersection inter : path) {
 			if (last_intersection != null) {
-				if (this.current_road.equals(last_intersection.getRoadTo(inter))) return true;
+				if (this.current_road.equals(last_intersection.getRoadTo(inter))) {
+					return true;
+				}
 			}
-			
-			if (looked_at + 1 >= look_ahead) break;
+			last_intersection = inter;
+			if (looked_at >= look_ahead) break;
+			looked_at++;
 		}
 		
 		return false;

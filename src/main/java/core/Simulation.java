@@ -29,7 +29,7 @@ public class Simulation {
 	
 	private boolean is_running;
 	private double current_time;
-	private int slow_mo_factor = 1;
+	private double slow_mo_factor = 1;
 
 	public Simulation(StreetMap map) {
 		this.street_map = map;
@@ -84,8 +84,6 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		System.out.println(origin_intersection);
-		System.out.println(destination_intersection);
 				
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
 		Car random_car = new Car(shortest_path, this.street_map);
@@ -94,13 +92,7 @@ public class Simulation {
 		this.addCar(random_car);
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
-	
-/*	public void generateRandomCars(int n_cars) {
-		for (int i = 0; i < n_cars; i++) {
-			this.addRandomCar(counter);
-		}
-	}
-*/	
+
 	// SIMULATION
 	
 	public void start() {
@@ -123,6 +115,7 @@ public class Simulation {
 			while (this.is_running) {
 				
 				System.out.println("\n--------T = " + this.current_time + "s---------");
+				long start_time = System.nanoTime();
 				
 				// update traffic light statuses
 				this.street_map.update(delta_t);
@@ -133,8 +126,7 @@ public class Simulation {
 					// recalculate car positions
 					if (car.update(this.cars, delta_t)) {
 						arrived_cars.add(car);
-					};					
-					System.out.println(car);
+					};
 				}
 				
 				// remove cars that reached their destination from the list
@@ -160,7 +152,7 @@ public class Simulation {
 				// Wait for time step to be over
 				int ms_to_wait = (int) (delta_t * 1000 * this.slow_mo_factor);
 				try {
-					TimeUnit.MILLISECONDS.sleep(ms_to_wait);				
+					TimeUnit.MILLISECONDS.sleep(Math.max(0, ms_to_wait - (System.nanoTime() - start_time)/1000000));				
 				} catch(InterruptedException e) {
 					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 				}

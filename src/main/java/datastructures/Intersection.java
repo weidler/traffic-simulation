@@ -264,6 +264,7 @@ public class Intersection {
 	public int numbConnections() {
 		return this.connections.size();
 	}
+
 	@Override
 	public String toString() {
 		return this.x_coord + "," + this.y_coord+",";

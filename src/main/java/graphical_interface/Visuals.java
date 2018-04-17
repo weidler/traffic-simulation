@@ -30,7 +30,7 @@ public class Visuals extends JPanel{
 	}
 	private Intersection drawRed;
 	
-	final int car_size = 6;
+	final int car_size = 8;
 	
 	private boolean drawLine = false;
 	private int mousePosX = 0;

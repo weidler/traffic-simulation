@@ -4,7 +4,7 @@ import datastructures.Car;
 
 public class IntelligentDriverModel{
 
-	final static double MIN_HEADWAY = 2.5;
+	final static double MIN_HEADWAY = 1;
 	final static double MIN_SPACING = 10;
 	final static double delta = 4; // this is common practice for this model
 	
