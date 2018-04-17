@@ -35,7 +35,7 @@ public class Car {
 	private double positionX;
 	private double positionY;
 	private double position_on_road;
-	private int lane = 0;
+	private int lane = 1;
 
 	// CONSTRAINTS
 	private double desired_velocity;
@@ -181,26 +181,26 @@ public class Car {
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -2*lane;
-				offsetY = -2*lane;
+				offsetX = -4*lane;
+				offsetY = -4*lane;
 			}
 			else
 			{
-				offsetX = 2*lane;
-				offsetY = -2*lane;
+				offsetX = 4*lane;
+				offsetY = -4*lane;
 			}
 		}
 		else
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -2*lane;
-				offsetY = 2*lane;
+				offsetX = -4*lane;
+				offsetY = 4*lane;
 			}
 			else
 			{
-				offsetX = 2*lane;
-				offsetY = 2*lane;
+				offsetX = 4*lane;
+				offsetY = 4*lane;
 			}
 		}
 	}
