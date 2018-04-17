@@ -195,13 +195,13 @@ public class Car {
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -2*lane;
-				offsetY = 2*lane;
+				offsetX = -4*lane;
+				offsetY = 4*lane;
 			}
 			else
 			{
-				offsetX = 2*lane;
-				offsetY = 2*lane;
+				offsetX = 4*lane;
+				offsetY = 4*lane;
 			}
 		}
 	}
