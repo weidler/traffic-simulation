@@ -27,7 +27,8 @@ public class Car {
 	public final double REACTION_TIME = 1;
 	public final double MAX_ACCELERATION = 10;
 	public final double DECCELARATION = 3;
-	public final double SIGHT_DISTANCE = 10;
+	public final double SIGHT_DISTANCE = 100;
+	public final double TL_BRAKING_DISTANCE = 10;
 	public final double DESIRED_VELOCITY = 400;
 	
 	// DYNAMIC VALUES
@@ -35,7 +36,7 @@ public class Car {
 	private double positionX;
 	private double positionY;
 	private double position_on_road;
-	private int lane = 0;
+	private int lane = 1;
 
 	// CONSTRAINTS
 	private double desired_velocity;
@@ -181,13 +182,13 @@ public class Car {
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -2*lane;
-				offsetY = -2*lane;
+				offsetX = -4*lane;
+				offsetY = -4*lane;
 			}
 			else
 			{
-				offsetX = 2*lane;
-				offsetY = -2*lane;
+				offsetX = 4*lane;
+				offsetY = -4*lane;
 			}
 		}
 		else
@@ -221,7 +222,7 @@ public class Car {
 		}
 		
 		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.SIGHT_DISTANCE) {
+		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.TL_BRAKING_DISTANCE) {
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
@@ -279,17 +280,22 @@ public class Car {
 			if(this.equals(c)) continue;
 
 			// only compare if driving on cars path
-			if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())), 1)) {
+			if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
 				// only compare if driving in the same direction...
 				if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
 					// only compare to cars in front
-					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad())
-						// If car is closer than previous then update
-						if (current_leading_car == null) {
-							current_leading_car = c;
-						} else if(this.getDistanceToCar(c) < this.getDistanceToCar(current_leading_car)){
-							current_leading_car = c;
+					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
+						double dist_to_c = this.getDistanceToCar(c);
+						// only if car is in distance of sight
+						if (dist_to_c <= this.SIGHT_DISTANCE) {
+							// If car is closer than previous then update
+							if (current_leading_car == null) {
+								current_leading_car = c;
+							} else if(dist_to_c < this.getDistanceToCar(current_leading_car)){
+								current_leading_car = c;
+							}							
 						}
+					}
 				}
 			}
 		}
@@ -323,9 +329,8 @@ public class Car {
 	
 	// CHECKS
 	
-	public boolean isOnPath(ArrayList<Intersection> path, int look_ahead) {
+	public boolean isOnPath(ArrayList<Intersection> path) {
 		Intersection last_intersection = null;
-		int looked_at = 0;
 		for (Intersection inter : path) {
 			if (last_intersection != null) {
 				if (this.current_road.equals(last_intersection.getRoadTo(inter))) {
@@ -333,8 +338,6 @@ public class Car {
 				}
 			}
 			last_intersection = inter;
-			if (looked_at >= look_ahead) break;
-			looked_at++;
 		}
 		
 		return false;

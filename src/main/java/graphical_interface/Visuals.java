@@ -254,7 +254,6 @@ public class Visuals extends JPanel{
 	    	 graphics.drawString(s, lastX, lastY);
 	    	 lastY = lastY + 10;
 		}
-	   
 	}
 	
 	public void IncreaseZoomMultiplier() {
