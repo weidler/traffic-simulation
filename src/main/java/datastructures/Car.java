@@ -35,6 +35,7 @@ public class Car {
 	private double positionX;
 	private double positionY;
 	private double position_on_road;
+	private int lane = 0;
 
 	// CONSTRAINTS
 	private double desired_velocity;
@@ -159,32 +160,47 @@ public class Car {
 	{
 		return color;
 	}
+	public void setLane(int l)
+	{
+		if(l >= 1 && l < 4)
+		{
+			lane = l;
+		}
+		else 
+		{
+			System.out.println("number of lanes is not allowed");
+		}		
+	}
+	public int getLanes()
+	{
+		return lane;
+	}
 	
 	public void calculateOffset(Intersection start, Intersection end) {
 		if(start.getXCoord() > end.getXCoord())
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -4;
-				offsetY = -4;
+				offsetX = -2*lane;
+				offsetY = -2*lane;
 			}
 			else
 			{
-				offsetX = 4;
-				offsetY = -4;
+				offsetX = 2*lane;
+				offsetY = -2*lane;
 			}
 		}
 		else
 		{
 			if(start.getYCoord() <end.getYCoord())
 			{
-				offsetX = -4;
-				offsetY = 4;
+				offsetX = -2*lane;
+				offsetY = 2*lane;
 			}
 			else
 			{
-				offsetX = 4;
-				offsetY = 4;
+				offsetX = 2*lane;
+				offsetY = 2*lane;
 			}
 		}
 	}
