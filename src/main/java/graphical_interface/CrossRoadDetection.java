@@ -17,11 +17,12 @@ public class CrossRoadDetection {
 			{
 				if(!recheck) 
 				{
-					int maxLanes = 0;
-					if(streetMap.getRoads().get(streetMap.getRoads().size()-1).getLanes()<streetMap.getRoads().get(i).getLanes())
+					int maxLanes = streetMap.getRoads().get(streetMap.getRoads().size()-1).getLanes();
+					if( maxLanes < streetMap.getRoads().get(i).getLanes())
 					{
 						maxLanes = streetMap.getRoads().get(i).getLanes();
 					}
+					
 					recheck = lineIntersect(streetMap.getRoads().get(streetMap.getRoads().size()-1).getX1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY1(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getX2(), streetMap.getRoads().get(streetMap.getRoads().size()-1).getY2(), streetMap.getRoads().get(i).getX1(), streetMap.getRoads().get(i).getY1(), streetMap.getRoads().get(i).getX2(), streetMap.getRoads().get(i).getY2(),i,streetMap.getRoads().size()-1, maxLanes);
 				}
 			}
@@ -32,8 +33,8 @@ public class CrossRoadDetection {
 				
 					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
 					{
-						int maxLanes = 0;
-						if(streetMap.getRoads().get(streetMap.getRoads().size()-1).getLanes()<streetMap.getRoads().get(i).getLanes())
+						int maxLanes = streetMap.getRoads().get(streetMap.getRoads().size()-1).getLanes();
+						if( maxLanes < streetMap.getRoads().get(i).getLanes())
 						{
 							maxLanes = streetMap.getRoads().get(i).getLanes();
 						}
@@ -44,8 +45,8 @@ public class CrossRoadDetection {
 				
 					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
 					{
-						int maxLanes = 0;
-						if(streetMap.getRoads().get(streetMap.getRoads().size()-2).getLanes()<streetMap.getRoads().get(i).getLanes())
+						int maxLanes = streetMap.getRoads().get(streetMap.getRoads().size()-2).getLanes();
+						if( maxLanes < streetMap.getRoads().get(i).getLanes())
 						{
 							maxLanes = streetMap.getRoads().get(i).getLanes();
 						}
@@ -56,8 +57,8 @@ public class CrossRoadDetection {
 				
 					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
 					{
-						int maxLanes = 0;
-						if(streetMap.getRoads().get(streetMap.getRoads().size()-3).getLanes()<streetMap.getRoads().get(i).getLanes())
+						int maxLanes = streetMap.getRoads().get(streetMap.getRoads().size()-3).getLanes();
+						if( maxLanes < streetMap.getRoads().get(i).getLanes())
 						{
 							maxLanes = streetMap.getRoads().get(i).getLanes();
 						}
@@ -68,8 +69,8 @@ public class CrossRoadDetection {
 			
 					for(int i = 0 ; i < streetMap.getRoads().size()-1 ; i++)
 					{
-						int maxLanes = 0;
-						if(streetMap.getRoads().get(streetMap.getRoads().size()-4).getLanes()<streetMap.getRoads().get(i).getLanes())
+						int maxLanes = streetMap.getRoads().get(streetMap.getRoads().size()-4).getLanes();
+						if( maxLanes < streetMap.getRoads().get(i).getLanes())
 						{
 							maxLanes = streetMap.getRoads().get(i).getLanes();
 						}
