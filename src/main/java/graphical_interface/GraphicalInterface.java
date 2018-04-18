@@ -657,8 +657,8 @@ randomGraphButton.addActionListener(new ActionListener() {
 						
 			clickCounter++;
 			
-			int x = e.getX();
-			int y = e.getY();
+			int x = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
+			int y = (int) (e.getY()/visuals.getZoomMultiplier()-visuals.getChangeY());
 						
 			
 			if(clickCounter == 1) {
@@ -843,8 +843,9 @@ randomGraphButton.addActionListener(new ActionListener() {
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 			
 			
-			mouseX = e.getX();
-			mouseY = e.getY();
+			mouseX = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
+			mouseY = (int) (e.getY()/visuals.getZoomMultiplier()-visuals.getChangeY());
+			
 			if(streetMap.getIntersections().size()>0)
 			{
 				int nearestX = -1;
