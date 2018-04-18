@@ -111,6 +111,7 @@ public class GraphicalInterface extends JFrame {
 		carsTextArea.setText("");
 		carsTextArea.setBounds(782, 11, 219, 640);
 		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
+		carsTextArea.setEditable(false);
 		contentPane.add(carsTextArea);
 		simulation.setTextArea(carsTextArea);
 		

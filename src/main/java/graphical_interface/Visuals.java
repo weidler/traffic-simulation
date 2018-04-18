@@ -33,7 +33,7 @@ public class Visuals extends JPanel{
 	
 	final int car_size = 8;
 	
-	private int intersectionSize = 40;
+	private int intersectionSize = 60;
 	private int laneSize = 7;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
@@ -118,7 +118,7 @@ public class Visuals extends JPanel{
 		if (drawLine) 
 		{	
 			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));		
-			g2.drawLine((int)(startPosX*zoomMultiplier), (int)(startPosY*zoomMultiplier), (int)(mousePosX*zoomMultiplier), (int)(mousePosY*zoomMultiplier));
+			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier), (int)(mousePosY*zoomMultiplier));
 			g2.setStroke(new BasicStroke());
 		}
 		// draws the roads
