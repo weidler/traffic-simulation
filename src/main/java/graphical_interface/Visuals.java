@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,11 +34,15 @@ public class Visuals extends JPanel{
 	final int car_size = 8;
 	
 	private int intersectionSize = 20;
+	private int laneSize = 4;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
 	private int mousePosY = 0;
 	private int startPosX = 0;
 	private int startPosY = 0;
+	private Stroke defaultStroke;
+	private Stroke dashed = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND, 0, new float[]{9}, 0);
+
 	
 	private double zoomMultiplier = 1.0;
 	
@@ -53,6 +58,15 @@ public class Visuals extends JPanel{
 	public int getIntersectionSize()
 	{
 		return intersectionSize;
+	}
+	public void setLaneSize(int l)
+	{
+		laneSize = l;
+	}
+	
+	public int getLaneSize()
+	{
+		return laneSize;
 	}
 	
 	public int getChangeX() {
@@ -88,6 +102,7 @@ public class Visuals extends JPanel{
 	public void paintComponent (Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
+		defaultStroke = g2.getStroke();
 		// draws red pointed
 		g2.setColor(Color.red);
 		if(drawRed!=null)
@@ -128,46 +143,98 @@ public class Visuals extends JPanel{
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2()) 
 				{	
-					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
+			        
+					int k = roads.get(i).getLanes();
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-k*laneSize)*zoomMultiplier+changeY));
+			        g2.setStroke(dashed);
+					for(int j = 1; j < roads.get(i).getLanes();j++)
 					{
+						
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+								(int)(roads.get(i).getX1()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*laneSize)*zoomMultiplier+changeY));
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+								(int)(roads.get(i).getX1()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*laneSize)*zoomMultiplier+changeY));
+					
+						
 					}
+					g2.setStroke(defaultStroke);
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+k*laneSize)*zoomMultiplier+changeY));
+				
 				}
 				else
 				{
-					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
+			        
+					int k = roads.get(i).getLanes();
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-k*laneSize)*zoomMultiplier+changeY));
+			        g2.setStroke(dashed);
+					for(int j = 1; j < roads.get(i).getLanes();j++)
 					{
+						
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+								(int)(roads.get(i).getX1()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*laneSize)*zoomMultiplier+changeY));
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+								(int)(roads.get(i).getX1()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*laneSize)*zoomMultiplier+changeY));
+					
+						
 					}
+					g2.setStroke(defaultStroke);
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+k*laneSize)*zoomMultiplier+changeY));
+				
 				}
 			}
 			else
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2())
 				{	
-					for(int j = 1; j <= roads.get(i).getLanes();j++)
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
+			        
+					int k = roads.get(i).getLanes();
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-k*laneSize)*zoomMultiplier+changeY));
+			        g2.setStroke(dashed);
+					for(int j = 1; j < roads.get(i).getLanes();j++)
 					{
+						
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+changeY));
+								(int)(roads.get(i).getX1()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*laneSize)*zoomMultiplier+changeY));
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+changeY));
+								(int)(roads.get(i).getX1()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*laneSize)*zoomMultiplier+changeY));
+					
+						
 					}
+					g2.setStroke(defaultStroke);
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+k*laneSize)*zoomMultiplier+changeY));
+				
 				}
 				else
-				{
-					for(int j = 1; j <= roads.get(i).getLanes();j++)
+				{					
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
+				       
+					int k = roads.get(i).getLanes();
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-k*laneSize)*zoomMultiplier+changeY));
+				    g2.setStroke(dashed);
+					for(int j = 1; j < roads.get(i).getLanes();j++)
 					{
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()+j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()+j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()+j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()+j*2)*zoomMultiplier+ changeY));
+								(int)(roads.get(i).getX1()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+j*laneSize)*zoomMultiplier+changeY));
 						g2.draw(new Line2D.Double(
-								(int)(roads.get(i).getX1()-j*2)*zoomMultiplier + changeX, (int)(roads.get(i).getY1()-j*2)*zoomMultiplier+ changeY, (int)(roads.get(i).getX2()-j*2)*zoomMultiplier+ changeX, (int)(roads.get(i).getY2()-j*2)*zoomMultiplier+ changeY));
+								(int)(roads.get(i).getX1()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-j*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-j*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-j*laneSize)*zoomMultiplier+changeY));
 					}
+					g2.setStroke(defaultStroke);
+					g2.draw(new Line2D.Double(
+							(int)(roads.get(i).getX1()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+k*laneSize)*zoomMultiplier+changeY));
 				}
 			}
 			//draws the intersections
