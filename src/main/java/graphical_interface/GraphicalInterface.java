@@ -652,8 +652,7 @@ randomGraphButton.addActionListener(new ActionListener() {
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 			
-			if(visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) 
-			{
+			
 						
 			clickCounter++;
 			
@@ -819,7 +818,7 @@ randomGraphButton.addActionListener(new ActionListener() {
 			repaint();
 			
 			}
-			}
+			
 			
 		}
 
