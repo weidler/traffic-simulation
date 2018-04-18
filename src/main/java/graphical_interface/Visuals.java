@@ -246,12 +246,12 @@ public class Visuals extends JPanel{
 		int lastX = x+10;
 		int lastY = y-10;
 	    Rectangle r = new Rectangle();
-	    r.setBounds(x+8, y-22, max*6, i*13);
+	    r.setBounds((int)((x+8)*zoomMultiplier + changeX), (int)((y-22)*zoomMultiplier + changeY), max*6, i*13);
 	    graphics.draw(r);
 	    graphics.setColor(Color.PINK);
 	    for(String s : list)
 		{
-	    	 graphics.drawString(s, lastX, lastY);
+	    	 graphics.drawString(s, (int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY));
 	    	 lastY = lastY + 10;
 		}
 	   
