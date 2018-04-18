@@ -316,7 +316,7 @@ public class Car {
 				} else if (i == this.path.indexOf(other_car.current_destination_intersection)) {
 					distance += other_car.getPositionOnRoad();
 				} else {
-					distance += this.path.get(i).getRoadTo(this.path.get(i)).getLength();
+					distance += this.path.get(i).getRoadTo(this.path.get(i-1)).getLength();
 				}
 			}
 			return distance;
