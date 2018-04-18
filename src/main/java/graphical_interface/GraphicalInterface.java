@@ -290,7 +290,6 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!simulation.getIsRunning()) 
 				{
-					if(streetMap.getRoads().size()>0 && visuals.getZoomMultiplier() == 1.0 && visuals.getChangeX()==0 && visuals.getChangeY() == 0) {
 						simulation.addRandomCar();
 						carsTextArea.setText("");
 						for(Car car : simulation.getCars())
@@ -298,7 +297,6 @@ public class GraphicalInterface extends JFrame {
 							carsTextArea.append(car.toString()+"\n");
 						}
 						repaint();
-					}	
 				}							
 			}
 		});
