@@ -867,7 +867,7 @@ randomGraphButton.addActionListener(new ActionListener() {
 					}	
 					
 				}
-				if(distance <= 20) 
+				if(distance <= visuals.getIntersectionSize()+10) 
 				{
 					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
 					visuals.setDrawRed(colorRed);

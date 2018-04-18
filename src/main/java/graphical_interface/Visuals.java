@@ -32,6 +32,7 @@ public class Visuals extends JPanel{
 	
 	final int car_size = 8;
 	
+	private int intersectionSize = 20;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
 	private int mousePosY = 0;
@@ -43,6 +44,17 @@ public class Visuals extends JPanel{
 	private int changeX = 0;
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
+	
+	public void setIntersectionSize(int is)
+	{
+		intersectionSize = is;
+	}
+	
+	public int getIntersectionSize()
+	{
+		return intersectionSize;
+	}
+	
 	public int getChangeX() {
 		return changeX;
 	}
@@ -81,7 +93,7 @@ public class Visuals extends JPanel{
 		if(drawRed!=null)
 		{
 			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
-			g2.fillOval((int)((drawRed.getXCoord()-8)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-8)*zoomMultiplier + changeY), (int)(15*zoomMultiplier), (int)(15*zoomMultiplier ));
+			g2.fillOval((int)((drawRed.getXCoord()-(intersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(intersectionSize/2)-3)*zoomMultiplier + changeY), (int)((intersectionSize+5)*zoomMultiplier), (int)((intersectionSize+5)*zoomMultiplier ));
 			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
 		}
 		g2.setColor(Color.cyan);
@@ -159,8 +171,9 @@ public class Visuals extends JPanel{
 				}
 			}
 			//draws the intersections
-			g2.fillOval((int)((roads.get(i).getX1()-5)*zoomMultiplier + changeX), (int)((roads.get(i).getY1()-5)*zoomMultiplier + changeY), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier ));
-			g2.fillOval((int)((roads.get(i).getX2()-5)*zoomMultiplier + changeX), (int)((roads.get(i).getY2()-5)*zoomMultiplier + changeY), (int)(10*zoomMultiplier), (int)(10*zoomMultiplier ));
+			
+			g2.fillOval((int)((roads.get(i).getX1()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY1()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
+			g2.fillOval((int)((roads.get(i).getX2()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY2()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
 		
 		}
 		
