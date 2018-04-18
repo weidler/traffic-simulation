@@ -29,7 +29,7 @@ public class Car {
 	public final double DECCELARATION = 3;
 	public final double SIGHT_DISTANCE = 100;
 	public final double TL_BRAKING_DISTANCE = 10;
-	public final double DESIRED_VELOCITY = 400;
+	public final double DESIRED_VELOCITY = 50;
 	
 	// DYNAMIC VALUES
 	private double current_velocity;
