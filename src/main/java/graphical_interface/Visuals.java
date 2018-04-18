@@ -306,7 +306,7 @@ public class Visuals extends JPanel{
 				
 		}		
 	}
-	
+	// draws tooltip
 	public void drawToolTip(Graphics2D graphics, String text, int x,int y) {
 		int i = 0;
 		if(i==0)
@@ -323,12 +323,14 @@ public class Visuals extends JPanel{
 			}
 		}
 		i = list.length;
-		int lastX = x+10;
-		int lastY = y-10;
+		int lastX = x+(int)(intersectionSize/2);
+		int lastY = y-(int)(intersectionSize/2);
 	    Rectangle r = new Rectangle();
-	    r.setBounds((int)((x+8)*zoomMultiplier + changeX), (int)((y-22)*zoomMultiplier + changeY), max*6, i*13);
+	    r.setBounds((int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY), max*6, i*13);
+	    graphics.fill(r);
 	    graphics.draw(r);
-	    graphics.setColor(Color.PINK);
+	    graphics.setColor(Color.WHITE);
+	    lastY = lastY + 10;
 	    for(String s : list)
 		{
 	    	 graphics.drawString(s, (int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY));
