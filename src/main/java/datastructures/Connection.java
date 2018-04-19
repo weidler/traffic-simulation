@@ -1,5 +1,7 @@
 package datastructures;
 
+import roads.Road;
+
 public class Connection {
 
 	private Road road;

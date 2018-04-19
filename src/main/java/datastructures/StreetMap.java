@@ -3,6 +3,8 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import roads.Road;
+
 /**
  * @author weidler
  *

@@ -29,9 +29,10 @@ import javax.swing.JScrollPane;
 import core.Simulation;
 import datastructures.Car;
 import datastructures.Intersection;
-import datastructures.Road;
 import datastructures.RoadTypes;
 import datastructures.StreetMap;
+import roads.Road;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -517,7 +518,7 @@ public class GraphicalInterface extends JFrame {
 		randomGraphButton.setBounds(10, 528, 147, 20);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
-randomGraphButton.addActionListener(new ActionListener() {
+		randomGraphButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

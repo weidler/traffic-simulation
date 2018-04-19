@@ -29,8 +29,9 @@ public class Simulation {
 	
 	private boolean is_running;
 	private double current_time;
-	private double slow_mo_factor = 1;
-
+	private float slow_mo_factor = 1;
+	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
+	
 	public Simulation(StreetMap map) {
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
@@ -112,6 +113,7 @@ public class Simulation {
 			}
 					
 			double delta_t = 0.001;
+			int step = 0;
 			while (this.is_running) {
 				
 				System.out.println("\n--------T = " + this.current_time + "s---------");
@@ -157,8 +159,10 @@ public class Simulation {
 					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 				}
 				
-				gui.redraw();
-				this.current_time += delta_t;				
+				this.current_time += delta_t;
+				
+				step++;
+				if (step % this.visualization_frequency == 0) gui.redraw();
 			}
 		});
 		

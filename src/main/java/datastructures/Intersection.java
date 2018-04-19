@@ -3,6 +3,8 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import roads.Road;
+
 public class Intersection {
 	
 	// Position

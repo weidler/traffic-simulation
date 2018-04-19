@@ -15,10 +15,10 @@ import javax.swing.ToolTipManager;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.Road;
 import datastructures.RoadTypes;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import roads.Road;
 
 public class Visuals extends JPanel{	
 	private Simulation simulation;

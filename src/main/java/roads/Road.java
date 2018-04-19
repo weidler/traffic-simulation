@@ -1,4 +1,7 @@
-package datastructures;
+package roads;
+
+import datastructures.Intersection;
+import datastructures.RoadTypes;
 
 public class Road {
 
@@ -11,40 +14,7 @@ public class Road {
 	private Intersection intersectionFrom;
 	private RoadTypes type = RoadTypes.ROAD;
 	private int lanes = 1;
-	
-	public void setLanes(int l)
-	{
-		if(l >= 1 && l < 4)
-		{
-			lanes = l;
-		}
-		else 
-		{
-			System.out.println("number of lanes is not allowed");
-		}		
-	}
-	public int getLanes()
-	{
-		return lanes;
-	}
-	public RoadTypes getType()
-	{
-		return type;
-	}
-	public void setType(RoadTypes t)
-	{
-		type = t;
-	}
-	
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-	private boolean two_way;
+	private int allowed_max_speed = 50;
 	
 	public Road(Intersection intersection_from, Intersection intersection_to) {
 		this.x1 = intersection_from.getXCoord();
@@ -65,6 +35,34 @@ public class Road {
 
 		this.length = this.calcLength(x1, y1, x2, y2);	
 	}
+
+	public void setLanes(int l) {
+		if(l >= 1 && l < 4) {
+			lanes = l;
+		} else {
+			System.out.println("number of lanes is not allowed");
+		}		
+	}
+	
+	public int getLanes() {
+		return lanes;
+	}
+
+	public RoadTypes getType() {
+		return type;
+	}
+	
+	public void setType(RoadTypes t) {
+		type = t;
+	}
+	
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
 	
 	public int getX1() {
 		return x1;
@@ -80,14 +78,6 @@ public class Road {
 
 	public int getY2() {
 		return y2;
-	}
-
-	public boolean isTwoWay() {
-		return two_way;
-	}
-
-	public void setTwoWay(boolean two_way) {
-		this.two_way = two_way;
 	}
 	
 	public String toString() {

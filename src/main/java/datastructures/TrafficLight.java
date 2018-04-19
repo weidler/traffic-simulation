@@ -1,5 +1,7 @@
 package datastructures;
 
+import roads.Road;
+
 public class TrafficLight {
 	private String status;
 	private Road road;

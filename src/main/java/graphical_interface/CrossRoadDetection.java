@@ -1,8 +1,8 @@
 package graphical_interface;
 
 import datastructures.Intersection;
-import datastructures.Road;
 import datastructures.StreetMap;
+import roads.Road;
 
 public class CrossRoadDetection {
 
