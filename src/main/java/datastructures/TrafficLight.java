@@ -5,13 +5,20 @@ import roads.Road;
 public class TrafficLight {
 	private String status;
 	private Road road;
+	private int lanes;
 	private Intersection intersection;
 
-	public TrafficLight(Road road, Intersection intersection) {
+	public TrafficLight(Road road, Intersection intersection, int lanes) {
 		this.road = road;
 		this.intersection = intersection;
-		
+		this.lanes = lanes;
 		this.status = "R";
+		
+		if(lanes > 1) {
+			for (int i = 0; i < lanes; i++) {
+				
+			}
+		}
 	}
 
 	// GETTERS / SETTERS

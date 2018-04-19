@@ -170,9 +170,9 @@ public class Intersection {
 	 * @param intersection the intersection which this intersection has a new connection to and from
 	 * @param trafficlight the trafficlight that regulates cars coming INTO this intersection FROM the parameter intersection
 	 */
-	public void addConnection(Road road, Intersection intersection, TrafficLight trafficlight) {
+	public void addConnection(Road road, Intersection intersection, TrafficLight trafficlight, int lanes) {
 		if (trafficlight == null) {
-			trafficlight = new TrafficLight(road, this);
+			trafficlight = new TrafficLight(road, this,lanes);
 		}
 
 		connections.add(new Connection(road, intersection, trafficlight));
@@ -266,7 +266,6 @@ public class Intersection {
 	public int numbConnections() {
 		return this.connections.size();
 	}
-
 	@Override
 	public String toString() {
 		return this.x_coord + "," + this.y_coord+",";

@@ -142,8 +142,8 @@ public class StreetMap {
 			System.out.println("One of the intersections you are planning to connect can't have more connections added.");
 		}*/ else {
 			this.roads.add(road);					
-			int_a.addConnection(road, int_b, null);
-			int_b.addConnection(road, int_a, null);			
+			int_a.addConnection(road, int_b, null, road.getLanes());
+			int_b.addConnection(road, int_a, null, road.getLanes());			
 		}
 	}
 	
