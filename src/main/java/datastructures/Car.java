@@ -179,32 +179,15 @@ public class Car {
 	}
 	
 	public void calculateOffset(Intersection start, Intersection end) {
-		if(start.getXCoord() > end.getXCoord())
-		{
-			if(start.getYCoord() <end.getYCoord())
-			{
-				offsetX = -4*lane;
-				offsetY = -4*lane;
-			}
-			else
-			{
-				offsetX = 4*lane;
-				offsetY = -4*lane;
-			}
+		int angle = (int) (Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord()));
+		if (angle<0){
+			angle+=360;
 		}
-		else
-		{
-			if(start.getYCoord() <end.getYCoord())
-			{
-				offsetX = -4*lane;
-				offsetY = 4*lane;
-			}
-			else
-			{
-				offsetX = 4*lane;
-				offsetY = 4*lane;
-			}
-		}
+		int offsetAngle = angle+90;
+		if (offsetAngle > 360)
+			offsetAngle-= 360;
+		offsetX = (int) (Math.round(Math.cos(offsetAngle)*4*lane)-4);
+		offsetY = (int) (Math.round(Math.sin(offsetAngle)*4*lane)-4);
 	}
 
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t){
