@@ -34,6 +34,7 @@ public class Visuals extends JPanel{
 	final int car_size = 8;
 	
 	private int intersectionSize = 0;
+	private int maxIntersectionSize = 0;
 	private int laneSize = 7;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
@@ -56,6 +57,15 @@ public class Visuals extends JPanel{
 	}
 	
 	public int getIntersectionSize()
+	{
+		return intersectionSize;
+	}
+	public void setMaxIntersectionSize(int is)
+	{
+		intersectionSize = is;
+	}
+	
+	public int getMaxIntersectionSize()
 	{
 		return intersectionSize;
 	}
@@ -103,12 +113,12 @@ public class Visuals extends JPanel{
 	{
 		Graphics2D g2 = (Graphics2D) g;
 		defaultStroke = g2.getStroke();
-		// draws red pointed
+		// draws red pointer
 		g2.setColor(Color.red);
 		if(drawRed!=null)
 		{
 			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
-			g2.fillOval((int)((drawRed.getXCoord()-(intersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(intersectionSize/2)-3)*zoomMultiplier + changeY), (int)((intersectionSize+5)*zoomMultiplier), (int)((intersectionSize+5)*zoomMultiplier ));
+			g2.fillOval((int)((drawRed.getXCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeY), (int)((maxIntersectionSize+5)*zoomMultiplier), (int)((maxIntersectionSize+5)*zoomMultiplier ));
 			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
 		}
 		g2.setColor(Color.cyan);
@@ -239,6 +249,10 @@ public class Visuals extends JPanel{
 			}
 			//draws the intersections
 			intersectionSize = roads.get(i).getLanes()*20;
+			if(intersectionSize>maxIntersectionSize)
+			{
+				maxIntersectionSize = intersectionSize;
+			}
 			g2.fillOval((int)((roads.get(i).getX1()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY1()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
 			g2.fillOval((int)((roads.get(i).getX2()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY2()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
 		
@@ -323,8 +337,8 @@ public class Visuals extends JPanel{
 			}
 		}
 		i = list.length;
-		int lastX = x+(int)(intersectionSize/2);
-		int lastY = y-(int)(intersectionSize/2);
+		int lastX = x+(int)(maxIntersectionSize/2);
+		int lastY = y-(int)(maxIntersectionSize/2);
 	    Rectangle r = new Rectangle();
 	    r.setBounds((int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY), max*6, i*13);
 	    graphics.fill(r);
