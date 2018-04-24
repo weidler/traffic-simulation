@@ -15,9 +15,7 @@ public class TrafficLight {
 		this.lanes = lanes;
 		this.status = "R";
 		if(lanes > 1) {
-			for (int i = 0; i < lanes; i++) {
-				
-			}
+			addTrafficLightToLanes(road,intersection,lanes);
 		}
 	}
 
