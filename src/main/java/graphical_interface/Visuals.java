@@ -157,7 +157,7 @@ public class Visuals extends JPanel{
 			else{
 
 				if(road.getY1() < road.getY2()){
-
+					
 					for(int j = 1; j <= road.getLanes();j++){
 						g2.draw(new Line2D.Double(
 								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
