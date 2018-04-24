@@ -15,7 +15,7 @@ public class TrafficLight {
 		this.lanes = lanes;
 		this.status = "R";
 		if(lanes > 1) {
-			addTrafficLightToLanes(road,intersection,lanes);
+//			addTrafficLightToLanes(road,intersection,lanes);
 		}
 	}
 
@@ -36,14 +36,19 @@ public class TrafficLight {
 		this.status = status;
 	}
 	
-	public ArrayList addTrafficLightToLanes(Road road, Intersection intersection, int lanes){
-		TrafficLightList = new ArrayList<TrafficLight>();
-		for(int i = 0; i < lanes; i++) {
-			TrafficLightList.add(new TrafficLight(road,intersection,lanes));
-		}
-		return TrafficLightList;
-	}
-	
+	//If multiple lanes, create an arrayList of traffic lights for the road
+//	public ArrayList<TrafficLight> addTrafficLightToLanes(Road road, Intersection intersection, int lanes){
+//		TrafficLightList = new ArrayList<TrafficLight>();
+//		for(int i = 0; i < lanes; i++) {
+//			TrafficLightList.add(new TrafficLight(road,intersection,lanes));
+//		}
+//		return TrafficLightList;
+//	}
+//	
+//	public ArrayList<TrafficLight> getTrafficLightList(){
+//		return TrafficLightList;
+//	}
+//	
 	public Intersection getIntersection()
 	{
 		return intersection;
