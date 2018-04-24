@@ -18,7 +18,7 @@ import datastructures.Intersection;
 import datastructures.RoadTypes;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
-import roads.Road;
+import road.Road;
 
 public class Visuals extends JPanel{	
 	private Simulation simulation;
@@ -52,31 +52,25 @@ public class Visuals extends JPanel{
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
 	
-	public void setIntersectionSize(int is)
-	{
+	public void setIntersectionSize(int is)	{
 		intersectionSize = is;
 	}
 	
-	public int getIntersectionSize()
-	{
+	public int getIntersectionSize() {
 		return intersectionSize;
 	}
-	public void setMaxIntersectionSize(int is)
-	{
+	public void setMaxIntersectionSize(int is) {
 		intersectionSize = is;
 	}
 	
-	public int getMaxIntersectionSize()
-	{
+	public int getMaxIntersectionSize() {
 		return intersectionSize;
 	}
-	public void setLaneSize(int l)
-	{
+	public void setLaneSize(int l) {
 		laneSize = l;
 	}
 	
-	public int getLaneSize()
-	{
+	public int getLaneSize() {
 		return laneSize;
 	}
 	
@@ -92,8 +86,8 @@ public class Visuals extends JPanel{
 	public int getChangeY() {
 		return changeY;
 	}
-	public void resetPosition()
-	{
+
+	public void resetPosition() {
 		changeX = 0;
 		changeY = 0;
 	}
@@ -110,13 +104,12 @@ public class Visuals extends JPanel{
 	
 	
 	@Override
-	public void paintComponent (Graphics g)
-	{
+	public void paintComponent (Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		defaultStroke = g2.getStroke();
 		// draws red pointer
 		g2.setColor(Color.red);
-		if(drawRed!=null)
+		if(drawRed != null)
 		{
 			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
 			g2.fillOval((int)((drawRed.getXCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeY), (int)((maxIntersectionSize+5)*zoomMultiplier), (int)((maxIntersectionSize+5)*zoomMultiplier ));

@@ -1,4 +1,4 @@
-package roads;
+package road;
 
 import datastructures.Intersection;
 

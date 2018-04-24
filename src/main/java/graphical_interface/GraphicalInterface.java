@@ -27,11 +27,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import core.Simulation;
-import datastructures.Car;
 import datastructures.Intersection;
 import datastructures.RoadTypes;
 import datastructures.StreetMap;
-import roads.Road;
+import road.Road;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -47,6 +46,9 @@ import javax.swing.KeyStroke;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.gson.Gson;
+
+import car.Car;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -814,12 +816,9 @@ public class GraphicalInterface extends JFrame {
 					Intersection in = new Intersection(endX, endY);
 					streetMap.addIntersection(in);
 					int typeCounter =0;
-					for(int i = 0; i<RoadTypes.values().length;i++)
-					{
-						if((RoadTypes.values()[i]+"").equals(roadTypeToAdd))
-						{
+					for(int i = 0; i<RoadTypes.values().length;i++) {
+						if((RoadTypes.values()[i]+"").equals(roadTypeToAdd)) {
 							typeCounter = i;
-
 						}
 					}
 					Road r = new Road(startX,startY,endX,endY);

@@ -1,6 +1,6 @@
 package datastructures;
 
-import roads.Road;
+import road.Road;
 
 public class Connection {
 
