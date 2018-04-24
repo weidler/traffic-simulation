@@ -901,7 +901,7 @@ public class GraphicalInterface extends JFrame {
 					}	
 
 				}
-				if(distance <= visuals.getIntersectionSize()+10) 
+				if(distance <= visuals.getMaxIntersectionSize()+10) 
 				{
 					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
 					visuals.setDrawRed(colorRed);
