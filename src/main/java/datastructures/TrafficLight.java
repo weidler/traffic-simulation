@@ -7,8 +7,7 @@ public class TrafficLight {
 	private Road road;
 	private int lanes;
 	private Intersection intersection;
-	private ArrayList<TrafficLight> TrafficLightList = new ArrayList<TrafficLight>();
-	private boolean inProgress = false;
+	private ArrayList<TrafficLight> TrafficLights = new ArrayList<TrafficLight>();
 
 	public TrafficLight(Road road, Intersection intersection, int lanes) {
 		this.road = road;
@@ -24,56 +23,57 @@ public class TrafficLight {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	public Road getRoad() {
 		return road;
-		
+
 	}
-	
+
 	public void setStatus(String status) {
 		if (status != "R" && status != "G") {
 			System.out.println("Illegal status '" + status + "'");
 		}
 		this.status = status;
 	}
-	
+
 	//If multiple lanes, create an arrayList of traffic lights for the road
 	public ArrayList<TrafficLight> addTrafficLightToLanes(Road road, Intersection intersection, int lanes){
-		for(int i = 0; i < lanes; i++) {
-			lanes = lanes - 1;
-			TrafficLightList.add(new TrafficLight(road,intersection,lanes));
+		ArrayList<TrafficLight> TrafficLightList = new ArrayList<TrafficLight>();
+		for(int i = 1; i < lanes; i++) {
+			int tempLanes = lanes - i;
+			TrafficLightList.add(new TrafficLight(road,intersection,tempLanes));
 		}
-		System.out.println(TrafficLightList);
+		TrafficLights = TrafficLightList;
 		return TrafficLightList;
 	}
-	
+
 	public ArrayList<TrafficLight> getTrafficLightList(){
-		return TrafficLightList;
+		return TrafficLights;
 	}
-	
+
 	public Intersection getIntersection()
 	{
 		return intersection;
 	}
-	
+
 	public boolean isRed() {
 		if (this.status == "R") {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean isGreen() {
 		if (this.status == "G") {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	// ACTIONS
-	
+
 	public void toggle() {
 		if (this.status == "R") {
 			this.setStatus("G");
