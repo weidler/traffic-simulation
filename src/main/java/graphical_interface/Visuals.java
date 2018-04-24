@@ -118,14 +118,70 @@ public class Visuals extends JPanel{
 		g2.setColor(Color.cyan);
 		
 		
-		// draws guid line		
+		// draws guide line		
 		if (drawLine) 
 		{	
 			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));		
 			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier), (int)(mousePosY*zoomMultiplier));
 			g2.setStroke(new BasicStroke());
 		}
-		// draws the roads
+		
+		// draws the lights
+		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
+			Road road= streetMap.getTrafficLights().get(i).getRoad();
+			double offset = 3;
+			
+			g2.setColor(Color.RED);
+
+			if(streetMap.getTrafficLights().get(i).getStatus().equals("G")){
+				g2.setColor(Color.GREEN);
+			}
+
+			if(road.getX1() > road.getX2()){
+				if(road.getY1() < road.getY2()){
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+					}
+
+				}
+				else{
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+			}
+			else{
+
+				if(road.getY1() < road.getY2()){
+					
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+
+				else{		
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+			}
+		}		
+		
 		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
