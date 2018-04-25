@@ -15,10 +15,10 @@ import javax.swing.ToolTipManager;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.Road;
-import datastructures.RoadTypes;
+import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import road.Road;
 
 public class Visuals extends JPanel{	
 	private Simulation simulation;
@@ -32,9 +32,10 @@ public class Visuals extends JPanel{
 	private Intersection drawRed;
 	
 	final int car_size = 8;
-	
+
 	private int intersectionSize = 0;
 	private int maxIntersectionSize = 0;
+
 	private int laneSize = 7;
 	private boolean drawLine = false;
 	private int mousePosX = 0;
@@ -51,31 +52,25 @@ public class Visuals extends JPanel{
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
 	
-	public void setIntersectionSize(int is)
-	{
+	public void setIntersectionSize(int is)	{
 		intersectionSize = is;
 	}
 	
-	public int getIntersectionSize()
-	{
+	public int getIntersectionSize() {
 		return intersectionSize;
 	}
-	public void setMaxIntersectionSize(int is)
-	{
+	public void setMaxIntersectionSize(int is) {
 		intersectionSize = is;
 	}
 	
-	public int getMaxIntersectionSize()
-	{
+	public int getMaxIntersectionSize() {
 		return intersectionSize;
 	}
-	public void setLaneSize(int l)
-	{
+	public void setLaneSize(int l) {
 		laneSize = l;
 	}
 	
-	public int getLaneSize()
-	{
+	public int getLaneSize() {
 		return laneSize;
 	}
 	
@@ -91,8 +86,8 @@ public class Visuals extends JPanel{
 	public int getChangeY() {
 		return changeY;
 	}
-	public void resetPosition()
-	{
+
+	public void resetPosition() {
 		changeX = 0;
 		changeY = 0;
 	}
@@ -109,13 +104,12 @@ public class Visuals extends JPanel{
 	
 	
 	@Override
-	public void paintComponent (Graphics g)
-	{
+	public void paintComponent (Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		defaultStroke = g2.getStroke();
 		// draws red pointer
 		g2.setColor(Color.red);
-		if(drawRed!=null)
+		if(drawRed != null)
 		{
 			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
 			g2.fillOval((int)((drawRed.getXCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeY), (int)((maxIntersectionSize+5)*zoomMultiplier), (int)((maxIntersectionSize+5)*zoomMultiplier ));
@@ -124,27 +118,82 @@ public class Visuals extends JPanel{
 		g2.setColor(Color.cyan);
 		
 		
-		// draws guid line		
+		// draws guide line		
 		if (drawLine) 
 		{	
 			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));		
 			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier), (int)(mousePosY*zoomMultiplier));
 			g2.setStroke(new BasicStroke());
 		}
-		// draws the roads
+		
+		// draws the lights
+		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
+			Road road= streetMap.getTrafficLights().get(i).getRoad();
+			double offset = 3;
+			
+			g2.setColor(Color.RED);
+
+			if(streetMap.getTrafficLights().get(i).getStatus().equals("G")){
+				g2.setColor(Color.GREEN);
+			}
+
+			if(road.getX1() > road.getX2()){
+				if(road.getY1() < road.getY2()){
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+					}
+
+				}
+				else{
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+			}
+			else{
+
+				if(road.getY1() < road.getY2()){
+					
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+
+				else{		
+
+					for(int j = 1; j <= road.getLanes();j++){
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY1()+j*laneSize-offset)*zoomMultiplier+changeY, (int)(road.getX2()+j*laneSize-offset)*zoomMultiplier+changeX, (int)(road.getY2()+j*laneSize-offset)*zoomMultiplier+changeY));
+						g2.draw(new Line2D.Double(
+								(int)(road.getX1()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY1()-j*laneSize+offset)*zoomMultiplier+changeY, (int)(road.getX2()-j*laneSize+offset)*zoomMultiplier+changeX, (int)(road.getY2()-j*laneSize+offset)*zoomMultiplier+changeY));
+					}
+				}
+			}
+		}		
+		
 		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
-			
-			if(roads.get(i).getType() == RoadTypes.ROAD)
+			if(roads.get(i).getType() == RoadType.ROAD)
 			{
 				g2.setColor(Color.black);
 			}
-			else if(roads.get(i).getType() == RoadTypes.DIRT_ROAD)
+			else if(roads.get(i).getType() == RoadType.DIRT_ROAD)
 			{
 				g2.setColor(Color.ORANGE);
 			}
-			else if(roads.get(i).getType() == RoadTypes.HIGHWAY)
+			else if(roads.get(i).getType() == RoadType.HIGHWAY)
 			{
 				g2.setColor(Color.BLUE);
 			}

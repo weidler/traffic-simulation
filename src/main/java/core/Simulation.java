@@ -3,6 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -11,15 +12,17 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 import algorithms.AStar;
+import car.Car;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.Visuals;
-import datastructures.Car;
 import datastructures.Intersection;
 
 public class Simulation {
 
+	private Properties props;
+	
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
@@ -29,9 +32,12 @@ public class Simulation {
 	
 	private boolean is_running;
 	private double current_time;
-	private double slow_mo_factor = 1;
-
-	public Simulation(StreetMap map) {
+	private float slow_mo_factor = 1;
+	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
+	
+	public Simulation(StreetMap map, Properties props) {
+		this.props = props;
+		
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
 		
@@ -86,7 +92,7 @@ public class Simulation {
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
 				
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
-		Car random_car = new Car(shortest_path, this.street_map);
+		Car random_car = new Car(shortest_path, this.street_map, this.props);
 		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
 
 		this.addCar(random_car);
@@ -112,6 +118,7 @@ public class Simulation {
 			}
 					
 			double delta_t = 0.001;
+			int step = 0;
 			while (this.is_running) {
 				
 				System.out.println("\n--------T = " + this.current_time + "s---------");
@@ -157,8 +164,10 @@ public class Simulation {
 					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
 				}
 				
-				gui.redraw();
-				this.current_time += delta_t;				
+				this.current_time += delta_t;
+				
+				step++;
+				if (step % this.visualization_frequency == 0) gui.redraw();
 			}
 		});
 		

@@ -1,6 +1,6 @@
 package datastructures;
 
-public enum RoadTypes {
+public enum RoadType {
 	HIGHWAY,
 	DIRT_ROAD,
 	ROAD

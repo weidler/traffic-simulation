@@ -3,6 +3,8 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import road.Road;
+
 public class Intersection {
 	
 	// Position
@@ -172,7 +174,7 @@ public class Intersection {
 		if (trafficlight == null) {
 			trafficlight = new TrafficLight(road, this,lanes);
 		}
-
+		System.out.println(trafficlight.getTrafficLightList());
 		connections.add(new Connection(road, intersection, trafficlight));
 	}
 	
