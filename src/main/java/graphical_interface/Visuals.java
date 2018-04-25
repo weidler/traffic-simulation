@@ -119,12 +119,12 @@ public class Visuals extends JPanel{
 		
 		
 		// draws guide line		
-		if (drawLine) 
+		/*if (drawLine) 
 		{	
 			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));		
-			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier), (int)(mousePosY*zoomMultiplier));
+			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier)+changeX, (int)(mousePosY*zoomMultiplier)+changeY);
 			g2.setStroke(new BasicStroke());
-		}
+		}*/
 		
 		// draws the lights
 		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
@@ -310,7 +310,7 @@ public class Visuals extends JPanel{
 		// draws the lights
 		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
 			Road road= streetMap.getTrafficLights().get(i).getRoad();
-			int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX) +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
+			int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX)  +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
 			int midPointY = (int) ((road.getY1()*zoomMultiplier+changeY) +(((road.getY2()*zoomMultiplier+changeY)-(road.getY1()*zoomMultiplier+changeY))/2));
 			g2.setColor(Color.RED);
 			if(streetMap.getTrafficLights().get(i).getStatus().equals("G"))

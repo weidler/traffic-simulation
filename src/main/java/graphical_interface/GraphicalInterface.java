@@ -805,7 +805,7 @@ public class GraphicalInterface extends JFrame {
 						}	
 
 					}
-					if(distance < 20) {
+					if(distance < visuals.getMaxIntersectionSize()) {
 
 						endX = nearestX;
 						endY = nearestY;

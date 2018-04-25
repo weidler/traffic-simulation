@@ -210,13 +210,13 @@ public class Car {
 	}
 	
 	public void calculateOffset(Intersection start, Intersection end) {
-		int angle = (int) (Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord()));
+		double angle = Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord());
 		if (angle<0){
-			angle+=360;
+			angle+=Math.PI*2;
 		}
-		int offsetAngle = angle+90;
-		if (offsetAngle > 360)
-			offsetAngle-= 360;
+		double offsetAngle = angle+Math.PI/2;
+		if (offsetAngle > Math.PI*2)
+			offsetAngle-= Math.PI*2;
 		offsetX = (int) (Math.round(Math.cos(offsetAngle)*4*lane)-4);
 		offsetY = (int) (Math.round(Math.sin(offsetAngle)*4*lane)-4);
 	}
