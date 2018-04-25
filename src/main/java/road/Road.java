@@ -1,10 +1,7 @@
 package road;
 
-import java.util.ArrayList;
-
 import datastructures.Intersection;
 import datastructures.RoadType;
-import datastructures.TrafficLight;
 
 public class Road {
 
@@ -12,19 +9,13 @@ public class Road {
 	protected int y1;
 	protected int x2;
 	protected int y2;
-	private Intersection intersectionTo ;
-	private Intersection intersectionFrom ;
 	protected int length;
 	protected int lanes = 1;
 
 	protected RoadType type = RoadType.ROAD;
 	protected int allowed_max_speed = 50;
-	private ArrayList<TrafficLight> trafficLightsRight = new ArrayList<TrafficLight>();
-	private ArrayList<TrafficLight> trafficLightsLeft = new ArrayList<TrafficLight>();
 	
 	public Road(Intersection intersection_from, Intersection intersection_to) {
-		intersectionTo = intersection_to;
-		intersectionFrom = intersection_from;
 		this.x1 = intersection_from.getXCoord();
 		this.y1 = intersection_from.getYCoord();
 
@@ -47,13 +38,6 @@ public class Road {
 	public void setLanes(int l) {
 		if(l >= 1 && l < 4) {
 			lanes = l;
-			for(int i = 0; i<l; l++)
-			{
-				System.out.print("wtf");
-				trafficLightsRight.add(new TrafficLight(this,intersectionTo));
-				trafficLightsLeft.add(new TrafficLight(this,intersectionFrom));
-			}
-			
 		} else {
 			System.out.println("number of lanes is not allowed");
 		}		
