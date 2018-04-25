@@ -312,6 +312,7 @@ public class GraphicalInterface extends JFrame {
 					if(!carsTextArea.getText().equals(""))
 					{
 						carsTextArea.setText("");
+					
 					}
 				}
 			}
@@ -599,7 +600,9 @@ public class GraphicalInterface extends JFrame {
 
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
 						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
-						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2)));
+						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2));
+						r.setStreetMap(streetMap);
+						streetMap.addRoad(r);
 					}
 					else 
 					{
@@ -623,7 +626,9 @@ public class GraphicalInterface extends JFrame {
 						}
 
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-						streetMap.addRoad(new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection));
+						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection);
+						r.setStreetMap(streetMap);
+						streetMap.addRoad(r);
 					}	
 					new CrossRoadDetection(streetMap);
 				}
@@ -872,6 +877,7 @@ public class GraphicalInterface extends JFrame {
 						default:
 							// collect all unknown road types and standard road under default
 							r = new Road(startX,startY,endX,endY);
+							r.setStreetMap(streetMap);
 							break;
 					}
 

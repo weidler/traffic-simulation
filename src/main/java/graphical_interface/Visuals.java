@@ -127,7 +127,7 @@ public class Visuals extends JPanel{
 		}*/
 		
 		// draws the lights
-		
+		/*
 		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
 			Road road= streetMap.getTrafficLights().get(i).getRoad();
 			double offset = 3;
@@ -181,7 +181,7 @@ public class Visuals extends JPanel{
 					}
 				}
 			}
-		}
+		}*/
 		
 		
 		g2.setColor(Color.black);
@@ -208,41 +208,93 @@ public class Visuals extends JPanel{
 			double offsetAngle = angle+(Math.PI/2);	
 			if (offsetAngle > Math.PI*2)
 				offsetAngle-= Math.PI*2;
+			
+			int midPointX = (int) ((roads.get(i).getX1()*zoomMultiplier+changeX)  +(((roads.get(i).getX2()*zoomMultiplier+changeX)-(roads.get(i).getX1()*zoomMultiplier+changeX))/2));
+			int midPointY = (int) ((roads.get(i).getY1()*zoomMultiplier+changeY) +(((roads.get(i).getY2()*zoomMultiplier+changeY)-(roads.get(i).getY1()*zoomMultiplier+changeY))/2));
+			
 			int offsetX = (int) (Math.round(Math.cos(offsetAngle)*k*laneSize));
 			int offsetY = (int) (Math.round(Math.sin(offsetAngle)*k*laneSize));
-			
-			
-			
-			
-			System.out.println(offsetX);
-			System.out.println(offsetY);
-			
-			
+			int offsetX2 = (int) (Math.round(Math.cos(offsetAngle)*laneSize));
+			int offsetY2 = (int) (Math.round(Math.sin(offsetAngle)*laneSize));
+					
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
-
+			
+			//trafficlight
+			g2.setColor(Color.RED);
+			
+			if(roads.get(i).getTrafficLightsRight().get(0).getStatus().equals("G"))
+			{
+				g2.setColor(Color.GREEN);
+			}
+			
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1()-(offsetX2/2))*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX-(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY+(offsetY2/2))*zoomMultiplier+changeY));
+		
+			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY));
 
+			//trafficlight
+			g2.setColor(Color.RED);
+			
+			if(roads.get(i).getTrafficLightsLeft().get(0).getStatus().equals("G"))
+			{
+				g2.setColor(Color.GREEN);
+			}
+			
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX2()+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY-(offsetY2/2 ))*zoomMultiplier+changeY));
+			
+			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));
-			
-			
-			g2.setStroke(dashed);
-			
+						
 			for(int j = 1; j < roads.get(i).getLanes();j++)
 			{	
 			offsetX = (int) (Math.round(Math.cos(offsetAngle)*j*laneSize));
 			offsetY = (int) (Math.round(Math.sin(offsetAngle)*j*laneSize));
 			
-		
+			g2.setStroke(dashed);
+			g2.setColor(Color.black);
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY));
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));	
+		
+			//trafficlights.
+			g2.setStroke(defaultStroke);
+			g2.setColor(Color.RED);
+			
+			if(roads.get(i).getTrafficLightsRight().get(j).getStatus().equals("G"))
+			{
+				g2.setColor(Color.GREEN);
+			}
+			
+			if(roads.get(i).getTrafficLightsRight().get(j).getIntersection().getXCoord() == roads.get(i).getX1() && roads.get(i).getTrafficLightsRight().get(j).getIntersection().getYCoord() == roads.get(i).getY1())
+			{
+				g2.draw(new Line2D.Double(
+						(int)(roads.get(i).getX1()-(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+(offsetY2/2 + offsetY))*zoomMultiplier+changeY, (int)(midPointX-(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(midPointY+(offsetY2/2 + offsetY))*zoomMultiplier+changeY));
+			
+			}
+			
+			g2.setColor(Color.RED);
+			
+			if(roads.get(i).getTrafficLightsLeft().get(0).getStatus().equals("G"))
+			{
+				g2.setColor(Color.GREEN);
+			}
+			
+			if(roads.get(i).getTrafficLightsLeft().get(j).getIntersection().getXCoord() == roads.get(i).getX2() && roads.get(i).getTrafficLightsLeft().get(j).getIntersection().getYCoord() == roads.get(i).getY2())
+			{
+				g2.draw(new Line2D.Double(
+						(int)(roads.get(i).getX2()+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 + offsetY))*zoomMultiplier+changeY, (int)(midPointX+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(midPointY-(offsetY2/2 + offsetY))*zoomMultiplier+changeY));
+			
+			}
+			
 			}
 			g2.setStroke(defaultStroke);
-			
+			g2.setColor(Color.black);
 			
 			/*
 			if(roads.get(i).getX1() > roads.get(i).getX2()) 

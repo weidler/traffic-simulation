@@ -104,12 +104,16 @@ public class CrossRoadDetection {
 				  streetMap.removeRoadBetweenCoordinates(x1, y1, x2, y2);
 				  streetMap.removeRoadBetweenCoordinates(x3, y3, x4, y4);
 				  Road r1 = new Road(x3, y3, newIntersection.getXCoord() , newIntersection.getYCoord());
+				  r1.setStreetMap(streetMap);
 				  r1.setLanes(lanes);
 				  Road r2 = new Road(x4, y4, newIntersection.getXCoord() , newIntersection.getYCoord());
+				  r2.setStreetMap(streetMap);
 				  r2.setLanes(lanes);
 				  Road r3 = new Road(x1, y1, newIntersection.getXCoord() , newIntersection.getYCoord());
+				  r3.setStreetMap(streetMap);
 				  r3.setLanes(lanes);
 				  Road r4 = new Road(x2, y2, newIntersection.getXCoord() , newIntersection.getYCoord());
+				  r4.setStreetMap(streetMap);
 				  r4.setLanes(lanes);
 				  streetMap.addRoad(r1);
 				  streetMap.addRoad(r2);

@@ -135,6 +135,7 @@ public class Simulation {
 				
 				System.out.println("\n--------T = " + this.current_time + "s---------");
 				long start_time = System.nanoTime();
+			
 				
 				// update traffic light statuses
 				this.street_map.update(delta_t);
