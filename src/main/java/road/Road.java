@@ -19,8 +19,9 @@ public class Road {
 
 	protected RoadType type = RoadType.ROAD;
 	protected int allowed_max_speed = 50;
-	private ArrayList<TrafficLight> trafficLightsRight = new ArrayList();
-	private ArrayList<TrafficLight> trafficLightsLeft = new ArrayList();
+	private ArrayList<TrafficLight> trafficLightsRight = new ArrayList<TrafficLight>();
+	private ArrayList<TrafficLight> trafficLightsLeft = new ArrayList<TrafficLight>();
+	
 	public Road(Intersection intersection_from, Intersection intersection_to) {
 		intersectionTo = intersection_to;
 		intersectionFrom = intersection_from;
@@ -48,8 +49,9 @@ public class Road {
 			lanes = l;
 			for(int i = 0; i<l; l++)
 			{
-				trafficLightsRight.add(new TrafficLight(this,intersectionTo , 0));
-				trafficLightsLeft.add(new TrafficLight(this, intersectionFrom, 0));
+				System.out.print("wtf");
+				trafficLightsRight.add(new TrafficLight(this,intersectionTo));
+				trafficLightsLeft.add(new TrafficLight(this,intersectionFrom));
 			}
 			
 		} else {
