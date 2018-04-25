@@ -30,6 +30,7 @@ public class Simulation {
 	private JTextArea carsTextPane;
 	private Car lastHoveredCar;
 	
+	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
 	private float slow_mo_factor = 1;
@@ -46,6 +47,17 @@ public class Simulation {
 	}
 	
 	// GETTERS / SETTERS
+	public void setCarInfo()
+	{
+		if(showCarInfo = true)
+		{
+			showCarInfo = false;
+		}
+		if(showCarInfo = false)
+		{
+			showCarInfo = true;
+		}
+	}
 	
 	public void setGUI(GraphicalInterface gui) {
 		this.gui = gui;
@@ -143,17 +155,20 @@ public class Simulation {
 				
 				//lists the cars
 				carsTextPane.setText("");
-				for(Car car : getCars())
+				if(showCarInfo) 
 				{
-					if(lastHoveredCar == car)
+					for(Car car : getCars())
 					{
-						carsTextPane.setText(carsTextPane.getText()+ "current: " + car.toString() +"\n");
+						if(lastHoveredCar == car)
+						{
+							carsTextPane.setText(carsTextPane.getText()+ "current: " + car.toString() +"\n");
+						}
+						else
+						{
+							carsTextPane.setText(carsTextPane.getText()+ car.toString() +"\n");
+						}
+						
 					}
-					else
-					{
-						carsTextPane.setText(carsTextPane.getText()+ car.toString() +"\n");
-					}
-					
 				}
 				
 				// Wait for time step to be over

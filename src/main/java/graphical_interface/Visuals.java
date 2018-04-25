@@ -127,6 +127,7 @@ public class Visuals extends JPanel{
 		}*/
 		
 		// draws the lights
+		
 		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
 			Road road= streetMap.getTrafficLights().get(i).getRoad();
 			double offset = 3;
@@ -180,7 +181,7 @@ public class Visuals extends JPanel{
 					}
 				}
 			}
-		}		
+		}
 		
 		
 		g2.setColor(Color.black);
@@ -198,6 +199,52 @@ public class Visuals extends JPanel{
 				g2.setColor(Color.BLUE);
 			}
 			
+			
+			
+			int k = roads.get(i).getLanes();
+			double angle = Math.atan2(roads.get(i).getY2()-roads.get(i).getY1(), roads.get(i).getX1()-roads.get(i).getX2());
+			if (angle<0)
+				angle+=Math.PI*2;
+			double offsetAngle = angle+(Math.PI/2);	
+			if (offsetAngle > Math.PI*2)
+				offsetAngle-= Math.PI*2;
+			int offsetX = (int) (Math.round(Math.cos(offsetAngle)*k*laneSize));
+			int offsetY = (int) (Math.round(Math.sin(offsetAngle)*k*laneSize));
+			
+			
+			
+			
+			System.out.println(offsetX);
+			System.out.println(offsetY);
+			
+			
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1())*zoomMultiplier+changeX, (int)(roads.get(i).getY1())*zoomMultiplier+changeY, (int)(roads.get(i).getX2())*zoomMultiplier+changeX, (int)(roads.get(i).getY2())*zoomMultiplier+changeY));
+
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY));
+
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));
+			
+			
+			g2.setStroke(dashed);
+			
+			for(int j = 1; j < roads.get(i).getLanes();j++)
+			{	
+			offsetX = (int) (Math.round(Math.cos(offsetAngle)*j*laneSize));
+			offsetY = (int) (Math.round(Math.sin(offsetAngle)*j*laneSize));
+			
+		
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY));
+			g2.draw(new Line2D.Double(
+					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));	
+			}
+			g2.setStroke(defaultStroke);
+			
+			
+			/*
 			if(roads.get(i).getX1() > roads.get(i).getX2()) 
 			{
 				if(roads.get(i).getY1() < roads.get(i).getY2()) 
@@ -295,7 +342,9 @@ public class Visuals extends JPanel{
 					g2.draw(new Line2D.Double(
 							(int)(roads.get(i).getX1()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+k*laneSize)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+k*laneSize)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+k*laneSize)*zoomMultiplier+changeY));
 				}
-			}
+			}*/
+			
+			
 			//draws the intersections
 			intersectionSize = roads.get(i).getLanes()*20;
 			if(intersectionSize>maxIntersectionSize)
@@ -308,7 +357,7 @@ public class Visuals extends JPanel{
 		}
 		
 		// draws the lights
-		for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
+		/*for (int i = 0; i < streetMap.getTrafficLights().size(); i++) {
 			Road road= streetMap.getTrafficLights().get(i).getRoad();
 			int midPointX = (int) ((road.getX1()*zoomMultiplier+changeX)  +(((road.getX2()*zoomMultiplier+changeX)-(road.getX1()*zoomMultiplier+changeX))/2));
 			int midPointY = (int) ((road.getY1()*zoomMultiplier+changeY) +(((road.getY2()*zoomMultiplier+changeY)-(road.getY1()*zoomMultiplier+changeY))/2));
@@ -327,7 +376,7 @@ public class Visuals extends JPanel{
 				g2.draw(new Line2D.Double(midPointX, midPointY, road.getX2()*zoomMultiplier+changeX, road.getY2()*zoomMultiplier+changeY));
 			}			
 			
-		}		
+		}*/		
 		
 		/*
 		for (int i = 0; i < streetMap.getIntersections().size(); i++)

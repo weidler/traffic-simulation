@@ -295,6 +295,28 @@ public class GraphicalInterface extends JFrame {
 
 		});
 
+		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
+		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
+		disableCarInfoRadio.setBounds(10, 405, 147, 23);
+		menuPanel.add(disableCarInfoRadio);
+		disableCarInfoRadio.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean selected = disableCarInfoRadio.isSelected();
+				simulation.setCarInfo();
+				System.out.println("selected "+selected);
+				if(selected)
+				{
+					if(!carsTextArea.getText().equals(""))
+					{
+						carsTextArea.setText("");
+					}
+				}
+			}
+		});
+		
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
 		addCar.setBounds(10, 131, 147, 20);
@@ -303,7 +325,16 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(!simulation.getIsRunning()) 
+				boolean selected = disableCarInfoRadio.isSelected();
+				System.out.println("selected "+selected);
+				if(selected)
+				{
+					if(!carsTextArea.getText().equals(""))
+					{
+						carsTextArea.setText("");
+					}
+				}
+				if(!simulation.getIsRunning()&&!selected) 
 				{
 					simulation.addRandomCar();
 					carsTextArea.setText("");
@@ -627,6 +658,8 @@ public class GraphicalInterface extends JFrame {
 		JLabel lanesLabel = new JLabel("lanes:");
 		lanesLabel.setBounds(10, 225, 49, 14);
 		menuPanel.add(lanesLabel);
+		
+		
 
 
 
