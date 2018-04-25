@@ -267,6 +267,7 @@ public class Car {
 				
 		return this.reached_destination;
 	}
+	
 
 	public TrafficLight getApproachedTrafficlight() {
 		return this.current_destination_intersection.getTrafficLightFrom(this.current_origin_intersection);
