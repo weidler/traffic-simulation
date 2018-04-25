@@ -267,7 +267,6 @@ public class Car {
 				
 		return this.reached_destination;
 	}
-	
 
 	public TrafficLight getApproachedTrafficlight() {
 		return this.current_destination_intersection.getTrafficLightFrom(this.current_origin_intersection);
@@ -375,7 +374,6 @@ public class Car {
 
 	public String toString() {
 		DecimalFormat df = new DecimalFormat(".##");
-		//Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")
-		return "";
+		return "Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
 	}
 }
