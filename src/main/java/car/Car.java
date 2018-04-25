@@ -374,6 +374,7 @@ public class Car {
 
 	public String toString() {
 		DecimalFormat df = new DecimalFormat(".##");
-		return "Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
+		//Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")
+		return "";
 	}
 }
