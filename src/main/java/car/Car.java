@@ -1,13 +1,18 @@
-package datastructures;
+package car;
 
 import java.awt.Color;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
-import models.IntelligentDriverModel;
+import datastructures.Intersection;
+import datastructures.StreetMap;
+import datastructures.TrafficLight;
+import model.IntelligentDriverModel;
+import road.Road;
 
 /**
  * 
@@ -17,35 +22,35 @@ import models.IntelligentDriverModel;
 public class Car {
 
 	// LOCALIZATION
-	private ArrayList<Intersection> path;
-	private Road current_road;
-	private Intersection current_origin_intersection;
-	private Intersection current_destination_intersection;
-	private boolean reached_destination;
+	protected ArrayList<Intersection> path;
+	protected Road current_road;
+	protected Intersection current_origin_intersection;
+	protected Intersection current_destination_intersection;
+	protected boolean reached_destination;
 	
-	// CONSTANTS
-	public final double REACTION_TIME = 1;
-	public final double MAX_ACCELERATION = 10;
-	public final double DECCELARATION = 3;
-	public final double SIGHT_DISTANCE = 100;
-	public final double TL_BRAKING_DISTANCE = 10;
-	public final double DESIRED_VELOCITY = 50;
+	// CHARACTERISTICS
+	protected double reaction_time;
+	protected double max_acceleration;
+	protected double decceleration;
+	protected double sight_distance;
+	protected double tl_braking_distance;
+	protected IntelligentDriverModel model;
 	
 	// DYNAMIC VALUES
-	private double current_velocity;
-	private double positionX;
-	private double positionY;
-	private double position_on_road;
-	private int lane = 1;
+	protected double current_velocity;
+	protected double positionX;
+	protected double positionY;
+	protected double position_on_road;
+	protected int lane = 1;
 
 	// CONSTRAINTS
-	private double desired_velocity;
+	protected double desired_velocity;
 	
 	// A THING NEEDED
-	private int offsetX;
-	private int offsetY;
+	protected int offsetX;
+	protected int offsetY;
 
-	private Color color;
+	protected Color color;
 	
 	/**
 	 *
@@ -53,7 +58,7 @@ public class Car {
 	 * @param endPoint
 	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
 	 */
-	public Car(ArrayList<Intersection> path, StreetMap streetMap) {
+	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
 		this.path = path;
 
 		color = Color.blue;
@@ -67,7 +72,18 @@ public class Car {
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
 		
 		this.current_velocity = 0;
-		this.desired_velocity = this.DESIRED_VELOCITY;
+		this.reaction_time = 1;
+		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"));
+		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
+		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
+		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
+		this.desired_velocity = Integer.parseInt(props.getProperty("desired_velocity"));
+	
+		this.model = new IntelligentDriverModel(
+				Integer.parseInt(props.getProperty("min_headway")), 
+				Integer.parseInt(props.getProperty("min_spacing")), 
+				Integer.parseInt(props.getProperty("IDM_delta"))
+		);
 		
 		this.reached_destination = false;
 	}
@@ -147,6 +163,22 @@ public class Car {
 		this.desired_velocity = desired_velocity;
 	}
 	
+	public double getMaxAcceleration() {
+		return max_acceleration;
+	}
+
+	public void setMaxAcceleration(double max_acceleration) {
+		this.max_acceleration = max_acceleration;
+	}
+
+	public double getDecceleration() {
+		return decceleration;
+	}
+
+	public void setDecceleration(double decceleration) {
+		this.decceleration = decceleration;
+	}
+
 	public int getOffsetX(){
 		
 		return offsetX;
@@ -196,16 +228,16 @@ public class Car {
 		Car leading_car = this.getLeadingCar(list_of_cars);
 		if (leading_car == null) {
 			this.color = Color.red;
-			acceleration = IntelligentDriverModel.getAcceleration(this, Double.NaN, Double.NaN);
+			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			this.color = Color.blue;
 			double dist_leading = this.getDistanceToCar(leading_car);
 			double leading_velocity = leading_car.getCurrentVelocity();
-			acceleration = IntelligentDriverModel.getAcceleration(this, dist_leading, leading_velocity);
+			acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 		}
 		
 		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.TL_BRAKING_DISTANCE) {
+		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.tl_braking_distance) {
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
@@ -270,7 +302,7 @@ public class Car {
 					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
 						double dist_to_c = this.getDistanceToCar(c);
 						// only if car is in distance of sight
-						if (dist_to_c <= this.SIGHT_DISTANCE) {
+						if (dist_to_c <= this.sight_distance) {
 							// If car is closer than previous then update
 							if (current_leading_car == null) {
 								current_leading_car = c;

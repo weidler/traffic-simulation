@@ -1,39 +1,54 @@
-package datastructures;
+package road;
+
+import datastructures.Intersection;
+import datastructures.RoadType;
 
 public class Road {
 
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
-	private int length;
-	private Intersection intersectionTo;
-	private Intersection intersectionFrom;
-	private RoadTypes type = RoadTypes.ROAD;
-	private int lanes = 1;
+	protected int x1;
+	protected int y1;
+	protected int x2;
+	protected int y2;
+	protected int length;
+	protected int lanes = 1;
+
+	protected RoadType type = RoadType.ROAD;
+	protected int allowed_max_speed = 50;
 	
-	public void setLanes(int l)
-	{
-		if(l >= 1 && l < 4)
-		{
+	public Road(Intersection intersection_from, Intersection intersection_to) {
+		this.x1 = intersection_from.getXCoord();
+		this.y1 = intersection_from.getYCoord();
+
+		this.x2 = intersection_to.getXCoord();
+		this.y2 = intersection_to.getYCoord();
+		
+		this.length = this.calcLength(x1, y1, x2, y2);
+	}
+	
+	public Road(int x1, int y1, int x2, int y2) {
+		this.x1 = x1;
+		this.y1 = y1;
+		
+		this.x2 = x2;
+		this.y2 = y2;
+
+		this.length = this.calcLength(x1, y1, x2, y2);	
+	}
+
+	public void setLanes(int l) {
+		if(l >= 1 && l < 4) {
 			lanes = l;
-		}
-		else 
-		{
+		} else {
 			System.out.println("number of lanes is not allowed");
 		}		
 	}
-	public int getLanes()
-	{
-		return lanes;
-	}
-	public RoadTypes getType()
-	{
+	
+	public RoadType getType() {
 		return type;
 	}
-	public void setType(RoadTypes t)
-	{
-		type = t;
+	
+	public int getLanes() {
+		return lanes;
 	}
 	
 	public int getLength() {
@@ -42,28 +57,6 @@ public class Road {
 
 	public void setLength(int length) {
 		this.length = length;
-	}
-
-	private boolean two_way;
-	
-	public Road(Intersection intersection_from, Intersection intersection_to) {
-		this.x1 = intersection_from.getXCoord();
-		this.y1 = intersection_from.getYCoord();
-		this.intersectionFrom = intersection_from;
-		this.x2 = intersection_to.getXCoord();
-		this.y2 = intersection_to.getYCoord();
-		this.intersectionTo = intersection_to;
-		
-		this.length = this.calcLength(x1, y1, x2, y2);
-	}
-	
-	public Road(int x1, int y1, int x2, int y2) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
-
-		this.length = this.calcLength(x1, y1, x2, y2);	
 	}
 	
 	public int getX1() {
@@ -81,17 +74,9 @@ public class Road {
 	public int getY2() {
 		return y2;
 	}
-
-	public boolean isTwoWay() {
-		return two_way;
-	}
-
-	public void setTwoWay(boolean two_way) {
-		this.two_way = two_way;
-	}
 	
 	public String toString() {
-		return this.x1 + "," + this.y1 +","+ this.x2 + "," + this.y2 + ",";
+		return this.getClass().getSimpleName() + "[" +this.x1 + "," + this.y1 +" -> "+ this.x2 + "," + this.y2 + "]";
 	}
 	
 	public boolean equalCoordinatesWith(Road road) {
@@ -108,15 +93,6 @@ public class Road {
 	
 	private int calcLength(int x1, int y1, int x2, int y2) {
 		return (int) Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
-	}
-	
-	public Intersection getInterFrom()
-	{
-		return intersectionFrom;
-	}
-	public Intersection getInterTo()
-	{
-		return intersectionTo;
 	}
 
 }

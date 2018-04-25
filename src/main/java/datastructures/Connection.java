@@ -1,6 +1,7 @@
 package datastructures;
 
 import java.util.ArrayList;
+import road.Road;
 
 public class Connection {
 

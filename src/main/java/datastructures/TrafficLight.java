@@ -1,5 +1,6 @@
 package datastructures;
 
+import road.Road;
 import java.util.ArrayList;
 
 public class TrafficLight {
