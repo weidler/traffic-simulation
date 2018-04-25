@@ -15,6 +15,7 @@ public class Connection {
 		this.road = road;
 		this.destination = destination;
 		this.trafficlight = trafficlight;
+		this.lanes = lanes;
 		
 		if(road.getLanes() > 1) {
 			addTrafficLightToLanes(road,destination,lanes);
@@ -28,6 +29,7 @@ public class Connection {
 			int tempLanes = lanes - i;
 			TrafficLightList.add(new TrafficLight(road,intersection,tempLanes));
 		}
+		System.out.println(TrafficLightList);
 		TrafficLights = TrafficLightList;
 		return TrafficLightList;
 	}
