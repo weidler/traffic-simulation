@@ -10,10 +10,9 @@ public class TrafficLight {
 	private Intersection intersection;
 	private ArrayList<TrafficLight> TrafficLights = new ArrayList<TrafficLight>();
 
-	public TrafficLight(Road road, Intersection intersection, int lanes) {
+	public TrafficLight(Road road, Intersection intersection) {
 		this.road = road;
 		this.intersection = intersection;
-		this.lanes = lanes;
 		this.status = "R";
 		
 	}
