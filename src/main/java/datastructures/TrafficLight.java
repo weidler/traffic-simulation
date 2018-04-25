@@ -15,9 +15,7 @@ public class TrafficLight {
 		this.intersection = intersection;
 		this.lanes = lanes;
 		this.status = "R";
-		if(lanes > 1) {
-			addTrafficLightToLanes(road,intersection,lanes);
-		}
+		
 	}
 
 	// GETTERS / SETTERS
@@ -35,21 +33,6 @@ public class TrafficLight {
 			System.out.println("Illegal status '" + status + "'");
 		}
 		this.status = status;
-	}
-
-	//If multiple lanes, create an arrayList of traffic lights for the road
-	public ArrayList<TrafficLight> addTrafficLightToLanes(Road road, Intersection intersection, int lanes){
-		ArrayList<TrafficLight> TrafficLightList = new ArrayList<TrafficLight>();
-		for(int i = 1; i < lanes; i++) {
-			int tempLanes = lanes - i;
-			TrafficLightList.add(new TrafficLight(road,intersection,tempLanes));
-		}
-		TrafficLights = TrafficLightList;
-		return TrafficLightList;
-	}
-
-	public ArrayList<TrafficLight> getTrafficLightList(){
-		return TrafficLights;
 	}
 
 	public Intersection getIntersection()
