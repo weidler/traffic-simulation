@@ -22,35 +22,35 @@ import road.Road;
 public class Car {
 
 	// LOCALIZATION
-	private ArrayList<Intersection> path;
-	private Road current_road;
-	private Intersection current_origin_intersection;
-	private Intersection current_destination_intersection;
-	private boolean reached_destination;
+	protected ArrayList<Intersection> path;
+	protected Road current_road;
+	protected Intersection current_origin_intersection;
+	protected Intersection current_destination_intersection;
+	protected boolean reached_destination;
 	
 	// CHARACTERISTICS
-	private double REACTION_TIME;
-	private double MAX_ACCELERATION;
-	private double DECCELARATION;
-	private double SIGHT_DISTANCE;
-	private double TL_BRAKING_DISTANCE;
-	private IntelligentDriverModel model;
+	protected double reaction_time;
+	protected double max_acceleration;
+	protected double decceleration;
+	protected double sight_distance;
+	protected double tl_braking_distance;
+	protected IntelligentDriverModel model;
 	
 	// DYNAMIC VALUES
-	private double current_velocity;
-	private double positionX;
-	private double positionY;
-	private double position_on_road;
-	private int lane = 1;
+	protected double current_velocity;
+	protected double positionX;
+	protected double positionY;
+	protected double position_on_road;
+	protected int lane = 1;
 
 	// CONSTRAINTS
-	private double desired_velocity;
+	protected double desired_velocity;
 	
 	// A THING NEEDED
-	private int offsetX;
-	private int offsetY;
+	protected int offsetX;
+	protected int offsetY;
 
-	private Color color;
+	protected Color color;
 	
 	/**
 	 *
@@ -72,11 +72,11 @@ public class Car {
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
 		
 		this.current_velocity = 0;
-		this.REACTION_TIME = 1;
-		this.setMaxAcceleration(Integer.parseInt(props.getProperty("max_acceleration")));
-		this.setDecceleration(Integer.parseInt(props.getProperty("decceleration")));
-		this.SIGHT_DISTANCE = Integer.parseInt(props.getProperty("sight_distance"));
-		this.TL_BRAKING_DISTANCE = Integer.parseInt(props.getProperty("tl_breaking_distance"));
+		this.reaction_time = 1;
+		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"));
+		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
+		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
+		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
 		this.desired_velocity = Integer.parseInt(props.getProperty("desired_velocity"));
 	
 		this.model = new IntelligentDriverModel(
@@ -164,19 +164,19 @@ public class Car {
 	}
 	
 	public double getMaxAcceleration() {
-		return MAX_ACCELERATION;
+		return max_acceleration;
 	}
 
-	public void setMaxAcceleration(double mAX_ACCELERATION) {
-		MAX_ACCELERATION = mAX_ACCELERATION;
+	public void setMaxAcceleration(double max_acceleration) {
+		this.max_acceleration = max_acceleration;
 	}
 
 	public double getDecceleration() {
-		return DECCELARATION;
+		return decceleration;
 	}
 
-	public void setDecceleration(double dECCELARATION) {
-		DECCELARATION = dECCELARATION;
+	public void setDecceleration(double decceleration) {
+		this.decceleration = decceleration;
 	}
 
 	public int getOffsetX(){
@@ -237,7 +237,7 @@ public class Car {
 		}
 		
 		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.TL_BRAKING_DISTANCE) {
+		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.tl_braking_distance) {
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
@@ -302,7 +302,7 @@ public class Car {
 					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
 						double dist_to_c = this.getDistanceToCar(c);
 						// only if car is in distance of sight
-						if (dist_to_c <= this.SIGHT_DISTANCE) {
+						if (dist_to_c <= this.sight_distance) {
 							// If car is closer than previous then update
 							if (current_leading_car == null) {
 								current_leading_car = c;
