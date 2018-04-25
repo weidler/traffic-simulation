@@ -28,8 +28,10 @@ import javax.swing.JScrollPane;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.RoadTypes;
+import datastructures.RoadType;
 import datastructures.StreetMap;
+import road.DirtRoad;
+import road.Highway;
 import road.Road;
 
 import javax.swing.JButton;
@@ -93,7 +95,7 @@ public class GraphicalInterface extends JFrame {
 	private StreetMap streetMap;
 	private Simulation simulation;
 
-	private String roadTypeToAdd = RoadTypes.ROAD + "";
+	private String roadTypeToAdd = RoadType.ROAD + "";
 	/**
 	 * JPanel that shows the roads etc.
 	 */
@@ -200,7 +202,7 @@ public class GraphicalInterface extends JFrame {
 
 
 
-		JLabel roadTypeLabel = new JLabel(RoadTypes.ROAD + "");
+		JLabel roadTypeLabel = new JLabel(RoadType.ROAD + "");
 		roadTypeLabel.setBounds(10, 192, 147, 19);
 		menuPanel.add(roadTypeLabel);
 		roadTypeLabel.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -215,11 +217,11 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				int typeCounter =0;
-				for(int i = 0; i<RoadTypes.values().length;i++)
+				for(int i = 0; i<RoadType.values().length;i++)
 				{
-					if((RoadTypes.values()[i]+"").equals(roadTypeLabel.getText()))
+					if((RoadType.values()[i]+"").equals(roadTypeLabel.getText()))
 					{
-						if(i == RoadTypes.values().length-1)
+						if(i == RoadType.values().length-1)
 						{
 							typeCounter = 0;
 						}
@@ -230,17 +232,17 @@ public class GraphicalInterface extends JFrame {
 
 					}
 				}
-				roadTypeLabel.setText(RoadTypes.values()[typeCounter]+"");
-				roadTypeToAdd = RoadTypes.values()[typeCounter]+"";
-				if(roadTypeLabel.getText().equals(RoadTypes.ROAD+""))
+				roadTypeLabel.setText(RoadType.values()[typeCounter]+"");
+				roadTypeToAdd = RoadType.values()[typeCounter]+"";
+				if(roadTypeLabel.getText().equals(RoadType.ROAD+""))
 				{
 					roadTypeLabel.setForeground (Color.black);
 				}
-				else if(roadTypeLabel.getText().equals(RoadTypes.DIRT_ROAD+""))
+				else if(roadTypeLabel.getText().equals(RoadType.DIRT_ROAD+""))
 				{
 					roadTypeLabel.setForeground (Color.ORANGE);
 				}
-				else if(roadTypeLabel.getText().equals(RoadTypes.HIGHWAY+""))
+				else if(roadTypeLabel.getText().equals(RoadType.HIGHWAY+""))
 				{
 					roadTypeLabel.setForeground (Color.BLUE);
 				}
@@ -816,13 +818,29 @@ public class GraphicalInterface extends JFrame {
 					Intersection in = new Intersection(endX, endY);
 					streetMap.addIntersection(in);
 					int typeCounter =0;
-					for(int i = 0; i<RoadTypes.values().length;i++) {
-						if((RoadTypes.values()[i]+"").equals(roadTypeToAdd)) {
+					for(int i = 0; i<RoadType.values().length;i++) {
+						if((RoadType.values()[i]+"").equals(roadTypeToAdd)) {
 							typeCounter = i;
 						}
 					}
-					Road r = new Road(startX,startY,endX,endY);
-					r.setType(RoadTypes.values()[typeCounter]);
+					
+//					Road r = new Road(startX,startY,endX,endY);		
+//					r.setType(RoadType.values()[typeCounter]);
+					Road r;
+					switch (roadTypeToAdd) {
+						case "DIRT_ROAD":
+							r = new DirtRoad(startX,startY,endX,endY);
+							break;
+					
+						case "HIGHWAY":
+							r = new Highway(startX,startY,endX,endY);
+							break;
+						
+						default:
+							// collect all unknown road types and standard road under default
+							r = new Road(startX,startY,endX,endY);
+							break;
+					}
 
 					oneLane = lanes1.isSelected();
 					twoLane = lanes2.isSelected();

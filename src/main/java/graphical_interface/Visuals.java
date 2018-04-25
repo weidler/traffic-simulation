@@ -15,7 +15,7 @@ import javax.swing.ToolTipManager;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.RoadTypes;
+import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import road.Road;
@@ -185,16 +185,15 @@ public class Visuals extends JPanel{
 		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {		
-			
-			if(roads.get(i).getType() == RoadTypes.ROAD)
+			if(roads.get(i).getType() == RoadType.ROAD)
 			{
 				g2.setColor(Color.black);
 			}
-			else if(roads.get(i).getType() == RoadTypes.DIRT_ROAD)
+			else if(roads.get(i).getType() == RoadType.DIRT_ROAD)
 			{
 				g2.setColor(Color.ORANGE);
 			}
-			else if(roads.get(i).getType() == RoadTypes.HIGHWAY)
+			else if(roads.get(i).getType() == RoadType.HIGHWAY)
 			{
 				g2.setColor(Color.BLUE);
 			}
