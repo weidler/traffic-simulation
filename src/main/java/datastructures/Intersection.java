@@ -172,7 +172,7 @@ public class Intersection {
 	 */
 	public void addConnection(Road road, Intersection intersection, TrafficLight trafficlight, int lanes) {
 		if (trafficlight == null) {
-			trafficlight = new TrafficLight(road, this,lanes);
+			trafficlight = new TrafficLight(road,this);
 		}
 		connections.add(new Connection(road, intersection, trafficlight,lanes));
 	}

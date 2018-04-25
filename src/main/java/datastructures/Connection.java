@@ -16,28 +16,7 @@ public class Connection {
 		this.destination = destination;
 		this.trafficlight = trafficlight;
 		this.lanes = lanes;
-		
-		if(road.getLanes() > 1) {
-			addTrafficLightToLanes(road,destination,lanes);
-		}
 	}
-	
-	//If multiple lanes, create an arrayList of traffic lights for the road
-	public ArrayList<TrafficLight> addTrafficLightToLanes(Road road, Intersection intersection, int lanes){
-		ArrayList<TrafficLight> TrafficLightList = new ArrayList<TrafficLight>();
-		for(int i = 1; i <= lanes; i++) {
-			int tempLanes = lanes - i;
-			TrafficLightList.add(new TrafficLight(road,intersection,tempLanes));
-		}
-		System.out.println(TrafficLightList);
-		TrafficLights = TrafficLightList;
-		return TrafficLightList;
-	}
-
-	public ArrayList<TrafficLight> getTrafficLightList(){
-		return TrafficLights;
-	}
-
 
 	// GETTER / SETTER
 	
