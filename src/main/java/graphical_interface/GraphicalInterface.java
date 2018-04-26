@@ -880,7 +880,7 @@ public class GraphicalInterface extends JFrame {
 							r.setStreetMap(streetMap);
 							break;
 					}
-
+					
 					oneLane = lanes1.isSelected();
 					twoLane = lanes2.isSelected();
 					threeLane = lanes3.isSelected();
@@ -890,10 +890,17 @@ public class GraphicalInterface extends JFrame {
 					if(threeLane) {l=3;}
 
 					r.setLanes(l);
-					streetMap.addRoad(r);
-					new CrossRoadDetection(streetMap);
+					if((int)(r.getLength() / visuals.getDivider()) >=2)
+					{
+						streetMap.addRoad(r);
+						new CrossRoadDetection(streetMap);
+					}
+					else
+					{
+						streetMap.removeIntersection(in);
+					}
 					clickCounter = 0;
-
+ 
 					visuals.setDrawLine(false);
 				}
 

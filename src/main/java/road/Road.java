@@ -51,8 +51,8 @@ public class Road {
 			lanes = l;
 			for(int i = 0; i < l; i++)
 			{
-				trafficlightsRight.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x1, y1), 0));
-				trafficlightsLeft.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x2, y2), 0));
+				trafficlightsRight.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x1, y1)));
+				trafficlightsLeft.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x2, y2)));
 				
 			}
 		} else {
