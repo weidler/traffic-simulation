@@ -142,6 +142,8 @@ public class Simulation {
 			}
 					
 			double delta_t = 0.001;
+			this.visualization_frequency = (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS")));
+			
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
