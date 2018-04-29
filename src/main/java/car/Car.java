@@ -52,6 +52,7 @@ public class Car {
 
 	protected Color color;
 	
+
 	/**
 	 *
 	 * @param startPoint

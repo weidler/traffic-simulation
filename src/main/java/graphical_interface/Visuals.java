@@ -242,6 +242,8 @@ public class Visuals extends JPanel{
 			
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()-(offsetX2/2))*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX-(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY+(offsetY2/2))*zoomMultiplier+changeY));
+			g2.fillOval((int)((midPointX)*zoomMultiplier + changeX + roads.get(i).getOffsetX().get(2)), (int)((midPointY)*zoomMultiplier + changeX + roads.get(i).getOffsetY().get(2)), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
+
 			//end trafficlight
 			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
