@@ -274,6 +274,9 @@ public class Visuals extends JPanel{
 		for(int i = 0; i<simulation.getCars().size(); i ++)
 		{
 				simulation.getCars().get(i).calculateOffset(simulation.getCars().get(i).getCurrentOriginIntersection(), simulation.getCars().get(i).getCurrentDestinationIntersection());
+				//simulation.getCars().get(i).setOffsetX(simulation.getCars().get(i).getCurrentRoad().getOffsetX().get(simulation.getCars().get(i).getLanes()-1));
+				//simulation.getCars().get(i).setOffsetY(simulation.getCars().get(i).getCurrentRoad().getOffsetY().get(simulation.getCars().get(i).getLanes()-1));
+				
 				g2.setColor(simulation.getCars().get(i).getColor());
 				g2.fillOval((int)((simulation.getCars().get(i).getPositionX())*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY())*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
 				

@@ -202,7 +202,14 @@ public class Car {
 	public double getDesiredVelocity() {
 		return this.desired_velocity;
 	}
-	
+	public void setOffsetX(int x)
+	{
+		offsetX = x;
+	}
+	public void setOffsetY(int y)
+	{
+		offsetX = y;
+	}
 	public int getOffsetX(){
 		
 		return offsetX;
