@@ -253,7 +253,7 @@ public class Car {
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars);
 		if (leading_car == null) {
-			this.color = Color.red;
+			this.color = Color.CYAN;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			this.color = Color.blue;
