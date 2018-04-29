@@ -335,7 +335,7 @@ public class GraphicalInterface extends JFrame {
 						carsTextArea.setText("");
 					}
 				}
-				if(!simulation.getIsRunning()&&!selected) 
+				if(!simulation.isRunning()&&!selected) 
 				{
 					simulation.addRandomCar();
 					carsTextArea.setText("");

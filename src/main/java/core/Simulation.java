@@ -40,6 +40,7 @@ public class Simulation {
 	// STATISTICS
 	private int measurement_interval = 100;
 	private double average_velocity;
+	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for that it simulates
 	
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -68,8 +69,7 @@ public class Simulation {
 		this.gui = gui;
 	}
 	
-	public boolean getIsRunning()
-	{
+	public boolean isRunning() {
 		return is_running;
 	}
 	
@@ -142,7 +142,9 @@ public class Simulation {
 			}
 					
 			double delta_t = 0.001;
+			long total_calculation_time = 0;
 			int step = 0;
+			int resettable_step = 0;
 			while (this.is_running) {
 				long start_time = System.nanoTime();
 			
@@ -182,18 +184,27 @@ public class Simulation {
 				}
 				
 				// Wait for time step to be over
-				int ms_to_wait = (int) (delta_t * 1000 * this.slow_mo_factor);
+				double ns_to_wait = delta_t * 1000000000;
+				double ns_used = (System.nanoTime() - start_time);
+				total_calculation_time += ns_used;
 				try {
-					TimeUnit.MILLISECONDS.sleep(Math.max(0, ms_to_wait - (System.nanoTime() - start_time)/1000000));				
+					TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));				
 				} catch(InterruptedException e) {
-					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
+					System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
 				}
 				
 				this.current_time += delta_t;
 				
 				step++;
+				resettable_step++; 
 				if (step % this.visualization_frequency == 0) gui.redraw();
-				if (step% this.measurement_interval == 0) this.calcStatistics();
+				if (step % this.measurement_interval == 0) this.calcStatistics();
+				if (step % 100 == 0) {
+					this.real_time_utilization = (total_calculation_time / resettable_step) / (delta_t * 1000000000);
+					resettable_step = 0;
+					total_calculation_time = 0;
+					System.out.println(this.real_time_utilization);
+				}
 			}
 		});
 		
@@ -206,14 +217,14 @@ public class Simulation {
 		this.average_velocity = total_velocity / this.cars.size();
 	}
 	
-	public void setTextArea(JTextArea p)
-	{
+	public void setTextArea(JTextArea p) {
 		carsTextPane = p;
 	}
-	public void setLastHoveredCar(Car c)
-	{
+
+	public void setLastHoveredCar(Car c) {
 		lastHoveredCar = c;
 	}
+	
 	public void stop() {
 		this.is_running = false;
 		System.out.println("stop");
