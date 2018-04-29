@@ -53,7 +53,17 @@ public class Car {
 	protected double vehicle_length;
 	protected double favored_velocity;
 	
+
+
+	/**
+	 *
+	 * @param startPoint
+	 * @param endPoint
+	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
+	 */
+
 	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
+		
 		this.path = path;
 
 		color = Color.blue;
@@ -192,7 +202,14 @@ public class Car {
 	public double getDesiredVelocity() {
 		return this.desired_velocity;
 	}
-	
+	public void setOffsetX(int x)
+	{
+		offsetX = x;
+	}
+	public void setOffsetY(int y)
+	{
+		offsetX = y;
+	}
 	public int getOffsetX(){
 		
 		return offsetX;
@@ -243,7 +260,7 @@ public class Car {
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars);
 		if (leading_car == null) {
-			this.color = Color.red;
+			this.color = Color.CYAN;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			this.color = Color.blue;

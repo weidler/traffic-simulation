@@ -16,8 +16,15 @@ public class Road {
 	protected int length;
 	protected int lanes = 1;
 
-	protected RoadType type;
-	protected int allowed_max_speed;
+
+	protected RoadType type = RoadType.ROAD;
+	protected int allowed_max_speed = 50;
+	protected ArrayList<Integer> offsetX = new ArrayList();
+	protected ArrayList<Integer> offsetY = new ArrayList();
+	
+
+	
+
 
 	//first one in the list is the trafficlight closest to the middle.
 	protected ArrayList<TrafficLight> trafficlightsRight = new ArrayList();
@@ -33,7 +40,38 @@ public class Road {
 		
 		this.length = this.calcLength(x1, y1, x2, y2);
 		
+
+		
+	}
+	public ArrayList<Integer> getOffsetX()
+	{
+		return offsetX;
+	}
+	public ArrayList<Integer> getOffsetY()
+	{
+		return offsetY;
+	}
+	
+	public void calculateOffset(Intersection start, Intersection end) {
+		double angle = Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord());
+		if (angle<0){
+			angle+=Math.PI*2;
+		}
+		double offsetAngle = angle+Math.PI/2;
+		if (offsetAngle > Math.PI*2)
+		{
+			offsetAngle-= Math.PI*2;
+		}	
+		for(int i = 0; i < lanes;i++)
+		{
+			System.out.println("lane: " + i);
+			offsetX.add((int) (Math.round(Math.cos(offsetAngle)*4*i)-4));
+			offsetY.add((int) (Math.round(Math.sin(offsetAngle)*4*i)-4));
+		}
+		
+
 		this.setTypeParameters();
+
 	}
 	
 	public Road(int x1, int y1, int x2, int y2) {
@@ -67,7 +105,8 @@ public class Road {
 			}
 		} else {
 			System.out.println("number of lanes is not allowed");
-		}		
+		}
+		calculateOffset(streetmap.getIntersectionByCoordinates(x1, y1), streetmap.getIntersectionByCoordinates(x2, y2));
 	}
 	
 	public RoadType getType() {
