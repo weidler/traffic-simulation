@@ -132,6 +132,8 @@ public class StreetMap {
 		Intersection int_a = this.getIntersectionByCoordinates(road.getX1(), road.getY1());
 		Intersection int_b = this.getIntersectionByCoordinates(road.getX2(), road.getY2());
 		
+		road.setStreetMap(this);
+		
 		if (int_a == null || int_b == null) {
 			System.out.println("You tried adding a road between at least one missing Intersection."
 					+ "Probably, you should create intersections first, THEN add the road.");

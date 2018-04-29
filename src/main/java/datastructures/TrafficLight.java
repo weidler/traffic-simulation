@@ -13,8 +13,7 @@ public class TrafficLight {
 	public TrafficLight(Road road, Intersection intersection) {
 		this.road = road;
 		this.intersection = intersection;
-		this.status = "R";
-		
+		this.status = "R";		
 	}
 
 	// GETTERS / SETTERS
@@ -24,7 +23,6 @@ public class TrafficLight {
 
 	public Road getRoad() {
 		return road;
-
 	}
 
 	public void setStatus(String status) {

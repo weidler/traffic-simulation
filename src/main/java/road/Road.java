@@ -16,15 +16,21 @@ public class Road {
 	protected int length;
 	protected int lanes = 1;
 
+
 	protected RoadType type = RoadType.ROAD;
 	protected int allowed_max_speed = 50;
 	protected ArrayList<Integer> offsetX;
 	protected ArrayList<Integer> offsetY;
 	
+
+	
+
+
 	//first one in the list is the trafficlight closest to the middle.
 	protected ArrayList<TrafficLight> trafficlightsRight = new ArrayList();
 	protected ArrayList<TrafficLight> trafficlightsLeft = new ArrayList();
-	protected StreetMap streetmap ;
+	protected StreetMap streetmap;
+
 	public Road(Intersection intersection_from, Intersection intersection_to) {
 		this.x1 = intersection_from.getXCoord();
 		this.y1 = intersection_from.getYCoord();
@@ -34,6 +40,7 @@ public class Road {
 		
 		this.length = this.calcLength(x1, y1, x2, y2);
 		
+
 		
 	}
 	public ArrayList<Integer> getOffsetX()
@@ -60,6 +67,9 @@ public class Road {
 			offsetY.add((int) (Math.round(Math.sin(offsetAngle)*4*i)-4));
 		}
 		
+
+		this.setTypeParameters();
+
 	}
 	
 	public Road(int x1, int y1, int x2, int y2) {
@@ -70,20 +80,26 @@ public class Road {
 		this.y2 = y2;
 
 		this.length = this.calcLength(x1, y1, x2, y2);	
+		
+		this.setTypeParameters();
+	}
+	
+	protected void setTypeParameters() {
+		this.allowed_max_speed = 50;
+		this.type = RoadType.ROAD;
 	}
 
 	public void setStreetMap(StreetMap map)
 	{
 		streetmap = map;
 	}
+
 	public void setLanes(int l) {
 		if(l >= 1 && l < 4) {
 			lanes = l;
-			for(int i = 0; i < l; i++)
-			{
+			for(int i = 0; i < l; i++) {
 				trafficlightsRight.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x1, y1)));
 				trafficlightsLeft.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x2, y2)));
-				
 			}
 		} else {
 			System.out.println("number of lanes is not allowed");
@@ -130,6 +146,15 @@ public class Road {
 	{
 		return trafficlightsLeft;
 	}
+
+	public int getAllowedMaxSpeed() {
+		return allowed_max_speed;
+	}
+
+	public void setAllowedMaxSpeed(int allowed_max_speed) {
+		this.allowed_max_speed = allowed_max_speed;
+	}
+
 	public String toString() {
 		return this.getClass().getSimpleName() + "[" +this.x1 + "," + this.y1 +" -> "+ this.x2 + "," + this.y2 + "]";
 	}

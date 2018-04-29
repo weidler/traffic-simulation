@@ -13,6 +13,7 @@ import javax.swing.JTextPane;
 
 import algorithms.AStar;
 import car.Car;
+import car.Truck;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
@@ -35,6 +36,11 @@ public class Simulation {
 	private double current_time;
 	private float slow_mo_factor = 1;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
+	
+	// STATISTICS
+	private int measurement_interval = 100;
+	private double average_velocity;
+	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for that it simulates
 	
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -63,8 +69,7 @@ public class Simulation {
 		this.gui = gui;
 	}
 	
-	public boolean getIsRunning()
-	{
+	public boolean isRunning() {
 		return is_running;
 	}
 	
@@ -93,6 +98,7 @@ public class Simulation {
 		this.street_map.getIntersections();
 		this.street_map.getRoads();
 		
+		// generate random parameters
 		Random r = new Random();
 		int origin = r.nextInt(this.street_map.getIntersections().size());
 		int destination;
@@ -102,12 +108,19 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-				
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
-		Car random_car = new Car(shortest_path, this.street_map, this.props);
+		
+		// create vehicle
+		Car random_car;
+		double type_rand = r.nextDouble();
+		if (type_rand <= 0.9) {
+			random_car = new Car(shortest_path, this.street_map, this.props);
+		} else {
+			random_car = new Truck(shortest_path, this.street_map, this.props);
+		}
 		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
-
 		this.addCar(random_car);
+
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 
@@ -121,8 +134,7 @@ public class Simulation {
 		
 		this.is_running = true;
 		
-		Thread th = new Thread(()-> {
-			System.out.println("start");			
+		Thread th = new Thread(()-> {		
 			
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
@@ -130,13 +142,12 @@ public class Simulation {
 			}
 					
 			double delta_t = 0.001;
+			long total_calculation_time = 0;
 			int step = 0;
+			int resettable_step = 0;
 			while (this.is_running) {
-				
-				System.out.println("\n--------T = " + this.current_time + "s---------");
 				long start_time = System.nanoTime();
 			
-				
 				// update traffic light statuses
 				this.street_map.update(delta_t);
 
@@ -173,31 +184,47 @@ public class Simulation {
 				}
 				
 				// Wait for time step to be over
-				int ms_to_wait = (int) (delta_t * 1000 * this.slow_mo_factor);
+				double ns_to_wait = delta_t * 1000000000;
+				double ns_used = (System.nanoTime() - start_time);
+				total_calculation_time += ns_used;
 				try {
-					TimeUnit.MILLISECONDS.sleep(Math.max(0, ms_to_wait - (System.nanoTime() - start_time)/1000000));				
+					TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));				
 				} catch(InterruptedException e) {
-					System.out.println("Simulation sleeping (" + ms_to_wait + "ms) got interrupted!");
+					System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
 				}
 				
 				this.current_time += delta_t;
 				
 				step++;
+				resettable_step++; 
 				if (step % this.visualization_frequency == 0) gui.redraw();
+				if (step % this.measurement_interval == 0) this.calcStatistics();
+				if (step % 100 == 0) {
+					this.real_time_utilization = (total_calculation_time / resettable_step) / (delta_t * 1000000000);
+					resettable_step = 0;
+					total_calculation_time = 0;
+					System.out.println(this.real_time_utilization);
+				}
 			}
 		});
 		
 		th.start();
 	}
 
-	public void setTextArea(JTextArea p)
-	{
+	public void calcStatistics() {
+		double total_velocity = 0;
+		for (Car c : this.cars) total_velocity += c.getCurrentVelocity();
+		this.average_velocity = total_velocity / this.cars.size();
+	}
+	
+	public void setTextArea(JTextArea p) {
 		carsTextPane = p;
 	}
-	public void setLastHoveredCar(Car c)
-	{
+
+	public void setLastHoveredCar(Car c) {
 		lastHoveredCar = c;
 	}
+	
 	public void stop() {
 		this.is_running = false;
 		System.out.println("stop");

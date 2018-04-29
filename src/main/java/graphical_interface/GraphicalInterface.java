@@ -335,7 +335,7 @@ public class GraphicalInterface extends JFrame {
 						carsTextArea.setText("");
 					}
 				}
-				if(!simulation.getIsRunning()&&!selected) 
+				if(!simulation.isRunning()&&!selected) 
 				{
 					simulation.addRandomCar();
 					carsTextArea.setText("");
@@ -877,9 +877,9 @@ public class GraphicalInterface extends JFrame {
 						default:
 							// collect all unknown road types and standard road under default
 							r = new Road(startX,startY,endX,endY);
-							r.setStreetMap(streetMap);
 							break;
 					}
+					r.setStreetMap(streetMap);
 					
 					oneLane = lanes1.isSelected();
 					twoLane = lanes2.isSelected();
