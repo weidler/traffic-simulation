@@ -45,7 +45,8 @@ public class Visuals extends JPanel{
 	private int startPosY = 0;
 	private Stroke defaultStroke;
 	private Stroke dashed = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND, 0, new float[]{9}, 0);
-	private int divider = 20;
+	private Stroke fat =new BasicStroke(laneSize-2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND);
+	private int divider = 30;
 	
 	private double zoomMultiplier = 1.0;
 	
@@ -194,6 +195,7 @@ public class Visuals extends JPanel{
 		
 		g2.setColor(Color.black);
 		for(int i = 0 ; i< roads.size() ; i++ ) {	
+			
 			setLightDistanceFromIntersection(roads.get(i).getLength());
 			//System.out.println("distance: "+lightDistanceFromIntersection);
 			if(roads.get(i).getType() == RoadType.ROAD)
@@ -234,7 +236,7 @@ public class Visuals extends JPanel{
 			
 			//trafficlight
 			g2.setColor(Color.RED);
-			
+			g2.setStroke(fat);
 			if(roads.get(i).getTrafficLightsRight().get(0).getStatus().equals("G"))
 			{
 				g2.setColor(Color.GREEN);
@@ -242,16 +244,17 @@ public class Visuals extends JPanel{
 			
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()-(offsetX2/2))*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX-(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY+(offsetY2/2))*zoomMultiplier+changeY));
-			g2.fillOval((int)((midPointX)*zoomMultiplier + changeX + roads.get(i).getOffsetX().get(2)), (int)((midPointY)*zoomMultiplier + changeX + roads.get(i).getOffsetY().get(2)), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
+			//g2.fillOval((int)((midPointX-(offsetX2/2))*zoomMultiplier + changeX + roads.get(i).getOffsetX().get(roads.get(i).getOffsetX().size()-1)), (int)((midPointY+(offsetY2/2 ))*zoomMultiplier + changeX + roads.get(i).getOffsetY().get(roads.get(i).getOffsetY().size()-1)), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
 
 			//end trafficlight
+			g2.setStroke(defaultStroke);
 			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY));
 
 			//trafficlight
 			g2.setColor(Color.RED);
-			
+			g2.setStroke(fat);
 			if(roads.get(i).getTrafficLightsLeft().get(0).getStatus().equals("G"))
 			{
 				g2.setColor(Color.GREEN);
@@ -260,6 +263,7 @@ public class Visuals extends JPanel{
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX2()+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX2+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY2-(offsetY2/2 ))*zoomMultiplier+changeY));
 			//end trafficlight
+			g2.setStroke(defaultStroke);
 			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
 					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));
@@ -277,7 +281,7 @@ public class Visuals extends JPanel{
 					(int)(roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, (int)(roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY));	
 		
 			//trafficlights.
-			g2.setStroke(defaultStroke);
+			g2.setStroke(fat);
 			g2.setColor(Color.RED);
 			
 			if(roads.get(i).getTrafficLightsRight().get(j).getStatus().equals("G"))
@@ -304,9 +308,8 @@ public class Visuals extends JPanel{
 				g2.draw(new Line2D.Double(
 						(int)(roads.get(i).getX2()+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 + offsetY))*zoomMultiplier+changeY, (int)(midPointX2+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(midPointY2-(offsetY2/2 + offsetY))*zoomMultiplier+changeY));
 			
-				g2.fillOval( (int)((midPointX2+(offsetX2/2 + offsetX))*zoomMultiplier+changeX), (int)((midPointY2-(offsetY2/2 + offsetY))*zoomMultiplier+changeY), laneSize-2, laneSize-2);
 			}
-			
+			g2.setStroke(defaultStroke);
 			}
 			g2.setStroke(defaultStroke);
 			g2.setColor(Color.black);

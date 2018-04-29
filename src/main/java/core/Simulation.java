@@ -92,6 +92,7 @@ public class Simulation {
 		}
 		
 		this.cars.add(car);					
+		
 	}
 	
 	public void addRandomCar() {

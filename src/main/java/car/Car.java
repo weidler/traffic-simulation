@@ -63,6 +63,7 @@ public class Car {
 	 */
 
 	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
+		
 		this.path = path;
 
 		color = Color.blue;
