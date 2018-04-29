@@ -37,6 +37,10 @@ public class Simulation {
 	private float slow_mo_factor = 1;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
+	// STATISTICS
+	private int measurement_interval = 100;
+	private double average_velocity;
+	
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
 		
@@ -189,12 +193,19 @@ public class Simulation {
 				
 				step++;
 				if (step % this.visualization_frequency == 0) gui.redraw();
+				if (step% this.measurement_interval == 0) this.calcStatistics();
 			}
 		});
 		
 		th.start();
 	}
 
+	public void calcStatistics() {
+		double total_velocity = 0;
+		for (Car c : this.cars) total_velocity += c.getCurrentVelocity();
+		this.average_velocity = total_velocity / this.cars.size();
+	}
+	
 	public void setTextArea(JTextArea p)
 	{
 		carsTextPane = p;
