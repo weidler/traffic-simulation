@@ -28,14 +28,6 @@ public class Car {
 	protected Intersection current_destination_intersection;
 	protected boolean reached_destination;
 	
-	// CHARACTERISTICS
-	protected double reaction_time;
-	protected double max_acceleration;
-	protected double decceleration;
-	protected double sight_distance;
-	protected double tl_braking_distance;
-	protected IntelligentDriverModel model;
-	
 	// DYNAMIC VALUES
 	protected double current_velocity;
 	protected double positionX;
@@ -43,21 +35,24 @@ public class Car {
 	protected double position_on_road;
 	protected int lane = 1;
 
-	// CONSTRAINTS
-	protected double desired_velocity;
+	// BEHAVIOR
+	protected IntelligentDriverModel model;
+	protected double desired_velocity;	
 	
-	// A THING NEEDED
+	// VISUALISATION
 	protected int offsetX;
 	protected int offsetY;
-
 	protected Color color;
+
+	// TYPE VARIABLES
+	protected double reaction_time;
+	protected double max_acceleration;
+	protected double decceleration;
+	protected double sight_distance;
+	protected double tl_braking_distance;
+	protected double vehicle_length;
+	protected double favored_velocity;
 	
-	/**
-	 *
-	 * @param startPoint
-	 * @param endPoint
-	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
-	 */
 	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
 		this.path = path;
 
@@ -72,12 +67,9 @@ public class Car {
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
 		
 		this.current_velocity = 0;
-		this.reaction_time = 1;
-		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"));
-		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
-		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
-		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
-		this.desired_velocity = Integer.parseInt(props.getProperty("desired_velocity"));
+		
+		this.setTypeParameters(props);
+		this.updateDesiredVelocity();
 	
 		this.model = new IntelligentDriverModel(
 				Integer.parseInt(props.getProperty("min_headway")), 
@@ -86,6 +78,24 @@ public class Car {
 		);
 		
 		this.reached_destination = false;
+	}
+	
+	private void updateDesiredVelocity() {
+		this.desired_velocity = Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed());
+	}
+
+	protected void setTypeParameters(Properties props) {
+		// DRIVING
+		this.reaction_time = 1;
+		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"));
+		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
+		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
+		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
+		this.favored_velocity = Integer.parseInt(props.getProperty("favored_velocity"));
+		
+		// PHYSICS / VIZ
+		this.vehicle_length = Integer.parseInt(props.getProperty("vehicle_length"));
+		this.color = Color.BLUE;
 	}
 	
 	public double getPositionOnRoad() {
@@ -155,12 +165,12 @@ public class Car {
 		this.positionY = positionY;
 	}
 
-	public double getDesiredVelocity() {
-		return desired_velocity;
+	public double getFavoredVelocity() {
+		return favored_velocity;
 	}
 
-	public void setDesiredVelocity(double desired_velocity) {
-		this.desired_velocity = desired_velocity;
+	public void setFavoredVelocity(double favored_velocity) {
+		this.favored_velocity = favored_velocity;
 	}
 	
 	public double getMaxAcceleration() {
@@ -179,6 +189,10 @@ public class Car {
 		this.decceleration = decceleration;
 	}
 
+	public double getDesiredVelocity() {
+		return this.desired_velocity;
+	}
+	
 	public int getOffsetX(){
 		
 		return offsetX;
@@ -193,6 +207,8 @@ public class Car {
 	{
 		return color;
 	}
+	
+	
 	public void setLane(int l)
 	{
 		if(l >= 1 && l < 4)
@@ -257,6 +273,7 @@ public class Car {
 				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
 				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
+				this.updateDesiredVelocity();
 			}
 
 			// update x and y based on position on road
@@ -374,6 +391,6 @@ public class Car {
 
 	public String toString() {
 		DecimalFormat df = new DecimalFormat(".##");
-		return "Car: (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
+		return this.getClass().getSimpleName() + ": (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
 	}
 }

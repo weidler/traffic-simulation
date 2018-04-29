@@ -69,7 +69,8 @@ From top to bottom the buttons are:
 During the interactive creation of a map, certain checks are run. Every intersection is restricted to not have more than four roads connected. If during two roads would cross each other, than at this crossing a new intersection is created.
 	
 \subsection{Traffic Flow Simulation}
-As mentioned beforehand, we implement the IDM \citep{treiber2000congested} for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
+
+As mentioned beforehand, we apply the IDM \citep{treiber2000congested} for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
 
 \begin{equation}
 	\label{eq:free-road-term}
@@ -91,8 +92,24 @@ In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space
 
 In order to simulate a time-continuous model, we need to numerically approximate the integration of the differential equations in \ref{eq:free-road-term} and \ref{eq:int-term}. For that, we choose a small time step $\Delta t$ and repetitively update the velocity as $v(t + \Delta t) = v(t) + \dot{v}(t)$.
 
+\subsection{Traffic Rule Compliance}
+Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights. Following, we briefly discuss the approaches we use in our simulation.
+
+\paragraph{Approaching Traffic Lights}
+
+\paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
+
+
+\subsubsection{Lane Changing}
+
+
+
 \section{Traffic Control Strategies}
 \label{sec:strategies}
+
+\subsubsection{Benchmark Strategies}
+
+\subsubsection{Advanced Strategies}
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}

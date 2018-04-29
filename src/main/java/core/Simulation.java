@@ -13,6 +13,7 @@ import javax.swing.JTextPane;
 
 import algorithms.AStar;
 import car.Car;
+import car.Truck;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
@@ -93,6 +94,7 @@ public class Simulation {
 		this.street_map.getIntersections();
 		this.street_map.getRoads();
 		
+		// generate random parameters
 		Random r = new Random();
 		int origin = r.nextInt(this.street_map.getIntersections().size());
 		int destination;
@@ -102,12 +104,19 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-				
 		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
-		Car random_car = new Car(shortest_path, this.street_map, this.props);
+		
+		// create vehicle
+		Car random_car;
+		double type_rand = r.nextDouble();
+		if (type_rand <= 0.9) {
+			random_car = new Car(shortest_path, this.street_map, this.props);
+		} else {
+			random_car = new Truck(shortest_path, this.street_map, this.props);
+		}
 		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
-
 		this.addCar(random_car);
+
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 
@@ -121,8 +130,7 @@ public class Simulation {
 		
 		this.is_running = true;
 		
-		Thread th = new Thread(()-> {
-			System.out.println("start");			
+		Thread th = new Thread(()-> {		
 			
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
@@ -132,11 +140,8 @@ public class Simulation {
 			double delta_t = 0.001;
 			int step = 0;
 			while (this.is_running) {
-				
-				System.out.println("\n--------T = " + this.current_time + "s---------");
 				long start_time = System.nanoTime();
 			
-				
 				// update traffic light statuses
 				this.street_map.update(delta_t);
 
