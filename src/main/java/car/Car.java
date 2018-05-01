@@ -29,6 +29,7 @@ public class Car {
 	protected Intersection current_origin_intersection;
 	protected Intersection current_destination_intersection;
 	protected boolean reached_destination;
+	private double angle;
 	
 	// DYNAMIC VALUES
 	protected double current_velocity;
@@ -243,9 +244,12 @@ public class Car {
 	{
 		return lane;
 	}
+	public double getAngle() {
+		return angle;
+	}
 	
 	public void calculateOffset(Intersection start, Intersection end) {
-		double angle = Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord());
+		angle = Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord());
 		if (angle<0){
 			angle+=Math.PI*2;
 		}
@@ -314,6 +318,9 @@ public class Car {
 	
 	public double getApproachedIntersectionDistance() {
 		return this.current_road.getLength() - this.position_on_road;
+	}
+	public CarType getType() {
+		return this.type;
 	}
 	
 	/**
