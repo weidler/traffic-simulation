@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import datastructures.CarType;
 import datastructures.Intersection;
+import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import model.IntelligentDriverModel;
@@ -52,7 +54,7 @@ public class Car {
 	protected double tl_braking_distance;
 	protected double vehicle_length;
 	protected double favored_velocity;
-	
+	protected CarType type = CarType.CAR;
 
 
 	/**
@@ -91,18 +93,18 @@ public class Car {
 	}
 	
 	private void updateDesiredVelocity() {
-		this.desired_velocity = Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed());
+		this.desired_velocity = Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed())+(Math.random()*2 - 1)*0.1*Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed());
 	}
 
 	protected void setTypeParameters(Properties props) {
 		// DRIVING
 		this.reaction_time = 1;
-		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"));
+		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration")) + (Math.random()*2 - 1)*Integer.parseInt(props.getProperty("max_acceleration"))*0.1 ;
 		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
 		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
 		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
 		this.favored_velocity = Integer.parseInt(props.getProperty("favored_velocity"));
-		
+		this.type = CarType.CAR;
 		// PHYSICS / VIZ
 		this.vehicle_length = Integer.parseInt(props.getProperty("vehicle_length"));
 		this.color = Color.BLUE;
@@ -260,10 +262,14 @@ public class Car {
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars);
 		if (leading_car == null) {
-			this.color = Color.CYAN;
+			this.color = Color.PINK;
+			if(this.type != CarType.CAR)
+				this.color = Color.ORANGE;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			this.color = Color.blue;
+			if(this.type != CarType.CAR)
+				this.color = Color.YELLOW;
 			double dist_leading = this.getDistanceToCar(leading_car);
 			double leading_velocity = leading_car.getCurrentVelocity();
 			acceleration = model.getAcceleration(this, dist_leading, leading_velocity);

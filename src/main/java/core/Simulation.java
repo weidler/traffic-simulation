@@ -168,7 +168,7 @@ public class Simulation {
 				
 				//lists the cars
 				carsTextPane.setText("");
-				if(showCarInfo) 
+				if(showCarInfo /*&& step % this.visualization_frequency == 0*/) 
 				{
 					for(Car car : getCars())
 					{
