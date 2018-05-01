@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import datastructures.CarType;
 import datastructures.Intersection;
 import datastructures.StreetMap;
 
@@ -21,7 +22,7 @@ public class Truck extends Car {
 		this.sight_distance = Integer.parseInt(props.getProperty("truck_sight_distance"));
 		this.tl_braking_distance = Integer.parseInt(props.getProperty("truck_tl_breaking_distance"));
 		this.favored_velocity = Integer.parseInt(props.getProperty("truck_favored_velocity"));
-		
+		this.type = CarType.TRUCK;
 		// PHYSICS
 		this.vehicle_length = Integer.parseInt(props.getProperty("truck_vehicle_length"));
 		this.color = Color.ORANGE;

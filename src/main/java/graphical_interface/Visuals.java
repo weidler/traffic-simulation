@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 
 import core.Simulation;
+import datastructures.CarType;
 import datastructures.Intersection;
 import datastructures.RoadType;
 import datastructures.StreetMap;
@@ -278,8 +279,15 @@ public class Visuals extends JPanel{
 				//simulation.getCars().get(i).setOffsetY(simulation.getCars().get(i).getCurrentRoad().getOffsetY().get(simulation.getCars().get(i).getLanes()-1));
 				
 				g2.setColor(simulation.getCars().get(i).getColor());
-				g2.fillOval((int)((simulation.getCars().get(i).getPositionX())*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY())*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
-				
+				if(simulation.getCars().get(i).getType() == CarType.CAR)
+					g2.fillOval((int)((simulation.getCars().get(i).getPositionX())*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY())*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
+				else {
+					//g2.rotate(simulation.getCars().get(i).getAngle());
+					
+					g2.fillRect((int)((simulation.getCars().get(i).getPositionX())*zoomMultiplier + changeX + simulation.getCars().get(i).getOffsetX()), (int)((simulation.getCars().get(i).getPositionY())*zoomMultiplier + changeY + simulation.getCars().get(i).getOffsetY()), (int)(this.car_size*zoomMultiplier), (int)(this.car_size*zoomMultiplier));
+					
+					//g2.rotate(0);
+				}
 		}		
 	}
 	// draws tooltip
