@@ -142,7 +142,7 @@ public class Simulation {
 				is.initializeTrafficLightSettings();
 			}
 					
-			double delta_t = 0.001;
+			double delta_t = 0.01;
 			this.visualization_frequency = (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS")));
 			
 			long total_calculation_time = 0;

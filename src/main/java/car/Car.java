@@ -12,6 +12,7 @@ import datastructures.Intersection;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import model.IntelligentDriverModel;
+import model.MOBIL;
 import road.Road;
 
 /**
@@ -30,6 +31,7 @@ public class Car {
 	
 	// DYNAMIC VALUES
 	protected double current_velocity;
+	protected double current_acceleration;
 	protected double positionX;
 	protected double positionY;
 	protected double position_on_road;
@@ -37,6 +39,7 @@ public class Car {
 
 	// BEHAVIOR
 	protected IntelligentDriverModel model;
+	protected MOBIL mobil;
 	protected double desired_velocity;	
 	
 	// VISUALISATION
@@ -86,6 +89,8 @@ public class Car {
 				Integer.parseInt(props.getProperty("min_spacing")), 
 				Integer.parseInt(props.getProperty("IDM_delta"))
 		);
+		
+		this.mobil = new MOBIL(this.model, 1);
 		
 		this.reached_destination = false;
 	}
@@ -157,6 +162,14 @@ public class Car {
 
 	public void setCurrentVelocity(double current_velocity) {
 		this.current_velocity = current_velocity;
+	}
+
+	public double getCurrentAcceleration() {
+		return current_acceleration;
+	}
+
+	public void setCurrent_acceleration(double current_acceleration) {
+		this.current_acceleration = current_acceleration;
 	}
 
 	public double getPositionX() {
@@ -258,7 +271,7 @@ public class Car {
 		double acceleration;
 		
 		// Check if leading car, else incorporate leaders speed etc.
-		Car leading_car = this.getLeadingCar(list_of_cars);
+		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
 		if (leading_car == null) {
 			this.color = Color.CYAN;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
@@ -276,8 +289,19 @@ public class Car {
 		}
 		
 		// Update speed and position
+		this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
 		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
+		
+		// Check if lane change is a good idea
+		for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
+			if (lane != this.lane) {
+				if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
+					this.lane = lane;
+					break;
+				}
+			}
+		}
 				
 		// Check if at destination
 		if (this.position_on_road >= this.current_road.getLength() && this.current_destination_intersection == this.path.get(this.path.size()-1)) {
@@ -317,41 +341,79 @@ public class Car {
 	 * @return true if there is no car on the same road that has bigger x coordinate than the car passed to the method
 	 */
 	public boolean hasLeadingCar(ArrayList<Car> list_of_cars){
-		if (this.getLeadingCar(list_of_cars) == null) return false;
+		if (this.getLeadingCar(list_of_cars, this.lane) == null) return false;
 		return true;
 	}
 
-	public Car getLeadingCar(ArrayList<Car> list_of_cars) {
+	public Car getLeadingCar(ArrayList<Car> list_of_cars, int lane) {
 		Car current_leading_car = null;
 
 		for(Car c : list_of_cars){
 			//for the case it compares with itself skip to next iteration
 			if(this.equals(c)) continue;
 
-			// only compare if driving on cars path
-			if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
-				// only compare if driving in the same direction...
-				if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
-					// only compare to cars in front
-					if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
-						double dist_to_c = this.getDistanceToCar(c);
-						// only if car is in distance of sight
-						if (dist_to_c <= this.sight_distance) {
-							// If car is closer than previous then update
-							if (current_leading_car == null) {
-								current_leading_car = c;
-							} else if(dist_to_c < this.getDistanceToCar(current_leading_car)){
-								current_leading_car = c;
-							}							
+			// only compare if on required lane
+			if (c.lane == lane) {
+				// only compare if driving on cars path
+				if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+					// only compare if driving in the same direction...
+					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
+						// only compare to cars in front
+						if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
+							double dist_to_c = this.getDistanceToCar(c);
+							// only if car is in distance of sight
+							if (dist_to_c <= this.sight_distance) {
+								// If car is closer than previous then update
+								if (current_leading_car == null) {
+									current_leading_car = c;
+								} else if(dist_to_c < this.getDistanceToCar(current_leading_car)){
+									current_leading_car = c;
+								}							
+							}
 						}
 					}
-				}
+				}				
 			}
 		}
 		
 		return current_leading_car;
 	}
 
+	public Car getFollowingCar(ArrayList<Car> list_of_cars, int lane) {
+		Car current_following_car = null;
+
+		for(Car c : list_of_cars){
+			//for the case it compares with itself skip to next iteration
+			if(this.equals(c)) continue;
+
+			// only compare if on required lane
+			if (c.lane == lane) {
+				// only compare if driving on cars path
+				if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+					// only compare if driving in the same direction...
+					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
+						// only compare to cars behind
+						if(this.getPositionOnRoad() >= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
+							double dist_to_c = this.getDistanceToCar(c);
+							// only if car is in distance of sight
+							if (dist_to_c <= this.sight_distance) {
+								// If car is closer than previous then update
+								if (current_following_car == null) {
+									current_following_car = c;
+								} else if(dist_to_c < this.getDistanceToCar(current_following_car)){
+									current_following_car = c;
+								}							
+							}
+						}
+					}
+				}				
+			}
+		}
+		
+		return current_following_car;
+	}
+
+	
 	public double getDistanceToCar(Car other_car){
 		// on same road
 		if (this.current_destination_intersection.equals(other_car.current_destination_intersection)) {
