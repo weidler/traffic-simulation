@@ -46,7 +46,7 @@ public class Visuals extends JPanel{
 	private int startPosY = 0;
 	private Stroke defaultStroke;
 	private Stroke dashed = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND, 0, new float[]{9}, 0);
-	private Stroke fat =new BasicStroke(laneSize-2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND);
+	private Stroke fat =new BasicStroke((float) (laneSize-2*getZoomMultiplier()), BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND);
 	private int divider = 30;
 	
 	private double zoomMultiplier = 1.0;
@@ -60,7 +60,7 @@ public class Visuals extends JPanel{
 	}
 	public void setLightDistanceFromIntersection(int length)
 	{
-		lightDistanceFromIntersection = length/divider;
+		lightDistanceFromIntersection = (length/divider);
 	}
 	public void setIntersectionSize(int is)	{
 		intersectionSize = is;
@@ -163,10 +163,10 @@ public class Visuals extends JPanel{
 			if (offsetAngle > Math.PI*2)
 				offsetAngle-= Math.PI*2;
 			
-			int midPointX = (int) (((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection))*zoomMultiplier+changeX);
-			int midPointY = (int) (((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection))*zoomMultiplier+changeY);
-			int midPointX2 = (int) (((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)))*zoomMultiplier+changeX);
-			int midPointY2 = (int) (((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection)*(lightDistanceFromIntersection-1))*zoomMultiplier+changeY);
+			int midPointX = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection));
+			int midPointY = (int) ((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection));
+			int midPointX2 = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)));
+			int midPointY2 = (int) ((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection)*(lightDistanceFromIntersection-1));
 			
 			int offsetX = (int) (Math.round(Math.cos(offsetAngle)*k*laneSize));
 			int offsetY = (int) (Math.round(Math.sin(offsetAngle)*k*laneSize));

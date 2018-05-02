@@ -318,7 +318,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
-		JButton addCar = new JButton("add vehicle");
+		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
 		addCar.setBounds(10, 131, 147, 20);
 		menuPanel.add(addCar);
