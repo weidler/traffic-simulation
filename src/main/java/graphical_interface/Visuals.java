@@ -61,6 +61,10 @@ public class Visuals extends JPanel{
 	public void setLightDistanceFromIntersection(int length)
 	{
 		lightDistanceFromIntersection = (length/divider);
+		if(lightDistanceFromIntersection <0.01)
+		{
+			lightDistanceFromIntersection = length;
+		}
 	}
 	public void setIntersectionSize(int is)	{
 		intersectionSize = is;
