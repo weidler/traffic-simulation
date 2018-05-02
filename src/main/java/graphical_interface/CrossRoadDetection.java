@@ -8,8 +8,19 @@ public class CrossRoadDetection {
 
 	private StreetMap streetMap;
 	
-	public CrossRoadDetection(StreetMap streetMap)
+	public CrossRoadDetection(StreetMap streetMap, Road r)
 	{
+		for(int i = 0; i < streetMap.getRoads().size(); i++)
+		{
+			if(lineIntersect(streetMap.getRoads().get(i), r))
+			{
+				streetMap.removeRoadBetweenCoordinates(r.getX1(), r.getY1(), r.getX2(), r.getY2());
+				streetMap.removeIntersection(streetMap.getIntersectionByCoordinates(r.getX2(), r.getY2()));
+				
+			}
+			
+		}
+		/*
 		boolean recheck = false;		
 		this.streetMap = streetMap;		
 		
@@ -78,10 +89,10 @@ public class CrossRoadDetection {
 						
 					}
 				
-			}	
+			}	*/
 		
 	}
-	
+	/*
 	public boolean lineIntersect(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int index, int index2, int lanes) {
 		
 	
@@ -120,6 +131,36 @@ public class CrossRoadDetection {
 				  streetMap.addRoad(r3);
 				  streetMap.addRoad(r4);					  
 				  
+				  return true;
+		      }
+		  }
+
+		  return false;
+	}*/
+	public boolean lineIntersect(Road r1, Road r2) {
+		
+		  int x3 = r2.getX1();
+		  int x4 = r2.getX2();
+		  int y4 = r2.getY2();
+		  int y3 = r2.getY1();
+		  int x1 = r1.getX1();
+		  int x2 = r1.getX2();
+		  int y1 = r1.getY1();
+		  int y2 = r1.getY2();
+		  double denom =(r2.getY2() - r2.getY1()) * (r1.getX2() - r1.getX1()) - (r2.getX2() - r2.getX1()) * (r1.getY2() - r1.getY1());
+		  
+		  if (denom == 0.0)
+		  { // Lines are parallel.
+		     return false;
+		  }
+		  
+		  double ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3))/denom;
+		  double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3))/denom;
+		  
+		  if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) 
+		  {
+		      if(y1 != y2 && y1 != y3 && y1 != y4 && y2 != y3 && y2 != y4 && y3 != y4 ) 
+		      {  
 				  return true;
 		      }
 		  }

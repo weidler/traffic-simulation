@@ -630,7 +630,7 @@ public class GraphicalInterface extends JFrame {
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
 					}	
-					new CrossRoadDetection(streetMap);
+					
 				}
 
 				repaint();
@@ -893,7 +893,7 @@ public class GraphicalInterface extends JFrame {
 					if((int)(r.getLength() / visuals.getDivider()) >=2)
 					{
 						streetMap.addRoad(r);
-						new CrossRoadDetection(streetMap);
+						new CrossRoadDetection(streetMap, r);
 					}
 					else
 					{
