@@ -163,10 +163,10 @@ public class Visuals extends JPanel{
 			if (offsetAngle > Math.PI*2)
 				offsetAngle-= Math.PI*2;
 			
-			int midPointX = (int) ((roads.get(i).getX1()*zoomMultiplier+changeX) +(((roads.get(i).getX2()*zoomMultiplier+changeX)-(roads.get(i).getX1()*zoomMultiplier+changeX))/lightDistanceFromIntersection));
-			int midPointY = (int) ((roads.get(i).getY1()*zoomMultiplier+changeY) +(((roads.get(i).getY2()*zoomMultiplier+changeY)-(roads.get(i).getY1()*zoomMultiplier+changeY))/lightDistanceFromIntersection));
-			int midPointX2 = (int) ((roads.get(i).getX1()*zoomMultiplier+changeX) +(((roads.get(i).getX2()*zoomMultiplier+changeX)-(roads.get(i).getX1()*zoomMultiplier+changeX))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)));
-			int midPointY2 = (int) ((roads.get(i).getY1()*zoomMultiplier+changeY) +(((roads.get(i).getY2()*zoomMultiplier+changeY)-(roads.get(i).getY1()*zoomMultiplier+changeY))/lightDistanceFromIntersection)*(lightDistanceFromIntersection-1));
+			int midPointX = (int) (((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection))*zoomMultiplier+changeX);
+			int midPointY = (int) (((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection))*zoomMultiplier+changeY);
+			int midPointX2 = (int) (((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)))*zoomMultiplier+changeX);
+			int midPointY2 = (int) (((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection)*(lightDistanceFromIntersection-1))*zoomMultiplier+changeY);
 			
 			int offsetX = (int) (Math.round(Math.cos(offsetAngle)*k*laneSize));
 			int offsetY = (int) (Math.round(Math.sin(offsetAngle)*k*laneSize));
