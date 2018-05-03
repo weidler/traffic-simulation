@@ -6,6 +6,7 @@ import datastructures.Intersection;
 import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import util.Geometry;
 
 public class Road {
 
@@ -99,6 +100,30 @@ public class Road {
 	
 	public RoadType getType() {
 		return type;
+	}
+	
+	public double getClockwiseAngleTo(Road that, Intersection at_int) {
+		return Geometry.clockwiseAngle(this.getX1(), this.getY1(), this.getX2(), this.getY2(), that.getX1(), that.getY1(), that.getX2(), that.getY2(), at_int.getXCoord(), at_int.getYCoord());
+	}
+	
+	public Road getNextRoadClockwise(Intersection at_int) {
+		if (at_int.numbConnections() == 0) return null;
+		
+		Road closest_road = null;
+		double closest_angle = 360;
+		
+		double current_angle;
+		for (Road other_road : at_int.getOutgoingRoads()) {
+			if (!this.equals(other_road)) {
+				current_angle = this.getClockwiseAngleTo(other_road, at_int);
+				if (current_angle < closest_angle) {
+					closest_angle = current_angle;
+					closest_road = other_road;
+				}
+			}
+		}
+		
+		return closest_road;
 	}
 	
 	public int getLanes() {
