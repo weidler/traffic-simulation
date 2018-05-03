@@ -22,10 +22,6 @@ public class Road {
 	protected ArrayList<Integer> offsetX = new ArrayList();
 	protected ArrayList<Integer> offsetY = new ArrayList();
 	
-
-	
-
-
 	//first one in the list is the trafficlight closest to the middle.
 	protected ArrayList<TrafficLight> trafficlightsRight = new ArrayList();
 	protected ArrayList<TrafficLight> trafficlightsLeft = new ArrayList();
@@ -38,17 +34,25 @@ public class Road {
 		this.x2 = intersection_to.getXCoord();
 		this.y2 = intersection_to.getYCoord();
 		
-		this.length = this.calcLength(x1, y1, x2, y2);
-		
-
-		
+		this.length = this.calcLength(x1, y1, x2, y2);		
 	}
-	public ArrayList<Integer> getOffsetX()
-	{
+	
+	public Road(int x1, int y1, int x2, int y2) {
+		this.x1 = x1;
+		this.y1 = y1;
+		
+		this.x2 = x2;
+		this.y2 = y2;
+
+		this.length = this.calcLength(x1, y1, x2, y2);	
+		
+		this.setTypeParameters();
+	}
+
+	public ArrayList<Integer> getOffsetX() {
 		return offsetX;
 	}
-	public ArrayList<Integer> getOffsetY()
-	{
+	public ArrayList<Integer> getOffsetY() {
 		return offsetY;
 	}
 	
@@ -68,22 +72,6 @@ public class Road {
 			offsetX.add((int) (Math.round(Math.cos(offsetAngle)*4*i)-4));
 			offsetY.add((int) (Math.round(Math.sin(offsetAngle)*4*i)-4));
 		}
-		
-
-		this.setTypeParameters();
-
-	}
-	
-	public Road(int x1, int y1, int x2, int y2) {
-		this.x1 = x1;
-		this.y1 = y1;
-		
-		this.x2 = x2;
-		this.y2 = y2;
-
-		this.length = this.calcLength(x1, y1, x2, y2);	
-		
-		this.setTypeParameters();
 	}
 	
 	protected void setTypeParameters() {
