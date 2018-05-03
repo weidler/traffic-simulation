@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -105,6 +106,8 @@ public class GraphicalInterface extends JFrame {
 	private JTextField txtMaxNumberOf;
 	private Car lastHovered;
 	private JTextField lanesTextField;
+	private JLabel addLabel = new JLabel("add");
+	private ArrayList<Intersection> toRemove = new ArrayList();
 
 	private JRadioButton lanes1;
 	private JRadioButton lanes2;
@@ -603,6 +606,7 @@ public class GraphicalInterface extends JFrame {
 						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2));
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
+						new CrossRoadDetection(streetMap, r);
 					}
 					else 
 					{
@@ -629,6 +633,7 @@ public class GraphicalInterface extends JFrame {
 						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection);
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
+						new CrossRoadDetection(streetMap, r);
 					}	
 					
 				}
@@ -663,6 +668,31 @@ public class GraphicalInterface extends JFrame {
 		JLabel lanesLabel = new JLabel("lanes:");
 		lanesLabel.setBounds(10, 225, 49, 14);
 		menuPanel.add(lanesLabel);
+		
+		
+		addLabel.setBounds(10, 354, 147, 14);
+		menuPanel.add(addLabel);
+				
+		JButton addDeleteButton = new JButton("add/delete");
+		addDeleteButton.setBounds(10, 333, 147, 19);
+		menuPanel.add(addDeleteButton);
+		addDeleteButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		addDeleteButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(addLabel.getText().equals("add"))
+				{
+					addLabel.setText("delete");
+				}
+				else 
+				{
+					addLabel.setText("add");
+				}
+				
+			}
+		});
+		
 		
 		
 
@@ -726,7 +756,8 @@ public class GraphicalInterface extends JFrame {
 			int x = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
 			int y = (int) (e.getY()/visuals.getZoomMultiplier()-visuals.getChangeY());
 
-
+			if(addLabel.getText().equals("add"))
+			{
 			if(clickCounter == 1) {
 
 				if (e.getButton() == MouseEvent.BUTTON3)
@@ -913,6 +944,98 @@ public class GraphicalInterface extends JFrame {
 				System.out.println("changed");
 				repaint();
 
+			}
+			}
+			else 
+			{
+				
+				if(clickCounter == 1)
+				{
+					System.out.println("select first point to remove");
+					if(!streetMap.getRoads().isEmpty()) 
+					{	
+						int nearestX = -1;
+						int nearestY = -1;
+						double distance = -1;
+						for(Intersection sec : streetMap.getIntersections())
+						{
+							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+							if (distance == -1) {
+								distance = distance2;							
+								nearestX = sec.getXCoord();						
+								nearestY = sec.getYCoord();							
+							}
+							else if(distance2 < distance)
+							{
+								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();							
+							}	
+
+						}
+						toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
+						System.out.println("toRemove size "+ toRemove.size());
+					}
+					else
+					{
+						clickCounter--;
+					}
+						
+				}
+				else 
+				{
+					System.out.println("select second point to remove");
+					
+					int nearestX = -1;
+					int nearestY = -1;
+					double distance = -1;
+					for(Intersection sec : streetMap.getIntersections())
+					{
+						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+						if (distance == -1) {
+							distance = distance2;							
+							nearestX = sec.getXCoord();						
+							nearestY = sec.getYCoord();							
+						}
+						else if(distance2 < distance)
+						{
+							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+							distance = distance2;
+							nearestX = sec.getXCoord();
+							nearestY = sec.getYCoord();							
+						}	
+					}
+					toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
+					boolean remove1 = true;
+					boolean remove2 = true;
+					if(toRemove.get(0).getConnectedIntersections().size() > 1)
+					{
+						System.out.println("connections "+ toRemove.get(0).getConnectedIntersections().size());
+						remove1 = false;
+					}	
+					if(toRemove.get(1).getConnectedIntersections().size() > 1)
+					{
+						System.out.println("connections "+ toRemove.get(1).getConnectedIntersections().size());
+						remove2 = false;
+					}
+					
+					System.out.println("toRemove size "+ toRemove.size() + " remove1: "+remove1+ " remove2: "+remove2);
+					streetMap.removeRoadBetween(toRemove.get(0), toRemove.get(1));
+					if(remove1)
+					{
+						streetMap.removeIntersection(toRemove.get(0));
+					}
+					if(remove2)
+					{
+						streetMap.removeIntersection(toRemove.get(1));
+					}
+					toRemove.clear();
+					clickCounter = 0;	
+				}
+			repaint();
 			}
 
 
