@@ -2,6 +2,8 @@ package util;
 
 import java.util.Arrays;
 
+import road.Road;
+
 public class Geometry {
 
 	public static double slope(double x1, double y1, double x2, double y2) {
@@ -74,7 +76,25 @@ public class Geometry {
 		return (360 - angle) % 360;
 	}
 	
-	public static double distance() {
-		return 0;
+	public static double distance(int x1, int y1, int x2, int y2) {
+		return (int) Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+	}
+	
+	public static double[] offset(Road road, int lane_size) {
+		double[] offsets = new double[5];
+		
+		int k = road.getLanes();
+		double angle = Math.atan2(road.getY2() - road.getY1(), road.getX1() - road.getX2());
+		if (angle<0) angle+=Math.PI*2;
+		double offsetAngle = angle+(Math.PI/2);	
+		if (offsetAngle > Math.PI*2) offsetAngle-= Math.PI*2;
+		
+		offsets[0] = (int) (Math.round(Math.cos(offsetAngle) * k * lane_size));
+		offsets[1] = (int) (Math.round(Math.sin(offsetAngle) * k * lane_size));
+		offsets[2] = (int) (Math.round(Math.cos(offsetAngle) * lane_size));
+		offsets[3] = (int) (Math.round(Math.sin(offsetAngle) * lane_size));
+		offsets[4] = offsetAngle;
+		
+		return offsets;
 	}
 }

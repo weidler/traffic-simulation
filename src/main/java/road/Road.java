@@ -14,7 +14,7 @@ public class Road {
 	protected int y1;
 	protected int x2;
 	protected int y2;
-	protected int length;
+	protected double length;
 	protected int lanes = 1;
 
 
@@ -106,31 +106,43 @@ public class Road {
 		return Geometry.clockwiseAngle(this.getX1(), this.getY1(), this.getX2(), this.getY2(), that.getX1(), that.getY1(), that.getX2(), that.getY2(), at_int.getXCoord(), at_int.getYCoord());
 	}
 	
-	public Road getNextRoadClockwise(Intersection at_int) {
+	public Road[] getNeighbouringRoadsAt(Intersection at_int) {
 		if (at_int.numbConnections() == 0) return null;
 		
 		Road closest_road = null;
+		Road farest_road = null;
 		double closest_angle = 360;
+		double farest_angle = 0;
 		
 		double current_angle;
 		for (Road other_road : at_int.getOutgoingRoads()) {
 			if (!this.equals(other_road)) {
 				current_angle = this.getClockwiseAngleTo(other_road, at_int);
+				
 				if (current_angle < closest_angle) {
 					closest_angle = current_angle;
 					closest_road = other_road;
 				}
+				
+				if (current_angle > farest_angle) {
+					farest_angle = current_angle;
+					farest_road = other_road;
+				}
 			}
 		}
 		
-		return closest_road;
+		Road[] neighbouring_roads = new Road[2];
+		neighbouring_roads[0] = closest_road;
+		neighbouring_roads[1] = farest_road;
+		
+		return neighbouring_roads;
 	}
-	
+		
 	public int getLanes() {
 		return lanes;
 	}
 	
-	public int getLength() {
+	public double getLength() {
 		return length;
 	}
 
@@ -169,6 +181,14 @@ public class Road {
 	public void setAllowedMaxSpeed(int allowed_max_speed) {
 		this.allowed_max_speed = allowed_max_speed;
 	}
+	
+	public Intersection[] getIntersections(StreetMap streetmap) {
+		Intersection [] intersections = new Intersection[2];
+		intersections[0] = streetmap.getIntersectionByCoordinates(this.x1, this.y1);
+		intersections[1] = streetmap.getIntersectionByCoordinates(this.x2, this.y2);
+		
+		return intersections;
+	}
 
 	public String toString() {
 		return this.getClass().getSimpleName() + "[" +this.x1 + "," + this.y1 +" -> "+ this.x2 + "," + this.y2 + "]";
@@ -186,8 +206,8 @@ public class Road {
 		return false;
 	}
 	
-	private int calcLength(int x1, int y1, int x2, int y2) {
-		return (int) Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+	private double calcLength(int x1, int y1, int x2, int y2) {
+		return Geometry.distance(x1, y1, x2, y2);
 	}
 
 }

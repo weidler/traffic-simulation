@@ -8,7 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -20,6 +20,7 @@ import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import road.Road;
+import util.Geometry;
 
 public class Visuals extends JPanel{	
 	private Simulation simulation;
@@ -54,18 +55,24 @@ public class Visuals extends JPanel{
 	private int changeX = 0;
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
-	public int getDivider()
-	{
+	
+	public Visuals(Simulation simulation) {
+		this.simulation = simulation;
+		this.streetMap = this.simulation.getStreetMap();
+		roads = streetMap.getRoads();
+	}
+		
+	public int getDivider() {
 		return divider;
 	}
-	public void setLightDistanceFromIntersection(int length)
-	{
+	
+	public void setLightDistanceFromIntersection(int length) {
 		lightDistanceFromIntersection = (length/divider);
-		if(lightDistanceFromIntersection <0.01)
-		{
+		if(lightDistanceFromIntersection <0.01) {
 			lightDistanceFromIntersection = length;
 		}
 	}
+	
 	public void setIntersectionSize(int is)	{
 		intersectionSize = is;
 	}
@@ -73,6 +80,7 @@ public class Visuals extends JPanel{
 	public int getIntersectionSize() {
 		return intersectionSize;
 	}
+	
 	public void setMaxIntersectionSize(int is) {
 		intersectionSize = is;
 	}
@@ -80,6 +88,7 @@ public class Visuals extends JPanel{
 	public int getMaxIntersectionSize() {
 		return intersectionSize;
 	}
+	
 	public void setLaneSize(int l) {
 		laneSize = l;
 	}
@@ -93,7 +102,7 @@ public class Visuals extends JPanel{
 	}
 
 	public boolean setChangeX(int i) {
-		this.changeX = changeX+(GRAPH_MOVED_DISTANCE*i);
+		this.changeX = changeX + (GRAPH_MOVED_DISTANCE * i);
 		return true;
 	}
 
@@ -107,16 +116,9 @@ public class Visuals extends JPanel{
 	}
 
 	public void setChangeY(int i) {
-		this.changeY = changeY+(GRAPH_MOVED_DISTANCE*i);
+		this.changeY = changeY + (GRAPH_MOVED_DISTANCE * i);
 	}
 
-	public Visuals(Simulation simulation) {
-		this.simulation = simulation;
-		this.streetMap = this.simulation.getStreetMap();
-		roads = streetMap.getRoads();
-	}
-	
-	
 	@Override
 	public void paintComponent (Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -139,11 +141,140 @@ public class Visuals extends JPanel{
 			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier)+changeX, (int)(mousePosY*zoomMultiplier)+changeY);
 			g2.setStroke(new BasicStroke());
 		}*/
-				
-		g2.setColor(Color.black);
-		for(int i = 0 ; i< roads.size() ; i++ ) {	
+		
+		// precalculate offsets
+		HashMap<Road, double[]> precalculated_offsets = new HashMap<Road, double[]>();
+		for(int i = 0 ; i< roads.size() ; i++ ) {				
+			Road current_road = roads.get(i);
+			double[] offsets = Geometry.offset(current_road, this.laneSize);
+			precalculated_offsets.put(current_road, offsets);
+		}
 			
-			setLightDistanceFromIntersection(roads.get(i).getLength());
+		g2.setColor(Color.black);
+		for(int i = 0 ; i < roads.size() ; i++ ) {				
+			Road current_road = roads.get(i);
+			Intersection[] connected_intersections = current_road.getIntersections(this.streetMap);
+			Intersection intersection_to = connected_intersections[0];
+			Intersection intersection_from = connected_intersections[1];
+			
+			// store needed roads in variables
+			Road[] neighbouring_roads_from = current_road.getNeighbouringRoadsAt(intersection_from);
+			Road[] neighbouring_roads_to = current_road.getNeighbouringRoadsAt(intersection_to);
+			
+			Road next_clockwise_road_from = neighbouring_roads_from[0];
+			Road next_counterclockwise_road_from = neighbouring_roads_from[1];
+			Road next_clockwise_road_to = neighbouring_roads_to[0];
+			Road next_counterclockwise_road_to = neighbouring_roads_to[1];			
+			
+			// get offset numbers
+			int offsetX1 = (int) precalculated_offsets.get(current_road)[0];
+			int offsetY1 = (int) precalculated_offsets.get(current_road)[1];
+			int offsetX2 = (int) precalculated_offsets.get(current_road)[2];
+			int offsetY2 = (int) precalculated_offsets.get(current_road)[3];
+			double offsetAngle = precalculated_offsets.get(current_road)[4];
+			
+			// recalculate initial start and end of road outer lines based on angular offset
+			int to_x_a = current_road.getX1() - offsetX1;
+			int to_y_a = current_road.getY1() + offsetY1;
+			int from_x_a = current_road.getX2() - offsetX2;
+			int from_y_a = current_road.getY2() + offsetY2;
+			
+			int to_x_b = current_road.getX1() + offsetX1;
+			int to_y_b = current_road.getY1() - offsetY1;
+			int from_x_b = current_road.getX2() + offsetX2;
+			int from_y_b = current_road.getY2() - offsetY2;
+			
+//			// ADJUST FROM end of the road
+//			if (next_clockwise_road_from != null) {
+//				
+//				// identify the coordinates of surrounding roads that are NOT at the focused intersection
+//				int ncr_origin_x = next_clockwise_road_from.getX1();
+//				int ncr_origin_y = next_clockwise_road_from.getY1();
+//				if (ncr_origin_x == intersection_from.getXCoord()) ncr_origin_x = next_clockwise_road_from.getX2();
+//				if (ncr_origin_y == intersection_from.getYCoord()) ncr_origin_y = next_clockwise_road_from.getY2();
+//
+//				int nccr_origin_x = next_counterclockwise_road_from.getX1();
+//				int nccr_origin_y = next_counterclockwise_road_from.getY1();
+//				if (nccr_origin_x == intersection_from.getXCoord()) nccr_origin_x = next_counterclockwise_road_from.getX2();
+//				if (nccr_origin_y == intersection_from.getYCoord()) nccr_origin_y = next_counterclockwise_road_from.getY2();
+//
+//				// retrieve intersection points
+//				double[] line_intersection_a_from = Geometry.intersection(from_x_a, from_y_a, to_x_a, to_y_a, 
+//						ncr_origin_x - (int) precalculated_offsets.get(next_clockwise_road_from)[0],
+//						ncr_origin_y + (int) precalculated_offsets.get(next_clockwise_road_from)[1], 
+//						intersection_from.getXCoord() - (int) precalculated_offsets.get(next_clockwise_road_from)[2], 
+//						intersection_from.getYCoord() + (int) precalculated_offsets.get(next_clockwise_road_from)[3]
+//				);
+//				
+//				double[] line_intersection_b_from = Geometry.intersection(from_x_b, from_y_b, to_x_b, to_y_b, 
+//						nccr_origin_x + (int) precalculated_offsets.get(next_counterclockwise_road_from)[0], 
+//						nccr_origin_y - (int) precalculated_offsets.get(next_counterclockwise_road_from)[1], 
+//						intersection_from.getXCoord() + (int) precalculated_offsets.get(next_counterclockwise_road_from)[2], 
+//						intersection_from.getYCoord() - (int) precalculated_offsets.get(next_counterclockwise_road_from)[3]
+//				);
+//			
+//				from_x_a = (int) line_intersection_a_from[0];
+//				from_y_a = (int) line_intersection_a_from[1];
+//			
+//				from_x_b = (int) line_intersection_b_from[0];
+//				from_y_b = (int) line_intersection_b_from[1];
+//			}			
+//			
+//			// ADJUST TO end of the road
+//			if (next_clockwise_road_to != null) {
+//				// identify the coordinates of surrounding roads that are NOT at the focused intersection
+//				int ncr_origin_x = next_clockwise_road_to.getX1();
+//				int ncr_origin_y = next_clockwise_road_to.getY1();
+//				if (ncr_origin_x == intersection_to.getXCoord()) ncr_origin_x = next_clockwise_road_to.getX2();
+//				if (ncr_origin_y == intersection_to.getYCoord()) ncr_origin_y = next_clockwise_road_to.getY2();
+//
+//				int nccr_origin_x = next_counterclockwise_road_to.getX1();
+//				int nccr_origin_y = next_counterclockwise_road_to.getY1();
+//				if (nccr_origin_x == intersection_to.getXCoord()) nccr_origin_x = next_counterclockwise_road_to.getX2();
+//				if (nccr_origin_y == intersection_to.getYCoord()) nccr_origin_y = next_counterclockwise_road_to.getY2();
+//
+//				// retrieve intersection points
+//				double[] line_intersection_a_to = Geometry.intersection(from_x_a, from_y_a, to_x_a, to_y_a, 
+//						ncr_origin_x - (int) precalculated_offsets.get(next_clockwise_road_to)[0],
+//						ncr_origin_y + (int) precalculated_offsets.get(next_clockwise_road_to)[1], 
+//						intersection_from.getXCoord() - (int) precalculated_offsets.get(next_clockwise_road_to)[2], 
+//						intersection_from.getYCoord() + (int) precalculated_offsets.get(next_clockwise_road_to)[3]
+//				);
+//				
+//				double[] line_intersection_b_to = Geometry.intersection(from_x_b, from_y_b, to_x_b, to_y_b, 
+//						nccr_origin_x + (int) precalculated_offsets.get(next_counterclockwise_road_to)[0], 
+//						nccr_origin_y - (int) precalculated_offsets.get(next_counterclockwise_road_to)[1], 
+//						intersection_from.getXCoord() + (int) precalculated_offsets.get(next_counterclockwise_road_to)[2], 
+//						intersection_from.getYCoord() - (int) precalculated_offsets.get(next_counterclockwise_road_to)[3]
+//				);
+//			
+//				to_x_a = (int) line_intersection_a_to[0];
+//				to_y_a = (int) line_intersection_a_to[1];
+//			
+//				to_x_b = (int) line_intersection_b_to[0];
+//				to_y_b = (int) line_intersection_b_to[1];
+//			}
+
+			// draw road outer lines
+			g2.setStroke(defaultStroke);
+			g2.setColor(Color.BLACK);
+			g2.draw(new Line2D.Double(
+					(int) (to_x_a) * zoomMultiplier + changeX, 
+					(int) (to_y_a) * zoomMultiplier + changeY,
+					(int) (from_x_a) * zoomMultiplier + changeX, 
+					(int) (from_y_a) * zoomMultiplier + changeY
+			));
+			
+			g2.setStroke(defaultStroke);
+			g2.setColor(Color.RED);
+			g2.draw(new Line2D.Double(
+					(int) (to_x_b) * zoomMultiplier + changeX, 
+					(int) (to_y_b) * zoomMultiplier + changeY,
+					(int) (from_x_b) * zoomMultiplier + changeX, 
+					(int) (from_y_b) * zoomMultiplier + changeY
+			));
+			
+			setLightDistanceFromIntersection((int) roads.get(i).getLength());
 			if(roads.get(i).getType() == RoadType.ROAD) {
 				g2.setColor(Color.black);
 			} else if(roads.get(i).getType() == RoadType.DIRT_ROAD) {
@@ -152,21 +283,10 @@ public class Visuals extends JPanel{
 				g2.setColor(Color.BLUE);
 			}
 						
-			int k = roads.get(i).getLanes();
-			double angle = Math.atan2(roads.get(i).getY2()-roads.get(i).getY1(), roads.get(i).getX1()-roads.get(i).getX2());
-			if (angle<0) angle+=Math.PI*2;
-			double offsetAngle = angle+(Math.PI/2);	
-			if (offsetAngle > Math.PI*2) offsetAngle-= Math.PI*2;
-			
 			int midPointX = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection));
 			int midPointY = (int) ((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection));
 			int midPointX2 = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)));
 			int midPointY2 = (int) ((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection)*(lightDistanceFromIntersection-1));
-			
-			int offsetX = (int) (Math.round(Math.cos(offsetAngle)*k*laneSize));
-			int offsetY = (int) (Math.round(Math.sin(offsetAngle)*k*laneSize));
-			int offsetX2 = (int) (Math.round(Math.cos(offsetAngle)*laneSize));
-			int offsetY2 = (int) (Math.round(Math.sin(offsetAngle)*laneSize));
 					
 			g2.draw(new Line2D.Double(
 					(int) (roads.get(i).getX1()) * zoomMultiplier+changeX, 
@@ -188,18 +308,7 @@ public class Visuals extends JPanel{
 					(int) (midPointX-(offsetX2/2 ))*zoomMultiplier+changeX, 
 					(int) (midPointY+(offsetY2/2))*zoomMultiplier+changeY
 			));
-			//end trafficlight
-			
-			g2.setStroke(defaultStroke);
-			g2.setColor(Color.BLACK);
-			g2.draw(new Line2D.Double(
-					(int) (roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, 
-					(int) (roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, 
-					(int) (roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, 
-					(int) (roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY
-			));
 
-			//trafficlight
 			g2.setColor(Color.RED);
 			g2.setStroke(fat);
 			if(roads.get(i).getTrafficLightsLeft().get(0).getStatus().equals("G"))
@@ -211,33 +320,25 @@ public class Visuals extends JPanel{
 					(int)(roads.get(i).getX2()+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 ))*zoomMultiplier+changeY, (int)(midPointX2+(offsetX2/2 ))*zoomMultiplier+changeX, (int)(midPointY2-(offsetY2/2 ))*zoomMultiplier+changeY));
 			//end trafficlight
 			
-			g2.setStroke(defaultStroke);
-			g2.setColor(Color.BLACK);
-			g2.draw(new Line2D.Double(
-					(int) (roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, 
-					(int) (roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, 
-					(int) (roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, 
-					(int) (roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY
-			));
-						
+			// Draw lanes
 			for(int j = 1; j < roads.get(i).getLanes();j++) {	
-				offsetX = (int) (Math.round(Math.cos(offsetAngle)*j*laneSize));
-				offsetY = (int) (Math.round(Math.sin(offsetAngle)*j*laneSize));
+				offsetX1 = (int) (Math.round(Math.cos(offsetAngle)*j*laneSize));
+				offsetY1 = (int) (Math.round(Math.sin(offsetAngle)*j*laneSize));
 				
 				g2.setStroke(dashed);
 				g2.setColor(Color.black);
 				g2.draw(new Line2D.Double(
-						(int) (roads.get(i).getX1()-offsetX)*zoomMultiplier+changeX, 
-						(int) (roads.get(i).getY1()+offsetY)*zoomMultiplier+changeY, 
-						(int) (roads.get(i).getX2()-offsetX)*zoomMultiplier+changeX, 
-						(int) (roads.get(i).getY2()+offsetY)*zoomMultiplier+changeY
+						(int) (roads.get(i).getX1()-offsetX1)*zoomMultiplier+changeX, 
+						(int) (roads.get(i).getY1()+offsetY1)*zoomMultiplier+changeY, 
+						(int) (roads.get(i).getX2()-offsetX1)*zoomMultiplier+changeX, 
+						(int) (roads.get(i).getY2()+offsetY1)*zoomMultiplier+changeY
 				));
 				
 				g2.draw(new Line2D.Double(
-						(int) (roads.get(i).getX1()+offsetX)*zoomMultiplier+changeX, 
-						(int) (roads.get(i).getY1()-offsetY)*zoomMultiplier+changeY, 
-						(int) (roads.get(i).getX2()+offsetX)*zoomMultiplier+changeX, 
-						(int) (roads.get(i).getY2()-offsetY)*zoomMultiplier+changeY
+						(int) (roads.get(i).getX1()+offsetX1)*zoomMultiplier+changeX, 
+						(int) (roads.get(i).getY1()-offsetY1)*zoomMultiplier+changeY, 
+						(int) (roads.get(i).getX2()+offsetX1)*zoomMultiplier+changeX, 
+						(int) (roads.get(i).getY2()-offsetY1)*zoomMultiplier+changeY
 				));	
 			
 				//trafficlights.
@@ -250,7 +351,10 @@ public class Visuals extends JPanel{
 				
 				if(roads.get(i).getTrafficLightsRight().get(j).getIntersection().getXCoord() == roads.get(i).getX1() && roads.get(i).getTrafficLightsRight().get(j).getIntersection().getYCoord() == roads.get(i).getY1()) {
 					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX1()-(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(roads.get(i).getY1()+(offsetY2/2 + offsetY))*zoomMultiplier+changeY, (int)(midPointX-(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(midPointY+(offsetY2/2 + offsetY))*zoomMultiplier+changeY));
+							(int)(roads.get(i).getX1()-(offsetX2/2 + offsetX1))*zoomMultiplier+changeX, 
+							(int)(roads.get(i).getY1()+(offsetY2/2 + offsetY1))*zoomMultiplier+changeY, 
+							(int)(midPointX-(offsetX2/2 + offsetX1))*zoomMultiplier+changeX, 
+							(int)(midPointY+(offsetY2/2 + offsetY1))*zoomMultiplier+changeY));
 				
 				}
 				
@@ -262,7 +366,11 @@ public class Visuals extends JPanel{
 				
 				if(roads.get(i).getTrafficLightsLeft().get(j).getIntersection().getXCoord() == roads.get(i).getX2() && roads.get(i).getTrafficLightsLeft().get(j).getIntersection().getYCoord() == roads.get(i).getY2()) {
 					g2.draw(new Line2D.Double(
-							(int)(roads.get(i).getX2()+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(roads.get(i).getY2()-(offsetY2/2 + offsetY))*zoomMultiplier+changeY, (int)(midPointX2+(offsetX2/2 + offsetX))*zoomMultiplier+changeX, (int)(midPointY2-(offsetY2/2 + offsetY))*zoomMultiplier+changeY));
+							(int) (roads.get(i).getX2()+(offsetX2/2 + offsetX1))*zoomMultiplier+changeX, 
+							(int) (roads.get(i).getY2()-(offsetY2/2 + offsetY1))*zoomMultiplier+changeY, 
+							(int) (midPointX2+(offsetX2/2 + offsetX1))*zoomMultiplier+changeX, 
+							(int) (midPointY2-(offsetY2/2 + offsetY1))*zoomMultiplier+changeY
+					));
 				
 				}
 				g2.setStroke(defaultStroke);
@@ -270,17 +378,26 @@ public class Visuals extends JPanel{
 			g2.setStroke(defaultStroke);
 			g2.setColor(Color.black);
 			
-			
-			
-			
 			//draws the intersections
 			intersectionSize = roads.get(i).getLanes()*20;
 			if(intersectionSize>maxIntersectionSize)
 			{
 				maxIntersectionSize = intersectionSize;
 			}
-			g2.fillOval((int)((roads.get(i).getX1()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY1()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
-			g2.fillOval((int)((roads.get(i).getX2()-intersectionSize/2)*zoomMultiplier + changeX), (int)((roads.get(i).getY2()-intersectionSize/2)*zoomMultiplier + changeY), (int)(intersectionSize*zoomMultiplier), (int)(intersectionSize*zoomMultiplier ));
+			
+			g2.fillOval(
+					(int) ((roads.get(i).getX1()-intersectionSize/2)*zoomMultiplier + changeX), 
+					(int) ((roads.get(i).getY1()-intersectionSize/2)*zoomMultiplier + changeY), 
+					(int) (intersectionSize*zoomMultiplier), 
+					(int) (intersectionSize*zoomMultiplier
+			));
+			
+			g2.fillOval(
+					(int) ((roads.get(i).getX2()-intersectionSize/2)*zoomMultiplier + changeX), 
+					(int) ((roads.get(i).getY2()-intersectionSize/2)*zoomMultiplier + changeY), 
+					(int) (intersectionSize*zoomMultiplier), 
+					(int) (intersectionSize*zoomMultiplier
+			));
 		
 		}
 		
