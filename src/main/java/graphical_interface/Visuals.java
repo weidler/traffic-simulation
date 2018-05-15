@@ -173,16 +173,18 @@ public class Visuals extends JPanel{
 			int offsetY2 = (int) precalculated_offsets.get(current_road)[3];
 			double offsetAngle = precalculated_offsets.get(current_road)[4];
 			
+			System.out.println(offsetX1 == offsetX2);
+			
 			// recalculate initial start and end of road outer lines based on angular offset
 			int to_x_a = current_road.getX1() - offsetX1;
 			int to_y_a = current_road.getY1() + offsetY1;
-			int from_x_a = current_road.getX2() - offsetX2;
-			int from_y_a = current_road.getY2() + offsetY2;
+			int from_x_a = current_road.getX2() - offsetX1;
+			int from_y_a = current_road.getY2() + offsetY1;
 			
 			int to_x_b = current_road.getX1() + offsetX1;
 			int to_y_b = current_road.getY1() - offsetY1;
-			int from_x_b = current_road.getX2() + offsetX2;
-			int from_y_b = current_road.getY2() - offsetY2;
+			int from_x_b = current_road.getX2() + offsetX1;
+			int from_y_b = current_road.getY2() - offsetY1;
 			
 //			// ADJUST FROM end of the road
 //			if (next_clockwise_road_from != null) {
@@ -298,25 +300,25 @@ public class Visuals extends JPanel{
 			// Draw lanes
 			for(int j = 1; j <= current_road.getLanes(); j++) {	
 				
-				offsetX1 = (int) (Math.round(Math.cos(offsetAngle) * (j - 1) * laneSize));
-				offsetY1 = (int) (Math.round(Math.sin(offsetAngle) * (j - 1) * laneSize));
-				
+				int lane_offset_x = (int) (Math.round(Math.cos(offsetAngle) * (j - 1) * laneSize));
+				int lane_offset_y = (int) (Math.round(Math.sin(offsetAngle) * (j - 1) * laneSize));
+								
 				if (j > 1) {
 					g2.setStroke(dashed);
 					g2.setColor(Color.black);
 					
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX1() - offsetX1)*zoomMultiplier+changeX, 
-							(int) (current_road.getY1() + offsetY1)*zoomMultiplier+changeY, 
-							(int) (current_road.getX2() - offsetX1)*zoomMultiplier+changeX, 
-							(int) (current_road.getY2() + offsetY1)*zoomMultiplier+changeY
+							(int) (current_road.getX1() - lane_offset_x) * zoomMultiplier + changeX, 
+							(int) (current_road.getY1() + lane_offset_y) * zoomMultiplier + changeY, 
+							(int) (current_road.getX2() - lane_offset_x) * zoomMultiplier + changeX, 
+							(int) (current_road.getY2() + lane_offset_y) * zoomMultiplier + changeY
 					));
 					
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX1() + offsetX1)*zoomMultiplier+changeX, 
-							(int) (current_road.getY1() - offsetY1)*zoomMultiplier+changeY, 
-							(int) (current_road.getX2() + offsetX1)*zoomMultiplier+changeX, 
-							(int) (current_road.getY2() - offsetY1)*zoomMultiplier+changeY
+							(int) (current_road.getX1() + lane_offset_x) * zoomMultiplier+changeX, 
+							(int) (current_road.getY1() - lane_offset_y) * zoomMultiplier+changeY, 
+							(int) (current_road.getX2() + lane_offset_x) * zoomMultiplier+changeX, 
+							(int) (current_road.getY2() - lane_offset_y) * zoomMultiplier+changeY
 					));					
 				}
 				
@@ -333,16 +335,16 @@ public class Visuals extends JPanel{
 				
 				if (intersection_from.isAt(current_road.getX1(), current_road.getY1())) {
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX1() + (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-							(int) (current_road.getY1() - (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY, 
+							(int) (current_road.getX1() + (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (current_road.getY1() - (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY, 
 							(int) (midPointX1 + (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
 							(int) (midPointY1 - (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY));					
 				} else {
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX2() + (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-							(int) (current_road.getY2() - (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY, 
-							(int) (midPointX2 + (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-							(int) (midPointY2 - (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY));
+							(int) (current_road.getX2() + (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (current_road.getY2() - (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY, 
+							(int) (midPointX2 + (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (midPointY2 - (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY));
 				}
 				
 				g2.setColor(Color.RED);
@@ -352,17 +354,17 @@ public class Visuals extends JPanel{
 				
 				if (intersection_to.isAt(current_road.getX1(), current_road.getY1())) {
 					g2.draw(new Line2D.Double(
-						(int) (current_road.getX1() - (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-						(int) (current_road.getY1() + (offsetY2/2 + offsetY1))* zoomMultiplier + changeY, 
-						(int) (midPointX1 - (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-						(int) (midPointY1 + (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY
+						(int) (current_road.getX1() - (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (current_road.getY1() + (offsetY2/2 + lane_offset_y))* zoomMultiplier + changeY, 
+						(int) (midPointX1 - (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY1 + (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY
 					));			
 				} else {
 					g2.draw(new Line2D.Double(
-						(int) (current_road.getX2()-(offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-						(int) (current_road.getY2()+(offsetY2/2 + offsetY1)) * zoomMultiplier + changeY, 
-						(int) (midPointX2 - (offsetX2/2 + offsetX1)) * zoomMultiplier + changeX, 
-						(int) (midPointY2 + (offsetY2/2 + offsetY1)) * zoomMultiplier + changeY
+						(int) (current_road.getX2() - (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (current_road.getY2() + (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY, 
+						(int) (midPointX2 - (offsetX2/2 + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY2 + (offsetY2/2 + lane_offset_y)) * zoomMultiplier + changeY
 					));
 				}
 				
