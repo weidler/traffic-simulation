@@ -140,23 +140,31 @@ public class Intersection {
 		return this.connections;
 	}
 	
-	public ArrayList<TrafficLight> getTrafficLights() {
-		ArrayList<TrafficLight> traffic_lights = new ArrayList<TrafficLight>();
+	public ArrayList<ArrayList<TrafficLight>> getTrafficLights() {
+		ArrayList<ArrayList<TrafficLight>> traffic_lights = new ArrayList<ArrayList<TrafficLight>>();
 		for (Connection c : this.connections) {
-			traffic_lights.add(c.getTrafficlight());
+			traffic_lights.add(c.getTrafficlights());
 		}
 		
 		
 		return traffic_lights;
 	}
 	
-	public TrafficLight getTrafficLightFrom(Intersection origin_intersection) {
+	public ArrayList<TrafficLight> getTrafficLightsApproachingFrom(Intersection origin_intersection) {
 		if (this.getConnectedIntersections().contains(origin_intersection)) {
 			for (Connection c : this.connections) {
 				if (c.getDestination() == origin_intersection) {
-					return c.getTrafficlight();
+					return c.getTrafficlights();
 				}
 			}
+		}
+		
+		return null;
+	}
+	
+	public TrafficLight getTrafficLightsApproachingFrom(Intersection origin_intersection, int lane) {
+		for (TrafficLight t : this.getTrafficLightsApproachingFrom(origin_intersection)) {
+			if (t.getLane() == lane) return t;
 		}
 		
 		return null;
@@ -170,11 +178,15 @@ public class Intersection {
 	 * @param intersection the intersection which this intersection has a new connection to and from
 	 * @param trafficlight the trafficlight that regulates cars coming INTO this intersection FROM the parameter intersection
 	 */
-	public void addConnection(Road road, Intersection intersection, TrafficLight trafficlight, int lanes) {
-		if (trafficlight == null) {
-			trafficlight = new TrafficLight(road,this);
+	public void addConnection(Road road, Intersection intersection, ArrayList<TrafficLight> trafficlights) {
+		if (trafficlights == null) {
+			trafficlights = new ArrayList<TrafficLight>();
+			for (int i = 1; i <= road.getLanes(); i++) {
+				trafficlights.add(new TrafficLight(road, this, i));				
+			}
 		}
-		connections.add(new Connection(road, intersection, trafficlight,lanes));
+		
+		connections.add(new Connection(road, intersection, trafficlights));
 	}
 	
 	public Road removeConnectionTo(Intersection intersection) {
@@ -218,20 +230,32 @@ public class Intersection {
 	public boolean equalCoordinatesWith(Intersection intersection) {
 		return (intersection.getXCoord() == this.x_coord && intersection.getYCoord() == this.y_coord);
 	}
+	
+	public boolean isAt(int x1, int y1) {
+		if (this.getXCoord() == x1 && this.getYCoord() == y1) return true;
+		return false;
+	}
+
 
 	// ACTIONS
 
 	public void setTrafficLightActivity() {
-		if(getTrafficLights().size() <= 2) {
-			for(TrafficLight t : getTrafficLights()) {
-				t.setStatus("G");
+		if (getTrafficLights().size() <= 2) {
+			for(ArrayList<TrafficLight> tls : getTrafficLights()) {
+				for(TrafficLight t : tls) {
+					t.setStatus("G");
+				}
 			}
 		} else {
 			for (int i = 0; i < getTrafficLights().size(); i++) {
-				if(i == active_light) {
-					getTrafficLights().get(i).setStatus("G");
+				if (i == active_light) {
+					for (TrafficLight t : getTrafficLights().get(i)) {
+						t.setStatus("G");
+					}
 				} else {
-					getTrafficLights().get(i).setStatus("R");
+					for (TrafficLight t : getTrafficLights().get(i)) {
+						t.setStatus("R");
+					}
 				}
 			}
 		}
@@ -268,7 +292,5 @@ public class Intersection {
 	@Override
 	public String toString() {
 		return this.x_coord + "," + this.y_coord+",";
-	}
-
-	
+	}	
 }

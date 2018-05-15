@@ -88,13 +88,10 @@ public class Road {
 	public void setLanes(int l) {
 		if(l >= 1 && l < 4) {
 			lanes = l;
-			for(int i = 0; i < l; i++) {
-				trafficlightsRight.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x1, y1)));
-				trafficlightsLeft.add(new TrafficLight(this, streetmap.getIntersectionByCoordinates(x2, y2)));
-			}
 		} else {
 			System.out.println("number of lanes is not allowed");
 		}
+		
 		calculateOffset(streetmap.getIntersectionByCoordinates(x1, y1), streetmap.getIntersectionByCoordinates(x2, y2));
 	}
 	
@@ -165,12 +162,12 @@ public class Road {
 	public int getY2() {
 		return y2;
 	}
-	public ArrayList<TrafficLight> getTrafficLightsRight()
-	{
+	
+	public ArrayList<TrafficLight> getTrafficLightsRight() {
 		return trafficlightsRight;
 	}
-	public ArrayList<TrafficLight> getTrafficLightsLeft()
-	{
+	
+	public ArrayList<TrafficLight> getTrafficLightsLeft() {
 		return trafficlightsLeft;
 	}
 

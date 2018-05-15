@@ -108,7 +108,9 @@ public class StreetMap {
 	public ArrayList<TrafficLight> getTrafficLights() {
 		ArrayList<TrafficLight> all_trafficlights = new ArrayList<TrafficLight>();
 		for (Intersection intersection : this.intersections) {
-			all_trafficlights.addAll(intersection.getTrafficLights());
+			for (ArrayList<TrafficLight> tls : intersection.getTrafficLights()) {
+				all_trafficlights.addAll(tls);
+			};
 		}
 		
 		return all_trafficlights;
@@ -144,8 +146,8 @@ public class StreetMap {
 			System.out.println("One of the intersections you are planning to connect can't have more connections added.");
 		}*/ else {
 			this.roads.add(road);					
-			int_a.addConnection(road, int_b, null, road.getLanes());
-			int_b.addConnection(road, int_a, null, road.getLanes());			
+			int_a.addConnection(road, int_b, null);
+			int_b.addConnection(road, int_a, null);			
 		}
 	}
 	

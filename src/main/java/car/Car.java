@@ -337,7 +337,7 @@ public class Car {
 	}
 
 	public TrafficLight getApproachedTrafficlight() {
-		return this.current_destination_intersection.getTrafficLightFrom(this.current_origin_intersection);
+		return this.current_destination_intersection.getTrafficLightsApproachingFrom(this.current_origin_intersection, this.lane);
 	}
 	
 	public double getApproachedIntersectionDistance() {

@@ -7,22 +7,18 @@ public class Connection {
 
 	private Road road;
 	private Intersection destination;
-	private TrafficLight trafficlight;
-	private int lanes;
-	private ArrayList<TrafficLight> TrafficLights = new ArrayList<TrafficLight>();
+	private ArrayList<TrafficLight> trafficlights;
 	
-	public Connection(Road road, Intersection destination, TrafficLight trafficlight, int lanes) {
+	public Connection(Road road, Intersection destination, ArrayList<TrafficLight> trafficlights) {
 		this.road = road;
 		this.destination = destination;
-		this.trafficlight = trafficlight;
-		this.lanes = lanes;
+		this.trafficlights = trafficlights;
 	}
 
 	// GETTER / SETTER
 	
 	public Road getRoad() {
 		return road;
-		
 	}
 
 	public void setRoad(Road road) {
@@ -37,17 +33,21 @@ public class Connection {
 		this.destination = destination;
 	}
 
-	public TrafficLight getTrafficlight() {
-		return trafficlight;
+	public ArrayList<TrafficLight> getTrafficlights() {
+		return trafficlights;
 	}
 
-	public void setTrafficlight(TrafficLight trafficlight) {
-		this.trafficlight = trafficlight;
+	public void setTrafficlights(ArrayList<TrafficLight> trafficlights) {
+		if (trafficlights.size() == this.getLanes()) this.trafficlights = trafficlights;
+		else System.out.println("[ERROR] Unallowed Number of Trafficlights for this Road.");
 	}
-
 	
+	public int getLanes() {
+		return this.road.getLanes();
+	}
+
 	@Override
 	public String toString() {
-		return "Connection [road=" + road + ", destination=" + destination + ", trafficlight=" + trafficlight + "]";
+		return "Connection [road=" + road + ", destination=" + destination + ", trafficlights=" + trafficlights + "]";
 	}
 }
