@@ -59,7 +59,23 @@ public class Car {
 	protected double vehicle_length;
 	protected double favored_velocity;
 	protected CarType type = CarType.CAR;
-
+	
+	// TIME VARIABLES
+	protected double carDistribution0_2 = 0.07;
+	protected double carDistribution2_4 = 0.15;
+	protected double carDistribution4_6 = 0.25;
+	protected double carDistribution6_8 = 0.40;
+	protected double carDistribution8_10 = 0.60;
+	protected double carDistribution10_12 = 0.65;
+	protected double carDistribution12_14 = 0.70;
+	protected double carDistribution14_16 = 0.77;
+	protected double carDistribution16_18 = 0.90;
+	protected double carDistribution18_20 = 0.95;
+	protected double carDistribution20_22 = 0.97;
+	protected double carDistribution22_24 = 1.00;
+	protected int startTime;
+	protected int endTime;
+	
 
 	/**
 	 *
@@ -70,8 +86,9 @@ public class Car {
 
 	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
 		
+		setStartTime();		
 		this.path = path;
-
+		
 		color = Color.blue;
 		
 		this.current_origin_intersection = path.get(0);
@@ -96,6 +113,73 @@ public class Car {
 		this.mobil = new MOBIL(this.model, 1);
 		
 		this.reached_destination = false;
+	}
+	
+	public void setStartTime()
+	{
+		Random r = new Random();
+		double t = 0 + (1 - 0) * r.nextDouble();
+		int iteration = 0;
+		if(t >= 0.0 && t <= carDistribution0_2)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution0_2 && t <= carDistribution2_4)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution2_4 && t <= carDistribution4_6)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution4_6 && t <= carDistribution6_8)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution6_8 && t <= carDistribution8_10)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution8_10 && t <= carDistribution10_12)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution10_12 && t <= carDistribution12_14)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution14_16 && t <= carDistribution16_18)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else if(t > carDistribution18_20 && t <= carDistribution20_22)
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		else 
+		{
+			iteration ++;
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
 	}
 	
 	private void updateDesiredVelocity() {
@@ -240,7 +324,21 @@ public class Car {
 	{
 		return color;
 	}
-	
+	public int getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(int startTime) {
+		this.startTime = startTime;
+	}
+
+	public int getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(int endTime) {
+		this.endTime = endTime;
+	}
 	
 	public void setLane(int l)
 	{
