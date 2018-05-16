@@ -39,7 +39,6 @@ public class TrafficLight {
 		}
 
 		this.status = status;
-		System.out.println(this.status);
 	}
 
 	public Intersection getIntersection()

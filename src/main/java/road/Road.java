@@ -23,9 +23,6 @@ public class Road {
 	protected ArrayList<Integer> offsetX = new ArrayList();
 	protected ArrayList<Integer> offsetY = new ArrayList();
 	
-	//first one in the list is the trafficlight closest to the middle.
-	protected ArrayList<TrafficLight> trafficlightsRight = new ArrayList();
-	protected ArrayList<TrafficLight> trafficlightsLeft = new ArrayList();
 	protected StreetMap streetmap;
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {
@@ -161,14 +158,6 @@ public class Road {
 
 	public int getY2() {
 		return y2;
-	}
-	
-	public ArrayList<TrafficLight> getTrafficLightsRight() {
-		return trafficlightsRight;
-	}
-	
-	public ArrayList<TrafficLight> getTrafficLightsLeft() {
-		return trafficlightsLeft;
 	}
 
 	public int getAllowedMaxSpeed() {

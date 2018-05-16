@@ -18,6 +18,10 @@ import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.Visuals;
+import road.Road;
+import schedule.GaussianSchedule;
+import schedule.PoissonSchedule;
+import schedule.Schedule;
 import datastructures.Intersection;
 
 public class Simulation {
@@ -27,7 +31,8 @@ public class Simulation {
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
 	private GraphicalInterface gui;
-
+	private Schedule simulation_schedule;
+	
 	private JTextArea carsTextPane;
 	private Car lastHoveredCar;
 	
@@ -125,9 +130,42 @@ public class Simulation {
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 
+	public void addCarAtRoad(Road r) {
+		this.street_map.getIntersections();
+		this.street_map.getRoads();
+		
+		// generate random parameters
+		Random rand = new Random();
+		int origin = this.street_map.getIntersectionIdByCoordinates(r.getX1(), r.getY1());
+		int destination;
+		do {
+			destination = rand.nextInt(this.street_map.getIntersections().size());
+		} while (destination == origin);
+
+		Intersection origin_intersection = this.street_map.getIntersection(origin);
+		Intersection destination_intersection = this.street_map.getIntersection(destination);
+		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection, this.street_map);
+		
+		// create vehicle
+		Car random_car;
+		double type_rand = rand.nextDouble();
+		if (type_rand <= 0.9) {
+			random_car = new Car(shortest_path, this.street_map, this.props);
+		} else {
+			random_car = new Truck(shortest_path, this.street_map, this.props);
+		}
+		
+		random_car.setPositionOnRoad(rand.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
+		this.addCar(random_car);
+
+		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
+	}
+	
 	// SIMULATION
 	
 	public void start() {
+		this.simulation_schedule = new GaussianSchedule(this.street_map, 5, 2);
+		
 		if (this.is_running) {
 			System.out.println("Already Running.");
 			return;
@@ -141,20 +179,29 @@ public class Simulation {
 			for (Intersection is : this.street_map.getIntersections()) {
 				is.initializeTrafficLightSettings();
 			}
-					
+			
 			double delta_t = 0.01;
 			this.visualization_frequency = (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS")));
-			
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
 			while (this.is_running) {
 				long start_time = System.nanoTime();
 			
+				simulation_schedule.logSchedule();
+				
+				// add new cars to the roads according to the schedule
+				for (Road r : this.street_map.getRoads()) {
+					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
+						this.addCarAtRoad(r);
+						simulation_schedule.drawNextCarAt(r);
+					}
+				}
+				
 				// update traffic light statuses
 				this.street_map.update(delta_t);
 
-				
+				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
 					// recalculate car positions
@@ -168,7 +215,7 @@ public class Simulation {
 					this.cars.remove(c);
 				}
 				
-				//lists the cars
+				// lists the cars
 				carsTextPane.setText("");
 				if(showCarInfo /*&& step % this.visualization_frequency == 0*/) 
 				{
@@ -198,6 +245,7 @@ public class Simulation {
 				
 				this.current_time += delta_t;
 				
+				// update graphics and statistics
 				step++;
 				resettable_step++; 
 				if (step % this.visualization_frequency == 0) gui.redraw();
