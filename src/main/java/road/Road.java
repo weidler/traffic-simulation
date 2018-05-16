@@ -97,7 +97,21 @@ public class Road {
 	}
 	
 	public double getClockwiseAngleTo(Road that, Intersection at_int) {
-		return Geometry.clockwiseAngle(this.getX1(), this.getY1(), this.getX2(), this.getY2(), that.getX1(), that.getY1(), that.getX2(), that.getY2(), at_int.getXCoord(), at_int.getYCoord());
+		int this_x = this.getX1();
+		int this_y = this.getY1();
+		if (this_x == at_int.getXCoord() && this_y == at_int.getYCoord()) {
+			this_x = this.getX2();
+			this_y = this.getY2();
+		}
+		
+		int that_x = that.getX1();
+		int that_y = that.getY1();
+		if (that_x == at_int.getXCoord() && that_y == at_int.getYCoord()) {
+			that_x = that.getX2();
+			that_y = that.getY2();
+		}
+		
+		return Geometry.clockwiseAngle(this_x, this_y, that_x, that_y, at_int.getXCoord(), at_int.getYCoord());
 	}
 	
 	public Road[] getNeighbouringRoadsAt(Intersection at_int) {

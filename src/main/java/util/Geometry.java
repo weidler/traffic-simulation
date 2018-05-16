@@ -51,29 +51,23 @@ public class Geometry {
 		return radians * (180 / Math.PI);
 	}
 	
-	public static double clockwiseAngle(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int common_x, int common_y) {
-		double[] intersection_point = intersection(x1, y1, x2, y2, x3, y3, x4, y4);
-		
+	public static double clockwiseAngle(int x1, int y1, int x2, int y2, int common_x, int common_y) {
 		// move intersection to origin
 		double centered_x1 = x1 - common_x;
-		double centered_x2 = x2 - common_x;
-		double centered_x3 = x3 - common_x;
-		double centered_x4 = x4 - common_x;
 		double centered_y1 = y1 - common_y;
-		double centered_y2 = y2 - common_y;
-		double centered_y3 = y3 - common_y;
-		double centered_y4 = y4 - common_y;
-		
-		double[] vector_a = new double[2];
-		double[] vector_b = new double[2];
 
-		vector_a[0] = centered_x1 - centered_x2;
-		vector_a[1] = centered_y1 - centered_y2;
-		vector_b[0] = centered_x3 - centered_x4;
-		vector_b[1] = centered_y3 - centered_y4;
+		double centered_x2 = x2 - common_x;
+		double centered_y2 = y2 - common_y;
 		
-		double angle = toDegrees(Math.atan2(vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0], vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1]));
-		return (360 - angle) % 360;
+		double dot = centered_x1 * centered_x2 + centered_y1 * centered_y2;
+		double det = centered_x1 * centered_y2 - centered_y1 * centered_x2;
+
+		double angle = toDegrees(Math.atan2(det, dot));
+		if (angle > 0) {
+			return angle;
+		} else {
+			return 360 + angle;
+		}
 	}
 	
 	public static double distance(double x1, double y1, double x2, double y2) {
@@ -120,6 +114,13 @@ public class Geometry {
 		
 		System.out.println(Geometry.liesLeft(Ax, Ay, Bx, By, Px, Py));
 		System.out.println(Geometry.liesLeft(Bx, By, Ax, Ay, Px, Py));
+		
+		double a = Geometry.clockwiseAngle(
+				1, 4, 
+				4, 5, 
+				3, 3);
+
+		System.out.println(a);
 	
 	}
 	

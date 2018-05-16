@@ -269,7 +269,6 @@ public class Simulation {
 					total_calculation_time = 0;
 					System.out.println(this.real_time_utilization);
 				}
-				System.out.println(is_running);
 			}
 		});
 		
