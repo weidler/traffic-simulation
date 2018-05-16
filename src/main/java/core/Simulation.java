@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -176,7 +177,7 @@ public class Simulation {
 		this.is_running = true;
 		
 		Thread th = new Thread(()-> {		
-			
+			Calendar now = Calendar.getInstance();	
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
 				is.initializeTrafficLightSettings();
@@ -188,10 +189,12 @@ public class Simulation {
 			int step = 0;
 			int resettable_step = 0;
 			while (this.is_running) {
-				long start_time = System.nanoTime();
-				long start_time2 = System.currentTimeMillis();
 				
-				simulation_schedule.logSchedule();
+				
+				long start_time = System.nanoTime();
+				//long start_time2 = now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60;
+				
+				//simulation_schedule.logSchedule();
 				
 				// add new cars to the roads according to the schedule
 				for (Road r : this.street_map.getRoads()) {
@@ -203,17 +206,21 @@ public class Simulation {
 
 				// update traffic light statuses
 				this.street_map.update(delta_t);
-
+				/*if((int)(((( now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60 -  start_time2))*time_multiplier))>=1440 * 60)
+				{
+					start_time2 = now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60;
+				}*/
+				
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
-					if(car.getStartTime() <= ((int)((System.currentTimeMillis()/60000) -  start_time2/60000))*time_multiplier)
+					
+					// recalculate car positions
+					if (car.update(this.cars, delta_t)) 
 					{
-						// recalculate car positions
-						if (car.update(this.cars, delta_t)) {
-							arrived_cars.add(car);
-						}
+						arrived_cars.add(car);
 					}
+					
 				}
 				
 				// remove cars that reached their destination from the list
@@ -262,6 +269,7 @@ public class Simulation {
 					total_calculation_time = 0;
 					System.out.println(this.real_time_utilization);
 				}
+				System.out.println(is_running);
 			}
 		});
 		
@@ -273,24 +281,36 @@ public class Simulation {
 		for (Car c : this.cars) total_velocity += c.getCurrentVelocity();
 		this.average_velocity = total_velocity / this.cars.size();
 		
-		long start_time = 0;
-		long end_time = 0;
-		int total_wait = 0;
-		ArrayList<Integer> waitingTimes = new ArrayList<>();
-		for (Car c : this.cars)	
-		{
-			if (c.getCurrentVelocity() == 0) 
-			{
-				start_time = System.currentTimeMillis()/1000;
-				while(c.getCurrentVelocity()==0) 
-				{
-					end_time = System.currentTimeMillis()/1000;
-				}
-			}
-			total_wait += end_time-start_time;
-			waitingTimes.add(total_wait);
-			total_wait = 0;
-		}
+//		long start_time = 0;
+//		long end_time = 0;
+//		int total_wait = 0;
+//		int i =0;
+//		ArrayList<Integer> waitingTimes = new ArrayList<>();
+//		for (Car c : this.cars)	
+//		{
+//			if (c.getCurrentVelocity() == 0) 
+//			{
+//				start_time = System.currentTimeMillis()/1000;
+//				while(c.getCurrentVelocity()==0) 
+//				{ 
+//					
+//					end_time = System.currentTimeMillis()/1000;
+//				}
+//			}
+//			total_wait += end_time-start_time;
+//			if(i < waitingTimes.size())
+//			{
+//				waitingTimes.set(i, total_wait);
+//			}
+//			else 
+//			{
+//				waitingTimes.add(total_wait);
+//			}
+//			
+//			total_wait = 0;
+//			i++;
+//			
+//		}
 	}
 	
 	public void setTextArea(JTextArea p) {
