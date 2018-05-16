@@ -16,7 +16,7 @@ public class Geometry {
 		return (y1 * x2 - y2 * x1) / (x2 - x1);
 	}
 	
-	public static double[] intersection(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+	public static double[] intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 		double m_a = slope(x1, y1, x2, y2);
 		double m_b = slope(x3, y3, x4, y4);
 		double b_a = yIntercept(x1, y1, x2, y2);
@@ -76,25 +76,51 @@ public class Geometry {
 		return (360 - angle) % 360;
 	}
 	
-	public static double distance(int x1, int y1, int x2, int y2) {
-		return (int) Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+	public static double distance(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
 	}
 	
 	public static double[] offset(Road road, int lane_size) {
 		double[] offsets = new double[5];
 		
-		int k = road.getLanes();
 		double angle = Math.atan2(road.getY2() - road.getY1(), road.getX1() - road.getX2());
 		if (angle<0) angle+=Math.PI*2;
 		double offsetAngle = angle+(Math.PI/2);	
 		if (offsetAngle > Math.PI*2) offsetAngle-= Math.PI*2;
 		
-		offsets[0] = (int) (Math.round(Math.cos(offsetAngle) * k * lane_size));
-		offsets[1] = (int) (Math.round(Math.sin(offsetAngle) * k * lane_size));
-		offsets[2] = (int) (Math.round(Math.cos(offsetAngle) * lane_size));
-		offsets[3] = (int) (Math.round(Math.sin(offsetAngle) * lane_size));
-		offsets[4] = offsetAngle;
+		offsets[0] = (int) (Math.round(Math.cos(offsetAngle) * lane_size));
+		offsets[1] = (int) (Math.round(Math.sin(offsetAngle) * lane_size));
+		offsets[2] = offsetAngle;
 		
 		return offsets;
 	}
+	
+	public static boolean liesLeft(double a_x, double a_y, double b_x, double b_y, double p_x, double p_y) {
+		// go to origin
+		b_x -= a_x;
+		b_y -= a_y;
+		p_x -= a_x;
+		p_y -= a_y;
+		
+		double cross_product = b_x * p_y - b_y * p_x;
+		
+		if (cross_product > 0) return false;
+		return true;
+		
+	}
+	
+	public static void main(String[] args) {
+		
+		double Ax = -30;
+		double Ay = 10; // A(-30, 10)
+		double Bx = 29;
+		double By = -15; // B(29, -15)
+		double Px = 15;
+		double Py = 28; // P(15, 28)
+		
+		System.out.println(Geometry.liesLeft(Ax, Ay, Bx, By, Px, Py));
+		System.out.println(Geometry.liesLeft(Bx, By, Ax, Ay, Px, Py));
+	
+	}
+	
 }
