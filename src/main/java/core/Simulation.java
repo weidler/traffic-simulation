@@ -37,7 +37,7 @@ public class Simulation {
 	private float slow_mo_factor = 1;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
-	private double time_multiplier = 24.0;
+	private int time_multiplier = 24;
 	
 	// STATISTICS
 	private int measurement_interval = 100;
@@ -152,18 +152,20 @@ public class Simulation {
 			int resettable_step = 0;
 			while (this.is_running) {
 				long start_time = System.nanoTime();
-			
+				long start_time2 = System.currentTimeMillis();
 				// update traffic light statuses
 				this.street_map.update(delta_t);
 
 				
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
-					
-					// recalculate car positions
-					if (car.update(this.cars, delta_t)) {
-						arrived_cars.add(car);
-					};
+					if(car.getStartTime() <= ((int)((System.currentTimeMillis()/60000) -  start_time2/60000))*time_multiplier)
+					{
+						// recalculate car positions
+						if (car.update(this.cars, delta_t)) {
+							arrived_cars.add(car);
+						}
+					}
 				}
 				
 				// remove cars that reached their destination from the list
