@@ -381,8 +381,8 @@ public class Visuals extends JPanel{
 			// Draw lanes
 			for(int j = 1; j <= current_road.getLanes(); j++) {	
 				
-				int lane_offset_x = (int) offset_x * (j - 1);
-				int lane_offset_y = (int) offset_y * (j - 1);
+				double lane_offset_x = offset_x * (j - 1);
+				double lane_offset_y = offset_y * (j - 1);
 								
 				if (j > 1) {
 					g2.setStroke(dashed);
@@ -404,7 +404,7 @@ public class Visuals extends JPanel{
 				}
 				
 				//trafficlights.
-				g2.setStroke(new BasicStroke((int) (this.laneSize * zoomMultiplier / 1.5)));
+				g2.setStroke(new BasicStroke((int) (this.laneSize * zoomMultiplier / 2)));
 			
 				TrafficLight tl_from = intersection_from.getTrafficLightsApproachingFrom(intersection_to, j);
 				TrafficLight tl_to = intersection_to.getTrafficLightsApproachingFrom(intersection_from, j);
@@ -416,16 +416,17 @@ public class Visuals extends JPanel{
 				
 				if (intersection_from.isAt(current_road.getX1(), current_road.getY1())) {
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX1() + (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-							(int) (current_road.getY1() - (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY, 
-							(int) (midPointX1 + (offset_x/2 + outer_offset_x)) * zoomMultiplier + changeX, 
-							(int) (midPointY1 - (offset_y/2 + outer_offset_y)) * zoomMultiplier + changeY));					
+							(int) (midPointX1 + (offset_x + lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (midPointY1 - (offset_y + lane_offset_y)) * zoomMultiplier + changeY, 
+							(int) (midPointX1 + (lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (midPointY1 - (lane_offset_y)) * zoomMultiplier + changeY
+					));					
 				} else {
 					g2.draw(new Line2D.Double(
-							(int) (current_road.getX2() + (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-							(int) (current_road.getY2() - (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY, 
-							(int) (midPointX2 + (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-							(int) (midPointY2 - (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY));
+							(int) (midPointX2 + (offset_x + lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (midPointY2 - (offset_y + lane_offset_y)) * zoomMultiplier + changeY, 
+							(int) (midPointX2 + (lane_offset_x)) * zoomMultiplier + changeX, 
+							(int) (midPointY2 - (lane_offset_y)) * zoomMultiplier + changeY));
 				}
 				
 				g2.setColor(Color.RED);
@@ -435,17 +436,17 @@ public class Visuals extends JPanel{
 				
 				if (intersection_to.isAt(current_road.getX1(), current_road.getY1())) {
 					g2.draw(new Line2D.Double(
-						(int) (current_road.getX1() - (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-						(int) (current_road.getY1() + (offset_y/2 + lane_offset_y))* zoomMultiplier + changeY, 
-						(int) (midPointX1 - (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-						(int) (midPointY1 + (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY
+						(int) (midPointX1 - (offset_x + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY1 + (offset_y + lane_offset_y))* zoomMultiplier + changeY, 
+						(int) (midPointX1 - (lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY1 + (lane_offset_y)) * zoomMultiplier + changeY
 					));			
 				} else {
 					g2.draw(new Line2D.Double(
-						(int) (current_road.getX2() - (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-						(int) (current_road.getY2() + (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY, 
-						(int) (midPointX2 - (offset_x/2 + lane_offset_x)) * zoomMultiplier + changeX, 
-						(int) (midPointY2 + (offset_y/2 + lane_offset_y)) * zoomMultiplier + changeY
+						(int) (midPointX2 - (offset_x + lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY2 + (offset_y + lane_offset_y)) * zoomMultiplier + changeY, 
+						(int) (midPointX2 - (lane_offset_x)) * zoomMultiplier + changeX, 
+						(int) (midPointY2 + (lane_offset_y)) * zoomMultiplier + changeY
 					));
 				}
 				

@@ -322,8 +322,11 @@ public class Car {
 			if (this.position_on_road >= this.current_road.getLength()) {
 				this.current_origin_intersection = this.current_destination_intersection;
 				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
+				
+				// change road
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
 				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
+				this.lane = Math.min(this.lane, current_road.getLanes());
 				this.updateDesiredVelocity();
 			}
 
