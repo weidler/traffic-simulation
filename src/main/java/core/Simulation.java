@@ -37,6 +37,8 @@ public class Simulation {
 	private float slow_mo_factor = 1;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
+	private double time_multiplier = 24.0;
+	
 	// STATISTICS
 	private int measurement_interval = 100;
 	private double average_velocity;
@@ -157,6 +159,7 @@ public class Simulation {
 				
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
+					
 					// recalculate car positions
 					if (car.update(this.cars, delta_t)) {
 						arrived_cars.add(car);
@@ -218,6 +221,25 @@ public class Simulation {
 		double total_velocity = 0;
 		for (Car c : this.cars) total_velocity += c.getCurrentVelocity();
 		this.average_velocity = total_velocity / this.cars.size();
+		
+		long start_time = 0;
+		long end_time = 0;
+		int total_wait = 0;
+		ArrayList<Integer> waitingTimes = new ArrayList<>();
+		for (Car c : this.cars)	
+		{
+			if (c.getCurrentVelocity() == 0) 
+			{
+				start_time = System.currentTimeMillis()/1000;
+				while(c.getCurrentVelocity()==0) 
+				{
+					end_time = System.currentTimeMillis()/1000;
+				}
+			}
+			total_wait += end_time-start_time;
+			waitingTimes.add(total_wait);
+			total_wait = 0;
+		}
 	}
 	
 	public void setTextArea(JTextArea p) {
