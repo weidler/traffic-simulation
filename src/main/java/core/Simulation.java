@@ -42,6 +42,8 @@ public class Simulation {
 	private float slow_mo_factor = 1;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
+	private int time_multiplier = 24;
+	
 	// STATISTICS
 	private int measurement_interval = 100;
 	private double average_velocity;
@@ -164,7 +166,7 @@ public class Simulation {
 	// SIMULATION
 	
 	public void start() {
-		this.simulation_schedule = new GaussianSchedule(this.street_map, 5, 2);
+		this.simulation_schedule = new PoissonSchedule(this.street_map, 10);
 		
 		if (this.is_running) {
 			System.out.println("Already Running.");
@@ -187,7 +189,8 @@ public class Simulation {
 			int resettable_step = 0;
 			while (this.is_running) {
 				long start_time = System.nanoTime();
-			
+				long start_time2 = System.currentTimeMillis();
+				
 				simulation_schedule.logSchedule();
 				
 				// add new cars to the roads according to the schedule
@@ -197,17 +200,20 @@ public class Simulation {
 						simulation_schedule.drawNextCarAt(r);
 					}
 				}
-				
+
 				// update traffic light statuses
 				this.street_map.update(delta_t);
 
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
-					// recalculate car positions
-					if (car.update(this.cars, delta_t)) {
-						arrived_cars.add(car);
-					};
+					if(car.getStartTime() <= ((int)((System.currentTimeMillis()/60000) -  start_time2/60000))*time_multiplier)
+					{
+						// recalculate car positions
+						if (car.update(this.cars, delta_t)) {
+							arrived_cars.add(car);
+						}
+					}
 				}
 				
 				// remove cars that reached their destination from the list
@@ -266,6 +272,25 @@ public class Simulation {
 		double total_velocity = 0;
 		for (Car c : this.cars) total_velocity += c.getCurrentVelocity();
 		this.average_velocity = total_velocity / this.cars.size();
+		
+		long start_time = 0;
+		long end_time = 0;
+		int total_wait = 0;
+		ArrayList<Integer> waitingTimes = new ArrayList<>();
+		for (Car c : this.cars)	
+		{
+			if (c.getCurrentVelocity() == 0) 
+			{
+				start_time = System.currentTimeMillis()/1000;
+				while(c.getCurrentVelocity()==0) 
+				{
+					end_time = System.currentTimeMillis()/1000;
+				}
+			}
+			total_wait += end_time-start_time;
+			waitingTimes.add(total_wait);
+			total_wait = 0;
+		}
 	}
 	
 	public void setTextArea(JTextArea p) {
