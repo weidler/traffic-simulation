@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ public class Visuals extends JPanel{
 	private int changeX = 0;
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
+	private int indicator_size = 15;
 	
 	public Visuals(Simulation simulation) {
 		this.simulation = simulation;
@@ -124,24 +126,14 @@ public class Visuals extends JPanel{
 	public void paintComponent (Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		defaultStroke = g2.getStroke();
-		// draws red pointer
-		g2.setColor(Color.red);
-		if(drawRed != null)
-		{
-			String text = "X: "+drawRed.getXCoord()+" Y: "+ drawRed.getYCoord()+"\n"+"test";
-			g2.fillOval((int)((drawRed.getXCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeX), (int)((drawRed.getYCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeY), (int)((maxIntersectionSize+5)*zoomMultiplier), (int)((maxIntersectionSize+5)*zoomMultiplier ));
-			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
-		}
-		g2.setColor(Color.cyan);
-		
 		
 		// draws guide line		
-		/*if (drawLine) 
-		{	
+		g2.setColor(Color.cyan);
+		if (drawLine) {	
 			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));		
 			g2.drawLine((int)(startPosX*zoomMultiplier)+changeX, (int)(startPosY*zoomMultiplier)+changeY, (int)(mousePosX*zoomMultiplier)+changeX, (int)(mousePosY*zoomMultiplier)+changeY);
 			g2.setStroke(new BasicStroke());
-		}*/
+		}
 		
 		// precalculate offsets
 		HashMap<Road, double[]> precalculated_offsets = new HashMap<Road, double[]>();
@@ -184,21 +176,6 @@ public class Visuals extends JPanel{
 			double to_y_left = current_road.getY1() - outer_offset_y;
 			double from_x_left = current_road.getX2() + outer_offset_x;
 			double from_y_left = current_road.getY2() - outer_offset_y;
-			
-//			g2.setStroke(new BasicStroke(3));
-//			g2.setColor(Color.BLUE);
-//			g2.fillOval(
-//					(int) ((to_x_right) * zoomMultiplier + changeX), 
-//					(int) ((to_y_right) * zoomMultiplier + changeY),
-//					5,5
-//			);
-//			
-//			g2.setColor(Color.PINK);
-//			g2.fillOval(
-//					(int) ((from_x_left) * zoomMultiplier + changeX), 
-//					(int) ((from_y_left) * zoomMultiplier + changeY),
-//					5,5
-//			);
 			
 			// ADJUST FROM end of the road
 			if (next_clockwise_road_from != null) {
@@ -265,8 +242,6 @@ public class Visuals extends JPanel{
 					);
 				}
 				
-				
-			
 				from_x_right = line_intersection_right_from[0];
 				from_y_right = line_intersection_right_from[1];
 			
@@ -457,26 +432,7 @@ public class Visuals extends JPanel{
 			g2.setColor(Color.black);
 			
 			//draws the intersections
-			intersectionSize = current_road.getLanes()*20;
-//			if(intersectionSize>maxIntersectionSize)
-//			{
-//				maxIntersectionSize = intersectionSize;
-//			}
-//			
-//			g2.fillOval(
-//					(int) ((current_road.getX1()-intersectionSize/2)*zoomMultiplier + changeX), 
-//					(int) ((current_road.getY1()-intersectionSize/2)*zoomMultiplier + changeY), 
-//					(int) (intersectionSize*zoomMultiplier), 
-//					(int) (intersectionSize*zoomMultiplier
-//			));
-//			
-//			g2.fillOval(
-//					(int) ((current_road.getX2()-intersectionSize/2)*zoomMultiplier + changeX), 
-//					(int) ((current_road.getY2()-intersectionSize/2)*zoomMultiplier + changeY), 
-//					(int) (intersectionSize*zoomMultiplier), 
-//					(int) (intersectionSize*zoomMultiplier
-//			));
-		
+			intersectionSize = 30;		
 		}
 		
 		// draws the cars
@@ -496,7 +452,23 @@ public class Visuals extends JPanel{
 					
 					//g2.rotate(0);
 				}
-		}		
+		}
+		
+		// draws intersection tooltip
+		g2.setColor(Color.red);
+		if(drawRed != null) {
+			String text = "X: " + drawRed.getXCoord() + " Y: " + drawRed.getYCoord() + "\n"
+					+ "Connects " + drawRed.getConnections().size() + " roads.";
+			
+			g2.fillOval(
+					(int) ((drawRed.getXCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeX - (indicator_size/4 * zoomMultiplier)), 
+					(int) ((drawRed.getYCoord()-(maxIntersectionSize/2)-3)*zoomMultiplier + changeY - (indicator_size/4 * zoomMultiplier)), 
+					(int) ((indicator_size)*zoomMultiplier), 
+					(int) ((indicator_size)*zoomMultiplier
+			));
+
+			drawToolTip(g2, text, drawRed.getXCoord(), drawRed.getYCoord());
+		}
 	}
 	// draws tooltip
 	public void drawToolTip(Graphics2D graphics, String text, int x,int y) {
@@ -514,18 +486,27 @@ public class Visuals extends JPanel{
 				max = s.length();
 			}
 		}
+		
 		i = list.length;
-		int lastX = x+(int)(maxIntersectionSize/2);
-		int lastY = y-(int)(maxIntersectionSize/2);
-	    Rectangle r = new Rectangle();
-	    r.setBounds((int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY), max*6, i*13);
+		int lastX = x + (int)(maxIntersectionSize/2);
+		int lastY = y - (int)(maxIntersectionSize/2) + 10;
+	    
+		RoundRectangle2D r = new RoundRectangle2D.Float(
+	    	(int) (lastX*zoomMultiplier + changeX), 
+	    	(int) (lastY*zoomMultiplier + changeY),
+	    	max*8, i*16,
+	    	10, 10);
 	    graphics.fill(r);
 	    graphics.draw(r);
 	    graphics.setColor(Color.WHITE);
-	    lastY = lastY + 10;
-	    for(String s : list)
-		{
-	    	 graphics.drawString(s, (int)(lastX*zoomMultiplier + changeX), (int)(lastY*zoomMultiplier + changeY));
+	    
+	    // padding
+	    lastX = lastX + 10;
+	    lastY = lastY + 15;
+	    for(String s : list) {
+	    	 graphics.drawString(s, 
+	    			 (int) (lastX * zoomMultiplier + changeX), 
+	    			 (int) (lastY * zoomMultiplier + changeY));
 	    	 lastY = lastY + 10;
 		}
 	}
