@@ -119,56 +119,87 @@ public class Car {
 	{
 		Random r = new Random();
 		double t = 0 + (1 - 0) * r.nextDouble();
-		int iteration = 0;
+		System.out.println("t; "+ t);
+		int iteration = 1;
 		if(t >= 0.0 && t <= carDistribution0_2)
-		{
-			iteration ++;
+		{		
+			
+			System.out.println("check"+2);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution0_2 && t <= carDistribution2_4)
+		else 
 		{
 			iteration ++;
+		}
+		
+		if(t > carDistribution0_2 && t <= carDistribution2_4)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution2_4 && t <= carDistribution4_6)
+		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution2_4 && t <= carDistribution4_6)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution4_6 && t <= carDistribution6_8)
+		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution4_6 && t <= carDistribution6_8)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution6_8 && t <= carDistribution8_10)
+		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution6_8 && t <= carDistribution8_10)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution8_10 && t <= carDistribution10_12)
+		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution8_10 && t <= carDistribution10_12)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution10_12 && t <= carDistribution12_14)
+		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution10_12 && t <= carDistribution12_14)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution14_16 && t <= carDistribution16_18)
+		else 
 		{
 			iteration ++;
-			startTime = (int)(r.nextDouble() * 120);	
-			startTime  = startTime + iteration * 120;
 		}
-		else if(t > carDistribution18_20 && t <= carDistribution20_22)
+		if(t > carDistribution14_16 && t <= carDistribution16_18)
 		{
 			iteration ++;
 			startTime = (int)(r.nextDouble() * 120);	
@@ -177,9 +208,26 @@ public class Car {
 		else 
 		{
 			iteration ++;
+		}
+		if(t > carDistribution18_20 && t <= carDistribution20_22)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
 			startTime = (int)(r.nextDouble() * 120);	
 			startTime  = startTime + iteration * 120;
 		}
+		else 
+		{
+			iteration ++;
+		}
+		if(t > carDistribution20_22 && t <= carDistribution22_24)
+		{
+			iteration ++;
+			System.out.println("check"+iteration);
+			startTime = (int)(r.nextDouble() * 120);	
+			startTime  = startTime + iteration * 120;
+		}
+		
 	}
 	
 	private void updateDesiredVelocity() {
