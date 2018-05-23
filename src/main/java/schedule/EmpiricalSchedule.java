@@ -18,15 +18,15 @@ public class EmpiricalSchedule extends Schedule {
 
 	public EmpiricalSchedule(StreetMap street_map, double mean_interarrival_time, String data_file_path) {
 		super(street_map);
-		
+
 		try {
 			Object obj = new JSONParser().parse(new FileReader(data_file_path));
 			JSONObject jo = (JSONObject) obj;
-			
+
 			for (int i = 0; i < 24; i++) {
 				rates[i] = ((Long) jo.get(Integer.toString(i))).doubleValue();
 			}
-			
+
 		} catch (Exception e) {
 			System.out.println("[WARNING] JSON DATA COULDNT BE PROCESSED. FALLBACK TO UNIFORM.");
 			e.printStackTrace();
@@ -34,14 +34,15 @@ public class EmpiricalSchedule extends Schedule {
 				rates[i] = 1;
 			}
 		}
-		
+
 		this.mean_interarrival_time = mean_interarrival_time;
 	}
-	
+
 	public void drawNextCarAt(Road r, double realistic_time_in_seconds) {
-		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime(this.mean_interarrival_time, realistic_time_in_seconds));
+		arrival_times_per_road.put(r, arrival_times_per_road.get(r)
+				+ this.drawInterarrivalTime(this.mean_interarrival_time, realistic_time_in_seconds));
 	}
-	
+
 	public double drawInterarrivalTime(double mean, double realistic_time_in_seconds) {
 		Random rand = new Random();
 		boolean thinned = true;
@@ -56,10 +57,10 @@ public class EmpiricalSchedule extends Schedule {
 			while (Time.secondsToHours(realistic_arrival_time) >= 24) {
 				realistic_arrival_time = realistic_arrival_time - Time.hoursToSeconds(24);
 			}
-			
+
 			double lambda_star = Doubles.max(rates);
 			double thinning_rand = rand.nextDouble();
-			if (thinning_rand <= (rates[(int) Math.floor(Time.secondsToHours(realistic_arrival_time))]/lambda_star)) {
+			if (thinning_rand <= (rates[(int) Math.floor(Time.secondsToHours(realistic_arrival_time))] / lambda_star)) {
 				thinned = false;
 			}
 		}

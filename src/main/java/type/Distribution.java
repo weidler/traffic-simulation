@@ -1,7 +1,5 @@
 package type;
 
 public enum Distribution {
-	GAUSSIAN,
-	POISSON,
-	EMPIRICAL
+	GAUSSIAN, POISSON, EMPIRICAL
 }

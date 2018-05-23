@@ -14,14 +14,15 @@ public class PoissonSchedule extends Schedule {
 		this.mean_interarrival_time = mean_interarrival_time;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public void drawNextCarAt(Road r) {
-		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime(this.mean_interarrival_time));
+		arrival_times_per_road.put(r,
+				arrival_times_per_road.get(r) + this.drawInterarrivalTime(this.mean_interarrival_time));
 	}
-	
+
 	public double drawInterarrivalTime(double mean) {
 		Random rand = new Random();
-		double ia = - mean * Math.log(rand.nextDouble());
+		double ia = -mean * Math.log(rand.nextDouble());
 		return ia;
 	}
 
