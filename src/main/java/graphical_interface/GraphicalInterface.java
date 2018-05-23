@@ -280,7 +280,7 @@ public class GraphicalInterface extends JFrame {
 
 			}
 		});
-
+		/*
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		helpButton.setBounds(10, 497, 147, 20);
@@ -297,6 +297,7 @@ public class GraphicalInterface extends JFrame {
 			}
 
 		});
+		*/
 
 		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
 		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -693,11 +694,17 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 		
-		
-		
-
-
-
+		JButton experimentButton = new JButton("Experiment");
+		experimentButton.setBounds(10, 379, 147, 15);
+		experimentButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(experimentButton);
+		experimentButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//JOptionPane.inpu
+			}
+		});
 
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
