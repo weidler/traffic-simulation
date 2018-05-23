@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import datastructures.CarType;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import model.IntelligentDriverModel;
 import model.MOBIL;
 import road.Road;
+import type.CarType;
+import type.RoadType;
 
 /**
  * 

@@ -1,7 +1,7 @@
 package road;
 
 import datastructures.Intersection;
-import datastructures.RoadType;
+import type.RoadType;
 
 public class Highway extends Road {
 

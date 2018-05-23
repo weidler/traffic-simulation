@@ -17,6 +17,7 @@ import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import experiment.Experiment;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.Visuals;
 import road.Road;
@@ -24,6 +25,7 @@ import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
+import type.Distribution;
 import util.Time;
 import datastructures.Intersection;
 
@@ -47,6 +49,8 @@ public class Simulation {
 	
 	private double realistic_time_in_seconds;
 	
+	private Experiment experiment;
+	
 	// STATISTICS
 	private int measurement_interval = 100;
 	private double average_velocity;
@@ -61,19 +65,14 @@ public class Simulation {
 		this.is_running = false;
 		this.current_time = 0;
 		this.realistic_time_in_seconds = 0;
+		
+		this.experiment = new Experiment();
+		this.applyExperimentalSettings();
 	}
 	
 	// GETTERS / SETTERS
-	public void setCarInfo()
-	{
-		if(showCarInfo = true)
-		{
-			showCarInfo = false;
-		}
-		if(showCarInfo = false)
-		{
-			showCarInfo = true;
-		}
+	public void setCarInfo() {
+		showCarInfo = !showCarInfo;	
 	}
 	
 	public void setGUI(GraphicalInterface gui) {
@@ -90,6 +89,10 @@ public class Simulation {
 	
 	public StreetMap getStreetMap() {
 		return this.street_map;
+	}
+	
+	public void setExperiment(Experiment exp) {
+		this.experiment = exp;
 	}
 	
 	// ACTIONS
@@ -167,12 +170,23 @@ public class Simulation {
 		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: " + this.street_map.getIntersection(origin).getYCoord() + ", total: "+ this.getCars().size());
 	}
 	
+	public void applyExperimentalSettings() {
+		// Arrival Distribution
+		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
+			this.simulation_schedule = new PoissonSchedule(this.street_map, 15);			
+		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
+			this.simulation_schedule = new GaussianSchedule(this.street_map, 15, 5);			
+		}
+	}
+	
 	// SIMULATION
 	
 	public void start() {
-		// this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
-		this.simulation_schedule = new PoissonSchedule(this.street_map, 15);
 		
+		this.simulation_schedule.updateToMap();
+				
 		if (this.is_running) {
 			System.out.println("Already Running.");
 			return;
@@ -191,12 +205,16 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
-			while (this.is_running) {
+			int days_simulated = 0;
+			while (this.is_running && days_simulated <= this.experiment.getSimulationLengthInDays()) {
 				long start_time = System.nanoTime();
 				
 				// update realistic time
 				realistic_time_in_seconds += delta_t;
-				if (Time.secondsToHours(realistic_time_in_seconds) >= 24) realistic_time_in_seconds = realistic_time_in_seconds - Time.hoursToSeconds(24);
+				if (Time.secondsToHours(realistic_time_in_seconds) >= 24) {
+					realistic_time_in_seconds = realistic_time_in_seconds - Time.hoursToSeconds(24);
+					days_simulated++;
+				}
 				
 				// add new cars to the roads according to the schedule
 				for (Road r : this.street_map.getRoads()) {
@@ -259,7 +277,7 @@ public class Simulation {
 				// update graphics and statistics
 				step++;
 				resettable_step++; 
-				if (step % this.visualization_frequency == 0) gui.redraw();
+				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (step % this.measurement_interval == 0) this.calcStatistics();
 				if (step % 100 == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / (delta_t * 1000000000);

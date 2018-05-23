@@ -26,22 +26,22 @@ public class StreetMap {
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
+	
 	@Override
 	public String toString()
 	{
 		
 		String result = "";
-		for(Intersection in : intersections)
-		{
+		for(Intersection in : intersections) {
 			result = result.concat(in.toString());
 		}
 		
 		result = result.concat("#,");
 		
-		for(Road r : roads)
-		{
-			result = result.concat(r.toString());
+		for(Road r : roads) {
+			result = result.concat(r.getX1() + "," + r.getY1() +","+ r.getX2() + "," + r.getY2() + ",");
 		}
+		
 		System.out.println(result);
 		return result;
 	}

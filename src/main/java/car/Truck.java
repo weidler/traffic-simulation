@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import datastructures.CarType;
 import datastructures.Intersection;
 import datastructures.StreetMap;
+import type.CarType;
 
 public class Truck extends Car {
 

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import car.Car;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import type.RoadType;
 import util.Geometry;
 
 public class Road {
@@ -19,8 +19,6 @@ public class Road {
 	protected int lanes = 1;
 	protected double avergeSpeed = 0;
 	
-
-
 	protected RoadType type = RoadType.ROAD;
 	protected int allowed_max_speed = 50;
 	protected ArrayList<Integer> offsetX = new ArrayList();

@@ -18,12 +18,12 @@ import javax.swing.JPanel;
 
 
 import core.Simulation;
-import datastructures.CarType;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import road.Road;
+import type.CarType;
+import type.RoadType;
 import util.Geometry;
 
 public class Visuals extends JPanel{	

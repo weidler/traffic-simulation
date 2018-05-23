@@ -1,4 +1,4 @@
-package datastructures;
+package type;
 
 public enum CarType {
 	CAR,

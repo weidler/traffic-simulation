@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import road.Road;
+import type.IntersectionTypes;
 
 public class Intersection {
 	

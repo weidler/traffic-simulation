@@ -48,4 +48,12 @@ public class Schedule {
 		System.out.println(this.arrival_times_per_road);
 	}
 
+	public void updateToMap() {
+		for (Road r : this.street_map.getRoads()) {
+			if (!this.arrival_times_per_road.containsKey(r)) {
+				this.arrival_times_per_road.put(r, this.drawInterarrivalTime());
+			}
+		}
+	}
+
 }

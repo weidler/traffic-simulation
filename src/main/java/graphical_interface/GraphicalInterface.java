@@ -29,11 +29,11 @@ import javax.swing.JScrollPane;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
+import type.RoadType;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -489,6 +489,7 @@ public class GraphicalInterface extends JFrame {
 				}
 			} 
 		});
+		
 		JButton loadButton = new JButton("load");
 		loadButton.setBounds(97, 435, 60, 20);
 		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -944,8 +945,6 @@ public class GraphicalInterface extends JFrame {
 						}
 					}
 					
-//					Road r = new Road(startX,startY,endX,endY);		
-//					r.setType(RoadType.values()[typeCounter]);
 					Road r;
 					switch (roadTypeToAdd) {
 						case "DIRT_ROAD":
