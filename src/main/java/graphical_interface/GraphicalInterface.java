@@ -30,10 +30,13 @@ import javax.swing.JScrollPane;
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
+import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
+import type.Distribution;
 import type.RoadType;
+import type.Strategy;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -745,6 +748,34 @@ public class GraphicalInterface extends JFrame {
 			         System.out.println("visualize value: " + visualize.isSelected());
 			         // then start experiment.
 			         
+			         Distribution arrival_schedule;
+			         switch ((String) schedule.getSelectedItem()) {
+			         	case "poisson":
+			         		arrival_schedule = Distribution.POISSON;
+			         		break;
+
+			         	case "gaussian":
+			         		arrival_schedule = Distribution.GAUSSIAN;
+			         		break;
+			         		
+			         	case "empirical":
+			         		arrival_schedule = Distribution.EMPIRICAL;
+			         		break;
+			         		
+			         	default:
+			         		arrival_schedule = Distribution.GAUSSIAN;
+			         		break;
+			         }
+
+			         Strategy control_strategy;
+			         switch ((String) strategy.getSelectedItem()) {
+			         	default:
+			         		control_strategy = Strategy.BENCHMARK_CYCLING;
+			         		break;
+			         }
+			         
+			         Experiment exp = new Experiment(arrival_schedule, control_strategy, Integer.parseInt(duration.getText()), visualize.isSelected());      
+			         simulation.setExperiment(exp);
 			         
 			      }
 			      
