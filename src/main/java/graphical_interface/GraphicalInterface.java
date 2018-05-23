@@ -295,26 +295,26 @@ public class GraphicalInterface extends JFrame {
 		 * });
 		 */
 
-		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
-		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
-		disableCarInfoRadio.setBounds(10, 405, 147, 23);
-		menuPanel.add(disableCarInfoRadio);
-		disableCarInfoRadio.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-				boolean selected = disableCarInfoRadio.isSelected();
-				simulation.setCarInfo();
-				System.out.println("selected " + selected);
-				if (selected) {
-					if (!carsTextArea.getText().equals("")) {
-						carsTextArea.setText("");
-
-					}
-				}
-			}
-		});
+//		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
+//		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
+//		disableCarInfoRadio.setBounds(10, 405, 147, 23);
+//		menuPanel.add(disableCarInfoRadio);
+//		disableCarInfoRadio.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//
+//				boolean selected = disableCarInfoRadio.isSelected();
+//				simulation.setCarInfo();
+//				System.out.println("selected " + selected);
+//				if (selected) {
+//					if (!carsTextArea.getText().equals("")) {
+//						carsTextArea.setText("");
+//
+//					}
+//				}
+//			}
+//		});
 
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -324,19 +324,19 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				boolean selected = disableCarInfoRadio.isSelected();
-				System.out.println("selected " + selected);
-				if (selected) {
-					if (!carsTextArea.getText().equals("")) {
-						carsTextArea.setText("");
-					}
-				}
-				if (!simulation.isRunning() && !selected) {
+//				boolean selected = disableCarInfoRadio.isSelected();
+//				System.out.println("selected " + selected);
+//				if (selected) {
+//					if (!carsTextArea.getText().equals("")) {
+//						carsTextArea.setText("");
+//					}
+//				}
+				if (!simulation.isRunning() ) {// && !selected) {
 					simulation.addRandomCar();
-					carsTextArea.setText("");
-					for (Car car : simulation.getCars()) {
-						carsTextArea.append(car.toString() + "\n");
-					}
+//					carsTextArea.setText("");
+//					for (Car car : simulation.getCars()) {
+//						carsTextArea.append(car.toString() + "\n");
+//					}
 					repaint();
 				}
 			}
