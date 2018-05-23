@@ -107,7 +107,6 @@ public class Simulation {
 		}
 
 		this.cars.add(car);
-
 	}
 
 	public void addRandomCar() {
@@ -249,18 +248,18 @@ public class Simulation {
 					this.cars.remove(c);
 				}
 
-				// lists the cars
-				carsTextPane.setText("");
-				if (showCarInfo /* && step % this.visualization_frequency == 0 */) {
-					for (Car car : getCars()) {
-						if (lastHoveredCar == car) {
-							carsTextPane.setText(carsTextPane.getText() + "current: " + car.toString() + "\n");
-						} else {
-							carsTextPane.setText(carsTextPane.getText() + car.toString() + "\n");
-						}
-
-					}
-				}
+//				// lists the cars
+//				carsTextPane.setText("");
+//				if (showCarInfo /* && step % this.visualization_frequency == 0 */) {
+//					for (Car car : getCars()) {
+//						if (lastHoveredCar == car) {
+//							carsTextPane.setText(carsTextPane.getText() + "current: " + car.toString() + "\n");
+//						} else {
+//							carsTextPane.setText(carsTextPane.getText() + car.toString() + "\n");
+//						}
+//
+//					}
+//				}
 
 				// Wait for time step to be over
 				double ns_to_wait = (delta_t * 1000000000) / simulated_seconds_per_real_second;

@@ -139,13 +139,13 @@ public class GraphicalInterface extends JFrame {
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
 
-		JTextArea carsTextArea = new JTextArea();
-		carsTextArea.setText("");
-		carsTextArea.setBounds(782, 11, 219, 640);
-		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
-		carsTextArea.setEditable(false);
-		contentPane.add(carsTextArea);
-		simulation.setTextArea(carsTextArea);
+//		JTextArea carsTextArea = new JTextArea();
+//		carsTextArea.setText("");
+//		carsTextArea.setBounds(782, 11, 219, 640);
+//		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
+//		carsTextArea.setEditable(false);
+//		contentPane.add(carsTextArea);
+//		simulation.setTextArea(carsTextArea);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
@@ -159,7 +159,7 @@ public class GraphicalInterface extends JFrame {
 		this.requestFocusInWindow();
 
 		JPanel drawPanel = visuals;
-		drawPanel.setBounds(10, 11, 762, 640);
+		drawPanel.setBounds(10, 11, 762 + 219, 640);
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 
