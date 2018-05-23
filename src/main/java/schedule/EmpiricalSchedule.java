@@ -1,15 +1,10 @@
 package schedule;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Random;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.fasterxml.jackson.core.JsonParser;
 import com.google.common.primitives.Doubles;
 
 import datastructures.StreetMap;
@@ -68,8 +63,7 @@ public class EmpiricalSchedule extends Schedule {
 				thinned = false;
 			}
 		}
-		
-		System.out.println("FOUND NEW IA " + final_interarrival_time);
+
 		return final_interarrival_time;
 	}
 

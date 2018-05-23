@@ -42,7 +42,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1;
+	private float simulated_seconds_per_real_second = 10;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
 	private double realistic_time_in_seconds;
@@ -170,7 +170,8 @@ public class Simulation {
 	// SIMULATION
 	
 	public void start() {
-		this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+		// this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+		this.simulation_schedule = new PoissonSchedule(this.street_map, 15);
 		
 		if (this.is_running) {
 			System.out.println("Already Running.");
@@ -180,7 +181,6 @@ public class Simulation {
 		this.is_running = true;
 		
 		Thread th = new Thread(()-> {		
-			Calendar now = Calendar.getInstance();	
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
 				is.initializeTrafficLightSettings();
@@ -202,7 +202,7 @@ public class Simulation {
 				for (Road r : this.street_map.getRoads()) {
 					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
 						this.addCarAtRoad(r);
-						simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
+						simulation_schedule.drawNextCarAt(r);//, realistic_time_in_seconds);
 					}
 				}
 
@@ -245,7 +245,7 @@ public class Simulation {
 				}
 				
 				// Wait for time step to be over
-				double ns_to_wait = delta_t * 1000000000;
+				double ns_to_wait = (delta_t * 1000000000) / simulated_seconds_per_real_second;
 				double ns_used = (System.nanoTime() - start_time);
 				total_calculation_time += ns_used;
 				try {
