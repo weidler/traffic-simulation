@@ -18,7 +18,7 @@ public class Road {
 	protected double length;
 	protected int lanes = 1;
 	protected double avergeSpeed = 0;
-	
+	protected ArrayList<Double> averageSpeeds = new ArrayList();// in kmh
 
 
 	protected RoadType type = RoadType.ROAD;
@@ -37,9 +37,18 @@ public class Road {
 		
 		this.length = this.calcLength(x1, y1, x2, y2);		
 	}
-	public void computeAverageSpeed(ArrayList<Car> cars) 
+	public void computeAverageSpeed(long timeSpent) 
 	{
+		averageSpeeds.add((length/(timeSpent)));
+		double totAvg = 0;
+		for(int i = 0; i < averageSpeeds.size(); i++)
+		{
+			System.out.println("speed of car "+i+" "+averageSpeeds.get(i));
 		
+			totAvg+= averageSpeeds.get(i);
+		}
+
+		System.out.println(totAvg/averageSpeeds.size());
 	} 
 	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;

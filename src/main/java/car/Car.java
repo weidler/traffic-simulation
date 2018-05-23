@@ -27,6 +27,7 @@ public class Car {
 	// LOCALIZATION
 	protected ArrayList<Intersection> path;
 	protected Road current_road;
+	protected Road roadToMeasure;
 	protected Intersection current_origin_intersection;
 	protected Intersection current_destination_intersection;
 	protected boolean reached_destination;
@@ -63,6 +64,9 @@ public class Car {
 	// TIME VARIABLES
 	protected int startTime;
 	protected int endTime;
+	protected long startRoad;
+	protected long endRoad;
+	protected int roadSwitch = 1;
 	
 
 	/**
@@ -148,6 +152,7 @@ public class Car {
 
 	public void setCurrentRoad(Road current_road) {
 		this.current_road = current_road;
+		
 	}
 
 	public Intersection getCurrentOriginIntersection() {
@@ -164,6 +169,7 @@ public class Car {
 
 	public void setCurrentDestinationIntersection(Intersection current_destination_intersection) {
 		this.current_destination_intersection = current_destination_intersection;
+
 	}
 
 	public double getCurrentVelocity() {
@@ -343,7 +349,8 @@ public class Car {
 			if (this.position_on_road >= this.current_road.getLength()) {
 				this.current_origin_intersection = this.current_destination_intersection;
 				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
-				
+				System.out.println("called");
+				timeMeasure();
 				// change road
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
 				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
@@ -414,6 +421,26 @@ public class Car {
 		}
 		
 		return current_leading_car;
+	}
+	
+	public void timeMeasure()
+	{
+			
+		if (roadSwitch == 1)
+		{
+			 startRoad =  System.currentTimeMillis()/1000;
+			 roadSwitch++;
+			 roadToMeasure = current_road;
+		}
+		else
+		{
+			endRoad =  System.currentTimeMillis()/1000;
+			roadSwitch = 1;
+			roadToMeasure.computeAverageSpeed(endRoad-startRoad);
+			long spent = endRoad-startRoad;
+			System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
+		}
+		
 	}
 
 	public Car getFollowingCar(ArrayList<Car> list_of_cars, int lane) {
