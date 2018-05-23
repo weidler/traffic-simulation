@@ -2,6 +2,7 @@ package road;
 
 import java.util.ArrayList;
 
+import car.Car;
 import datastructures.Intersection;
 import datastructures.RoadType;
 import datastructures.StreetMap;
@@ -16,6 +17,8 @@ public class Road {
 	protected int y2;
 	protected double length;
 	protected int lanes = 1;
+	protected double avergeSpeed = 0;
+	
 
 
 	protected RoadType type = RoadType.ROAD;
@@ -34,7 +37,10 @@ public class Road {
 		
 		this.length = this.calcLength(x1, y1, x2, y2);		
 	}
-	
+	public void computeAverageSpeed(ArrayList<Car> cars) 
+	{
+		
+	} 
 	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
