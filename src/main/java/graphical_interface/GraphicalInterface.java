@@ -692,12 +692,6 @@ public class GraphicalInterface extends JFrame {
 				
 			}
 		});
-		
-		
-		
-
-
-
 
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
@@ -749,8 +743,6 @@ public class GraphicalInterface extends JFrame {
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 
-
-
 			clickCounter++;
 
 			int x = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
@@ -767,18 +759,14 @@ public class GraphicalInterface extends JFrame {
 						int nearestX = -1;
 						int nearestY = -1;
 						double distance = -1;
-						for(Intersection sec : streetMap.getIntersections())
-						{
-
+						for(Intersection sec : streetMap.getIntersections()) {
 							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 							if (distance == -1) {
 								distance = distance2;							
 								nearestX = sec.getXCoord();						
 								nearestY = sec.getYCoord();							
-							}
-							else if(distance2 < distance)
-							{
+							} else if(distance2 < distance)	{
 								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 								distance = distance2;
 								nearestX = sec.getXCoord();
@@ -795,25 +783,18 @@ public class GraphicalInterface extends JFrame {
 					startY = y;
 					Intersection in = new Intersection(startX, startY);
 					streetMap.addIntersection(in);
-
-				}
-				else
-				{
+				} else {
 					int nearestX = -1;
 					int nearestY = -1;
 					double distance = -1;
-					for(Intersection sec : streetMap.getIntersections())
-					{
-
+					for(Intersection sec : streetMap.getIntersections()) {
 						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 						if (distance == -1) {
 							distance = distance2;							
 							nearestX = sec.getXCoord();						
 							nearestY = sec.getYCoord();							
-						}
-						else if(distance2 < distance)
-						{
+						} else if(distance2 < distance) {
 							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 							distance = distance2;
 							nearestX = sec.getXCoord();
@@ -827,10 +808,6 @@ public class GraphicalInterface extends JFrame {
 					streetMap.addIntersection(in);
 
 					Intersection section = streetMap.getIntersectionByCoordinates(startX, startY);
-					if(!section.connectionCanBeAdded())
-					{
-						clickCounter=0;
-					}
 
 				}
 
@@ -844,13 +821,10 @@ public class GraphicalInterface extends JFrame {
 			else 
 			{
 
-				if (e.getButton() == MouseEvent.BUTTON3)
-				{
+				if (e.getButton() == MouseEvent.BUTTON3) {
 					visuals.setDrawLine(false);
 					clickCounter = 0;
-				}
-				else
-				{
+				} else {
 
 					int nearestX = -1;
 					int nearestY = -1;
@@ -864,9 +838,7 @@ public class GraphicalInterface extends JFrame {
 							distance = distance2;							
 							nearestX = sec.getXCoord();						
 							nearestY = sec.getYCoord();							
-						}
-						else if(distance2 < distance)
-						{
+						} else if(distance2 < distance) {
 							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 							distance = distance2;
 							nearestX = sec.getXCoord();
@@ -875,11 +847,9 @@ public class GraphicalInterface extends JFrame {
 
 					}
 					if(distance < visuals.getMaxIntersectionSize()) {
-
 						endX = nearestX;
 						endY = nearestY;
-					}
-					else {
+					} else {
 						endX = x;
 						endY = y;
 					}
@@ -892,9 +862,7 @@ public class GraphicalInterface extends JFrame {
 							typeCounter = i;
 						}
 					}
-					
-//					Road r = new Road(startX,startY,endX,endY);		
-//					r.setType(RoadType.values()[typeCounter]);
+
 					Road r;
 					switch (roadTypeToAdd) {
 						case "DIRT_ROAD":

@@ -2,8 +2,10 @@ package graphical_interface;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
@@ -49,7 +51,7 @@ public class Visuals extends JPanel{
 	private int startPosY = 0;
 	private Stroke defaultStroke;
 	private Stroke dashed = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND, 0, new float[]{9}, 0);
-	private Stroke fat =new BasicStroke((float) (laneSize-2*getZoomMultiplier()), BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND);
+	private Stroke fat = new BasicStroke((float) (laneSize-2*getZoomMultiplier()), BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND);
 	private int divider = 30;
 	
 	private double zoomMultiplier = 1.0;
@@ -58,6 +60,10 @@ public class Visuals extends JPanel{
 	private int changeY = 0;
 	private final int GRAPH_MOVED_DISTANCE = 25;
 	private int indicator_size = 15;
+	
+	private String road_color = "#c2c2d6";
+	private String highway_color = "#5c85d6";
+	private String dirtroad_color = "#cc9900";
 	
 	public Visuals(Simulation simulation) {
 		this.simulation = simulation;
@@ -311,7 +317,18 @@ public class Visuals extends JPanel{
 				to_y_left = line_intersection_left_to[1];
 			}
 
-			// draw road outer lines
+			// draw road background
+			Polygon bg_polygon = new Polygon();
+			bg_polygon.addPoint((int) to_x_right, (int) to_y_right);
+			bg_polygon.addPoint((int) from_x_right, (int) from_y_right);
+			bg_polygon.addPoint((int) from_x_left, (int) from_y_left);
+			bg_polygon.addPoint((int) to_x_left, (int) to_y_left);
+			if(roads.get(i).getType() == RoadType.ROAD) g2.setColor(Color.decode(road_color));
+			else if(roads.get(i).getType() == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
+			else if(roads.get(i).getType() == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
+			g2.fill(bg_polygon);
+			
+			// draw road outer lines			
 			g2.setStroke(defaultStroke);
 			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double(
@@ -331,14 +348,7 @@ public class Visuals extends JPanel{
 			));
 			
 			setLightDistanceFromIntersection((int) roads.get(i).getLength());
-			if(roads.get(i).getType() == RoadType.ROAD) {
-				g2.setColor(Color.black);
-			} else if(roads.get(i).getType() == RoadType.DIRT_ROAD) {
-				g2.setColor(Color.ORANGE);
-			} else if(roads.get(i).getType() == RoadType.HIGHWAY)	{
-				g2.setColor(Color.BLUE);
-			}
-						
+									
 			int midPointX1 = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection));
 			int midPointY1 = (int) ((roads.get(i).getY1()) +(((roads.get(i).getY2())-(roads.get(i).getY1()))/lightDistanceFromIntersection));
 			int midPointX2 = (int) ((roads.get(i).getX1()) +(((roads.get(i).getX2())-(roads.get(i).getX1()))/lightDistanceFromIntersection*(lightDistanceFromIntersection-1)));
