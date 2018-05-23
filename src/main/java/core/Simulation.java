@@ -20,9 +20,11 @@ import datastructures.TrafficLight;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.Visuals;
 import road.Road;
+import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
+import util.Time;
 import datastructures.Intersection;
 
 public class Simulation {
@@ -40,10 +42,10 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float slow_mo_factor = 1;
+	private float simulated_seconds_per_real_second = 10;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 	
-	private int time_multiplier = 24;
+	private double realistic_time_in_seconds;
 	
 	// STATISTICS
 	private int measurement_interval = 100;
@@ -58,6 +60,7 @@ public class Simulation {
 		
 		this.is_running = false;
 		this.current_time = 0;
+		this.realistic_time_in_seconds = 0;
 	}
 	
 	// GETTERS / SETTERS
@@ -167,7 +170,8 @@ public class Simulation {
 	// SIMULATION
 	
 	public void start() {
-		this.simulation_schedule = new PoissonSchedule(this.street_map, 10);
+		// this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+		this.simulation_schedule = new PoissonSchedule(this.street_map, 15);
 		
 		if (this.is_running) {
 			System.out.println("Already Running.");
@@ -177,39 +181,33 @@ public class Simulation {
 		this.is_running = true;
 		
 		Thread th = new Thread(()-> {		
-			Calendar now = Calendar.getInstance();	
 			// Initialize
 			for (Intersection is : this.street_map.getIntersections()) {
 				is.initializeTrafficLightSettings();
 			}
 			
-			double delta_t = 0.01;
+			double delta_t = 0.01; // in seconds
 			this.visualization_frequency = (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS")));
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
 			while (this.is_running) {
-				
-				
 				long start_time = System.nanoTime();
-				//long start_time2 = now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60;
 				
-				//simulation_schedule.logSchedule();
+				// update realistic time
+				realistic_time_in_seconds += delta_t;
+				if (Time.secondsToHours(realistic_time_in_seconds) >= 24) realistic_time_in_seconds = realistic_time_in_seconds - Time.hoursToSeconds(24);
 				
 				// add new cars to the roads according to the schedule
 				for (Road r : this.street_map.getRoads()) {
 					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
 						this.addCarAtRoad(r);
-						simulation_schedule.drawNextCarAt(r);
+						simulation_schedule.drawNextCarAt(r);//, realistic_time_in_seconds);
 					}
 				}
 
 				// update traffic light statuses
 				this.street_map.update(delta_t);
-				/*if((int)(((( now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60 -  start_time2))*time_multiplier))>=1440 * 60)
-				{
-					start_time2 = now.get(Calendar.HOUR_OF_DAY) * 360 + now.get(Calendar.MINUTE) * 60;
-				}*/
 				
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
@@ -247,7 +245,7 @@ public class Simulation {
 				}
 				
 				// Wait for time step to be over
-				double ns_to_wait = delta_t * 1000000000;
+				double ns_to_wait = (delta_t * 1000000000) / simulated_seconds_per_real_second;
 				double ns_used = (System.nanoTime() - start_time);
 				total_calculation_time += ns_used;
 				try {

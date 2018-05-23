@@ -32,6 +32,13 @@ public class Schedule {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime());
 	}
 	
+	/**
+	 * NOT IMPLEMENTED FOR THIS SCHEDULE
+	 */
+	public void drawNextCarAt(Road r, double current_time) {
+		System.out.println("NOT IMPLEMENTED FOR THIS SCHEDULE.");
+	}
+	
 	public double drawInterarrivalTime() {
 		Random rand = new Random();
 		return rand.nextDouble() * 10;

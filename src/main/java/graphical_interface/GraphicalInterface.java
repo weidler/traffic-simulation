@@ -36,11 +36,14 @@ import road.Highway;
 import road.Road;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JSlider;
@@ -65,6 +68,13 @@ import javax.swing.JRadioButton;
 
 public class GraphicalInterface extends JFrame {
 
+	private JCheckBox visualize = new JCheckBox("visualize?");
+	private JTextField duration = new JTextField(5); //in days
+    private JTextField density = new JTextField(5);  // number of cars
+    private JComboBox<String> strategy;
+    private JComboBox<String> schedule;
+    
+	
 	private final JFileChooser fc = new JFileChooser();
 	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 
@@ -120,6 +130,11 @@ public class GraphicalInterface extends JFrame {
 	 * create interface. including buttons and listeners
 	 */
 	public GraphicalInterface(Simulation simulation) {
+		String[] strateyList = {"circulating lights"};
+		String[] scheduleList = {"poisson","gaussian"};
+		strategy = new JComboBox<>(strateyList);
+	    schedule = new JComboBox<>(scheduleList);
+	    
 		this.simulation = simulation;
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
@@ -280,7 +295,7 @@ public class GraphicalInterface extends JFrame {
 
 			}
 		});
-
+		/*
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		helpButton.setBounds(10, 497, 147, 20);
@@ -297,6 +312,7 @@ public class GraphicalInterface extends JFrame {
 			}
 
 		});
+		*/
 
 		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
 		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -694,10 +710,45 @@ public class GraphicalInterface extends JFrame {
 		});
 		
 		
-		
+		JButton experimentButton = new JButton("Experiment");
+		experimentButton.setBounds(10, 379, 147, 15);
+		experimentButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.add(experimentButton);
+		experimentButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
 
-
-
+			      JPanel myPanel = new JPanel();
+			      myPanel.add(new JLabel("duration in days:"));
+			      myPanel.add(duration);
+			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			      myPanel.add(new JLabel("amout of cars per day:"));
+			      myPanel.add(density);
+			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			      myPanel.add(new JLabel("strategy:"));
+			      myPanel.add(strategy);
+			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			      myPanel.add(new JLabel("schedule:"));
+			      myPanel.add(schedule);
+			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			      myPanel.add(visualize);
+			      int result = JOptionPane.showConfirmDialog(null, myPanel, 
+			               "Please Enter data", JOptionPane.OK_CANCEL_OPTION);
+			      if (result == JOptionPane.OK_OPTION) {
+			         System.out.println("duration value:  " + duration.getText());
+			         System.out.println("density value:   " + density.getText());
+			         System.out.println("schedule value:  " + schedule.getSelectedIndex());
+			         System.out.println("strategy value:  " + strategy.getSelectedIndex());
+			         System.out.println("visualize value: " + visualize.isSelected());
+			         // then start experiment.
+			         
+			         
+			      }
+			      
+			}
+		});
 
 		//ADDS MOUSE AND KEY LISTENER		
 		Handlerclass handler = new Handlerclass();
