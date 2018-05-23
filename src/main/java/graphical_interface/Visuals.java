@@ -377,10 +377,10 @@ public class Visuals extends JPanel {
 
 			// draw road background
 			Polygon bg_polygon = new Polygon();
-			bg_polygon.addPoint((int) to_x_right, (int) to_y_right);
-			bg_polygon.addPoint((int) from_x_right, (int) from_y_right);
-			bg_polygon.addPoint((int) from_x_left, (int) from_y_left);
-			bg_polygon.addPoint((int) to_x_left, (int) to_y_left);
+			bg_polygon.addPoint((int) (to_x_right * zoomMultiplier + changeX), (int) (to_y_right * zoomMultiplier + changeY));
+			bg_polygon.addPoint((int) (from_x_right * zoomMultiplier + changeX), (int) (from_y_right * zoomMultiplier + changeY));
+			bg_polygon.addPoint((int) (from_x_left * zoomMultiplier + changeX), (int) (from_y_left * zoomMultiplier + changeY));
+			bg_polygon.addPoint((int) (to_x_left * zoomMultiplier + changeX), (int) (to_y_left * zoomMultiplier + changeY));
 			if (roads.get(i).getType() == RoadType.ROAD) g2.setColor(Color.decode(road_color));
 			else if (roads.get(i).getType() == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
 			else if (roads.get(i).getType() == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
