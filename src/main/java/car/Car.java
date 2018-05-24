@@ -39,7 +39,7 @@ public class Car {
 	protected double positionX;
 	protected double positionY;
 	protected double position_on_road;
-	protected int lane = 1;
+	protected int lane;
 
 	// BEHAVIOR
 	protected IntelligentDriverModel model;
@@ -47,8 +47,8 @@ public class Car {
 	protected double desired_velocity;
 
 	// VISUALISATION
-	protected int offsetX;
-	protected int offsetY;
+	protected double offsetX;
+	protected double offsetY;
 	protected Color color;
 
 	// TYPE VARIABLES
@@ -90,6 +90,7 @@ public class Car {
 		this.positionY = (double) current_origin_intersection.getYCoord();
 
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
+		this.lane = current_road.getLanes();
 
 		this.current_velocity = 0;
 
@@ -178,6 +179,14 @@ public class Car {
 		this.current_velocity = current_velocity;
 	}
 
+	public double getVehicleLength() {
+		return vehicle_length;
+	}
+
+	public void setVehicle_length(double vehicle_length) {
+		this.vehicle_length = vehicle_length;
+	}
+
 	public double getCurrentAcceleration() {
 		return current_acceleration;
 	}
@@ -238,12 +247,12 @@ public class Car {
 		offsetX = y;
 	}
 
-	public int getOffsetX() {
+	public double getOffsetX() {
 
 		return offsetX;
 	}
 
-	public int getOffsetY() {
+	public double getOffsetY() {
 
 		return offsetY;
 	}
@@ -276,7 +285,7 @@ public class Car {
 		}
 	}
 
-	public int getLanes() {
+	public int getLane() {
 		return lane;
 	}
 
@@ -284,15 +293,14 @@ public class Car {
 		return angle;
 	}
 
-	public void calculateOffset(Intersection start, Intersection end) {
+	public void calculateOffset(Intersection start, Intersection end, int width) {
 		angle = Math.atan2(end.getYCoord() - start.getYCoord(), end.getXCoord() - start.getXCoord());
-		if (angle < 0) {
-			angle += Math.PI * 2;
-		}
+		if (angle < 0) angle += Math.PI * 2;
 		double offsetAngle = angle + Math.PI / 2;
+
 		if (offsetAngle > Math.PI * 2) offsetAngle -= Math.PI * 2;
-		offsetX = (int) (Math.round(Math.cos(offsetAngle) * 4 * lane) - 4);
-		offsetY = (int) (Math.round(Math.sin(offsetAngle) * 4 * lane) - 4);
+		offsetX = Math.cos(offsetAngle) * (width * lane - width / 2);
+		offsetY = Math.sin(offsetAngle) * (width * lane - width / 2);
 	}
 
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {

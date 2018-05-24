@@ -51,6 +51,10 @@ public class Geometry {
 	public static double toDegrees(double radians) {
 		return radians * (180 / Math.PI);
 	}
+	
+	public static double toRadians(double degrees) {
+		return degrees * (Math.PI / 180);
+	}
 
 	public static double clockwiseAngle(int x1, int y1, int x2, int y2, int common_x, int common_y) {
 		// move intersection to origin
@@ -83,8 +87,8 @@ public class Geometry {
 		double offsetAngle = angle + (Math.PI / 2);
 		if (offsetAngle > Math.PI * 2) offsetAngle -= Math.PI * 2;
 
-		offsets[0] = (int) (Math.round(Math.cos(offsetAngle) * lane_size));
-		offsets[1] = (int) (Math.round(Math.sin(offsetAngle) * lane_size));
+		offsets[0] = (Math.round(Math.cos(offsetAngle) * lane_size));
+		offsets[1] = (Math.round(Math.sin(offsetAngle) * lane_size));
 		offsets[2] = offsetAngle;
 
 		return offsets;
@@ -103,7 +107,59 @@ public class Geometry {
 		return true;
 
 	}
+	
+	public static double[] getPointBetween(double d, double x1, double y1, double x2, double y2) {
+		double distance_between = distance(x1, y1, x2, y2);
+		
+		double[] new_point = new double[2];
+		new_point[0] = x1 + (d/distance_between) * (x2 - x1);
+		new_point[1] = y1 + (d/distance_between) * (y2 - y1);
+		
+		return new_point;
+	}
 
+	public static double[] rotateByAngle(double x, double y, double angle) {
+		angle = toRadians(angle);
+		double[] rotated = new double[2];
+		rotated[0] = Math.cos(angle) * x - Math.sin(angle) * y;
+		rotated[1] = Math.sin(angle) * x + Math.cos(angle) * y;
+		
+		return rotated;
+	}
+	
+	public static double[] midpoint(double x1, double y1, double x2, double y2) {
+		double[] mid = new double[2];
+		mid[0] = (x1 + x2) / 2;
+		mid[1] = (y1 + y2) / 2;
+		return mid;
+	}
+	
+	public static double[] rectangleCenter(double[] coordinates) {
+		double[] center = midpoint(coordinates[0], coordinates[1], coordinates[4], coordinates[5]);
+		return center;
+	}
+	
+	public static double[] rotateRectangleAroundCenter(double[] coordinates, double angle) {
+		double[] new_coordinates = new double[8];
+		double[] center = rectangleCenter(coordinates);
+		
+		for (int i = 0; i < 8; i = i + 2) {
+			// move to origin
+			new_coordinates[i] = coordinates[i] - center[0];
+			new_coordinates[i + 1] = coordinates[i + 1] - center[1];
+			
+			double[] rotated = rotateByAngle(new_coordinates[i], new_coordinates[i + 1], angle);
+			new_coordinates[i] = rotated[0];
+			new_coordinates[i + 1] = rotated[1];
+			
+			// move back
+			new_coordinates[i] = new_coordinates[i] + center[0];
+			new_coordinates[i + 1] = new_coordinates[i + 1] + center[1];
+		}
+		
+		return new_coordinates;
+	}
+	
 	public static void main(String[] args) {
 
 		double Ax = -30;
@@ -120,6 +176,8 @@ public class Geometry {
 
 		System.out.println(a);
 
+		System.out.println(Arrays.toString(Geometry.rotateByAngle(4, 0, 180)));
+		
 	}
 
 }

@@ -22,6 +22,7 @@ public class Road {
 	protected int allowed_max_speed = 50;
 	protected ArrayList<Integer> offsetX = new ArrayList<Integer>();
 	protected ArrayList<Integer> offsetY = new ArrayList<Integer>();
+	protected double angle;
 
 	protected StreetMap streetmap;
 
@@ -49,6 +50,10 @@ public class Road {
 	public ArrayList<Integer> getOffsetY() {
 		return this.offsetY;
 	}
+	
+	public double getAngle() {
+		return this.angle;
+	}
 
 	public void calculateOffset(Intersection start, Intersection end) {
 		double angle = Math.atan2(end.getYCoord() - start.getYCoord(), end.getXCoord() - start.getXCoord());
@@ -60,6 +65,8 @@ public class Road {
 			this.offsetX.add((int) (Math.round(Math.cos(offsetAngle) * 4 * i) - 4));
 			this.offsetY.add((int) (Math.round(Math.sin(offsetAngle) * 4 * i) - 4));
 		}
+		
+		this.angle = offsetAngle;
 	}
 
 	protected void setTypeParameters() {
