@@ -40,7 +40,7 @@ public class Simulation {
 
 	private JTextArea carsTextPane;
 	private Car lastHoveredCar;
-
+	private long start_time;
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
@@ -94,6 +94,9 @@ public class Simulation {
 
 	public void setExperiment(Experiment exp) {
 		this.experiment = exp;
+	}
+	public long getStartTime() {
+		return this.start_time;
 	}
 
 	// ACTIONS
@@ -212,7 +215,8 @@ public class Simulation {
 			int resettable_step = 0;
 			int days_simulated = 0;
 			while (this.is_running && days_simulated <= this.experiment.getSimulationLengthInDays()) {
-				long start_time = System.nanoTime();
+				start_time = System.nanoTime();
+				street_map.setCurrentTime(current_time);
 
 				// update realistic time
 				realistic_time_in_seconds += delta_t;
@@ -338,7 +342,11 @@ public class Simulation {
 
 	public void stop() {
 		this.is_running = false;
-		System.out.println("stop");
+		for(int i =0; i < street_map.getRoads().size(); i++) {
+			
+			
+			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
+		}
 	}
 
 	public void reset() {

@@ -279,6 +279,7 @@ public class GraphicalInterface extends JFrame {
 
 			}
 		});
+		
 		/*
 		 * JButton helpButton = new JButton("help");
 		 * helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -355,6 +356,7 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
 				simulation.stop();
 
 			}

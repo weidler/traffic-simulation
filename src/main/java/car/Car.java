@@ -64,9 +64,14 @@ public class Car {
 	// TIME VARIABLES
 	protected int startTime;
 	protected int endTime;
-	protected long startRoad;
-	protected long endRoad;
+	protected double startRoad;
+	protected double endRoad;
 	protected int roadSwitch = 1;
+	
+	protected int timeSwitch = 1;
+	protected double startWait;
+	protected double endWait;
+	protected double totalWait;
 
 	/**
 	 *
@@ -276,6 +281,11 @@ public class Car {
 		this.endTime = endTime;
 	}
 
+	public double getWait(){
+		return totalWait;
+	}
+	
+	
 	public void setLane(int l) {
 		if (l >= 1 && l < 4) {
 			lane = l;
@@ -304,7 +314,7 @@ public class Car {
 
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {
 		double acceleration;
-
+		
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
 		if (leading_car == null) {
@@ -327,7 +337,26 @@ public class Car {
 		this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
 		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
-
+		
+		
+		// Calculate wait time
+		if(this.current_velocity<10 && timeSwitch ==1)
+		{
+			
+			startWait = StreetMap.getCurrentTime();
+			timeSwitch++;
+		}
+		else
+		{
+			endWait = StreetMap.getCurrentTime();
+			timeSwitch = 1;
+			totalWait += (endWait - startWait);
+			//System.out.println("Total wait: " + totalWait);
+		}
+		
+		
+		
+		
 		// Check if lane change is a good idea
 		for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
 			if (lane != this.lane) {
@@ -350,7 +379,7 @@ public class Car {
 				this.current_origin_intersection = this.current_destination_intersection;
 				this.current_destination_intersection = this.path
 						.get(this.path.indexOf(this.current_origin_intersection) + 1);
-				System.out.println("called");
+				
 				timeMeasure();
 				// change road
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
@@ -433,14 +462,14 @@ public class Car {
 	public void timeMeasure() {
 
 		if (roadSwitch == 1) {
-			startRoad = System.currentTimeMillis() / 1000;
+			startRoad = StreetMap.getCurrentTime();
 			roadSwitch++;
 			roadToMeasure = current_road;
 		} else {
-			endRoad = System.currentTimeMillis() / 1000;
+			endRoad = StreetMap.getCurrentTime();
 			roadSwitch = 1;
-			roadToMeasure.computeAverageSpeed(endRoad - startRoad);
-			long spent = endRoad - startRoad;
+			double spent = endRoad - startRoad;
+			roadToMeasure.computeAverageSpeed(spent);
 			System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
 		}
 
