@@ -217,7 +217,7 @@ public class Simulation {
 			int days_simulated = 0;
 			while (this.is_running && days_simulated <= this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
-				street_map.setStartTime(current_time);
+				street_map.setCurrentTime(current_time);
 
 				// update realistic time
 				realistic_time_in_seconds += delta_t;

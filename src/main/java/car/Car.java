@@ -429,11 +429,11 @@ public class Car {
 	public void timeMeasure() {
 
 		if (roadSwitch == 1) {
-			startRoad = System.nanoTime() - StreetMap.getStartTime();
+			startRoad = StreetMap.getCurrentTime();
 			roadSwitch++;
 			roadToMeasure = current_road;
 		} else {
-			endRoad = System.nanoTime() - StreetMap.getStartTime();
+			endRoad = StreetMap.getCurrentTime();
 			roadSwitch = 1;
 			double spent = endRoad - startRoad;
 			roadToMeasure.computeAverageSpeed(spent);

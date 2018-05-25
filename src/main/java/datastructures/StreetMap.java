@@ -20,14 +20,14 @@ public class StreetMap {
 	 * Intersection inside the AdjacencyMatrix.
 	 */
 	private ArrayList<Intersection> intersections;
-	private static double startTime = 0;
-	public void setStartTime(double t) 
+	private static double CurrentTime = 0;
+	public void setCurrentTime(double t) 
 	{
-		startTime = t;
+		CurrentTime = t;
 	}
-	public static double getStartTime() 
+	public static double getCurrentTime() 
 	{
-		return startTime;
+		return CurrentTime;
 	}
 
 	/**
