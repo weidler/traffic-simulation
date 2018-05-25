@@ -67,6 +67,11 @@ public class Car {
 	protected double startRoad;
 	protected double endRoad;
 	protected int roadSwitch = 1;
+	
+	protected int timeSwitch = 1;
+	protected double startWait;
+	protected double endWait;
+	protected double totalWait;
 
 	/**
 	 *
@@ -297,7 +302,7 @@ public class Car {
 
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {
 		double acceleration;
-
+		
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
 		if (leading_car == null) {
@@ -323,7 +328,26 @@ public class Car {
 		this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
 		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
-
+		
+		
+		// Calculate wait time
+		if(this.current_velocity<10 && timeSwitch ==1)
+		{
+			
+			startWait = StreetMap.getCurrentTime();
+			timeSwitch++;
+		}
+		else
+		{
+			endWait = StreetMap.getCurrentTime();
+			timeSwitch = 1;
+			totalWait += (endWait - startWait);
+			//System.out.println("Total wait: " + totalWait);
+		}
+		
+		
+		
+		
 		// Check if lane change is a good idea
 		for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
 			if (lane != this.lane) {
