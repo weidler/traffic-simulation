@@ -295,6 +295,7 @@ public class GraphicalInterface extends JFrame {
 
 			}
 		});
+		
 		/*
 		JButton helpButton = new JButton("help");
 		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
