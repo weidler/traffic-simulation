@@ -16,6 +16,7 @@ public class Road {
 	protected double length;
 	protected int lanes = 1;
 	protected double avergeSpeed = 0;
+	protected double avg;
 	protected ArrayList<Double> averageSpeeds = new ArrayList<Double>();// in kmh
 
 	protected RoadType type = RoadType.ROAD;
@@ -83,8 +84,8 @@ public class Road {
 		return this.type;
 	}
 
-	public void computeAverageSpeed(long timeSpent) {
-		this.averageSpeeds.add((this.length / (timeSpent)));
+	public void computeAverageSpeed(double timeSpent) {
+		this.averageSpeeds.add((double)((this.length / (timeSpent))));
 		double totAvg = 0;
 		for (int i = 0; i < this.averageSpeeds.size(); i++) {
 			System.out.println("speed of car " + i + " " + this.averageSpeeds.get(i));
@@ -92,7 +93,12 @@ public class Road {
 			totAvg += this.averageSpeeds.get(i);
 		}
 
-		System.out.println(totAvg / this.averageSpeeds.size());
+		System.out.println("This is it: "+ totAvg / this.averageSpeeds.size());
+		avg = totAvg / this.averageSpeeds.size();
+	}
+	
+	public double getAverageSpeed() {
+		return avg;
 	}
 
 	public double getClockwiseAngleTo(Road that, Intersection at_int) {

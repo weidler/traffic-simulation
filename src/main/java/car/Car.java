@@ -64,8 +64,8 @@ public class Car {
 	// TIME VARIABLES
 	protected int startTime;
 	protected int endTime;
-	protected long startRoad;
-	protected long endRoad;
+	protected double startRoad;
+	protected double endRoad;
 	protected int roadSwitch = 1;
 
 	/**
@@ -429,14 +429,14 @@ public class Car {
 	public void timeMeasure() {
 
 		if (roadSwitch == 1) {
-			startRoad = System.currentTimeMillis() / 1000;
+			startRoad = System.nanoTime() - StreetMap.getStartTime();
 			roadSwitch++;
 			roadToMeasure = current_road;
 		} else {
-			endRoad = System.currentTimeMillis() / 1000;
+			endRoad = System.nanoTime() - StreetMap.getStartTime();
 			roadSwitch = 1;
-			roadToMeasure.computeAverageSpeed(endRoad - startRoad);
-			long spent = endRoad - startRoad;
+			double spent = endRoad - startRoad;
+			roadToMeasure.computeAverageSpeed(spent);
 			System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
 		}
 
