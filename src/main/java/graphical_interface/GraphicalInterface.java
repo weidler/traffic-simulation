@@ -1,7 +1,6 @@
 
 package graphical_interface;
 
-
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -29,11 +28,14 @@ import javax.swing.JScrollPane;
 
 import core.Simulation;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
+import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
+import type.Distribution;
+import type.RoadType;
+import type.Strategy;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -62,19 +64,17 @@ import javax.swing.JRadioButton;
 
 /**
  * 
- * @author thomas
- * this class is the interface
+ * @author thomas this class is the interface
  */
 
 public class GraphicalInterface extends JFrame {
 
 	private JCheckBox visualize = new JCheckBox("visualize?");
-	private JTextField duration = new JTextField(5); //in days
-    private JTextField density = new JTextField(5);  // number of cars
-    private JComboBox<String> strategy;
-    private JComboBox<String> schedule;
-    
-	
+	private JTextField duration = new JTextField(5); // in days
+	private JTextField density = new JTextField(5); // number of cars
+	private JComboBox<String> strategy;
+	private JComboBox<String> schedule;
+
 	private final JFileChooser fc = new JFileChooser();
 	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 
@@ -130,11 +130,11 @@ public class GraphicalInterface extends JFrame {
 	 * create interface. including buttons and listeners
 	 */
 	public GraphicalInterface(Simulation simulation) {
-		String[] strateyList = {"circulating lights"};
-		String[] scheduleList = {"poisson","gaussian"};
+		String[] strateyList = { "circulating lights" };
+		String[] scheduleList = { "poisson", "gaussian" };
 		strategy = new JComboBox<>(strateyList);
-	    schedule = new JComboBox<>(scheduleList);
-	    
+		schedule = new JComboBox<>(scheduleList);
+
 		this.simulation = simulation;
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
@@ -163,12 +163,12 @@ public class GraphicalInterface extends JFrame {
 		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		contentPane.add(drawPanel);
 
-		//ARROW KEY LISTENERS
+		// ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"up");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"down");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
 
 		ActionMap am = drawPanel.getActionMap();
 		am.put("up", new AbstractAction() {
@@ -208,7 +208,6 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(1011, 11, 167, 640);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
@@ -216,9 +215,6 @@ public class GraphicalInterface extends JFrame {
 
 		contentPane.add(menuPanel);
 		menuPanel.setLayout(null);
-
-
-
 
 		JLabel roadTypeLabel = new JLabel(RoadType.ROAD + "");
 		roadTypeLabel.setBounds(10, 192, 147, 19);
@@ -234,35 +230,25 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				int typeCounter =0;
-				for(int i = 0; i<RoadType.values().length;i++)
-				{
-					if((RoadType.values()[i]+"").equals(roadTypeLabel.getText()))
-					{
-						if(i == RoadType.values().length-1)
-						{
+				int typeCounter = 0;
+				for (int i = 0; i < RoadType.values().length; i++) {
+					if ((RoadType.values()[i] + "").equals(roadTypeLabel.getText())) {
+						if (i == RoadType.values().length - 1) {
 							typeCounter = 0;
-						}
-						else 
-						{
-							typeCounter = i+1;
+						} else {
+							typeCounter = i + 1;
 						}
 
 					}
 				}
-				roadTypeLabel.setText(RoadType.values()[typeCounter]+"");
-				roadTypeToAdd = RoadType.values()[typeCounter]+"";
-				if(roadTypeLabel.getText().equals(RoadType.ROAD+""))
-				{
-					roadTypeLabel.setForeground (Color.black);
-				}
-				else if(roadTypeLabel.getText().equals(RoadType.DIRT_ROAD+""))
-				{
-					roadTypeLabel.setForeground (Color.ORANGE);
-				}
-				else if(roadTypeLabel.getText().equals(RoadType.HIGHWAY+""))
-				{
-					roadTypeLabel.setForeground (Color.BLUE);
+				roadTypeLabel.setText(RoadType.values()[typeCounter] + "");
+				roadTypeToAdd = RoadType.values()[typeCounter] + "";
+				if (roadTypeLabel.getText().equals(RoadType.ROAD + "")) {
+					roadTypeLabel.setForeground(Color.black);
+				} else if (roadTypeLabel.getText().equals(RoadType.DIRT_ROAD + "")) {
+					roadTypeLabel.setForeground(Color.ORANGE);
+				} else if (roadTypeLabel.getText().equals(RoadType.HIGHWAY + "")) {
+					roadTypeLabel.setForeground(Color.BLUE);
 				}
 
 			}
@@ -277,7 +263,7 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				clearMap();	
+				clearMap();
 				simulation.stop();
 			}
 		});
@@ -292,52 +278,45 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				simulation.start();
 
-
 			}
 		});
 		
 		/*
-		JButton helpButton = new JButton("help");
-		helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		helpButton.setBounds(10, 497, 147, 20);
-		menuPanel.add(helpButton);
-		helpButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				JOptionPane.showMessageDialog(drawPanel,"left click to create road, right click to cancel creating road."
-						+ "\n"
-						+ "To move the graph, use the arrow keys. \n"
-						+ "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
-						+ "To change the graph again press the reset button.");
-			}
-
-		});
-		*/
+		 * JButton helpButton = new JButton("help");
+		 * helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		 * helpButton.setBounds(10, 497, 147, 20); menuPanel.add(helpButton);
+		 * helpButton.addActionListener(new ActionListener() {
+		 * 
+		 * public void actionPerformed(ActionEvent e) { JOptionPane.showMessageDialog(
+		 * drawPanel,"left click to create road, right click to cancel creating road." +
+		 * "\n" + "To move the graph, use the arrow keys. \n" +
+		 * "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
+		 * + "To change the graph again press the reset button."); }
+		 * 
+		 * });
+		 */
 
 		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
 		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
 		disableCarInfoRadio.setBounds(10, 405, 147, 23);
 		menuPanel.add(disableCarInfoRadio);
 		disableCarInfoRadio.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				boolean selected = disableCarInfoRadio.isSelected();
 				simulation.setCarInfo();
-				System.out.println("selected "+selected);
-				if(selected)
-				{
-					if(!carsTextArea.getText().equals(""))
-					{
+				System.out.println("selected " + selected);
+				if (selected) {
+					if (!carsTextArea.getText().equals("")) {
 						carsTextArea.setText("");
-					
+
 					}
 				}
 			}
 		});
-		
+
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
 		addCar.setBounds(10, 131, 147, 20);
@@ -347,24 +326,20 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				boolean selected = disableCarInfoRadio.isSelected();
-				System.out.println("selected "+selected);
-				if(selected)
-				{
-					if(!carsTextArea.getText().equals(""))
-					{
+				System.out.println("selected " + selected);
+				if (selected) {
+					if (!carsTextArea.getText().equals("")) {
 						carsTextArea.setText("");
 					}
 				}
-				if(!simulation.isRunning()&&!selected) 
-				{
+				if (!simulation.isRunning() && !selected) {
 					simulation.addRandomCar();
 					carsTextArea.setText("");
-					for(Car car : simulation.getCars())
-					{
-						carsTextArea.append(car.toString()+"\n");
+					for (Car car : simulation.getCars()) {
+						carsTextArea.append(car.toString() + "\n");
 					}
 					repaint();
-				}							
+				}
 			}
 		});
 
@@ -373,8 +348,6 @@ public class GraphicalInterface extends JFrame {
 		slider.setValue(50);
 		slider.setEnabled(false);
 		menuPanel.add(slider);
-
-
 
 		JButton stopButton = new JButton("stop");
 		stopButton.setBounds(97, 466, 60, 20);
@@ -395,10 +368,10 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(slider.getValue()<99) {
+				if (slider.getValue() < 99) {
 					visuals.IncreaseZoomMultiplier();
 					System.out.println("zoom in");
-					slider.setValue((int)(50*visuals.getZoomMultiplier()));
+					slider.setValue((int) (50 * visuals.getZoomMultiplier()));
 					repaint();
 				}
 			}
@@ -410,15 +383,14 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(slider.getValue()>1) {
+				if (slider.getValue() > 1) {
 					visuals.DecreaseZoomMultiplier();
 					System.out.println("zoom out");
-					slider.setValue((int)(50*visuals.getZoomMultiplier()));
+					slider.setValue((int) (50 * visuals.getZoomMultiplier()));
 					repaint();
 				}
 			}
 		});
-
 
 		JButton resetPositionButton = new JButton("reset position");
 		resetPositionButton.setBounds(10, 39, 147, 20);
@@ -434,9 +406,7 @@ public class GraphicalInterface extends JFrame {
 				repaint();
 
 			}
-		});	
-
-
+		});
 
 		JButton saveButton = new JButton("save");
 		saveButton.setBounds(10, 435, 60, 20);
@@ -444,52 +414,43 @@ public class GraphicalInterface extends JFrame {
 		menuPanel.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
 			int count = 0;
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				count++;
 				streetMap.toString();
 				/*
-		        Gson gson = new Gson();
-		        String json = gson.toJson(streetMap);
-		        System.out.println(json);
-		        File f = new File("src\\save\\java\\save"+count+".json\\");
-				try {
-					while(f.exists() && !f.isDirectory()) {
-						count++;
-						f = new File("src\\save\\java\\save"+count+".json\\");
-					}
-					FileWriter file = new FileWriter("src\\save\\java\\save"+count+".json\\");
-					gson.toJson(streetMap, file);
-					file.close();
-				} catch (IOException e) {
-
-					e.printStackTrace();
-				}
+				 * Gson gson = new Gson(); String json = gson.toJson(streetMap);
+				 * System.out.println(json); File f = new
+				 * File("src\\save\\java\\save"+count+".json\\"); try { while(f.exists() &&
+				 * !f.isDirectory()) { count++; f = new
+				 * File("src\\save\\java\\save"+count+".json\\"); } FileWriter file = new
+				 * FileWriter("src\\save\\java\\save"+count+".json\\"); gson.toJson(streetMap,
+				 * file); file.close(); } catch (IOException e) {
+				 * 
+				 * e.printStackTrace(); }
 				 */
 				BufferedWriter bw = null;
 				FileWriter fw = null;
-				File f = new File("./savefiles/streetmap"+count+".txt");
-				try 
-				{
-					while(f.exists() && !f.isDirectory()) 
-					{
+				File f = new File("./savefiles/streetmap" + count + ".txt");
+				try {
+					while (f.exists() && !f.isDirectory()) {
 						count++;
-						f = new File("./savefiles/streetmap"+count+".txt");
+						f = new File("./savefiles/streetmap" + count + ".txt");
 					}
 
 					fw = new FileWriter(f);
 					bw = new BufferedWriter(fw);
-					bw.write(streetMap.toString());	
+					bw.write(streetMap.toString());
 					bw.close();
 					fw.close();
-					System.out.println("saved: "+"./savefiles/streetmap"+count+".txt");
-				}
-				catch(IOException ex)
-				{
+					System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
+				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-			} 
+			}
 		});
+
 		JButton loadButton = new JButton("load");
 		loadButton.setBounds(97, 435, 60, 20);
 		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -499,49 +460,43 @@ public class GraphicalInterface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				fc.setCurrentDirectory(new File ("./savefiles/"));
+				fc.setCurrentDirectory(new File("./savefiles/"));
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
-				if(file!=null) {
+				if (file != null) {
 
-					//JSON from file to Object
+					// JSON from file to Object
 					try {
 						clearMap();
-						Scanner sc = new Scanner(file);						 
+						Scanner sc = new Scanner(file);
 						sc.useDelimiter(",");
 						String next = sc.next();
 						Boolean change = false;
-						while(next != null)
-						{
+						while (next != null) {
 
-							if(next.equals("#"))
-							{
+							if (next.equals("#")) {
 								change = true;
 								next = sc.next();
-							}
-							else if(!change)
-							{
+							} else if (!change) {
 								int x = Integer.parseInt(next);
 								next = sc.next();
-								int y = Integer.parseInt(next);					    		
+								int y = Integer.parseInt(next);
 								streetMap.addIntersection(new Intersection(x, y));
 								next = sc.next();
-							}	
-							else 
-							{
+							} else {
 								int x1 = Integer.parseInt(next);
 								next = sc.next();
-								int y1 = Integer.parseInt(next);	
+								int y1 = Integer.parseInt(next);
 								next = sc.next();
 								int x2 = Integer.parseInt(next);
 								next = sc.next();
-								int y2 = Integer.parseInt(next);	
+								int y2 = Integer.parseInt(next);
 								Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
 								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
 								streetMap.addRoad(start, end);
 								next = sc.next();
 							}
-							System.out.println("loading..."+ next);
+							System.out.println("loading..." + next);
 						}
 						System.out.println("loaded");
 						repaint();
@@ -575,16 +530,16 @@ public class GraphicalInterface extends JFrame {
 
 		JButton randomGraphButton = new JButton("random graph");
 		Random rnd = new Random();
-		int maxX = drawPanel.getX() + drawPanel.getBounds().width-10;
+		int maxX = drawPanel.getX() + drawPanel.getBounds().width - 10;
 		int minX = drawPanel.getX();
-		int maxY = drawPanel.getY() + drawPanel.getBounds().height-10;
+		int maxY = drawPanel.getY() + drawPanel.getBounds().height - 10;
 		int minY = drawPanel.getY();
 
 		randomGraphButton.setBounds(10, 528, 147, 20);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		randomGraphButton.addActionListener(new ActionListener() {
-	
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -594,25 +549,19 @@ public class GraphicalInterface extends JFrame {
 
 				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
 
-
-				for(int i = 0; i < numberOfRoads; i++)
-				{
-					if(streetMap.getIntersections().size()==0) 
-					{
+				for (int i = 0; i < numberOfRoads; i++) {
+					if (streetMap.getIntersections().size() == 0) {
 						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
 						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
 						boolean oke = false;
-						while(!oke)
-						{
-							double distance2 = (double)(Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2) + (Math.pow(coordinateY1 - coordinateY2, 2))));
-							if(distance2 > DISTANCE_BETWEEN_INTERSECTIONS)
-							{
+						while (!oke) {
+							double distance2 = (double) (Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2)
+									+ (Math.pow(coordinateY1 - coordinateY2, 2))));
+							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
 								oke = true;
-							}
-							else
-							{
+							} else {
 								coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
 								coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
 							}
@@ -620,39 +569,38 @@ public class GraphicalInterface extends JFrame {
 
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
 						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
-						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), streetMap.getIntersections().get(streetMap.getIntersections().size()-2));
+						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
+								streetMap.getIntersections().get(streetMap.getIntersections().size() - 2));
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
 						new CrossRoadDetection(streetMap, r);
-					}
-					else 
-					{
-						Intersection startIntersection = streetMap.getIntersections().get(rnd.nextInt((streetMap.getIntersections().size()-1) - 0 + 1) + 0);
+					} else {
+						Intersection startIntersection = streetMap.getIntersections()
+								.get(rnd.nextInt((streetMap.getIntersections().size() - 1) - 0 + 1) + 0);
 						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
 						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
 
 						boolean oke = false;
-						while(!oke)
-						{
-							double distance2 = (double)(Math.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2) + (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
-							if(distance2 > DISTANCE_BETWEEN_INTERSECTIONS)
-							{
+						while (!oke) {
+							double distance2 = (double) (Math
+									.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2)
+											+ (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
+							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
 								oke = true;
-							}
-							else
-							{
+							} else {
 								coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
 								coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
 							}
 						}
 
 						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size()-1), startIntersection);
+						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
+								startIntersection);
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
 						new CrossRoadDetection(streetMap, r);
-					}	
-					
+					}
+
 				}
 
 				repaint();
@@ -663,9 +611,9 @@ public class GraphicalInterface extends JFrame {
 		buttonPanel.setBounds(10, 222, 125, 100);
 		buttonPanel.setBackground(Color.LIGHT_GRAY);
 
-		lanes1 = new JRadioButton("One Lane",true);
-		lanes2 = new JRadioButton("Two Lanes",false);
-		lanes3 = new JRadioButton("Three Lanes",false);
+		lanes1 = new JRadioButton("One Lane", true);
+		lanes2 = new JRadioButton("Two Lanes", false);
+		lanes3 = new JRadioButton("Three Lanes", false);
 		lanes1.setBackground(Color.LIGHT_GRAY);
 		lanes2.setBackground(Color.LIGHT_GRAY);
 		lanes3.setBackground(Color.LIGHT_GRAY);
@@ -681,89 +629,110 @@ public class GraphicalInterface extends JFrame {
 		buttonPanel.add(lanes3);
 
 		menuPanel.add(buttonPanel);
-		
+
 		JLabel lanesLabel = new JLabel("lanes:");
 		lanesLabel.setBounds(10, 225, 49, 14);
 		menuPanel.add(lanesLabel);
-		
-		
+
 		addLabel.setBounds(10, 354, 147, 14);
 		menuPanel.add(addLabel);
-				
+
 		JButton addDeleteButton = new JButton("add/delete");
 		addDeleteButton.setBounds(10, 333, 147, 19);
 		menuPanel.add(addDeleteButton);
 		addDeleteButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		addDeleteButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(addLabel.getText().equals("add"))
-				{
+				if (addLabel.getText().equals("add")) {
 					addLabel.setText("delete");
-				}
-				else 
-				{
+				} else {
 					addLabel.setText("add");
 				}
-				
+
 			}
 		});
-		
-		
+
 		JButton experimentButton = new JButton("Experiment");
 		experimentButton.setBounds(10, 379, 147, 15);
 		experimentButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(experimentButton);
 		experimentButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
 
-			      JPanel myPanel = new JPanel();
-			      myPanel.add(new JLabel("duration in days:"));
-			      myPanel.add(duration);
-			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-			      myPanel.add(new JLabel("amout of cars per day:"));
-			      myPanel.add(density);
-			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-			      myPanel.add(new JLabel("strategy:"));
-			      myPanel.add(strategy);
-			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-			      myPanel.add(new JLabel("schedule:"));
-			      myPanel.add(schedule);
-			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-			      myPanel.add(visualize);
-			      int result = JOptionPane.showConfirmDialog(null, myPanel, 
-			               "Please Enter data", JOptionPane.OK_CANCEL_OPTION);
-			      if (result == JOptionPane.OK_OPTION) {
-			         System.out.println("duration value:  " + duration.getText());
-			         System.out.println("density value:   " + density.getText());
-			         System.out.println("schedule value:  " + schedule.getSelectedIndex());
-			         System.out.println("strategy value:  " + strategy.getSelectedIndex());
-			         System.out.println("visualize value: " + visualize.isSelected());
-			         // then start experiment.
-			         
-			         
-			      }
-			      
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("duration in days:"));
+				myPanel.add(duration);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("amout of cars per day:"));
+				myPanel.add(density);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("strategy:"));
+				myPanel.add(strategy);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("schedule:"));
+				myPanel.add(schedule);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(visualize);
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					System.out.println("duration value:  " + duration.getText());
+					System.out.println("density value:   " + density.getText());
+					System.out.println("schedule value:  " + schedule.getSelectedIndex());
+					System.out.println("strategy value:  " + strategy.getSelectedIndex());
+					System.out.println("visualize value: " + visualize.isSelected());
+					// then start experiment.
+
+					Distribution arrival_schedule;
+					switch ((String) schedule.getSelectedItem()) {
+						case "poisson":
+							arrival_schedule = Distribution.POISSON;
+							break;
+
+						case "gaussian":
+							arrival_schedule = Distribution.GAUSSIAN;
+							break;
+
+						case "empirical":
+							arrival_schedule = Distribution.EMPIRICAL;
+							break;
+
+						default:
+							arrival_schedule = Distribution.GAUSSIAN;
+							break;
+					}
+
+					Strategy control_strategy;
+					switch ((String) strategy.getSelectedItem()) {
+						default:
+							control_strategy = Strategy.BENCHMARK_CYCLING;
+							break;
+					}
+
+					Experiment exp = new Experiment(arrival_schedule, control_strategy,
+							Integer.parseInt(duration.getText()), visualize.isSelected());
+					simulation.setExperiment(exp);
+
+				}
+
 			}
 		});
 
-		//ADDS MOUSE AND KEY LISTENER		
+		// ADDS MOUSE AND KEY LISTENER
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
 		drawPanel.addMouseMotionListener(handler);
 		drawPanel.setFocusable(true);
 
-
-		drawPanel.requestFocusInWindow();		
+		drawPanel.requestFocusInWindow();
 
 	}
 
-	public void clearMap()
-	{
+	public void clearMap() {
 		simulation.reset();
 		streetMap.clearMap();
 		visuals.resetZoomMultiplier();
@@ -772,14 +741,14 @@ public class GraphicalInterface extends JFrame {
 
 	/**
 	 * 
-	 * @author thomas
-	 * this is the mouse/key listener. in here all the clicks and movement of the mouse are registered and roads and intersection are created.
+	 * @author thomas this is the mouse/key listener. in here all the clicks and
+	 *         movement of the mouse are registered and roads and intersection are
+	 *         created.
 	 */
-	private class Handlerclass implements MouseListener,MouseMotionListener {
+	private class Handlerclass implements MouseListener, MouseMotionListener {
 
 		@Override
 		public void mouseClicked(java.awt.event.MouseEvent e) {
-
 
 		}
 
@@ -796,300 +765,265 @@ public class GraphicalInterface extends JFrame {
 		}
 
 		/**
-		 *  this is the only used method and registers the clicks.
+		 * this is the only used method and registers the clicks.
 		 */
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
 
-
-
 			clickCounter++;
 
-			int x = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
-			int y = (int) (e.getY()/visuals.getZoomMultiplier()-visuals.getChangeY());
+			int x = (int) (e.getX() / visuals.getZoomMultiplier() - visuals.getChangeX());
+			int y = (int) (e.getY() / visuals.getZoomMultiplier() - visuals.getChangeY());
 
-			if(addLabel.getText().equals("add"))
-			{
-			if(clickCounter == 1) {
+			if (addLabel.getText().equals("add")) {
+				if (clickCounter == 1) {
 
-				if (e.getButton() == MouseEvent.BUTTON3)
-				{
-					if(streetMap.getRoads().size() > 0) 
-					{
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						if (streetMap.getRoads().size() > 0) {
+							int nearestX = -1;
+							int nearestY = -1;
+							double distance = -1;
+							for (Intersection sec : streetMap.getIntersections()) {
+
+								double distance2 = (double) (Math
+										.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+								// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+								if (distance == -1) {
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								} else if (distance2 < distance) {
+									// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								}
+
+							}
+
+						}
+					}
+
+					if (streetMap.getRoads().isEmpty()) {
+						startX = x;
+						startY = y;
+						Intersection in = new Intersection(startX, startY);
+						streetMap.addIntersection(in);
+
+					} else {
 						int nearestX = -1;
 						int nearestY = -1;
 						double distance = -1;
-						for(Intersection sec : streetMap.getIntersections())
-						{
+						for (Intersection sec : streetMap.getIntersections()) {
 
-							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+							double distance2 = (double) (Math
+									.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 							if (distance == -1) {
-								distance = distance2;							
-								nearestX = sec.getXCoord();						
-								nearestY = sec.getYCoord();							
-							}
-							else if(distance2 < distance)
-							{
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();
+							} else if (distance2 < distance) {
 								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 								distance = distance2;
 								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();							
-							}	
+								nearestY = sec.getYCoord();
+							}
 
+						}
+						startX = nearestX;
+						startY = nearestY;
+						Intersection in = new Intersection(startX, startY);
+						streetMap.addIntersection(in);
+
+						Intersection section = streetMap.getIntersectionByCoordinates(startX, startY);
+						if (!section.connectionCanBeAdded()) {
+							clickCounter = 0;
 						}
 
 					}
-				}
 
-				if(streetMap.getRoads().isEmpty()) {
-					startX = x;
-					startY = y;
-					Intersection in = new Intersection(startX, startY);
-					streetMap.addIntersection(in);
+					visuals.setStartPosX(startX);
+					visuals.setStartPosY(startY);
+					if (clickCounter != 0) {
+						visuals.setDrawLine(true);
+					}
 
-				}
-				else
-				{
-					int nearestX = -1;
-					int nearestY = -1;
-					double distance = -1;
-					for(Intersection sec : streetMap.getIntersections())
-					{
+				} else {
 
-						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
-						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-						if (distance == -1) {
-							distance = distance2;							
-							nearestX = sec.getXCoord();						
-							nearestY = sec.getYCoord();							
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						visuals.setDrawLine(false);
+						clickCounter = 0;
+					} else {
+
+						int nearestX = -1;
+						int nearestY = -1;
+						double distance = -1;
+						for (Intersection sec : streetMap.getIntersections()) {
+
+							double distance2 = (double) (Math
+									.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+							if (distance == -1) {
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();
+							} else if (distance2 < distance) {
+								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();
+							}
+
 						}
-						else if(distance2 < distance)
-						{
-							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-							distance = distance2;
-							nearestX = sec.getXCoord();
-							nearestY = sec.getYCoord();							
-						}	
+						if (distance < visuals.getMaxIntersectionSize()) {
 
-					}
-					startX = nearestX;
-					startY = nearestY;
-					Intersection in = new Intersection(startX, startY);
-					streetMap.addIntersection(in);
-
-					Intersection section = streetMap.getIntersectionByCoordinates(startX, startY);
-					if(!section.connectionCanBeAdded())
-					{
-						clickCounter=0;
-					}
-
-				}
-
-				visuals.setStartPosX(startX);
-				visuals.setStartPosY(startY);
-				if(clickCounter!=0) {
-					visuals.setDrawLine(true);
-				}
-
-			}
-			else 
-			{
-
-				if (e.getButton() == MouseEvent.BUTTON3)
-				{
-					visuals.setDrawLine(false);
-					clickCounter = 0;
-				}
-				else
-				{
-
-					int nearestX = -1;
-					int nearestY = -1;
-					double distance = -1;
-					for(Intersection sec : streetMap.getIntersections())
-					{
-
-						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
-						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-						if (distance == -1) {
-							distance = distance2;							
-							nearestX = sec.getXCoord();						
-							nearestY = sec.getYCoord();							
+							endX = nearestX;
+							endY = nearestY;
+						} else {
+							endX = x;
+							endY = y;
 						}
-						else if(distance2 < distance)
-						{
-							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-							distance = distance2;
-							nearestX = sec.getXCoord();
-							nearestY = sec.getYCoord();							
-						}	
 
-					}
-					if(distance < visuals.getMaxIntersectionSize()) {
-
-						endX = nearestX;
-						endY = nearestY;
-					}
-					else {
-						endX = x;
-						endY = y;
-					}
-
-					Intersection in = new Intersection(endX, endY);
-					streetMap.addIntersection(in);
-					int typeCounter =0;
-					for(int i = 0; i<RoadType.values().length;i++) {
-						if((RoadType.values()[i]+"").equals(roadTypeToAdd)) {
-							typeCounter = i;
+						Intersection in = new Intersection(endX, endY);
+						streetMap.addIntersection(in);
+						int typeCounter = 0;
+						for (int i = 0; i < RoadType.values().length; i++) {
+							if ((RoadType.values()[i] + "").equals(roadTypeToAdd)) {
+								typeCounter = i;
+							}
 						}
-					}
-					
-//					Road r = new Road(startX,startY,endX,endY);		
-//					r.setType(RoadType.values()[typeCounter]);
-					Road r;
-					switch (roadTypeToAdd) {
-						case "DIRT_ROAD":
-							r = new DirtRoad(startX,startY,endX,endY);
-							break;
-					
-						case "HIGHWAY":
-							r = new Highway(startX,startY,endX,endY);
-							break;
-						
-						default:
-							// collect all unknown road types and standard road under default
-							r = new Road(startX,startY,endX,endY);
-							break;
-					}
-					r.setStreetMap(streetMap);
-					
-					oneLane = lanes1.isSelected();
-					twoLane = lanes2.isSelected();
-					threeLane = lanes3.isSelected();
-					int l = 1;
-					if(oneLane) {l=1;}
-					if(twoLane) {l=2;}
-					if(threeLane) {l=3;}
 
-					r.setLanes(l);
-					if((int)(r.getLength() / visuals.getDivider()) >=2)
-					{
-						streetMap.addRoad(r);
-						new CrossRoadDetection(streetMap, r);
+						Road r;
+						switch (roadTypeToAdd) {
+							case "DIRT_ROAD":
+								r = new DirtRoad(startX, startY, endX, endY);
+								break;
+
+							case "HIGHWAY":
+								r = new Highway(startX, startY, endX, endY);
+								break;
+
+							default:
+								// collect all unknown road types and standard road under default
+								r = new Road(startX, startY, endX, endY);
+								break;
+						}
+						r.setStreetMap(streetMap);
+
+						oneLane = lanes1.isSelected();
+						twoLane = lanes2.isSelected();
+						threeLane = lanes3.isSelected();
+						int l = 1;
+						if (oneLane) {
+							l = 1;
+						}
+						if (twoLane) {
+							l = 2;
+						}
+						if (threeLane) {
+							l = 3;
+						}
+
+						r.setLanes(l);
+						if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
+							streetMap.addRoad(r);
+							new CrossRoadDetection(streetMap, r);
+						} else {
+							streetMap.removeIntersection(in);
+						}
+						clickCounter = 0;
+
+						visuals.setDrawLine(false);
 					}
-					else
-					{
-						streetMap.removeIntersection(in);
-					}
-					clickCounter = 0;
- 
-					visuals.setDrawLine(false);
+
+					System.out.println(streetMap.getIntersections());
+					System.out.println(streetMap.getRoads());
+
+					System.out.println("x coordinate: " + x);
+					System.out.println("y coordinate: " + y);
+					System.out.println("");
+					System.out.println("changed");
+					repaint();
+
 				}
+			} else {
 
-				System.out.println(streetMap.getIntersections());
-				System.out.println(streetMap.getRoads());
-
-				System.out.println("x coordinate: "+x);
-				System.out.println("y coordinate: "+y);
-				System.out.println("");
-				System.out.println("changed");
-				repaint();
-
-			}
-			}
-			else 
-			{
-				
-				if(clickCounter == 1)
-				{
+				if (clickCounter == 1) {
 					System.out.println("select first point to remove");
-					if(!streetMap.getRoads().isEmpty()) 
-					{	
+					if (!streetMap.getRoads().isEmpty()) {
 						int nearestX = -1;
 						int nearestY = -1;
 						double distance = -1;
-						for(Intersection sec : streetMap.getIntersections())
-						{
-							double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+						for (Intersection sec : streetMap.getIntersections()) {
+							double distance2 = (double) (Math
+									.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 							if (distance == -1) {
-								distance = distance2;							
-								nearestX = sec.getXCoord();						
-								nearestY = sec.getYCoord();							
-							}
-							else if(distance2 < distance)
-							{
+								distance = distance2;
+								nearestX = sec.getXCoord();
+								nearestY = sec.getYCoord();
+							} else if (distance2 < distance) {
 								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 								distance = distance2;
 								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();							
-							}	
+								nearestY = sec.getYCoord();
+							}
 
 						}
 						toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
-						System.out.println("toRemove size "+ toRemove.size());
-					}
-					else
-					{
+						System.out.println("toRemove size " + toRemove.size());
+					} else {
 						clickCounter--;
 					}
-						
-				}
-				else 
-				{
+
+				} else {
 					System.out.println("select second point to remove");
-					
+
 					int nearestX = -1;
 					int nearestY = -1;
 					double distance = -1;
-					for(Intersection sec : streetMap.getIntersections())
-					{
-						double distance2 = (double)(Math.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+					for (Intersection sec : streetMap.getIntersections()) {
+						double distance2 = (double) (Math
+								.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 						if (distance == -1) {
-							distance = distance2;							
-							nearestX = sec.getXCoord();						
-							nearestY = sec.getYCoord();							
-						}
-						else if(distance2 < distance)
-						{
+							distance = distance2;
+							nearestX = sec.getXCoord();
+							nearestY = sec.getYCoord();
+						} else if (distance2 < distance) {
 							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 							distance = distance2;
 							nearestX = sec.getXCoord();
-							nearestY = sec.getYCoord();							
-						}	
+							nearestY = sec.getYCoord();
+						}
 					}
 					toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
 					boolean remove1 = true;
 					boolean remove2 = true;
-					if(toRemove.get(0).getConnectedIntersections().size() > 1)
-					{
-						System.out.println("connections "+ toRemove.get(0).getConnectedIntersections().size());
+					if (toRemove.get(0).getConnectedIntersections().size() > 1) {
+						System.out.println("connections " + toRemove.get(0).getConnectedIntersections().size());
 						remove1 = false;
-					}	
-					if(toRemove.get(1).getConnectedIntersections().size() > 1)
-					{
-						System.out.println("connections "+ toRemove.get(1).getConnectedIntersections().size());
+					}
+					if (toRemove.get(1).getConnectedIntersections().size() > 1) {
+						System.out.println("connections " + toRemove.get(1).getConnectedIntersections().size());
 						remove2 = false;
 					}
-					
-					System.out.println("toRemove size "+ toRemove.size() + " remove1: "+remove1+ " remove2: "+remove2);
+
+					System.out.println(
+							"toRemove size " + toRemove.size() + " remove1: " + remove1 + " remove2: " + remove2);
 					streetMap.removeRoadBetween(toRemove.get(0), toRemove.get(1));
-					if(remove1)
-					{
+					if (remove1) {
 						streetMap.removeIntersection(toRemove.get(0));
 					}
-					if(remove2)
-					{
+					if (remove2) {
 						streetMap.removeIntersection(toRemove.get(1));
 					}
 					toRemove.clear();
-					clickCounter = 0;	
+					clickCounter = 0;
 				}
-			repaint();
+				repaint();
 			}
-
 
 		}
 
@@ -1112,86 +1046,71 @@ public class GraphicalInterface extends JFrame {
 		@Override
 		public void mouseMoved(java.awt.event.MouseEvent e) {
 
+			mouseX = (int) (e.getX() / visuals.getZoomMultiplier() - visuals.getChangeX());
+			mouseY = (int) (e.getY() / visuals.getZoomMultiplier() - visuals.getChangeY());
 
-			mouseX = (int) (e.getX()/visuals.getZoomMultiplier()-visuals.getChangeX());
-			mouseY = (int) (e.getY()/visuals.getZoomMultiplier()-visuals.getChangeY());
-
-			if(streetMap.getIntersections().size()>0)
-			{
+			if (streetMap.getIntersections().size() > 0) {
 				int nearestX = -1;
 				int nearestY = -1;
 				double distance = -1;
-				for(Intersection sec : streetMap.getIntersections())
-				{
+				for (Intersection sec : streetMap.getIntersections()) {
 
-					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - sec.getXCoord(), 2) + (Math.pow(mouseY - sec.getYCoord(), 2))));
+					double distance2 = (double) (Math
+							.sqrt(Math.pow(mouseX - sec.getXCoord(), 2) + (Math.pow(mouseY - sec.getYCoord(), 2))));
 					// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 					if (distance == -1) {
-						distance = distance2;							
-						nearestX = sec.getXCoord();						
-						nearestY = sec.getYCoord();							
-					}
-					else if(distance2 < distance)
-					{
+						distance = distance2;
+						nearestX = sec.getXCoord();
+						nearestY = sec.getYCoord();
+					} else if (distance2 < distance) {
 						// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 						distance = distance2;
 						nearestX = sec.getXCoord();
-						nearestY = sec.getYCoord();							
-					}	
+						nearestY = sec.getYCoord();
+					}
 
 				}
-				if(distance <= visuals.getMaxIntersectionSize()+10) 
-				{
+				if (distance <= visuals.getMaxIntersectionSize() + 10) {
 					Intersection colorRed = streetMap.getIntersectionByCoordinates(nearestX, nearestY);
 					visuals.setDrawRed(colorRed);
-				}
-				else
-				{
+				} else {
 					visuals.setDrawRed(null);
 
 				}
 
 			}
 
-			if(simulation.getCars().size()>0)
-			{
+			if (simulation.getCars().size() > 0) {
 				int nearestX = -1;
 				int nearestY = -1;
 				double distance = -1;
-				for(Car car : simulation.getCars())
-				{
+				for (Car car : simulation.getCars()) {
 
-					double distance2 = (double)(Math.sqrt(Math.pow(mouseX - car.getPositionX(), 2) + (Math.pow(mouseY - car.getPositionY(), 2))));
+					double distance2 = (double) (Math.sqrt(
+							Math.pow(mouseX - car.getPositionX(), 2) + (Math.pow(mouseY - car.getPositionY(), 2))));
 					// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
 					if (distance == -1) {
-						distance = distance2;							
-						nearestX = (int)car.getPositionX();						
-						nearestY = (int)car.getPositionY();							
-					}
-					else if(distance2 < distance)
-					{
+						distance = distance2;
+						nearestX = (int) car.getPositionX();
+						nearestY = (int) car.getPositionY();
+					} else if (distance2 < distance) {
 						// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
 						distance = distance2;
-						nearestX = (int)car.getPositionX();						
-						nearestY = (int)car.getPositionY();								
-					}	
+						nearestX = (int) car.getPositionX();
+						nearestY = (int) car.getPositionY();
+					}
 
 				}
-				if(distance <= 20) 
-				{
+				if (distance <= 20) {
 					Car nearestCar = null;
-					for(Car car: simulation.getCars())
-					{
-						if((int)car.getPositionX() == nearestX && (int)car.getPositionY() == nearestY)
-						{
+					for (Car car : simulation.getCars()) {
+						if ((int) car.getPositionX() == nearestX && (int) car.getPositionY() == nearestY) {
 							nearestCar = car;
 							break;
 						}
 					}
 					simulation.setLastHoveredCar(nearestCar);
-				}
-				else
-				{
+				} else {
 
 				}
 
@@ -1203,12 +1122,9 @@ public class GraphicalInterface extends JFrame {
 
 		}
 
-
-
 	}
 
-	public void redraw()
-	{
+	public void redraw() {
 		repaint();
 	}
 }

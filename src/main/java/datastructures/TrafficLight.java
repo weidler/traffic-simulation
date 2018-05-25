@@ -8,7 +8,7 @@ public class TrafficLight {
 	private Road road;
 	private Intersection intersection;
 	private int lane;
-	
+
 	public TrafficLight(Road road, Intersection intersection, int lane) {
 		this.road = road;
 		this.intersection = intersection;
@@ -41,8 +41,7 @@ public class TrafficLight {
 		this.status = status;
 	}
 
-	public Intersection getIntersection()
-	{
+	public Intersection getIntersection() {
 		return intersection;
 	}
 

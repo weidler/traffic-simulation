@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import datastructures.CarType;
 import datastructures.Intersection;
-import datastructures.RoadType;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import model.IntelligentDriverModel;
 import model.MOBIL;
 import road.Road;
+import type.CarType;
+import type.RoadType;
 
 /**
  * 
@@ -27,11 +27,12 @@ public class Car {
 	// LOCALIZATION
 	protected ArrayList<Intersection> path;
 	protected Road current_road;
+	protected Road roadToMeasure;
 	protected Intersection current_origin_intersection;
 	protected Intersection current_destination_intersection;
 	protected boolean reached_destination;
 	private double angle;
-	
+
 	// DYNAMIC VALUES
 	protected double current_velocity;
 	protected double current_acceleration;
@@ -43,8 +44,8 @@ public class Car {
 	// BEHAVIOR
 	protected IntelligentDriverModel model;
 	protected MOBIL mobil;
-	protected double desired_velocity;	
-	
+	protected double desired_velocity;
+
 	// VISUALISATION
 	protected int offsetX;
 	protected int offsetY;
@@ -59,60 +60,61 @@ public class Car {
 	protected double vehicle_length;
 	protected double favored_velocity;
 	protected CarType type = CarType.CAR;
-	
+
 	// TIME VARIABLES
 	protected int startTime;
 	protected int endTime;
-	
+	protected long startRoad;
+	protected long endRoad;
+	protected int roadSwitch = 1;
 
 	/**
 	 *
 	 * @param startPoint
 	 * @param endPoint
-	 * @param streetMap this object needs to be passed as parameter to find the road the car is in!
+	 * @param streetMap
+	 *            this object needs to be passed as parameter to find the road the
+	 *            car is in!
 	 */
 
 	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
-		
-			
+
 		this.path = path;
-		
+
 		color = Color.blue;
-		
+
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
-		
+
 		this.positionX = (double) current_origin_intersection.getXCoord();
 		this.positionY = (double) current_origin_intersection.getYCoord();
 
 		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
-		
+
 		this.current_velocity = 0;
-		
+
 		this.setTypeParameters(props);
 		this.updateDesiredVelocity();
-	
-		this.model = new IntelligentDriverModel(
-				Integer.parseInt(props.getProperty("min_headway")), 
-				Integer.parseInt(props.getProperty("min_spacing")), 
-				Integer.parseInt(props.getProperty("IDM_delta"))
-		);
-		
+
+		this.model = new IntelligentDriverModel(Integer.parseInt(props.getProperty("min_headway")),
+				Integer.parseInt(props.getProperty("min_spacing")), Integer.parseInt(props.getProperty("IDM_delta")));
+
 		this.mobil = new MOBIL(this.model, 1);
-		
+
 		this.reached_destination = false;
 	}
-	
-	
-	
+
 	private void updateDesiredVelocity() {
-		this.desired_velocity = Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed())+(Math.random()*2 - 1)*0.1*Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed());
+		this.desired_velocity = Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed())
+				+ (Math.random() * 2 - 1) * 0.1
+						* Math.min(this.favored_velocity, this.current_road.getAllowedMaxSpeed());
 	}
 
 	protected void setTypeParameters(Properties props) {
 		// DRIVING
 		this.reaction_time = 1;
-		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration")) + (Math.random()*2 - 1)*Integer.parseInt(props.getProperty("max_acceleration"))*0.1 ;
+		this.max_acceleration = Integer.parseInt(props.getProperty("max_acceleration"))
+				+ (Math.random() * 2 - 1) * Integer.parseInt(props.getProperty("max_acceleration")) * 0.1;
 		this.decceleration = Integer.parseInt(props.getProperty("decceleration"));
 		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
 		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
@@ -122,7 +124,7 @@ public class Car {
 		this.vehicle_length = Integer.parseInt(props.getProperty("vehicle_length"));
 		this.color = Color.BLUE;
 	}
-	
+
 	public double getPositionOnRoad() {
 		return position_on_road;
 	}
@@ -148,6 +150,7 @@ public class Car {
 
 	public void setCurrentRoad(Road current_road) {
 		this.current_road = current_road;
+
 	}
 
 	public Intersection getCurrentOriginIntersection() {
@@ -164,6 +167,7 @@ public class Car {
 
 	public void setCurrentDestinationIntersection(Intersection current_destination_intersection) {
 		this.current_destination_intersection = current_destination_intersection;
+
 	}
 
 	public double getCurrentVelocity() {
@@ -205,7 +209,7 @@ public class Car {
 	public void setFavoredVelocity(double favored_velocity) {
 		this.favored_velocity = favored_velocity;
 	}
-	
+
 	public double getMaxAcceleration() {
 		return max_acceleration;
 	}
@@ -225,28 +229,29 @@ public class Car {
 	public double getDesiredVelocity() {
 		return this.desired_velocity;
 	}
-	public void setOffsetX(int x)
-	{
+
+	public void setOffsetX(int x) {
 		offsetX = x;
 	}
-	public void setOffsetY(int y)
-	{
+
+	public void setOffsetY(int y) {
 		offsetX = y;
 	}
-	public int getOffsetX(){
-		
+
+	public int getOffsetX() {
+
 		return offsetX;
 	}
-	
-	public int getOffsetY(){
-		
+
+	public int getOffsetY() {
+
 		return offsetY;
 	}
-	
-	public Color getColor()
-	{
+
+	public Color getColor() {
 		return color;
 	}
+
 	public int getStartTime() {
 		return startTime;
 	}
@@ -262,88 +267,87 @@ public class Car {
 	public void setEndTime(int endTime) {
 		this.endTime = endTime;
 	}
-	
-	public void setLane(int l)
-	{
-		if(l >= 1 && l < 4)
-		{
+
+	public void setLane(int l) {
+		if (l >= 1 && l < 4) {
 			lane = l;
-		}
-		else 
-		{
+		} else {
 			System.out.println("number of lanes is not allowed");
-		}		
+		}
 	}
-	public int getLanes()
-	{
+
+	public int getLanes() {
 		return lane;
 	}
+
 	public double getAngle() {
 		return angle;
 	}
-	
+
 	public void calculateOffset(Intersection start, Intersection end) {
-		angle = Math.atan2(end.getYCoord()-start.getYCoord(), end.getXCoord()-start.getXCoord());
-		if (angle<0){
-			angle+=Math.PI*2;
+		angle = Math.atan2(end.getYCoord() - start.getYCoord(), end.getXCoord() - start.getXCoord());
+		if (angle < 0) {
+			angle += Math.PI * 2;
 		}
-		double offsetAngle = angle+Math.PI/2;
-		if (offsetAngle > Math.PI*2)
-			offsetAngle-= Math.PI*2;
-		offsetX = (int) (Math.round(Math.cos(offsetAngle)*4*lane)-4);
-		offsetY = (int) (Math.round(Math.sin(offsetAngle)*4*lane)-4);
+		double offsetAngle = angle + Math.PI / 2;
+		if (offsetAngle > Math.PI * 2) offsetAngle -= Math.PI * 2;
+		offsetX = (int) (Math.round(Math.cos(offsetAngle) * 4 * lane) - 4);
+		offsetY = (int) (Math.round(Math.sin(offsetAngle) * 4 * lane) - 4);
 	}
 
-	public boolean update(ArrayList<Car> list_of_cars, double delta_t){
+	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {
 		double acceleration;
-		
+
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
 		if (leading_car == null) {
 			this.color = Color.PINK;
-			if(this.type != CarType.CAR)
-				this.color = Color.ORANGE;
+			if (this.type != CarType.CAR) this.color = Color.ORANGE;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
 			this.color = Color.blue;
-			if(this.type != CarType.CAR)
-				this.color = Color.YELLOW;
+			if (this.type != CarType.CAR) this.color = Color.YELLOW;
 			double dist_leading = this.getDistanceToCar(leading_car);
 			double leading_velocity = leading_car.getCurrentVelocity();
 			acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 		}
-		
+
 		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed() && this.getApproachedIntersectionDistance() < this.tl_braking_distance) {
+		if (this.getApproachedTrafficlight().isRed()
+				&& this.getApproachedIntersectionDistance() < this.tl_braking_distance) {
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
-		
+
 		// Update speed and position
 		this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
 		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
-		
+
 		// Check if lane change is a good idea
 		for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
 			if (lane != this.lane) {
-				if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
+				if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane),
+						this.getFollowingCar(list_of_cars, lane))) {
 					this.lane = lane;
 					break;
 				}
 			}
 		}
-				
+
 		// Check if at destination
-		if (this.position_on_road >= this.current_road.getLength() && this.current_destination_intersection == this.path.get(this.path.size()-1)) {
+		if (this.position_on_road >= this.current_road.getLength()
+				&& this.current_destination_intersection == this.path.get(this.path.size() - 1)) {
 			this.reached_destination = true;
 		} else {
 
 			// Check if at new road
 			if (this.position_on_road >= this.current_road.getLength()) {
 				this.current_origin_intersection = this.current_destination_intersection;
-				this.current_destination_intersection = this.path.get(this.path.indexOf(this.current_origin_intersection) + 1);
-				
+				this.current_destination_intersection = this.path
+						.get(this.path.indexOf(this.current_origin_intersection) + 1);
+				System.out.println("called");
+				timeMeasure();
 				// change road
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
 				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
@@ -356,28 +360,31 @@ public class Car {
 			this.positionX = new_coordinates[0];
 			this.positionY = new_coordinates[1];
 		}
-				
+
 		return this.reached_destination;
 	}
 
 	public TrafficLight getApproachedTrafficlight() {
-		return this.current_destination_intersection.getTrafficLightsApproachingFrom(this.current_origin_intersection, this.lane);
+		return this.current_destination_intersection.getTrafficLightsApproachingFrom(this.current_origin_intersection,
+				this.lane);
 	}
-	
+
 	public double getApproachedIntersectionDistance() {
 		return this.current_road.getLength() - this.position_on_road;
 	}
+
 	public CarType getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 *
 	 * @param list_of_cars
 	 * @param car
-	 * @return true if there is no car on the same road that has bigger x coordinate than the car passed to the method
+	 * @return true if there is no car on the same road that has bigger x coordinate
+	 *         than the car passed to the method
 	 */
-	public boolean hasLeadingCar(ArrayList<Car> list_of_cars){
+	public boolean hasLeadingCar(ArrayList<Car> list_of_cars) {
 		if (this.getLeadingCar(list_of_cars, this.lane) == null) return false;
 		return true;
 	}
@@ -385,98 +392,121 @@ public class Car {
 	public Car getLeadingCar(ArrayList<Car> list_of_cars, int lane) {
 		Car current_leading_car = null;
 
-		for(Car c : list_of_cars){
-			//for the case it compares with itself skip to next iteration
-			if(this.equals(c)) continue;
+		for (Car c : list_of_cars) {
+			// for the case it compares with itself skip to next iteration
+			if (this.equals(c)) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
 				// only compare if driving on cars path
-				if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+				if (c.isOnPath(new ArrayList<Intersection>(
+						this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
 					// only compare if driving in the same direction...
-					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
+					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path
+							.indexOf(c.getCurrentDestinationIntersection())) {
 						// only compare to cars in front
-						if(this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
+						if (this.getPositionOnRoad() <= c.getPositionOnRoad()
+								|| c.getCurrentRoad() != this.getCurrentRoad()) {
 							double dist_to_c = this.getDistanceToCar(c);
 							// only if car is in distance of sight
 							if (dist_to_c <= this.sight_distance) {
 								// If car is closer than previous then update
 								if (current_leading_car == null) {
 									current_leading_car = c;
-								} else if(dist_to_c < this.getDistanceToCar(current_leading_car)){
+								} else if (dist_to_c < this.getDistanceToCar(current_leading_car)) {
 									current_leading_car = c;
-								}							
+								}
 							}
 						}
 					}
-				}				
+				}
 			}
 		}
-		
+
 		return current_leading_car;
+	}
+
+	public void timeMeasure() {
+
+		if (roadSwitch == 1) {
+			startRoad = System.currentTimeMillis() / 1000;
+			roadSwitch++;
+			roadToMeasure = current_road;
+		} else {
+			endRoad = System.currentTimeMillis() / 1000;
+			roadSwitch = 1;
+			roadToMeasure.computeAverageSpeed(endRoad - startRoad);
+			long spent = endRoad - startRoad;
+			System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
+		}
+
 	}
 
 	public Car getFollowingCar(ArrayList<Car> list_of_cars, int lane) {
 		Car current_following_car = null;
 
-		for(Car c : list_of_cars){
-			//for the case it compares with itself skip to next iteration
-			if(this.equals(c)) continue;
+		for (Car c : list_of_cars) {
+			// for the case it compares with itself skip to next iteration
+			if (this.equals(c)) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
 				// only compare if driving on cars path
-				if (c.isOnPath(new ArrayList<Intersection>(this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+				if (c.isOnPath(new ArrayList<Intersection>(
+						this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
 					// only compare if driving in the same direction...
-					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path.indexOf(c.getCurrentDestinationIntersection())) {
+					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path
+							.indexOf(c.getCurrentDestinationIntersection())) {
 						// only compare to cars behind
-						if(this.getPositionOnRoad() >= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
+						if (this.getPositionOnRoad() >= c.getPositionOnRoad()
+								|| c.getCurrentRoad() != this.getCurrentRoad()) {
 							double dist_to_c = this.getDistanceToCar(c);
 							// only if car is in distance of sight
 							if (dist_to_c <= this.sight_distance) {
 								// If car is closer than previous then update
 								if (current_following_car == null) {
 									current_following_car = c;
-								} else if(dist_to_c < this.getDistanceToCar(current_following_car)){
+								} else if (dist_to_c < this.getDistanceToCar(current_following_car)) {
 									current_following_car = c;
-								}							
+								}
 							}
 						}
 					}
-				}				
+				}
 			}
 		}
-		
+
 		return current_following_car;
 	}
 
-	
-	public double getDistanceToCar(Car other_car){
+	public double getDistanceToCar(Car other_car) {
 		// on same road
 		if (this.current_destination_intersection.equals(other_car.current_destination_intersection)) {
 			return Math.abs(this.getPositionOnRoad() - other_car.getPositionOnRoad());
 		} else {
 			// get distance over multiple roads
 			double distance = 0;
-			for (int i = this.path.indexOf(this.current_destination_intersection); i <= this.path.indexOf(other_car.current_destination_intersection); i++) {
+			for (int i = this.path.indexOf(this.current_destination_intersection); i <= this.path
+					.indexOf(other_car.current_destination_intersection); i++) {
 				if (i == this.path.indexOf(this.current_destination_intersection)) {
 					distance += this.current_road.getLength() - this.getPositionOnRoad();
 				} else if (i == this.path.indexOf(other_car.current_destination_intersection)) {
 					distance += other_car.getPositionOnRoad();
 				} else {
-					distance += this.path.get(i).getRoadTo(this.path.get(i-1)).getLength();
+					distance += this.path.get(i).getRoadTo(this.path.get(i - 1)).getLength();
 				}
 			}
 			return distance;
 		}
 	}
 
-//	public double getPositionOnRoad() {
-//		return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) + Math.pow(this.positionY - this.current_road.getY1(), 2));
-//	}
-	
+	// public double getPositionOnRoad() {
+	// return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) +
+	// Math.pow(this.positionY - this.current_road.getY1(), 2));
+	// }
+
 	// CHECKS
-	
+
 	public boolean isOnPath(ArrayList<Intersection> path) {
 		Intersection last_intersection = null;
 		for (Intersection inter : path) {
@@ -487,26 +517,31 @@ public class Car {
 			}
 			last_intersection = inter;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * https://math.stackexchange.com/questions/2045174/how-to-find-a-point-between-two-points-with-given-distance
 	 */
 	private double[] getCoordinatesFromPosition(double position) {
-		double x_delta = this.current_destination_intersection.getXCoord() - this.current_origin_intersection.getXCoord();
-		double y_delta = this.current_destination_intersection.getYCoord() - this.current_origin_intersection.getYCoord();
-				
+		double x_delta = this.current_destination_intersection.getXCoord()
+				- this.current_origin_intersection.getXCoord();
+		double y_delta = this.current_destination_intersection.getYCoord()
+				- this.current_origin_intersection.getYCoord();
+
 		double[] coordinates = new double[2];
-		coordinates[0] = this.current_origin_intersection.getXCoord() + (position/this.current_road.getLength()) * x_delta;
-		coordinates[1] = this.current_origin_intersection.getYCoord() + (position/this.current_road.getLength()) * y_delta;		
-		
+		coordinates[0] = this.current_origin_intersection.getXCoord()
+				+ (position / this.current_road.getLength()) * x_delta;
+		coordinates[1] = this.current_origin_intersection.getYCoord()
+				+ (position / this.current_road.getLength()) * y_delta;
+
 		return coordinates;
 	}
 
 	public String toString() {
 		DecimalFormat df = new DecimalFormat(".##");
-		return this.getClass().getSimpleName() + ": (x=" + (int)this.positionX + ", y=" + (int)this.positionY + ", v=" + df.format(current_velocity) + " km/h" +")";
+		return this.getClass().getSimpleName() + ": (x=" + (int) this.positionX + ", y=" + (int) this.positionY + ", v="
+				+ df.format(current_velocity) + " km/h" + ")";
 	}
 }

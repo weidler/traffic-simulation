@@ -15,11 +15,12 @@ public class GaussianSchedule extends Schedule {
 		this.mean_interarrival_time = mean_interarrival_time;
 		this.sd_interarrival_times = sd_interarrival_times;
 	}
-	
+
 	public void drawNextCarAt(Road r) {
-		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime(this.mean_interarrival_time, this.sd_interarrival_times));
+		arrival_times_per_road.put(r, arrival_times_per_road.get(r)
+				+ this.drawInterarrivalTime(this.mean_interarrival_time, this.sd_interarrival_times));
 	}
-	
+
 	public double drawInterarrivalTime(double mean, double sd) {
 		Random rand = new Random();
 		double rn = rand.nextGaussian();
