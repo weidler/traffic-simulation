@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import car.Car;
@@ -25,6 +26,7 @@ import road.Road;
 import type.CarType;
 import type.RoadType;
 import util.Geometry;
+import datatype.Point;
 
 public class Visuals extends JPanel {
 	private Simulation simulation;
@@ -61,7 +63,7 @@ public class Visuals extends JPanel {
 	private final int GRAPH_MOVED_DISTANCE = 25;
 	private int indicator_size = 15;
 
-	private String road_color = "#c2c2d6";
+	private String road_color = "#596270";
 	private String highway_color = "#5c85d6";
 	private String dirtroad_color = "#cc9900";
 
@@ -69,6 +71,10 @@ public class Visuals extends JPanel {
 		this.simulation = simulation;
 		this.streetMap = this.simulation.getStreetMap();
 		roads = streetMap.getRoads();
+		
+		setOpaque(true);
+		this.setBackground(Color.decode("#57af6b"));
+		this.setBorder(BorderFactory.createEmptyBorder());
 	}
 
 	public int getDivider() {
@@ -130,6 +136,7 @@ public class Visuals extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		defaultStroke = g2.getStroke();
 
@@ -151,11 +158,16 @@ public class Visuals extends JPanel {
 		}
 
 		g2.setColor(Color.black);
+
+		HashMap<Intersection, ArrayList<Point>> chosen_line_intersections = new HashMap<Intersection, ArrayList<Point>>();
 		for (int i = 0; i < roads.size(); i++) {
 			Road current_road = roads.get(i);
 			Intersection[] connected_intersections = current_road.getIntersections(this.streetMap);
 			Intersection intersection_to = connected_intersections[0];
 			Intersection intersection_from = connected_intersections[1];
+			
+			if (!chosen_line_intersections.containsKey(intersection_from)) chosen_line_intersections.put(intersection_from, new ArrayList<Point>());
+			if (!chosen_line_intersections.containsKey(intersection_to)) chosen_line_intersections.put(intersection_to, new ArrayList<Point>());
 
 			// store needed roads in variables
 			Road[] neighbouring_roads_from = current_road.getNeighbouringRoadsAt(intersection_from);
@@ -290,6 +302,9 @@ public class Visuals extends JPanel {
 
 				from_x_left = line_intersection_left_from[0];
 				from_y_left = line_intersection_left_from[1];
+				
+				chosen_line_intersections.get(intersection_from).add(new Point(line_intersection_left_from));
+				chosen_line_intersections.get(intersection_from).add(new Point(line_intersection_right_from));
 			}
 
 			// ADJUST TO end of the road
@@ -373,6 +388,9 @@ public class Visuals extends JPanel {
 
 				to_x_left = line_intersection_left_to[0];
 				to_y_left = line_intersection_left_to[1];
+				
+				chosen_line_intersections.get(intersection_to).add(new Point(line_intersection_left_to));
+				chosen_line_intersections.get(intersection_to).add(new Point(line_intersection_right_to));
 			}
 
 			// draw road background
@@ -387,21 +405,19 @@ public class Visuals extends JPanel {
 			g2.fill(bg_polygon);
 
 			// draw road outer lines
-			g2.setStroke(defaultStroke);
-			g2.setColor(Color.BLACK);
+			g2.setColor(Color.WHITE);
+			g2.setStroke(new BasicStroke((float) 1.5));
 			g2.draw(new Line2D.Double((int) (to_x_right) * zoomMultiplier + changeX,
 					(int) (to_y_right) * zoomMultiplier + changeY, (int) (from_x_right) * zoomMultiplier + changeX,
 					(int) (from_y_right) * zoomMultiplier + changeY));
-
-			g2.setStroke(defaultStroke);
-			g2.setColor(Color.BLACK);
 			g2.draw(new Line2D.Double((int) (to_x_left) * zoomMultiplier + changeX,
 					(int) (to_y_left) * zoomMultiplier + changeY, (int) (from_x_left) * zoomMultiplier + changeX,
 					(int) (from_y_left) * zoomMultiplier + changeY));
-
-			setLightDistanceFromIntersection((int) roads.get(i).getLength());
-
-			g2.setStroke(new BasicStroke(2));
+			
+			// draw mid line
+			g2.setColor(Color.WHITE);
+			g2.setStroke(dashed);
+			if (current_road.getLanes() > 1) g2.setStroke(new BasicStroke(2));
 			g2.draw(new Line2D.Double((int) (roads.get(i).getX1()) * zoomMultiplier + changeX,
 					(int) (roads.get(i).getY1()) * zoomMultiplier + changeY,
 					(int) (roads.get(i).getX2()) * zoomMultiplier + changeX,
@@ -480,7 +496,7 @@ public class Visuals extends JPanel {
 				// lane lines
 				if (j > 1) {
 					g2.setStroke(dashed);
-					g2.setColor(Color.black);
+					g2.setColor(Color.WHITE);
 
 					g2.draw(new Line2D.Double((int) (current_road.getX1() - lane_offset_x) * zoomMultiplier + changeX,
 							(int) (current_road.getY1() + lane_offset_y) * zoomMultiplier + changeY,
@@ -495,10 +511,30 @@ public class Visuals extends JPanel {
 			}
 
 			g2.setStroke(defaultStroke);
-			g2.setColor(Color.black);
 
 			// draws the intersections
 			intersectionSize = 30;
+		}
+		
+		// fill intersection leftouts
+		if (streetMap.intersectionCount() > 1) {
+			for (Intersection inter : streetMap.getIntersections()) {
+				Polygon intersection_filling = new Polygon();
+				if (chosen_line_intersections.containsKey(inter)) {
+					for (Point point : Geometry.convexHull(chosen_line_intersections.get(inter))) {
+						if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
+							intersection_filling.addPoint(
+									(int) (point.x * zoomMultiplier + changeX), 
+									(int) (point.y * zoomMultiplier + changeY)
+							);
+						}
+					}
+					
+					g2.setColor(Color.decode(road_color));
+					g2.fill(intersection_filling);
+					
+				}
+			}			
 		}
 
 		// draws the cars
@@ -510,23 +546,22 @@ public class Visuals extends JPanel {
 			
 			// starting left bottom, clockwise
 			double[] car_rectangle = {
-					car_center_x - c.getVehicleLength() / 2,
-					car_center_y + this.car_width / 2,
+					car_center_x - (int) (c.getVehicleLength() / 2),
+					car_center_y + (int) (this.car_width / 2),
 					
-					car_center_x - c.getVehicleLength() / 2,
-					car_center_y - this.car_width / 2,
+					car_center_x - (int) (c.getVehicleLength() / 2),
+					car_center_y - (int) (this.car_width / 2),
 					
-					car_center_x + c.getVehicleLength() / 2,
-					car_center_y - this.car_width / 2,
+					car_center_x + (int) (c.getVehicleLength() / 2),
+					car_center_y - (int) (this.car_width / 2),
 					
-					car_center_x + c.getVehicleLength() / 2,
-					car_center_y + this.car_width / 2,
+					car_center_x + (int) (c.getVehicleLength() / 2),
+					car_center_y + (int) (this.car_width / 2),
 			};
 			
 			// subtract 180 to have orientation correct!
 			car_rectangle = Geometry.rotateRectangleAroundCenter(car_rectangle, Geometry.toDegrees(c.getAngle()) - 180);  
-		
-			
+
 			g2.setColor(c.getColor());
 			Polygon car_polygon = new Polygon();
 			for (int i = 0; i < 8; i += 2) {

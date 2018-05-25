@@ -44,7 +44,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1;
+	private float simulated_seconds_per_real_second = 10;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 
 	private double realistic_time_in_seconds;
@@ -180,9 +180,9 @@ public class Simulation {
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
 			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
-			this.simulation_schedule = new PoissonSchedule(this.street_map, 15);
+			this.simulation_schedule = new PoissonSchedule(this.street_map, 10);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
-			this.simulation_schedule = new GaussianSchedule(this.street_map, 15, 5);
+			this.simulation_schedule = new GaussianSchedule(this.street_map, 10, 5);
 		}
 	}
 

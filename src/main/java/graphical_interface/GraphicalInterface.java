@@ -142,7 +142,6 @@ public class GraphicalInterface extends JFrame {
 //		JTextArea carsTextArea = new JTextArea();
 //		carsTextArea.setText("");
 //		carsTextArea.setBounds(782, 11, 219, 640);
-//		carsTextArea.setBorder(BorderFactory.createRaisedBevelBorder());
 //		carsTextArea.setEditable(false);
 //		contentPane.add(carsTextArea);
 //		simulation.setTextArea(carsTextArea);
@@ -150,7 +149,7 @@ public class GraphicalInterface extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
 
-		contentPane.setBorder(BorderFactory.createRaisedBevelBorder());
+		contentPane.setBorder(BorderFactory.createEmptyBorder());
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setResizable(false);
@@ -160,7 +159,7 @@ public class GraphicalInterface extends JFrame {
 
 		JPanel drawPanel = visuals;
 		drawPanel.setBounds(10, 11, 762 + 219, 640);
-		drawPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		drawPanel.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(drawPanel);
 
 		// ARROW KEY LISTENERS
@@ -211,7 +210,7 @@ public class GraphicalInterface extends JFrame {
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBounds(1011, 11, 167, 640);
 		menuPanel.setBackground(Color.LIGHT_GRAY);
-		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.setBorder(BorderFactory.createEmptyBorder());
 
 		contentPane.add(menuPanel);
 		menuPanel.setLayout(null);

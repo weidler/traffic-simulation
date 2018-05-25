@@ -81,8 +81,6 @@ public class Car {
 
 		this.path = path;
 
-		color = Color.blue;
-
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
 
@@ -121,9 +119,10 @@ public class Car {
 		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
 		this.favored_velocity = Integer.parseInt(props.getProperty("favored_velocity"));
 		this.type = CarType.CAR;
+		
 		// PHYSICS / VIZ
 		this.vehicle_length = Integer.parseInt(props.getProperty("vehicle_length"));
-		this.color = Color.BLUE;
+		this.color = Color.decode("#81bae2");
 	}
 
 	public double getPositionOnRoad() {
@@ -309,20 +308,17 @@ public class Car {
 		// Check if leading car, else incorporate leaders speed etc.
 		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
 		if (leading_car == null) {
-			this.color = Color.PINK;
-			if (this.type != CarType.CAR) this.color = Color.ORANGE;
 			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 		} else {
-			this.color = Color.blue;
-			if (this.type != CarType.CAR) this.color = Color.YELLOW;
-			double dist_leading = this.getDistanceToCar(leading_car);
+			double dist_leading = this.getDistanceToCar(leading_car) - (this.getVehicleLength()/2) - (leading_car.getVehicleLength());;
 			double leading_velocity = leading_car.getCurrentVelocity();
 			acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 		}
 
 		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed()
-				&& this.getApproachedIntersectionDistance() < this.tl_braking_distance) {
+		if (this.getApproachedTrafficlight().isRed() 
+				&& this.getApproachedIntersectionDistance() < this.tl_braking_distance + 5
+				&& this.getApproachedIntersectionDistance() > this.tl_braking_distance) { // do not break if already over tl line
 			this.current_velocity = 0;
 			acceleration = 0;
 		}
@@ -488,12 +484,13 @@ public class Car {
 	}
 
 	public double getDistanceToCar(Car other_car) {
+		double distance;
 		// on same road
 		if (this.current_destination_intersection.equals(other_car.current_destination_intersection)) {
 			return Math.abs(this.getPositionOnRoad() - other_car.getPositionOnRoad());
 		} else {
 			// get distance over multiple roads
-			double distance = 0;
+			distance = 0;
 			for (int i = this.path.indexOf(this.current_destination_intersection); i <= this.path
 					.indexOf(other_car.current_destination_intersection); i++) {
 				if (i == this.path.indexOf(this.current_destination_intersection)) {
@@ -504,8 +501,9 @@ public class Car {
 					distance += this.path.get(i).getRoadTo(this.path.get(i - 1)).getLength();
 				}
 			}
-			return distance;
 		}
+		
+		return distance;
 	}
 
 	// public double getPositionOnRoad() {

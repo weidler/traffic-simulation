@@ -1,7 +1,9 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import datatype.Point;
 import road.Road;
 
 public class Geometry {
@@ -159,6 +161,46 @@ public class Geometry {
 		
 		return new_coordinates;
 	}
+	
+	public static int orientation(Point p, Point q, Point r) {
+        double val = (q.y - p.y) * (r.x - q.x) -
+                  (q.x - p.x) * (r.y - q.y);
+      
+        if (val == 0) return 0;  // collinear
+        return (val > 0)? 1: 2; // clock or counterclock wise
+    }
+     
+    /**
+     * https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
+     */
+    public static ArrayList<Point> convexHull(ArrayList<Point> points) {
+      
+    	if (points.size() < 3) {
+    		return points;
+    	}
+    	
+    	// Initialize Result
+        ArrayList<Point> hull = new ArrayList<Point>();
+      
+        // Find the leftmost point
+        int l = 0;
+        for (int i = 1; i < points.size(); i++) {
+        	if (points.get(i).x < points.get(l).x) l = i;
+        }
+      
+        // find hull
+        int p = l, q;
+        do {
+            hull.add(points.get(p));
+            q = (p + 1) % points.size();
+            for (int i = 0; i < points.size(); i++) {
+               if (orientation(points.get(p), points.get(i), points.get(q)) == 2) q = i;
+            }
+            p = q;
+        } while (p != l);
+      
+        return hull;
+    }
 	
 	public static void main(String[] args) {
 
