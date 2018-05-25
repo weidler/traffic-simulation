@@ -93,7 +93,7 @@ public class Road {
 			totAvg += this.averageSpeeds.get(i);
 		}
 
-		System.out.println("This is it: "+ totAvg / this.averageSpeeds.size());
+		System.out.println("Average speed for road: "+ totAvg / this.averageSpeeds.size());
 		avg = totAvg / this.averageSpeeds.size();
 	}
 	

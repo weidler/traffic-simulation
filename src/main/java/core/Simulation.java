@@ -44,7 +44,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1;
+	private float simulated_seconds_per_real_second = 10;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 
 	private double realistic_time_in_seconds;
@@ -348,7 +348,6 @@ public class Simulation {
 			
 			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
 		}
-		System.out.println("stop");
 	}
 
 	public void reset() {

@@ -273,6 +273,11 @@ public class Car {
 		this.endTime = endTime;
 	}
 
+	public double getWait(){
+		return totalWait;
+	}
+	
+	
 	public void setLane(int l) {
 		if (l >= 1 && l < 4) {
 			lane = l;
@@ -370,7 +375,7 @@ public class Car {
 				this.current_origin_intersection = this.current_destination_intersection;
 				this.current_destination_intersection = this.path
 						.get(this.path.indexOf(this.current_origin_intersection) + 1);
-				System.out.println("called");
+				
 				timeMeasure();
 				// change road
 				this.position_on_road = this.position_on_road - this.current_road.getLength();
