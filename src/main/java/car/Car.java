@@ -72,6 +72,7 @@ public class Car {
 	protected double startWait;
 	protected double endWait;
 	protected double totalWait;
+	private boolean in_traffic;
 
 	/**
 	 *
@@ -106,6 +107,8 @@ public class Car {
 		this.mobil = new MOBIL(this.model, 1);
 
 		this.reached_destination = false;
+		
+		this.in_traffic = false;
 	}
 
 	private void updateDesiredVelocity() {
@@ -313,88 +316,92 @@ public class Car {
 	}
 
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {
-		double acceleration;
-		
-		// Check if leading car, else incorporate leaders speed etc.
-		Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
-		if (leading_car == null) {
-			acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
+		if (!this.in_traffic) {
+			if (this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
+				this.lane = this.current_road.getLanes();
+				this.in_traffic = true;
+			}
 		} else {
-			double dist_leading = this.getDistanceToCar(leading_car) - (this.getVehicleLength()/2) - (leading_car.getVehicleLength());;
-			double leading_velocity = leading_car.getCurrentVelocity();
-			acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
-		}
+			// Check if leading car, else incorporate leaders speed etc.
+			Car leading_car = this.getLeadingCar(list_of_cars, this.lane);
+			double acceleration;
+			if (leading_car == null) {
+				acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
+			} else {
+				double dist_leading = this.getDistanceToCar(leading_car) - (this.getVehicleLength()/2) - (leading_car.getVehicleLength());
+				double leading_velocity = leading_car.getCurrentVelocity();
+				acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
+			}
 
-		// React to traffic lights
-		if (this.getApproachedTrafficlight().isRed() 
-				&& this.getApproachedIntersectionDistance() < this.tl_braking_distance + 5
-				&& this.getApproachedIntersectionDistance() > this.tl_braking_distance) { // do not break if already over tl line
-			this.current_velocity = 0;
-			acceleration = 0;
-		}
+			// React to traffic lights
+			if (this.getApproachedTrafficlight().isRed() 
+					&& this.getApproachedIntersectionDistance() < this.tl_braking_distance + 5
+					&& this.getApproachedIntersectionDistance() > this.tl_braking_distance) { // do not break if already over tl line
+				this.current_velocity = 0;
+				acceleration = 0;
+			}
 
-		// Update speed and position
-		this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
-		this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
-		this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
-		
-		
-		// Calculate wait time
-		if(this.current_velocity<10 && timeSwitch ==1)
-		{
+			// Update speed and position
+			this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
+			this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
+			this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
 			
-			startWait = StreetMap.getCurrentTime();
-			timeSwitch++;
-		}
-		else
-		{
-			endWait = StreetMap.getCurrentTime();
-			timeSwitch = 1;
-			totalWait += (endWait - startWait);
-			//System.out.println("Total wait: " + totalWait);
-		}
-		
-		
-		
-		
-		// Check if lane change is a good idea
-		for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
-			if (lane != this.lane) {
-				if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane),
-						this.getFollowingCar(list_of_cars, lane))) {
-					this.lane = lane;
-					break;
+			
+			// Calculate wait time
+			if(this.current_velocity < 10 && timeSwitch ==1) {
+				startWait = StreetMap.getCurrentTime();
+				timeSwitch++;
+			} else {
+				endWait = StreetMap.getCurrentTime();
+				timeSwitch = 1;
+				totalWait += (endWait - startWait);
+				//System.out.println("Total wait: " + totalWait);
+			}
+			
+			
+			
+			
+			// Check if lane change is a good idea
+			for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
+				if (lane != this.lane) {
+					if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane),
+							this.getFollowingCar(list_of_cars, lane))) {
+						this.lane = lane;
+						break;
+					}
 				}
 			}
-		}
 
-		// Check if at destination
-		if (this.position_on_road >= this.current_road.getLength()
-				&& this.current_destination_intersection == this.path.get(this.path.size() - 1)) {
-			this.reached_destination = true;
-		} else {
+			// Check if at destination
+			if (this.position_on_road >= this.current_road.getLength()
+					&& this.current_destination_intersection == this.path.get(this.path.size() - 1)) {
+				this.reached_destination = true;
+			} else {
 
-			// Check if at new road
-			if (this.position_on_road >= this.current_road.getLength()) {
-				this.current_origin_intersection = this.current_destination_intersection;
-				this.current_destination_intersection = this.path
-						.get(this.path.indexOf(this.current_origin_intersection) + 1);
-				
-				timeMeasure();
-				// change road
-				this.position_on_road = this.position_on_road - this.current_road.getLength();
-				this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
-				this.lane = Math.min(this.lane, current_road.getLanes());
-				this.updateDesiredVelocity();
+				// Check if at new road
+				if (this.position_on_road >= this.current_road.getLength()) {
+					this.current_origin_intersection = this.current_destination_intersection;
+					this.current_destination_intersection = this.path
+							.get(this.path.indexOf(this.current_origin_intersection) + 1);
+					
+					timeMeasure();
+					// change road
+					this.position_on_road = this.position_on_road - this.current_road.getLength();
+					this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
+					this.lane = Math.min(this.lane, current_road.getLanes());
+					this.updateDesiredVelocity();
+				}
+
+				// update x and y based on position on road
+				double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
+				this.positionX = new_coordinates[0];
+				this.positionY = new_coordinates[1];
 			}
 
-			// update x and y based on position on road
-			double[] new_coordinates = this.getCoordinatesFromPosition(this.position_on_road);
-			this.positionX = new_coordinates[0];
-			this.positionY = new_coordinates[1];
+			return this.reached_destination;
 		}
-
-		return this.reached_destination;
+		
+		return false;
 	}
 
 	public TrafficLight getApproachedTrafficlight() {
@@ -427,7 +434,7 @@ public class Car {
 
 		for (Car c : list_of_cars) {
 			// for the case it compares with itself skip to next iteration
-			if (this.equals(c)) continue;
+			if (this.equals(c) || !this.in_traffic) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
@@ -480,7 +487,7 @@ public class Car {
 
 		for (Car c : list_of_cars) {
 			// for the case it compares with itself skip to next iteration
-			if (this.equals(c)) continue;
+			if (this.equals(c) || !this.in_traffic) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
@@ -555,6 +562,13 @@ public class Car {
 
 		return false;
 	}
+	
+	public Road getNextRoad() {
+		int destind = this.path.indexOf(current_destination_intersection);
+		if (destind != this.path.size() - 1) {
+			return current_destination_intersection.getRoadTo(this.path.get(destind + 1));
+		} else return null;
+	}
 
 	/**
 	 * https://math.stackexchange.com/questions/2045174/how-to-find-a-point-between-two-points-with-given-distance
@@ -578,5 +592,9 @@ public class Car {
 		DecimalFormat df = new DecimalFormat(".##");
 		return this.getClass().getSimpleName() + ": (x=" + (int) this.positionX + ", y=" + (int) this.positionY + ", v="
 				+ df.format(current_velocity) + " km/h" + ")";
+	}
+
+	public boolean inTraffic() {
+		return this.in_traffic;
 	}
 }

@@ -539,6 +539,8 @@ public class Visuals extends JPanel {
 
 		// draws the cars
 		for (Car c : simulation.getCars()) {
+			if (!c.inTraffic()) continue;
+			
 			c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);
 
 			double car_center_x = c.getPositionX() + c.getOffsetX();
