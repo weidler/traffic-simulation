@@ -50,6 +50,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
+import javax.swing.RepaintManager;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -139,13 +140,6 @@ public class GraphicalInterface extends JFrame {
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
 
-//		JTextArea carsTextArea = new JTextArea();
-//		carsTextArea.setText("");
-//		carsTextArea.setBounds(782, 11, 219, 640);
-//		carsTextArea.setEditable(false);
-//		contentPane.add(carsTextArea);
-//		simulation.setTextArea(carsTextArea);
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
 
@@ -158,9 +152,14 @@ public class GraphicalInterface extends JFrame {
 		this.requestFocusInWindow();
 
 		JPanel drawPanel = visuals;
-		drawPanel.setBounds(10, 11, 762 + 219, 640);
+		drawPanel.setBounds(10, 71, 762 + 219, 640 - 50);
 		drawPanel.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(drawPanel);
+		
+		JPanel infoPanel = new JPanel();
+		infoPanel.setBounds(10, 11, 762 + 219, 61);
+		infoPanel.setBorder(BorderFactory.createEmptyBorder());
+		contentPane.add(infoPanel);
 
 		// ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -295,27 +294,6 @@ public class GraphicalInterface extends JFrame {
 		 * });
 		 */
 
-//		JRadioButton disableCarInfoRadio = new JRadioButton("disable car info");
-//		disableCarInfoRadio.setBorder(BorderFactory.createRaisedBevelBorder());
-//		disableCarInfoRadio.setBounds(10, 405, 147, 23);
-//		menuPanel.add(disableCarInfoRadio);
-//		disableCarInfoRadio.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//
-//				boolean selected = disableCarInfoRadio.isSelected();
-//				simulation.setCarInfo();
-//				System.out.println("selected " + selected);
-//				if (selected) {
-//					if (!carsTextArea.getText().equals("")) {
-//						carsTextArea.setText("");
-//
-//					}
-//				}
-//			}
-//		});
-
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
 		addCar.setBounds(10, 131, 147, 20);
@@ -324,19 +302,8 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-//				boolean selected = disableCarInfoRadio.isSelected();
-//				System.out.println("selected " + selected);
-//				if (selected) {
-//					if (!carsTextArea.getText().equals("")) {
-//						carsTextArea.setText("");
-//					}
-//				}
 				if (!simulation.isRunning() ) {// && !selected) {
 					simulation.addRandomCar();
-//					carsTextArea.setText("");
-//					for (Car car : simulation.getCars()) {
-//						carsTextArea.append(car.toString() + "\n");
-//					}
 					repaint();
 				}
 			}
@@ -419,17 +386,7 @@ public class GraphicalInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				count++;
 				streetMap.toString();
-				/*
-				 * Gson gson = new Gson(); String json = gson.toJson(streetMap);
-				 * System.out.println(json); File f = new
-				 * File("src\\save\\java\\save"+count+".json\\"); try { while(f.exists() &&
-				 * !f.isDirectory()) { count++; f = new
-				 * File("src\\save\\java\\save"+count+".json\\"); } FileWriter file = new
-				 * FileWriter("src\\save\\java\\save"+count+".json\\"); gson.toJson(streetMap,
-				 * file); file.close(); } catch (IOException e) {
-				 * 
-				 * e.printStackTrace(); }
-				 */
+
 				BufferedWriter bw = null;
 				FileWriter fw = null;
 				File f = new File("./savefiles/streetmap" + count + ".txt");

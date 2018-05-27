@@ -44,7 +44,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 10;
+	private float simulated_seconds_per_real_second = 1000;
 	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
 
 	private double realistic_time_in_seconds;
@@ -139,9 +139,6 @@ public class Simulation {
 		}
 		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
 		this.addCar(random_car);
-
-		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: "
-				+ this.street_map.getIntersection(origin).getYCoord() + ", total: " + this.getCars().size());
 	}
 
 	public void addCarAtRoad(Road r) {
@@ -173,9 +170,6 @@ public class Simulation {
 		random_car.setPositionOnRoad(
 				rand.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
 		this.addCar(random_car);
-
-		System.out.println("created new car, x: " + this.street_map.getIntersection(origin).getXCoord() + ", y: "
-				+ this.street_map.getIntersection(origin).getYCoord() + ", total: " + this.getCars().size());
 	}
 
 	public void applyExperimentalSettings() {
@@ -252,19 +246,6 @@ public class Simulation {
 					this.cars.remove(c);
 				}
 
-//				// lists the cars
-//				carsTextPane.setText("");
-//				if (showCarInfo /* && step % this.visualization_frequency == 0 */) {
-//					for (Car car : getCars()) {
-//						if (lastHoveredCar == car) {
-//							carsTextPane.setText(carsTextPane.getText() + "current: " + car.toString() + "\n");
-//						} else {
-//							carsTextPane.setText(carsTextPane.getText() + car.toString() + "\n");
-//						}
-//
-//					}
-//				}
-
 				// Wait for time step to be over
 				double ns_to_wait = (delta_t * 1000000000) / simulated_seconds_per_real_second;
 				double ns_used = (System.nanoTime() - start_time);
@@ -282,7 +263,7 @@ public class Simulation {
 				resettable_step++;
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (step % this.measurement_interval == 0) this.calcStatistics();
-				if (step % 100 == 0) {
+				if (step % (100 * this.simulated_seconds_per_real_second) == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / (delta_t * 1000000000);
 					resettable_step = 0;
 					total_calculation_time = 0;

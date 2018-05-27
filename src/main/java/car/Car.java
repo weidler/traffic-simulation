@@ -477,7 +477,7 @@ public class Car {
 			roadSwitch = 1;
 			double spent = endRoad - startRoad;
 			roadToMeasure.computeAverageSpeed(spent);
-			System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
+			// System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
 		}
 
 	}
@@ -542,11 +542,6 @@ public class Car {
 		return distance;
 	}
 
-	// public double getPositionOnRoad() {
-	// return Math.sqrt(Math.pow((this.positionX - this.current_road.getX1()), 2) +
-	// Math.pow(this.positionY - this.current_road.getY1(), 2));
-	// }
-
 	// CHECKS
 
 	public boolean isOnPath(ArrayList<Intersection> path) {
@@ -596,5 +591,9 @@ public class Car {
 
 	public boolean inTraffic() {
 		return this.in_traffic;
+	}
+
+	public boolean reachedDestination() {
+		return reached_destination;
 	}
 }
