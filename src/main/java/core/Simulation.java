@@ -211,7 +211,7 @@ public class Simulation {
 			int step = 0;
 			int resettable_step = 0;
 			int days_simulated = 0;
-			while (this.is_running && days_simulated <= this.experiment.getSimulationLengthInDays()) {
+			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
@@ -250,7 +250,7 @@ public class Simulation {
 				}
 
 				// Wait for time step to be over
-				double ns_to_wait = (delta_t * 1000000000) / simulated_seconds_per_real_second;
+				double ns_to_wait = Time.secondsToNanoseconds(delta_t) / Time.secondsToNanoseconds(simulated_seconds_per_real_second);
 				double ns_used = (System.nanoTime() - start_time);
 				total_calculation_time += ns_used;
 				try {
@@ -264,15 +264,13 @@ public class Simulation {
 				// update graphics and statistics
 				step++;
 				resettable_step++;
-				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) {
-					gui.redraw();
-				}
+				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (step % this.measurement_interval == 0) this.calcStatistics();
 				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
 					resettable_step = 0;
 					total_calculation_time = 0;
-					System.out.println(this.real_time_utilization);
+					System.out.println(Time.secondsToHours(this.realistic_time_in_seconds) + " o'clock: " + this.real_time_utilization);
 				}
 			}
 
@@ -334,7 +332,8 @@ public class Simulation {
 		for (Car c : this.car_sink) {
 			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
 			travel_times.add(travel_time);
-			fractional_waiting_times.add(c.getWait() / travel_time);
+			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
+			System.out.println(c.getTotalWaitingTime() / travel_time);
 		}
 		
 		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
@@ -356,5 +355,9 @@ public class Simulation {
 	public void reset() {
 		this.cars.clear();
 		this.car_sink.clear();
+	}
+
+	public double getRealisticTime() {
+		return this.realistic_time_in_seconds;
 	}
 }

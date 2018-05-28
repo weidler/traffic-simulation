@@ -289,7 +289,7 @@ public class Car {
 		this.endTime = endTime;
 	}
 
-	public double getWait(){
+	public double getTotalWaitingTime(){
 		return totalWait;
 	}
 	

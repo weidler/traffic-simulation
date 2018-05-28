@@ -156,7 +156,7 @@ public class GraphicalInterface extends JFrame {
 		drawPanel.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(drawPanel);
 		
-		JPanel infoPanel = new JPanel();
+		JPanel infoPanel = new InfoPanel(simulation);
 		infoPanel.setBounds(10, 11, 762 + 219, 61);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(infoPanel);

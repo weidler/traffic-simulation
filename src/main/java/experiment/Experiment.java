@@ -21,7 +21,7 @@ public class Experiment {
 	public Experiment() {
 		this.arrival_generator = Distribution.POISSON;
 		this.control_strategy = Strategy.BENCHMARK_CYCLING;
-		this.simulation_length_in_days = 10;
+		this.simulation_length_in_days = 1;
 		this.vizualise = true;
 	}
 

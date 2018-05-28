@@ -542,7 +542,7 @@ public class Visuals extends JPanel {
 		// list in a different thread. might look hacky, but my research showed this
 		// is common practice
 		for (Car c : new ArrayList<Car>(simulation.getCars())) {
-			if (!c.inTraffic() && !c.reachedDestination()) continue;
+			if (c != null && !c.inTraffic() && !c.reachedDestination()) continue;
 			
 			c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);
 
