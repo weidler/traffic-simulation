@@ -55,6 +55,7 @@ import javax.swing.InputMap;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.RepaintManager;
+import javax.swing.border.Border;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -102,8 +103,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private final int button_height = 30;
 	private final int button_x = (this.menu_width - this.button_width) / 2;
 	private final int button_y_diff = 10;
-	private int initial_button_offset = 10;
+	private int initial_button_offset = this.info_height;
 	private int button_x_diff = 10;
+	private int round_button_diameter = 50;
+	private Border button_border = BorderFactory.createEmptyBorder();
 	
 	private final Color menu_bg = Color.decode("#3a3a3a");
 	private final Color map_bg = Color.decode("#57af6b");
@@ -152,6 +155,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private int numb_lanes = 1;
 	protected RoadType road_type = RoadType.ROAD;
 	private Color contrast_font_color = Color.WHITE;
+
 
 
 
@@ -241,7 +245,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		 * MENU ELEMENTs
 		 */
 		
-		JPanel menuPanel = new JPanel();
+		
+		// PANEL
+		JPanel menuPanel = new MenuPanel(this.info_height);
 		menuPanel.setBounds((int) menu_origin.x, (int) menu_origin.y, menu_width, menu_height);
 		menuPanel.setBackground(this.menu_bg);
 		menuPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -249,11 +255,15 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.setLayout(null);
 		
 		menuPanel.setForeground(this.contrast_font_color );
-
+		
+		// TITLE
+		
+		
+		// BUTTONS
 		JButton clearButton = new JButton("clear");
 		clearButton.setLocation(button_x, this.calculateInMenuYPosition(0));
 		clearButton.setUI(new CriticalButtonUI());
-		clearButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		clearButton.setBorder(this.button_border);
 		clearButton.setSize(button_width, button_height);
 		menuPanel.add(clearButton);
 		clearButton.addActionListener(new ActionListener() {
@@ -265,22 +275,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
-		JButton startButton = new JButton("start");
-		startButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
-		startButton.setUI(new ImportantButtonUI());
-		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		menuPanel.add(startButton);
-		startButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				simulation.start();
-
-			}
-		});
-
 		JButton addCar = new JButton("add car");
-		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
+		addCar.setBorder(this.button_border);
 		addCar.setUI(new DefaultButtonUI());
 		addCar.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
 		menuPanel.add(addCar);
@@ -299,13 +295,28 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		slider.setBounds(button_x, this.calculateInMenuYPosition(3), button_width, button_height);
 		slider.setValue(50);
 		slider.setEnabled(false);
+		slider.setBackground(null);
 		menuPanel.add(slider);
 
-		JButton stopButton = new JButton("stop");
+		JButton startButton = new JButton("Start");
+		startButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+		startButton.setUI(new ImportantButtonUI());
+		startButton.setBorder(this.button_border);
+		menuPanel.add(startButton);
+		startButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.start();
+
+			}
+		});
+		
+		JButton stopButton = new JButton("Pause");
 		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
 		stopButton.setUI(new DefaultButtonUI());
 		menuPanel.add(stopButton);
-		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		stopButton.setBorder(this.button_border);
 		stopButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -319,7 +330,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		JButton zoomInButton = new JButton("+");
 		zoomInButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(2), button_width/2 - button_x_diff, button_height);
 		zoomInButton.setUI(new DefaultButtonUI());
-		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		zoomInButton.setBorder(this.button_border);
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -335,7 +346,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		JButton zoomOutButton = new JButton("-");
 		zoomOutButton.setBounds(button_x, this.calculateInMenuYPosition(2), button_width/2 - this.button_x_diff, button_height);
 		zoomOutButton.setUI(new DefaultButtonUI());
-		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		zoomOutButton.setBorder(this.button_border);
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -348,10 +359,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
-		JButton resetPositionButton = new JButton("reset position");
+		JButton resetPositionButton = new JButton("Reset Camera");
 		resetPositionButton.setBounds(button_x, this.calculateInMenuYPosition(1), button_width, button_height);
 		resetPositionButton.setUI(new DefaultButtonUI());
-		resetPositionButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		resetPositionButton.setBorder(this.button_border);
 		menuPanel.add(resetPositionButton);
 		resetPositionButton.addActionListener(new ActionListener() {
 
@@ -365,10 +376,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
-		JButton saveButton = new JButton("save");
+		JButton saveButton = new JButton("Save");
 		saveButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		saveButton.setUI(new DefaultButtonUI());
-		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		saveButton.setBorder(this.button_border);
 		menuPanel.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
 			int count = 0;
@@ -399,10 +410,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
-		JButton loadButton = new JButton("load");
+		JButton loadButton = new JButton("Load");
 		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		loadButton.setUI(new DefaultButtonUI());
-		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		loadButton.setBorder(this.button_border);
 		menuPanel.add(loadButton);
 		loadButton.addActionListener(new ActionListener() {
 
@@ -456,106 +467,106 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				}
 			}
 		});
+//
+//		txtMinNumberOf = new JTextField();
+//		txtMinNumberOf.setText("0");
+//		txtMinNumberOf.setBounds(61, 559, 96, 20);
+//		menuPanel.add(txtMinNumberOf);
+//		txtMinNumberOf.setColumns(10);
+//
+//		txtMaxNumberOf = new JTextField();
+//		txtMaxNumberOf.setBounds(61, 590, 96, 20);
+//		txtMaxNumberOf.setText("0");
+//		menuPanel.add(txtMaxNumberOf);
+//		txtMaxNumberOf.setColumns(10);
 
-		txtMinNumberOf = new JTextField();
-		txtMinNumberOf.setText("0");
-		txtMinNumberOf.setBounds(61, 559, 96, 20);
-		menuPanel.add(txtMinNumberOf);
-		txtMinNumberOf.setColumns(10);
-
-		txtMaxNumberOf = new JTextField();
-		txtMaxNumberOf.setBounds(61, 590, 96, 20);
-		txtMaxNumberOf.setText("0");
-		menuPanel.add(txtMaxNumberOf);
-		txtMaxNumberOf.setColumns(10);
-
-		JLabel lblMin = new JLabel("Min");
-		lblMin.setBounds(button_x, 562, 28, 14);
-		lblMin.setForeground(this.contrast_font_color );
-		menuPanel.add(lblMin);
-
-		JLabel lblMax = new JLabel("Max");
-		lblMax.setBounds(button_x, 596, 28, 14);
-		lblMax.setForeground(this.contrast_font_color );
-		menuPanel.add(lblMax);
-
-		JButton randomGraphButton = new JButton("random graph");
-		randomGraphButton.setUI(new DefaultButtonUI());
-		Random rnd = new Random();
-		int maxX = drawPanel.getX() + drawPanel.getBounds().width - 10;
-		int minX = drawPanel.getX();
-		int maxY = drawPanel.getY() + drawPanel.getBounds().height - 10;
-		int minY = drawPanel.getY();
-
-		randomGraphButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width, button_height);
-		menuPanel.add(randomGraphButton);
-		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		randomGraphButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-				clearMap();
-				int maxNumberOfRoads = Integer.parseInt(txtMaxNumberOf.getText());
-				int minNumberOfRoads = Integer.parseInt(txtMinNumberOf.getText());
-
-				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
-
-				for (int i = 0; i < numberOfRoads; i++) {
-					if (streetMap.getIntersections().size() == 0) {
-						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
-						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
-						boolean oke = false;
-						while (!oke) {
-							double distance2 = (double) (Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2)
-									+ (Math.pow(coordinateY1 - coordinateY2, 2))));
-							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
-								oke = true;
-							} else {
-								coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
-								coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
-							}
-						}
-
-						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
-						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
-								streetMap.getIntersections().get(streetMap.getIntersections().size() - 2));
-						r.setStreetMap(streetMap);
-						streetMap.addRoad(r);
-					} else {
-						Intersection startIntersection = streetMap.getIntersections()
-								.get(rnd.nextInt((streetMap.getIntersections().size() - 1) - 0 + 1) + 0);
-						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-
-						boolean oke = false;
-						while (!oke) {
-							double distance2 = (double) (Math
-									.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2)
-											+ (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
-							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
-								oke = true;
-							} else {
-								coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-								coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-							}
-						}
-
-						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
-								startIntersection);
-						r.setStreetMap(streetMap);
-						streetMap.addRoad(r);
-					}
-
-				}
-
-				repaint();
-			}
-		});
+//		JLabel lblMin = new JLabel("Min");
+//		lblMin.setBounds(button_x, 562, 28, 14);
+//		lblMin.setForeground(this.contrast_font_color );
+//		menuPanel.add(lblMin);
+//
+//		JLabel lblMax = new JLabel("Max");
+//		lblMax.setBounds(button_x, 596, 28, 14);
+//		lblMax.setForeground(this.contrast_font_color );
+//		menuPanel.add(lblMax);
+//
+//		JButton randomGraphButton = new JButton("random graph");
+//		randomGraphButton.setUI(new DefaultButtonUI());
+//		Random rnd = new Random();
+//		int maxX = drawPanel.getX() + drawPanel.getBounds().width - 10;
+//		int minX = drawPanel.getX();
+//		int maxY = drawPanel.getY() + drawPanel.getBounds().height - 10;
+//		int minY = drawPanel.getY();
+//
+//		randomGraphButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width, button_height);
+//		menuPanel.add(randomGraphButton);
+//		randomGraphButton.setBorder(this.button_border);
+//		randomGraphButton.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//
+//				clearMap();
+//				int maxNumberOfRoads = Integer.parseInt(txtMaxNumberOf.getText());
+//				int minNumberOfRoads = Integer.parseInt(txtMinNumberOf.getText());
+//
+//				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
+//
+//				for (int i = 0; i < numberOfRoads; i++) {
+//					if (streetMap.getIntersections().size() == 0) {
+//						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+//						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+//						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
+//						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
+//						boolean oke = false;
+//						while (!oke) {
+//							double distance2 = (double) (Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2)
+//									+ (Math.pow(coordinateY1 - coordinateY2, 2))));
+//							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
+//								oke = true;
+//							} else {
+//								coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
+//								coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
+//							}
+//						}
+//
+//						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
+//						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
+//						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
+//								streetMap.getIntersections().get(streetMap.getIntersections().size() - 2));
+//						r.setStreetMap(streetMap);
+//						streetMap.addRoad(r);
+//					} else {
+//						Intersection startIntersection = streetMap.getIntersections()
+//								.get(rnd.nextInt((streetMap.getIntersections().size() - 1) - 0 + 1) + 0);
+//						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+//						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+//
+//						boolean oke = false;
+//						while (!oke) {
+//							double distance2 = (double) (Math
+//									.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2)
+//											+ (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
+//							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
+//								oke = true;
+//							} else {
+//								coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
+//								coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
+//							}
+//						}
+//
+//						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
+//						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
+//								startIntersection);
+//						r.setStreetMap(streetMap);
+//						streetMap.addRoad(r);
+//					}
+//
+//				}
+//
+//				repaint();
+//			}
+//		});
 
 		String[] lane_options = {"One", "Two", "Three"};
 		JComboBox<String> numb_lanes_cbox = new JComboBox<String>(lane_options);
@@ -620,7 +631,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		addDeleteButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
 		addDeleteButton.setUI(new DefaultButtonUI());
 		menuPanel.add(addDeleteButton);
-		addDeleteButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		addDeleteButton.setBorder(this.button_border);
 		addDeleteButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -637,7 +648,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		JButton experimentButton = new JButton("Experiment");
 		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width, button_height);
 		experimentButton.setUI(new DefaultButtonUI());
-		experimentButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		experimentButton.setBorder(this.button_border);
 		menuPanel.add(experimentButton);
 		experimentButton.addActionListener(new ActionListener() {
 
@@ -702,7 +713,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			}
 		});
-
 
 		// ADDS MOUSE AND KEY LISTENER
 		Handlerclass handler = new Handlerclass();
