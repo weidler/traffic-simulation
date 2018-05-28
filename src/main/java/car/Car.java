@@ -372,7 +372,7 @@ public class Car {
 			if(this.current_velocity < 10 && timeSwitch == 1) {
 				startWait = StreetMap.getCurrentTime();
 				timeSwitch++;
-			} else {
+			} else if(this.current_velocity > 10) {
 				endWait = StreetMap.getCurrentTime();
 				timeSwitch = 1;
 				totalWait += (endWait - startWait);
@@ -394,6 +394,7 @@ public class Car {
 			if (this.position_on_road >= this.current_road.getLength()
 					&& this.current_destination_intersection == this.path.get(this.path.size() - 1)) {
 				this.reached_destination = true;
+				timeMeasure();
 			} else {
 
 				// Check if at new road

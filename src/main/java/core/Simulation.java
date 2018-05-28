@@ -46,7 +46,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1000;
+	private float simulated_seconds_per_real_second = 1;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
