@@ -36,6 +36,7 @@ public class MOBIL {
 	
 	public boolean isIncentive(Car car, Car approached_car, Car approached_car_on_new_lane, Car approaching_car_on_new_lane) {
 		boolean isIncentive = false;
+		if (car.getCurrentVelocity() == 0) return false;		
 
 		// is the lane change desired?
 		double current_acceleration = car.getCurrentAcceleration();
@@ -43,7 +44,7 @@ public class MOBIL {
 		if (approached_car_on_new_lane != null) potential_acceleration = IDM.getAcceleration(car,
 				car.getDistanceToCar(approached_car_on_new_lane) - (car.getVehicleLength()/2) - (approached_car_on_new_lane.getVehicleLength()), approached_car_on_new_lane.getCurrentVelocity());
 		else potential_acceleration = IDM.getAcceleration(car, Double.NaN, Double.NaN);
-		isIncentive = potential_acceleration > current_acceleration;
+		isIncentive = potential_acceleration / current_acceleration >= 1.1; // at least 10% gain, prevents flickering changes
 
 		return isIncentive;
 	}

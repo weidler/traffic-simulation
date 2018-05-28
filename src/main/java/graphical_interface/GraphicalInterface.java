@@ -909,6 +909,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							streetMap.removeIntersection(in);
 						}
 
+						clickCounter = 0;
+						
 						visuals.setDrawLine(false);
 					}
 
@@ -1046,7 +1048,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 					visuals.setDrawRed(null);
 
 				}
-
 			}
 			
 			visuals.setMousePosX(mouseX);

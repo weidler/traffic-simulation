@@ -1,25 +1,16 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-
 import algorithms.AStar;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
-import datastructures.TrafficLight;
 import experiment.Experiment;
 import graphical_interface.GraphicalInterface;
-import graphical_interface.Visuals;
 import road.Road;
 import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
@@ -40,13 +31,11 @@ public class Simulation {
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
 
-	private JTextArea carsTextPane;
-	private Car lastHoveredCar;
 	private long start_time;
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1;
+	private float simulated_seconds_per_real_second = 10;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -258,7 +247,7 @@ public class Simulation {
 				}
 
 				// Wait for time step to be over
-				double ns_to_wait = Time.secondsToNanoseconds(delta_t) / Time.secondsToNanoseconds(simulated_seconds_per_real_second);
+				double ns_to_wait = Time.secondsToNanoseconds(delta_t/ simulated_seconds_per_real_second);
 				double ns_used = (System.nanoTime() - start_time);
 				total_calculation_time += ns_used;
 				try {
@@ -276,7 +265,6 @@ public class Simulation {
 				if (step % this.measurement_interval == 0) this.calcStatistics();
 				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
-					System.out.println(this.real_time_utilization);
 					resettable_step = 0;
 					total_calculation_time = 0;
 				}
@@ -345,14 +333,6 @@ public class Simulation {
 		
 		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
-	}
-
-	public void setTextArea(JTextArea p) {
-		carsTextPane = p;
-	}
-
-	public void setLastHoveredCar(Car c) {
-		lastHoveredCar = c;
 	}
 
 	public void stop() {
