@@ -2,6 +2,9 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.junit.experimental.theories.Theories;
 
@@ -133,13 +136,13 @@ public class Geometry {
 		return degrees * (Math.PI / 180);
 	}
 
-	public static double clockwiseAngle(int x1, int y1, int x2, int y2, int common_x, int common_y) {
+	public static double clockwiseAngle(double x, double y, double x2, double y2, double x3, double y3) {
 		// move intersection to origin
-		double centered_x1 = x1 - common_x;
-		double centered_y1 = y1 - common_y;
+		double centered_x1 = x - x3;
+		double centered_y1 = y - y3;
 
-		double centered_x2 = x2 - common_x;
-		double centered_y2 = y2 - common_y;
+		double centered_x2 = x2 - x3;
+		double centered_y2 = y2 - y3;
 
 		double dot = centered_x1 * centered_x2 + centered_y1 * centered_y2;
 		double det = centered_x1 * centered_y2 - centered_y1 * centered_x2;
@@ -236,13 +239,36 @@ public class Geometry {
 		
 		return new_coordinates;
 	}
+	
+	public static ArrayList<Point> orderPointsClockwise(ArrayList<Point> points, Point center) {
+		if (points.size() <= 3) {
+    		return points;
+    	}
+		
+		TreeMap<Double, Point> angles =  new TreeMap<Double, Point>();
+		
+		Point starting_point = points.get(0);
+		double angle;
+		for (Point p : points.subList(1, points.size())) {
+			angle = clockwiseAngle(starting_point.x, starting_point.y, p.x, p.y, center.x, center.y);
+			angles.put(angle, p);
+		}
+		
+		ArrayList<Point> out = new ArrayList<Point>();
+		for (Map.Entry<Double, Point> entry : angles.entrySet()) {
+			out.add(entry.getValue());
+		}
+		
+		return out;
+		
+	}
      
     /**
      * https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
      */
     public static ArrayList<Point> convexHull(ArrayList<Point> points) {
       
-    	if (points.size() < 3) {
+    	if (points.size() <= 3) {
     		return points;
     	}
     	

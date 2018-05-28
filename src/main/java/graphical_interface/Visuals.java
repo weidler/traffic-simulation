@@ -521,7 +521,7 @@ public class Visuals extends JPanel {
 			for (Intersection inter : streetMap.getIntersections()) {
 				Polygon intersection_filling = new Polygon();
 				if (chosen_line_intersections.containsKey(inter)) {
-					for (Point point : Geometry.convexHull(chosen_line_intersections.get(inter))) {
+					for (Point point : Geometry.orderPointsClockwise((chosen_line_intersections.get(inter)), inter.getPoint())) {
 						if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
 							intersection_filling.addPoint(
 									(int) (point.x * zoomMultiplier + changeX), 

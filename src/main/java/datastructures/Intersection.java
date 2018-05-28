@@ -291,4 +291,8 @@ public class Intersection {
 	public String toString() {
 		return this.x_coord + "," + this.y_coord + ",";
 	}
+
+	public Point getPoint() {
+		return new Point(this.getXCoord(), this.getYCoord());
+	}
 }

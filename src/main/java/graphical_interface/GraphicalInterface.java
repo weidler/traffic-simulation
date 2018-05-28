@@ -790,8 +790,6 @@ public class GraphicalInterface extends JFrame {
 						startY = nearestY;
 						Intersection in = new Intersection(startX, startY);
 						streetMap.addIntersection(in);
-
-						Intersection section = streetMap.getIntersectionByCoordinates(startX, startY);
 					}
 
 					visuals.setStartPosX(startX);
@@ -883,13 +881,7 @@ public class GraphicalInterface extends JFrame {
 
 					System.out.println(streetMap.getIntersections());
 					System.out.println(streetMap.getRoads());
-
-					System.out.println("x coordinate: " + x);
-					System.out.println("y coordinate: " + y);
-					System.out.println("");
-					System.out.println("changed");
 					repaint();
-
 				}
 			} else {
 
