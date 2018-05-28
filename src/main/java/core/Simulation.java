@@ -26,6 +26,7 @@ import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
 import type.Distribution;
+import util.Statistics;
 import util.Time;
 import datastructures.Intersection;
 
@@ -35,6 +36,7 @@ public class Simulation {
 
 	private StreetMap street_map;
 	private ArrayList<Car> cars;
+	private ArrayList<Car> car_sink;
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
 
@@ -45,7 +47,7 @@ public class Simulation {
 	private boolean is_running;
 	private double current_time;
 	private float simulated_seconds_per_real_second = 1000;
-	private float visualization_frequency = 10; // 1 means each step, e.g. 10 means every 10 steps
+	private int visualization_frequency;
 
 	private double realistic_time_in_seconds;
 
@@ -62,6 +64,7 @@ public class Simulation {
 
 		this.street_map = map;
 		this.cars = new ArrayList<Car>();
+		this.car_sink = new ArrayList<Car>();
 
 		this.is_running = false;
 		this.current_time = 0;
@@ -133,9 +136,9 @@ public class Simulation {
 		Car random_car;
 		double type_rand = r.nextDouble();
 		if (type_rand <= 0.9) {
-			random_car = new Car(shortest_path, this.street_map, this.props);
+			random_car = new Car(shortest_path, this.current_time, this.props);
 		} else {
-			random_car = new Truck(shortest_path, this.street_map, this.props);
+			random_car = new Truck(shortest_path, this.current_time, this.props);
 		}
 		random_car.setPositionOnRoad(r.nextDouble() * shortest_path.get(0).getRoadTo(shortest_path.get(1)).getLength());
 		this.addCar(random_car);
@@ -162,9 +165,9 @@ public class Simulation {
 		Car random_car;
 		double type_rand = rand.nextDouble();
 		if (type_rand <= 0.9) {
-			random_car = new Car(shortest_path, this.street_map, this.props);
+			random_car = new Car(shortest_path, this.current_time, this.props);
 		} else {
-			random_car = new Truck(shortest_path, this.street_map, this.props);
+			random_car = new Truck(shortest_path, this.current_time, this.props);
 		}
 
 		random_car.setPositionOnRoad(
@@ -202,8 +205,8 @@ public class Simulation {
 				is.initializeTrafficLightSettings();
 			}
 
-			double delta_t = 0.01; // in seconds
-			this.visualization_frequency = (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS")));
+			double delta_t = 0.05; // in seconds
+			this.adjustVisualizationFrequency(delta_t);
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
@@ -233,17 +236,17 @@ public class Simulation {
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
-
 					// recalculate car positions
 					if (car.update(this.cars, delta_t)) {
 						arrived_cars.add(car);
 					}
-
 				}
 
 				// remove cars that reached their destination from the list
 				for (Car c : arrived_cars) {
 					this.cars.remove(c);
+					this.car_sink.add(c);
+					c.setArrivalTime(this.current_time);
 				}
 
 				// Wait for time step to be over
@@ -261,18 +264,26 @@ public class Simulation {
 				// update graphics and statistics
 				step++;
 				resettable_step++;
-				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
+				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) {
+					gui.redraw();
+				}
 				if (step % this.measurement_interval == 0) this.calcStatistics();
-				if (step % (100 * this.simulated_seconds_per_real_second) == 0) {
-					this.real_time_utilization = (total_calculation_time / resettable_step) / (delta_t * 1000000000);
+				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
+					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
 					resettable_step = 0;
 					total_calculation_time = 0;
 					System.out.println(this.real_time_utilization);
 				}
 			}
+
+			this.reportStatistics();
 		});
 
 		th.start();
+	}
+
+	private void adjustVisualizationFrequency(double delta_t) {
+		this.visualization_frequency = Math.max(1, (int) ((1 / delta_t) / Integer.parseInt(this.props.getProperty("FPS"))));
 	}
 
 	public void calcStatistics() {
@@ -312,6 +323,23 @@ public class Simulation {
 		//
 		// }
 	}
+	
+	private void reportStatistics() {
+		for (int i = 0; i < street_map.getRoads().size(); i++) {
+			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
+		}
+		
+		ArrayList<Double> travel_times = new ArrayList<Double>();
+		ArrayList<Double> fractional_waiting_times = new ArrayList<Double>();
+		for (Car c : this.car_sink) {
+			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
+			travel_times.add(travel_time);
+			fractional_waiting_times.add(c.getWait() / travel_time);
+		}
+		
+		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
+		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
+	}
 
 	public void setTextArea(JTextArea p) {
 		carsTextPane = p;
@@ -323,14 +351,10 @@ public class Simulation {
 
 	public void stop() {
 		this.is_running = false;
-		for(int i =0; i < street_map.getRoads().size(); i++) {
-			
-			
-			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
-		}
 	}
 
 	public void reset() {
 		this.cars.clear();
+		this.car_sink.clear();
 	}
 }

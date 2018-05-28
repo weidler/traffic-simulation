@@ -13,7 +13,11 @@ public class Point {
 		this.x = coords[0];
 		this.y = coords[1];
 	}
-
+	
+	public boolean equals(Point b) {
+		return (this.x == b.x && this.y == b.y);
+	}
+	
 	public double[] toArray() {
 		double[] coords = {x, y};
 		return coords;

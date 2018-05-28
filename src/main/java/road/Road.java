@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import datastructures.Intersection;
 import datastructures.StreetMap;
+import datatype.Point;
 import type.RoadType;
 import util.Geometry;
 
@@ -40,8 +41,7 @@ public class Road {
 	}
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {
-		this(intersection_from.getXCoord(), intersection_from.getYCoord(), intersection_to.getXCoord(),
-				intersection_to.getYCoord());
+		this(intersection_from.getXCoord(), intersection_from.getYCoord(), intersection_to.getXCoord(), intersection_to.getYCoord());
 	}
 
 	public ArrayList<Integer> getOffsetX() {
@@ -183,6 +183,14 @@ public class Road {
 
 	public int getY2() {
 		return this.y2;
+	}
+	
+	public Point getPointA() {
+		return new Point(x1, y1);
+	}
+	
+	public Point getPointB() {
+		return new Point(x2, y2);
 	}
 
 	public int getAllowedMaxSpeed() {

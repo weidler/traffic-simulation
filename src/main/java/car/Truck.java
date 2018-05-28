@@ -10,8 +10,8 @@ import type.CarType;
 
 public class Truck extends Car {
 
-	public Truck(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
-		super(path, streetMap, props);
+	public Truck(ArrayList<Intersection> path, double departure_time, Properties props) {
+		super(path, departure_time, props);
 	}
 
 	protected void setTypeParameters(Properties props) {

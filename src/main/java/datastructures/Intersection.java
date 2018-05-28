@@ -3,6 +3,7 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import datatype.Point;
 import road.Road;
 import type.IntersectionTypes;
 
@@ -46,6 +47,10 @@ public class Intersection {
 		this.time_till_toggle = this.tl_phase_length;
 
 		this.connections = new ArrayList<Connection>();
+	}
+	
+	public Intersection(Point p) {
+		this((int) p.x, (int) p.y);
 	}
 
 	// GETTERS / SETTERS

@@ -3,7 +3,9 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import datatype.Point;
 import road.Road;
+import util.Geometry;
 
 /**
  * @author weidler
@@ -21,10 +23,10 @@ public class StreetMap {
 	 */
 	private ArrayList<Intersection> intersections;
 	private static double CurrentTime = 0;
-	public void setCurrentTime(double t) 
-	{
+	public void setCurrentTime(double t) {
 		CurrentTime = t;
 	}
+	
 	public static double getCurrentTime() 
 	{
 		return CurrentTime;
@@ -128,16 +130,6 @@ public class StreetMap {
 
 	// GRAPH MODIFICATION
 
-	/**
-	 * Adds a Road between intersections start and end.
-	 * 
-	 * @param start
-	 *            ID of the starting intersection
-	 * @param end
-	 *            ID of the ending intersection
-	 * @param road
-	 *            Road object to be added
-	 */
 	public void addRoad(Intersection start, Intersection end) {
 		Road new_road = new Road(start, end);
 		this.addRoad(new_road);
@@ -155,15 +147,36 @@ public class StreetMap {
 		} else if (this.roadAlreadyOccupied(road)) {
 			System.out
 					.println("There already exists a road between these coordinates/intersections. Skipping addition.");
-		} /*
-			 * else if (!int_a.connectionCanBeAdded() || !int_b.connectionCanBeAdded()) { //
-			 * TODO handle empty intersection leftovers System.out.
-			 * println("One of the intersections you are planning to connect can't have more connections added."
-			 * ); }
-			 */ else {
-			this.roads.add(road);
-			int_a.addConnection(road, int_b, null);
-			int_b.addConnection(road, int_a, null);
+		} else {
+			// Check if road intersects other road
+			Road crossed_road = null;
+			for (Road r : this.roads) {
+				if (this.roadsIntersect(r, road)) crossed_road = r;
+				break;
+			}
+			
+			System.out.println(crossed_road);
+			
+			if (crossed_road != null) {
+				
+				System.out.println("LOOKI LOOKI");
+				
+//				Intersection new_intersection = new Intersection(Geometry.intersection(road.getPointA(), road.getPointB(), crossed_road.getPointA(), crossed_road.getPointB()));
+//				this.addIntersection(new_intersection);
+//				
+//				// remove crossed road
+//				//this.removeRoad(crossed_road);
+//				
+//				// add four new roads; do this recursively to allow multiple intersections
+//				this.addRoad(new Road(int_a, new_intersection));
+//				this.addRoad(new Road(int_b, new_intersection));
+//				this.addRoad(new Road(crossed_road.getIntersections(this)[0], new_intersection));
+//				this.addRoad(new Road(crossed_road.getIntersections(this)[1], new_intersection));				
+			} else {
+				this.roads.add(road);
+				int_a.addConnection(road, int_b, null);
+				int_b.addConnection(road, int_a, null);				
+			}
 		}
 	}
 
@@ -174,17 +187,6 @@ public class StreetMap {
 		}
 	}
 
-	/**
-	 * Removes a road identified by the connected intersections. Always choose this
-	 * over removing by ID if possible, since this is faster!
-	 * 
-	 * @param start
-	 *            ID of one of the intersections
-	 * @param end
-	 *            ID of the other intersection
-	 * @param road
-	 *            ID of the road to be removed
-	 */
 	public void removeRoadBetween(Intersection a, Intersection b) {
 		Road road = a.removeConnectionTo(b);
 		b.removeConnectionTo(a);
@@ -203,21 +205,28 @@ public class StreetMap {
 		this.removeRoadBetween(intersection_a, intersection_b);
 	}
 
-	/**
-	 * Adds an Intersection by appending the provided object to the lookup table and
-	 * inserting row and column to the adjacency matrix.
-	 * 
-	 * @param intersection
-	 */
-	public void addIntersection(Intersection intersection) {
+	public Intersection addIntersection(Intersection intersection) {
 		if (this.intersectionAlreadyExists(intersection)) {
 			System.out.println("Intersection already exists at these coordinates. Skipping addition. x: "
 					+ intersection.getXCoord() + ", y: " + intersection.getYCoord());
 		} else {
 			this.intersections.add(intersection);
+			return intersection;
 		}
+		
+		return null;
 	}
 
+	public Intersection addIntersection(int x, int y) {
+		Intersection inter = new Intersection(x, y);
+		return this.addIntersection(inter);
+	}
+	
+	public Intersection addIntersection(Point p) {
+		Intersection inter = new Intersection((int) p.x, (int) p.y);
+		return this.addIntersection(inter);
+	}
+	
 	public void removeIntersection(Intersection removed_intersection) {
 		this.intersections.remove(removed_intersection);
 
@@ -278,7 +287,7 @@ public class StreetMap {
 		}
 	}
 
-	// VALIDATORS
+	// CHECKS
 
 	private boolean roadAlreadyOccupied(Road road) {
 		for (Road r : this.roads) {
@@ -298,5 +307,9 @@ public class StreetMap {
 		}
 
 		return false;
+	}
+	
+	private boolean roadsIntersect(Road a, Road b) {
+		return Geometry.lineSegmentsIntersect(new Point(a.getX1(), a.getY1()), new Point(a.getX2(), a.getY2()), new Point(b.getX1(), b.getY1()), new Point(b.getX2(), b.getY2()));
 	}
 }

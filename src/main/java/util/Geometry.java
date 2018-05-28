@@ -3,6 +3,8 @@ package util;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.experimental.theories.Theories;
+
 import datatype.Point;
 import road.Road;
 
@@ -18,7 +20,29 @@ public class Geometry {
 		return (y1 * x2 - y2 * x1) / (x2 - x1);
 	}
 
-	public static double[] intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
+	public static boolean liesOnSegment(Point s_a, Point s_b, Point q) {
+	    if (q.x <= Math.max(s_a.x, s_b.x) && q.x >= Math.min(s_a.x, s_b.x) &&
+	        q.y <= Math.max(s_a.y, s_b.y) && q.y >= Math.min(s_a.y, s_b.y))
+	       return true;
+	 
+	    return false;
+	}
+	
+	// https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+	// To find orientation of ordered triplet (p, q, r).
+	// The function returns following values
+	// 0 --> p, q and r are colinear
+	// 1 --> Clockwise
+	// 2 --> Counterclockwise
+	public static int orientation(Point p, Point q, Point r) {
+	    double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	 
+	    if (val == 0) return 0;	 
+	    else if (val > 0) return 1;
+	    else return 2;
+	}
+	
+	public static Point intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
 			double y4) {
 		double m_a = slope(x1, y1, x2, y2);
 		double m_b = slope(x3, y3, x4, y4);
@@ -27,13 +51,64 @@ public class Geometry {
 
 		if (m_a == 0 && m_b == 0) return null;
 
-		double[] intersection = new double[2];
-		intersection[0] = (b_b - b_a) / (m_a - m_b);
-		intersection[1] = m_a * intersection[0] + b_a;
+		double x = (b_b - b_a) / (m_a - m_b);
+		double y = m_a * x + b_a;
 
-		return intersection;
+		return new Point(x, y);
 	}
-
+	
+	public static Point intersection(Point a, Point b, Point c, Point d) {
+		return intersection(a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y);
+	}
+	
+	public static boolean lineSegmentsIntersect(Point a, Point b, Point c, Point d) {
+		
+		if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
+			return false;
+		}
+		
+		// Find the four orientations needed for general and
+	    // special cases
+	    int o1 = orientation(a, b, c);
+	    int o2 = orientation(a, b, d);
+	    int o3 = orientation(c, d, a);
+	    int o4 = orientation(c, d, b);
+	 
+	    // General case
+	    if (o1 != o2 && o3 != o4)
+	        return true;
+	 
+	    // Special Cases
+	    // a, b and c are colinear and c lies on segment ab
+	    if (o1 == 0 && liesOnSegment(a, c, b)) return true;
+	 
+	    // a, b and d are colinear and d lies on segment ab
+	    if (o2 == 0 && liesOnSegment(a, d, b)) return true;
+	 
+	    // c, d and a are colinear and a lies on segment cd
+	    if (o3 == 0 && liesOnSegment(c, a, d)) return true;
+	 
+	     // c, d and b are colinear and b lies on segment cd
+	    if (o4 == 0 && liesOnSegment(c, b, d)) return true;
+	 
+	    return false; // Doesn't fall in any of the above cases
+		
+//		double denom = (d.y - c.y) * (b.x - a.x) - (d.x - c.x) * (b.y - a.y);
+//
+//		if (denom == 0.0) return false;
+//
+//		double ua = ((d.x - c.x) * (a.y - c.y) - (d.y - c.y) * (a.x - c.x)) / denom;
+//		double ub = ((b.x - a.x) * (a.y - c.y) - (b.y - a.y) * (a.x - c.x)) / denom;
+//
+//		if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+//			if (a.y != b.y && a.y != c.y && a.y != d.y && c.y != c.y && b.y != d.y && c.y != d.y) {
+//				return true;
+//			}
+//		}
+//
+//		return false;
+	}
+	
 	public static double vectorMagnitude(double x, double y) {
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 	}
@@ -161,14 +236,6 @@ public class Geometry {
 		
 		return new_coordinates;
 	}
-	
-	public static int orientation(Point p, Point q, Point r) {
-        double val = (q.y - p.y) * (r.x - q.x) -
-                  (q.x - p.x) * (r.y - q.y);
-      
-        if (val == 0) return 0;  // collinear
-        return (val > 0)? 1: 2; // clock or counterclock wise
-    }
      
     /**
      * https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/

@@ -232,7 +232,7 @@ public class Visuals extends JPanel {
 				}
 
 				// right line needs to cross clockwise right
-				double[] line_intersection_right_from;
+				Point line_intersection_right_from;
 				if (!Geometry.liesLeft(ncr_origin_x, ncr_origin_y, intersection_from.getXCoord(),
 						intersection_from.getYCoord(), // is clockwise road option a to the right?
 						intersection_from.getXCoord() - (precalculated_offsets.get(next_clockwise_road_from)[0]
@@ -264,7 +264,7 @@ public class Visuals extends JPanel {
 				}
 
 				// left line needs to cross counterclockwise right
-				double[] line_intersection_left_from;
+				Point line_intersection_left_from;
 				if (Geometry.liesLeft(nccr_origin_x, nccr_origin_y, intersection_from.getXCoord(),
 						intersection_from.getYCoord(),
 						intersection_from.getXCoord() + (precalculated_offsets.get(next_counterclockwise_road_from)[0]
@@ -297,14 +297,14 @@ public class Visuals extends JPanel {
 											* next_counterclockwise_road_from.getLanes()));
 				}
 
-				from_x_right = line_intersection_right_from[0];
-				from_y_right = line_intersection_right_from[1];
+				from_x_right = line_intersection_right_from.x;
+				from_y_right = line_intersection_right_from.y;
 
-				from_x_left = line_intersection_left_from[0];
-				from_y_left = line_intersection_left_from[1];
+				from_x_left = line_intersection_left_from.x;
+				from_y_left = line_intersection_left_from.y;
 				
-				chosen_line_intersections.get(intersection_from).add(new Point(line_intersection_left_from));
-				chosen_line_intersections.get(intersection_from).add(new Point(line_intersection_right_from));
+				chosen_line_intersections.get(intersection_from).add(line_intersection_left_from);
+				chosen_line_intersections.get(intersection_from).add(line_intersection_right_from);
 			}
 
 			// ADJUST TO end of the road
@@ -322,7 +322,7 @@ public class Visuals extends JPanel {
 				if (nccr_origin_y == intersection_to.getYCoord()) nccr_origin_y = next_counterclockwise_road_to.getY2();
 
 				// right line needs to cross counterclockwise left
-				double[] line_intersection_right_to;
+				Point line_intersection_right_to;
 				if (Geometry.liesLeft(nccr_origin_x, nccr_origin_y, intersection_to.getXCoord(),
 						intersection_to.getYCoord(),
 						intersection_to.getXCoord() - (precalculated_offsets.get(next_counterclockwise_road_to)[0]
@@ -354,7 +354,7 @@ public class Visuals extends JPanel {
 				}
 
 				// left line needs to cross clockwise right
-				double[] line_intersection_left_to;
+				Point line_intersection_left_to;
 				if (!Geometry.liesLeft(ncr_origin_x, ncr_origin_y, intersection_to.getXCoord(),
 						intersection_to.getYCoord(),
 						intersection_to.getXCoord() + (precalculated_offsets.get(next_clockwise_road_to)[0]
@@ -383,14 +383,14 @@ public class Visuals extends JPanel {
 									* next_clockwise_road_to.getLanes()));
 				}
 
-				to_x_right = line_intersection_right_to[0];
-				to_y_right = line_intersection_right_to[1];
+				to_x_right = line_intersection_right_to.x;
+				to_y_right = line_intersection_right_to.y;
 
-				to_x_left = line_intersection_left_to[0];
-				to_y_left = line_intersection_left_to[1];
+				to_x_left = line_intersection_left_to.x;
+				to_y_left = line_intersection_left_to.y;
 				
-				chosen_line_intersections.get(intersection_to).add(new Point(line_intersection_left_to));
-				chosen_line_intersections.get(intersection_to).add(new Point(line_intersection_right_to));
+				chosen_line_intersections.get(intersection_to).add(line_intersection_left_to);
+				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
 
 			// draw road background
@@ -537,8 +537,11 @@ public class Visuals extends JPanel {
 			}			
 		}
 
-		// draws the cars
-		for (Car c : simulation.getCars()) {
+		// draws the cars; Creating a deep copy of the car list in order to prevent 
+		// concurrent modification errors occuring because the simulation alters the 
+		// list in a different thread. might look hacky, but my research showed this
+		// is common practice
+		for (Car c : new ArrayList<Car>(simulation.getCars())) {
 			if (!c.inTraffic() && !c.reachedDestination()) continue;
 			
 			c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);

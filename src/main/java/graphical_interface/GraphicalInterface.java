@@ -530,7 +530,6 @@ public class GraphicalInterface extends JFrame {
 								streetMap.getIntersections().get(streetMap.getIntersections().size() - 2));
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
-						new CrossRoadDetection(streetMap, r);
 					} else {
 						Intersection startIntersection = streetMap.getIntersections()
 								.get(rnd.nextInt((streetMap.getIntersections().size() - 1) - 0 + 1) + 0);
@@ -555,7 +554,6 @@ public class GraphicalInterface extends JFrame {
 								startIntersection);
 						r.setStreetMap(streetMap);
 						streetMap.addRoad(r);
-						new CrossRoadDetection(streetMap, r);
 					}
 
 				}
@@ -833,8 +831,8 @@ public class GraphicalInterface extends JFrame {
 							}
 
 						}
+						
 						if (distance < visuals.getMaxIntersectionSize()) {
-
 							endX = nearestX;
 							endY = nearestY;
 						} else {
@@ -844,12 +842,6 @@ public class GraphicalInterface extends JFrame {
 
 						Intersection in = new Intersection(endX, endY);
 						streetMap.addIntersection(in);
-						int typeCounter = 0;
-						for (int i = 0; i < RoadType.values().length; i++) {
-							if ((RoadType.values()[i] + "").equals(roadTypeToAdd)) {
-								typeCounter = i;
-							}
-						}
 
 						Road r;
 						switch (roadTypeToAdd) {
@@ -885,7 +877,6 @@ public class GraphicalInterface extends JFrame {
 						r.setLanes(l);
 						if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
 							streetMap.addRoad(r);
-							new CrossRoadDetection(streetMap, r);
 						} else {
 							streetMap.removeIntersection(in);
 						}
@@ -1036,43 +1027,7 @@ public class GraphicalInterface extends JFrame {
 				}
 
 			}
-
-			if (simulation.getCars().size() > 0) {
-				int nearestX = -1;
-				int nearestY = -1;
-				double distance = -1;
-				for (Car car : simulation.getCars()) {
-
-					double distance2 = (double) (Math.sqrt(
-							Math.pow(mouseX - car.getPositionX(), 2) + (Math.pow(mouseY - car.getPositionY(), 2))));
-					// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-					if (distance == -1) {
-						distance = distance2;
-						nearestX = (int) car.getPositionX();
-						nearestY = (int) car.getPositionY();
-					} else if (distance2 < distance) {
-						// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-						distance = distance2;
-						nearestX = (int) car.getPositionX();
-						nearestY = (int) car.getPositionY();
-					}
-
-				}
-				if (distance <= 20) {
-					Car nearestCar = null;
-					for (Car car : simulation.getCars()) {
-						if ((int) car.getPositionX() == nearestX && (int) car.getPositionY() == nearestY) {
-							nearestCar = car;
-							break;
-						}
-					}
-					simulation.setLastHoveredCar(nearestCar);
-				} else {
-
-				}
-
-			}
-
+			
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();

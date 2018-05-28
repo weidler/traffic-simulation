@@ -32,6 +32,8 @@ public class Car {
 	protected Intersection current_destination_intersection;
 	protected boolean reached_destination;
 	private double angle;
+	private boolean in_traffic;
+
 
 	// DYNAMIC VALUES
 	protected double current_velocity;
@@ -72,7 +74,9 @@ public class Car {
 	protected double startWait;
 	protected double endWait;
 	protected double totalWait;
-	private boolean in_traffic;
+	
+	protected double departure_time;
+	protected double arrival_time;
 
 	/**
 	 *
@@ -83,8 +87,7 @@ public class Car {
 	 *            car is in!
 	 */
 
-	public Car(ArrayList<Intersection> path, StreetMap streetMap, Properties props) {
-
+	public Car(ArrayList<Intersection> path, double departure_time, Properties props) {
 		this.path = path;
 
 		this.current_origin_intersection = path.get(0);
@@ -109,6 +112,8 @@ public class Car {
 		this.reached_destination = false;
 		
 		this.in_traffic = false;
+		
+		this.departure_time = departure_time;
 	}
 
 	private void updateDesiredVelocity() {
@@ -289,6 +294,22 @@ public class Car {
 	}
 	
 	
+	public double getDepartureTime() {
+		return departure_time;
+	}
+
+	public double getArrivalTime() {
+		return arrival_time;
+	}
+
+	public void setDeparture_time(double departure_time) {
+		this.departure_time = departure_time;
+	}
+
+	public void setArrivalTime(double arrival_time) {
+		this.arrival_time = arrival_time;
+	}
+
 	public void setLane(int l) {
 		if (l >= 1 && l < 4) {
 			lane = l;
@@ -348,7 +369,7 @@ public class Car {
 			
 			
 			// Calculate wait time
-			if(this.current_velocity < 10 && timeSwitch ==1) {
+			if(this.current_velocity < 10 && timeSwitch == 1) {
 				startWait = StreetMap.getCurrentTime();
 				timeSwitch++;
 			} else {
@@ -357,9 +378,6 @@ public class Car {
 				totalWait += (endWait - startWait);
 				//System.out.println("Total wait: " + totalWait);
 			}
-			
-			
-			
 			
 			// Check if lane change is a good idea
 			for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
