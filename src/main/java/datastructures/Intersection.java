@@ -225,14 +225,6 @@ public class Intersection {
 
 	// CHECKS
 
-	public boolean connectionCanBeAdded() {
-		if (numbConnections() < 4) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public boolean equalCoordinatesWith(Intersection intersection) {
 		return (intersection.getXCoord() == this.x_coord && intersection.getYCoord() == this.y_coord);
 	}

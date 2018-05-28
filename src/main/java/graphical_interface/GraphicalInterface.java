@@ -792,10 +792,6 @@ public class GraphicalInterface extends JFrame {
 						streetMap.addIntersection(in);
 
 						Intersection section = streetMap.getIntersectionByCoordinates(startX, startY);
-						if (!section.connectionCanBeAdded()) {
-							clickCounter = 0;
-						}
-
 					}
 
 					visuals.setStartPosX(startX);
