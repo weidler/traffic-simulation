@@ -265,6 +265,7 @@ public class Geometry {
      
     /**
      * https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
+     * FLAWED! MAY RESULT IN INFINITE LOOP
      */
     public static ArrayList<Point> convexHull(ArrayList<Point> points) {
       

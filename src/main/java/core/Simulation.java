@@ -48,9 +48,10 @@ public class Simulation {
 	private double current_time;
 	private float simulated_seconds_per_real_second = 1000;
 	private int visualization_frequency;
-
+	
 	private double realistic_time_in_seconds;
-
+	private int days_simulated;
+	
 	private Experiment experiment;
 
 	// STATISTICS
@@ -103,6 +104,14 @@ public class Simulation {
 	}
 
 	// ACTIONS
+
+	public double getRealTimeUtilization() {
+		return real_time_utilization;
+	}
+
+	public void setReal_time_utilization(double real_time_utilization) {
+		this.real_time_utilization = real_time_utilization;
+	}
 
 	public void addCar(Car car) {
 		for (Car c : this.cars) {
@@ -210,7 +219,6 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
-			int days_simulated = 0;
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
@@ -268,9 +276,9 @@ public class Simulation {
 				if (step % this.measurement_interval == 0) this.calcStatistics();
 				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
+					System.out.println(this.real_time_utilization);
 					resettable_step = 0;
 					total_calculation_time = 0;
-					System.out.println(Time.secondsToHours(this.realistic_time_in_seconds) + " o'clock: " + this.real_time_utilization);
 				}
 			}
 
@@ -359,5 +367,9 @@ public class Simulation {
 
 	public double getRealisticTime() {
 		return this.realistic_time_in_seconds;
+	}
+
+	public int getCurrentDay() {
+		return this.days_simulated;
 	}
 }
