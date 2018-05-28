@@ -73,7 +73,6 @@ public class Visuals extends JPanel {
 		roads = streetMap.getRoads();
 		
 		setOpaque(true);
-		this.setBackground(Color.decode("#57af6b"));
 		this.setBorder(BorderFactory.createEmptyBorder());
 	}
 

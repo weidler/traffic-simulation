@@ -341,7 +341,6 @@ public class Simulation {
 			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
 			travel_times.add(travel_time);
 			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
-			System.out.println(c.getTotalWaitingTime() / travel_time);
 		}
 		
 		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));

@@ -1,5 +1,6 @@
 package graphical_interface;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -28,6 +29,8 @@ public class InfoPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        g.setColor(Color.WHITE);
+        
         String time_string = Time.toSixtyMinuteFormat(Time.secondsToHours(sim.getRealisticTime()));
         String day_string = "Day " + Integer.toString(sim.getCurrentDay());
         String performance_string = "Current Performance : " + (Math.round(sim.getRealTimeUtilization() * 1000) / 1000);
@@ -37,12 +40,12 @@ public class InfoPanel extends JPanel {
         g.setFont(this.large_front);
         FontMetrics fm = g.getFontMetrics();
         Point time_coords = getCenteredTextCoords(time_string, fm);
-        g.drawString(time_string, (int) time_coords.x, (int) time_coords.y - g.getFontMetrics(this.small_font).getHeight() / 2 - y_diff / 2);
+        g.drawString(time_string, (int) time_coords.x, (int) time_coords.y - g.getFontMetrics(this.small_font).getHeight() / 2);
         
         g.setFont(this.small_font);
         fm = g.getFontMetrics();
         Point day_coords = getCenteredTextCoords(day_string, fm);
-        g.drawString(day_string, (int) day_coords.x, (int) day_coords.y + fm.getHeight() / 2 + y_diff / 2);
+        g.drawString(day_string, (int) day_coords.x, (int) day_coords.y + fm.getHeight() / 2 + y_diff);
         
         //g.dispose();
     }

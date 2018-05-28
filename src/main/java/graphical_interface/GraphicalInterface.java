@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -29,6 +32,7 @@ import javax.swing.JScrollPane;
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
+import datatype.Point;
 import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
@@ -68,7 +72,7 @@ import javax.swing.JRadioButton;
  * @author thomas this class is the interface
  */
 
-public class GraphicalInterface extends JFrame {
+public class GraphicalInterface extends JFrame implements ComponentListener{
 
 	private JCheckBox visualize = new JCheckBox("visualize?");
 	private JTextField duration = new JTextField(5); // in days
@@ -79,6 +83,32 @@ public class GraphicalInterface extends JFrame {
 	private final JFileChooser fc = new JFileChooser();
 	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 
+	/**
+	 * LAYOUT PARAMETERS
+	 */
+	private final int menu_width = 200;
+	private int menu_height;
+	private Point menu_origin;
+	
+	private int map_width;
+	private int map_height;
+	private Point map_origin;
+	
+	private int info_width;
+	private final int info_height = 70;
+	private final Point info_origin = new Point(0, 0);
+	
+	private final int button_width = 150;
+	private final int button_height = 30;
+	private final int button_x = (this.menu_width - this.button_width) / 2;
+	private final int button_y_diff = 10;
+	private int initial_button_offset = 10;
+	private int button_x_diff = 10;
+	
+	private final Color menu_bg = Color.decode("#3a3a3a");
+	private final Color map_bg = Color.decode("#57af6b");
+	private final Color info_bg = Color.decode("#3a3a3a");
+	
 	/**
 	 * represent to position of the mouse at all times.
 	 */
@@ -107,7 +137,6 @@ public class GraphicalInterface extends JFrame {
 	private StreetMap streetMap;
 	private Simulation simulation;
 
-	private String roadTypeToAdd = RoadType.ROAD + "";
 	/**
 	 * JPanel that shows the roads etc.
 	 */
@@ -118,14 +147,13 @@ public class GraphicalInterface extends JFrame {
 	private Car lastHovered;
 	private JTextField lanesTextField;
 	private JLabel addLabel = new JLabel("add");
-	private ArrayList<Intersection> toRemove = new ArrayList();
+	private ArrayList<Intersection> toRemove = new ArrayList<Intersection>();
 
-	private JRadioButton lanes1;
-	private JRadioButton lanes2;
-	private JRadioButton lanes3;
-	private boolean oneLane = true;
-	private boolean twoLane = false;
-	private boolean threeLane = false;
+	private int numb_lanes = 1;
+	protected RoadType road_type = RoadType.ROAD;
+	private Color contrast_font_color = Color.WHITE;
+
+
 
 	/**
 	 * create interface. including buttons and listeners
@@ -142,23 +170,26 @@ public class GraphicalInterface extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
-
+		this.adjustPanelSizes();
+		setResizable(false);
+		
 		contentPane.setBorder(BorderFactory.createEmptyBorder());
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setResizable(false);
-
+		
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 
 		JPanel drawPanel = visuals;
-		drawPanel.setBounds(10, 71, 762 + 219, 640 - 50);
+		drawPanel.setBounds((int) map_origin.x, (int) map_origin.y, map_width, map_height);
 		drawPanel.setBorder(BorderFactory.createEmptyBorder());
+		drawPanel.setBackground(this.map_bg);
 		contentPane.add(drawPanel);
 		
 		JPanel infoPanel = new InfoPanel(simulation);
-		infoPanel.setBounds(10, 11, 762 + 219, 61);
+		infoPanel.setBounds((int) info_origin.x, (int) info_origin.y, info_width, info_height);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder());
+		infoPanel.setBackground(this.info_bg);
 		contentPane.add(infoPanel);
 
 		// ARROW KEY LISTENERS
@@ -206,56 +237,24 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
+		/**
+		 * MENU ELEMENTs
+		 */
+		
 		JPanel menuPanel = new JPanel();
-		menuPanel.setBounds(1011, 11, 167, 640);
-		menuPanel.setBackground(Color.LIGHT_GRAY);
+		menuPanel.setBounds((int) menu_origin.x, (int) menu_origin.y, menu_width, menu_height);
+		menuPanel.setBackground(this.menu_bg);
 		menuPanel.setBorder(BorderFactory.createEmptyBorder());
-
 		contentPane.add(menuPanel);
 		menuPanel.setLayout(null);
-
-		JLabel roadTypeLabel = new JLabel(RoadType.ROAD + "");
-		roadTypeLabel.setBounds(10, 192, 147, 19);
-		menuPanel.add(roadTypeLabel);
-		roadTypeLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-
-		JButton roadTypeButton = new JButton("Road Type");
-		roadTypeButton.setBounds(10, 162, 147, 19);
-		menuPanel.add(roadTypeButton);
-		roadTypeButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		roadTypeButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-				int typeCounter = 0;
-				for (int i = 0; i < RoadType.values().length; i++) {
-					if ((RoadType.values()[i] + "").equals(roadTypeLabel.getText())) {
-						if (i == RoadType.values().length - 1) {
-							typeCounter = 0;
-						} else {
-							typeCounter = i + 1;
-						}
-
-					}
-				}
-				roadTypeLabel.setText(RoadType.values()[typeCounter] + "");
-				roadTypeToAdd = RoadType.values()[typeCounter] + "";
-				if (roadTypeLabel.getText().equals(RoadType.ROAD + "")) {
-					roadTypeLabel.setForeground(Color.black);
-				} else if (roadTypeLabel.getText().equals(RoadType.DIRT_ROAD + "")) {
-					roadTypeLabel.setForeground(Color.ORANGE);
-				} else if (roadTypeLabel.getText().equals(RoadType.HIGHWAY + "")) {
-					roadTypeLabel.setForeground(Color.BLUE);
-				}
-
-			}
-		});
+		
+		menuPanel.setForeground(this.contrast_font_color );
 
 		JButton clearButton = new JButton("clear");
-		clearButton.setLocation(10, 11);
+		clearButton.setLocation(button_x, this.calculateInMenuYPosition(0));
+		clearButton.setUI(new CriticalButtonUI());
 		clearButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		clearButton.setSize(147, 20);
+		clearButton.setSize(button_width, button_height);
 		menuPanel.add(clearButton);
 		clearButton.addActionListener(new ActionListener() {
 
@@ -267,7 +266,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton startButton = new JButton("start");
-		startButton.setBounds(10, 466, 60, 20);
+		startButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+		startButton.setUI(new ImportantButtonUI());
 		startButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
@@ -278,25 +278,11 @@ public class GraphicalInterface extends JFrame {
 
 			}
 		});
-		
-		/*
-		 * JButton helpButton = new JButton("help");
-		 * helpButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		 * helpButton.setBounds(10, 497, 147, 20); menuPanel.add(helpButton);
-		 * helpButton.addActionListener(new ActionListener() {
-		 * 
-		 * public void actionPerformed(ActionEvent e) { JOptionPane.showMessageDialog(
-		 * drawPanel,"left click to create road, right click to cancel creating road." +
-		 * "\n" + "To move the graph, use the arrow keys. \n" +
-		 * "When zoomed in or out or when the graph's location has changed you can't change the graph.\n"
-		 * + "To change the graph again press the reset button."); }
-		 * 
-		 * });
-		 */
 
 		JButton addCar = new JButton("add car");
 		addCar.setBorder(BorderFactory.createRaisedBevelBorder());
-		addCar.setBounds(10, 131, 147, 20);
+		addCar.setUI(new DefaultButtonUI());
+		addCar.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
 		menuPanel.add(addCar);
 		addCar.addActionListener(new ActionListener() {
 
@@ -310,13 +296,14 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JSlider slider = new JSlider();
-		slider.setBounds(10, 101, 147, 19);
+		slider.setBounds(button_x, this.calculateInMenuYPosition(3), button_width, button_height);
 		slider.setValue(50);
 		slider.setEnabled(false);
 		menuPanel.add(slider);
 
 		JButton stopButton = new JButton("stop");
-		stopButton.setBounds(97, 466, 60, 20);
+		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+		stopButton.setUI(new DefaultButtonUI());
 		menuPanel.add(stopButton);
 		stopButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		stopButton.addActionListener(new ActionListener() {
@@ -330,7 +317,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton zoomInButton = new JButton("+");
-		zoomInButton.setBounds(97, 70, 60, 20);
+		zoomInButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(2), button_width/2 - button_x_diff, button_height);
+		zoomInButton.setUI(new DefaultButtonUI());
 		zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomInButton);
 		zoomInButton.addActionListener(new ActionListener() {
@@ -345,7 +333,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton zoomOutButton = new JButton("-");
-		zoomOutButton.setBounds(10, 70, 60, 20);
+		zoomOutButton.setBounds(button_x, this.calculateInMenuYPosition(2), button_width/2 - this.button_x_diff, button_height);
+		zoomOutButton.setUI(new DefaultButtonUI());
 		zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(zoomOutButton);
 		zoomOutButton.addActionListener(new ActionListener() {
@@ -360,7 +349,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton resetPositionButton = new JButton("reset position");
-		resetPositionButton.setBounds(10, 39, 147, 20);
+		resetPositionButton.setBounds(button_x, this.calculateInMenuYPosition(1), button_width, button_height);
+		resetPositionButton.setUI(new DefaultButtonUI());
 		resetPositionButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(resetPositionButton);
 		resetPositionButton.addActionListener(new ActionListener() {
@@ -376,7 +366,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton saveButton = new JButton("save");
-		saveButton.setBounds(10, 435, 60, 20);
+		saveButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		saveButton.setUI(new DefaultButtonUI());
 		saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
@@ -409,7 +400,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton loadButton = new JButton("load");
-		loadButton.setBounds(97, 435, 60, 20);
+		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		loadButton.setUI(new DefaultButtonUI());
 		loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(loadButton);
 		loadButton.addActionListener(new ActionListener() {
@@ -478,21 +470,24 @@ public class GraphicalInterface extends JFrame {
 		txtMaxNumberOf.setColumns(10);
 
 		JLabel lblMin = new JLabel("Min");
-		lblMin.setBounds(10, 562, 28, 14);
+		lblMin.setBounds(button_x, 562, 28, 14);
+		lblMin.setForeground(this.contrast_font_color );
 		menuPanel.add(lblMin);
 
 		JLabel lblMax = new JLabel("Max");
-		lblMax.setBounds(10, 596, 28, 14);
+		lblMax.setBounds(button_x, 596, 28, 14);
+		lblMax.setForeground(this.contrast_font_color );
 		menuPanel.add(lblMax);
 
 		JButton randomGraphButton = new JButton("random graph");
+		randomGraphButton.setUI(new DefaultButtonUI());
 		Random rnd = new Random();
 		int maxX = drawPanel.getX() + drawPanel.getBounds().width - 10;
 		int minX = drawPanel.getX();
 		int maxY = drawPanel.getY() + drawPanel.getBounds().height - 10;
 		int minY = drawPanel.getY();
 
-		randomGraphButton.setBounds(10, 528, 147, 20);
+		randomGraphButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width, button_height);
 		menuPanel.add(randomGraphButton);
 		randomGraphButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		randomGraphButton.addActionListener(new ActionListener() {
@@ -562,38 +557,68 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		buttonPanel.setBounds(10, 222, 125, 100);
-		buttonPanel.setBackground(Color.LIGHT_GRAY);
+		String[] lane_options = {"One", "Two", "Three"};
+		JComboBox<String> numb_lanes_cbox = new JComboBox<String>(lane_options);
+		numb_lanes_cbox.setSelectedIndex(0);
+		numb_lanes_cbox.setBounds(this.button_x, this.calculateInMenuYPosition(5), this.button_width, this.button_height);
+		numb_lanes_cbox.addActionListener(new ActionListener() {
 
-		lanes1 = new JRadioButton("One Lane", true);
-		lanes2 = new JRadioButton("Two Lanes", false);
-		lanes3 = new JRadioButton("Three Lanes", false);
-		lanes1.setBackground(Color.LIGHT_GRAY);
-		lanes2.setBackground(Color.LIGHT_GRAY);
-		lanes3.setBackground(Color.LIGHT_GRAY);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String) numb_lanes_cbox.getSelectedItem()) {
+					case "One":
+						numb_lanes = 1;
+						break;
 
-		ButtonGroup group = new ButtonGroup();
+					case "Two":
+						numb_lanes = 2;
+						break;
+						
+					case "Three":
+						numb_lanes = 3;
+						break;
+					
+					default:
+						break;
+				}
+			}
+		});
+		menuPanel.add(numb_lanes_cbox);
+		
+		String[] road_options = {"Normal", "Highway", "Dirt"};
+		JComboBox<String> road_type_cbox = new JComboBox<String>(road_options);
+		road_type_cbox.setSelectedIndex(0);
+		road_type_cbox.setBounds(this.button_x, this.calculateInMenuYPosition(6), this.button_width, this.button_height);
+		road_type_cbox.addActionListener(new ActionListener() {
 
-		group.add(lanes1);
-		group.add(lanes2);
-		group.add(lanes3);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String) road_type_cbox.getSelectedItem()) {
+					case "Normal":
+						road_type = RoadType.ROAD;
+						break;
 
-		buttonPanel.add(lanes1);
-		buttonPanel.add(lanes2);
-		buttonPanel.add(lanes3);
-
-		menuPanel.add(buttonPanel);
-
-		JLabel lanesLabel = new JLabel("lanes:");
-		lanesLabel.setBounds(10, 225, 49, 14);
-		menuPanel.add(lanesLabel);
-
-		addLabel.setBounds(10, 354, 147, 14);
-		menuPanel.add(addLabel);
+					case "Highway":
+						road_type = RoadType.HIGHWAY;
+						break;
+						
+					case "Dirt":
+						road_type = RoadType.DIRT_ROAD;
+						break;
+					
+					default:
+						break;
+				}
+			}
+		});
+		menuPanel.add(road_type_cbox);
+		
+//		addLabel.setBounds(button_x, 354, 147, 14);
+//		menuPanel.add(addLabel);
 
 		JButton addDeleteButton = new JButton("add/delete");
-		addDeleteButton.setBounds(10, 333, 147, 19);
+		addDeleteButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
+		addDeleteButton.setUI(new DefaultButtonUI());
 		menuPanel.add(addDeleteButton);
 		addDeleteButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		addDeleteButton.addActionListener(new ActionListener() {
@@ -610,7 +635,8 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		JButton experimentButton = new JButton("Experiment");
-		experimentButton.setBounds(10, 379, 147, 15);
+		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width, button_height);
+		experimentButton.setUI(new DefaultButtonUI());
 		experimentButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.add(experimentButton);
 		experimentButton.addActionListener(new ActionListener() {
@@ -677,6 +703,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
+
 		// ADDS MOUSE AND KEY LISTENER
 		Handlerclass handler = new Handlerclass();
 		drawPanel.addMouseListener(handler);
@@ -687,6 +714,17 @@ public class GraphicalInterface extends JFrame {
 
 	}
 
+	private void adjustPanelSizes() {
+		this.map_height = this.getHeight() - this.info_height;
+		this.map_width = this.getWidth() - this.menu_width;
+		this.map_origin = new Point(0, this.info_height);
+		
+		this.menu_height = this.getHeight();
+		this.menu_origin = new Point(this.map_width, 0);
+		
+		this.info_width = this.map_width;
+	}
+
 	public void clearMap() {
 		simulation.reset();
 		streetMap.clearMap();
@@ -694,6 +732,10 @@ public class GraphicalInterface extends JFrame {
 		repaint();
 	}
 
+	public void componentResized(ComponentEvent ce) {
+		adjustPanelSizes();
+	}
+	
 	/**
 	 * 
 	 * @author thomas this is the mouse/key listener. in here all the clicks and
@@ -838,12 +880,16 @@ public class GraphicalInterface extends JFrame {
 						streetMap.addIntersection(in);
 
 						Road r;
-						switch (roadTypeToAdd) {
-							case "DIRT_ROAD":
+						switch (road_type) {
+							case ROAD:
+								r = new Road(startX, startY, endX, endY);
+								break;
+							
+							case DIRT_ROAD:
 								r = new DirtRoad(startX, startY, endX, endY);
 								break;
 
-							case "HIGHWAY":
+							case HIGHWAY:
 								r = new Highway(startX, startY, endX, endY);
 								break;
 
@@ -852,21 +898,9 @@ public class GraphicalInterface extends JFrame {
 								r = new Road(startX, startY, endX, endY);
 								break;
 						}
+						
 						r.setStreetMap(streetMap);
-
-						oneLane = lanes1.isSelected();
-						twoLane = lanes2.isSelected();
-						threeLane = lanes3.isSelected();
-						int l = 1;
-						if (oneLane) {
-							l = 1;
-						}
-						if (twoLane) {
-							l = 2;
-						}
-						if (threeLane) {
-							l = 3;
-						}
+						int l = numb_lanes;
 
 						r.setLanes(l);
 						if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
@@ -874,7 +908,6 @@ public class GraphicalInterface extends JFrame {
 						} else {
 							streetMap.removeIntersection(in);
 						}
-						clickCounter = 0;
 
 						visuals.setDrawLine(false);
 					}
@@ -1023,8 +1056,30 @@ public class GraphicalInterface extends JFrame {
 		}
 
 	}
+	
+	private int calculateInMenuYPosition(int position) {
+		return this.initial_button_offset + (position * this.button_height) + (position * this.button_y_diff);
+	}
 
 	public void redraw() {
 		repaint();
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

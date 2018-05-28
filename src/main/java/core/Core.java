@@ -37,6 +37,7 @@ public class Core {
 
 		} catch (Exception ex) {
 			System.out.println("Properties couldn't be loaded.");
+			ex.printStackTrace();
 		}
 	}
 }
