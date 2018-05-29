@@ -25,9 +25,9 @@ public class MOBIL {
 		// is the lane change safe?
 		if (approaching_car_on_new_lane != null) {
 			double dist_to_approaching = approaching_car_on_new_lane.getDistanceToCar(car);
-			double hypothetical_speed_of_approaching_car = this.IDM.getAcceleration(approaching_car_on_new_lane,
+			double hypothetical_acceleration_of_approaching_car = this.IDM.getAcceleration(approaching_car_on_new_lane,
 					dist_to_approaching, car.getCurrentVelocity());
-			isSafe = hypothetical_speed_of_approaching_car >= - this.b_safe;
+			isSafe = hypothetical_acceleration_of_approaching_car >= - this.b_safe;
 			if (!isSafe) return false; // shortcut for efficiency
 		} else isSafe = true;
 		
