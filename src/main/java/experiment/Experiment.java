@@ -10,6 +10,8 @@ public class Experiment {
 	private int simulation_length_in_days;
 	private boolean vizualise;
 
+	
+		
 	public Experiment(Distribution arrival_generator, Strategy control_strategy, int simulation_length_in_days,
 			boolean vizualise) {
 		this.arrival_generator = arrival_generator;

@@ -370,15 +370,7 @@ public class Car {
 			
 			
 			// Calculate wait time
-			if(this.current_velocity < 10 && timeSwitch == 1) {
-				startWait = current_time;
-				timeSwitch++;
-			} else if(this.current_velocity > 10) {
-				endWait = current_time;
-				timeSwitch = 1;
-				totalWait += (endWait - startWait);
-				//System.out.println("Total wait: " + totalWait);
-			}
+			if (this.isWaiting()) totalWait += delta_t;
 			
 			// Check if lane change is a good idea
 			for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
