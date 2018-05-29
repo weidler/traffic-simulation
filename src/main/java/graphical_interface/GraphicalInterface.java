@@ -173,7 +173,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		this.visuals = new Visuals(simulation);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 700);
+		setBounds(0, 0, 1200, 700);
 		this.adjustPanelSizes();
 		setResizable(false);
 		
@@ -488,6 +488,19 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		speedUpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 10);
+			}
+		});
+		
+		// EXIT
+		JButton exitButton = new JButton("Exit");
+		exitButton.setBounds(this.menu_width/2 - this.button_width/4, (this.menu_height - 50) - button_height - button_y_diff, button_width/2, button_height);
+		exitButton.setUI(new CriticalButtonUI());
+		exitButton.setBorder(this.button_border);
+		menuPanel.add(exitButton);
+		exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.stop();
+				System.exit(0);
 			}
 		});
 		
