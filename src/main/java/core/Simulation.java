@@ -35,7 +35,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 100;
+	private float simulated_seconds_per_real_second = 1;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -98,8 +98,12 @@ public class Simulation {
 		return real_time_utilization;
 	}
 
-	public void setReal_time_utilization(double real_time_utilization) {
-		this.real_time_utilization = real_time_utilization;
+	public float getSimulatedSecondsperRealSecond() {
+		return simulated_seconds_per_real_second;
+	}
+
+	public void setSimulatedSecondsPerRealSecond(float simulated_seconds_per_real_second) {
+		this.simulated_seconds_per_real_second = simulated_seconds_per_real_second;
 	}
 
 	public void addCar(Car car) {
@@ -267,6 +271,7 @@ public class Simulation {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
 					resettable_step = 0;
 					total_calculation_time = 0;
+					System.out.println("PERFORMANCE: "+ this.real_time_utilization);
 				}
 			}
 

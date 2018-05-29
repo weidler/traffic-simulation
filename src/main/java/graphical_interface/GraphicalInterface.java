@@ -290,7 +290,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				}
 			}
 		});
-
+		
 		JSlider slider = new JSlider();
 		slider.setBounds(button_x, this.calculateInMenuYPosition(3), button_width, button_height);
 		slider.setValue(50);
@@ -467,6 +467,30 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				}
 			}
 		});
+		
+		// SIMULATION CONTROLS
+		JButton slowDownButton = new JButton("Speed-");
+		slowDownButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width/2 - this.button_x_diff, button_height);
+		slowDownButton.setUI(new CriticalButtonUI());
+		slowDownButton.setBorder(this.button_border);
+		menuPanel.add(slowDownButton);
+		slowDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.setSimulatedSecondsPerRealSecond(Math.max(0, simulation.getSimulatedSecondsperRealSecond() - 10));
+			}
+		});
+		
+		JButton speedUpButton = new JButton("Speed+");
+		speedUpButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(12), button_width/2 - button_x_diff, button_height);
+		speedUpButton.setUI(new ImportantButtonUI());
+		speedUpButton.setBorder(this.button_border);
+		menuPanel.add(speedUpButton);
+		speedUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 10);
+			}
+		});
+		
 //
 //		txtMinNumberOf = new JTextField();
 //		txtMinNumberOf.setText("0");
