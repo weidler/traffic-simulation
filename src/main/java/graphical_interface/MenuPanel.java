@@ -26,7 +26,7 @@ public class MenuPanel extends JPanel {
         
         String title1 = "Traffic";
         String title2 = "Simulation";
-        
+
         g.setFont(large_font);
         FontMetrics fm = g.getFontMetrics();
         Point title1_coords = getCenteredTextCoords(title1, fm);

@@ -49,6 +49,8 @@ public class Simulation {
 	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for
 											// that it simulates
 
+	private double truck_rate = 0.5;
+
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
 
@@ -133,7 +135,7 @@ public class Simulation {
 		// create vehicle
 		Car random_car;
 		double type_rand = r.nextDouble();
-		if (type_rand <= 0.9) {
+		if (type_rand <= 1 - this.truck_rate) {
 			random_car = new Car(shortest_path, this.current_time, this.props);
 		} else {
 			random_car = new Truck(shortest_path, this.current_time, this.props);
@@ -162,7 +164,7 @@ public class Simulation {
 		// create vehicle
 		Car random_car;
 		double type_rand = rand.nextDouble();
-		if (type_rand <= 0.9) {
+		if (type_rand <= 1 - this.truck_rate) {
 			random_car = new Car(shortest_path, this.current_time, this.props);
 		} else {
 			random_car = new Truck(shortest_path, this.current_time, this.props);
@@ -203,7 +205,7 @@ public class Simulation {
 				is.initializeTrafficLightSettings();
 			}
 
-			double delta_t = 0.05; // in seconds
+			double delta_t = 0.01; // in seconds
 			this.adjustVisualizationFrequency(delta_t);
 			long total_calculation_time = 0;
 			int step = 0;

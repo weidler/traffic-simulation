@@ -95,15 +95,20 @@ In order to simulate a time-continuous model, we need to numerically approximate
 \subsection{Traffic Rule Compliance}
 Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights. Following, we briefly discuss the approaches we use in our simulation.
 
-\paragraph{Approaching Traffic Lights}
-
 \paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
 
-
-\subsubsection{Lane Changing}
+\subsubsection{Lane Changing} In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a continuous Simulation}
-Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size.
+Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size. The IAT can be drawn from the following distributions
+
+\begin{itemize}
+	\item Exponential
+	\item Gaussian
+	\item Realistic
+\end{itemize}
+
+While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the Realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs using the thinning algorithm \citep{lewis1979simulation}.
 
 \section{Traffic Control Strategies}
 \label{sec:strategies}
