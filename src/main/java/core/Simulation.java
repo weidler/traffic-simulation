@@ -44,7 +44,7 @@ public class Simulation {
 	private Experiment experiment;
 
 	// PARAMETERS
-	private double truck_rate = 0.5;
+	private double truck_rate = 0.2;
 	
 	// STATISTICS
 	private int measurement_interval = 1000;
