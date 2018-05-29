@@ -35,7 +35,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 10;
+	private float simulated_seconds_per_real_second = 5;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -44,11 +44,11 @@ public class Simulation {
 	private Experiment experiment;
 
 	// STATISTICS
-	private int measurement_interval = 100;
+	private int measurement_interval = 1000;
 	private double average_velocity;
 	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for
 											// that it simulates
-
+	
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
 
@@ -234,7 +234,7 @@ public class Simulation {
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
 				for (Car car : this.cars) {
 					// recalculate car positions
-					if (car.update(this.cars, delta_t)) {
+					if (car.update(this.cars, delta_t, current_time)) {
 						arrived_cars.add(car);
 					}
 				}
@@ -282,10 +282,16 @@ public class Simulation {
 
 	public void calcStatistics() {
 		double total_velocity = 0;
-		for (Car c : this.cars)
+		double cars_in_queue = 0;
+		for (Car c : this.cars) {
 			total_velocity += c.getCurrentVelocity();
+			if (c.isWaiting()) cars_in_queue++;
+		}
+		
 		this.average_velocity = total_velocity / this.cars.size();
 
+		
+		//System.out.println(cars_in_queue);
 		// long start_time = 0;
 		// long end_time = 0;
 		// int total_wait = 0;

@@ -336,10 +336,11 @@ public class Car {
 		offsetY = Math.sin(offsetAngle) * (width * lane - width / 2);
 	}
 
-	public boolean update(ArrayList<Car> list_of_cars, double delta_t) {
+	public boolean update(ArrayList<Car> list_of_cars, double delta_t, double current_time) {
 		if (!this.in_traffic) {
-			if (this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
-				this.lane = this.current_road.getLanes();
+			this.lane = this.current_road.getLanes();
+			if (this.getDistanceToCar(this.getLeadingCar(list_of_cars, lane)) > this.vehicle_length * 5 
+				&& this.getDistanceToCar(this.getFollowingCar(list_of_cars, lane)) > this.vehicle_length * 5) {
 				this.in_traffic = true;
 			}
 		} else {
@@ -349,7 +350,7 @@ public class Car {
 			if (leading_car == null) {
 				acceleration = model.getAcceleration(this, Double.NaN, Double.NaN);
 			} else {
-				double dist_leading = this.getDistanceToCar(leading_car) - (this.getVehicleLength()/2) - (leading_car.getVehicleLength());
+				double dist_leading = this.getDistanceToCar(leading_car);
 				double leading_velocity = leading_car.getCurrentVelocity();
 				acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 			}
@@ -370,10 +371,10 @@ public class Car {
 			
 			// Calculate wait time
 			if(this.current_velocity < 10 && timeSwitch == 1) {
-				startWait = StreetMap.getCurrentTime();
+				startWait = current_time;
 				timeSwitch++;
 			} else if(this.current_velocity > 10) {
-				endWait = StreetMap.getCurrentTime();
+				endWait = current_time;
 				timeSwitch = 1;
 				totalWait += (endWait - startWait);
 				//System.out.println("Total wait: " + totalWait);
@@ -453,7 +454,7 @@ public class Car {
 
 		for (Car c : list_of_cars) {
 			// for the case it compares with itself skip to next iteration
-			if (this.equals(c) || !this.in_traffic) continue;
+			if (this.equals(c) || !c.in_traffic) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
@@ -506,7 +507,7 @@ public class Car {
 
 		for (Car c : list_of_cars) {
 			// for the case it compares with itself skip to next iteration
-			if (this.equals(c) || !this.in_traffic) continue;
+			if (this.equals(c) || !c.in_traffic) continue;
 
 			// only compare if on required lane
 			if (c.lane == lane) {
@@ -541,8 +542,9 @@ public class Car {
 	public double getDistanceToCar(Car other_car) {
 		double distance;
 		// on same road
+		if (other_car == null) return 100000000;
 		if (this.current_destination_intersection.equals(other_car.current_destination_intersection)) {
-			return Math.abs(this.getPositionOnRoad() - other_car.getPositionOnRoad());
+			distance = Math.abs(this.getPositionOnRoad() - other_car.getPositionOnRoad());
 		} else {
 			// get distance over multiple roads
 			distance = 0;
@@ -558,7 +560,7 @@ public class Car {
 			}
 		}
 		
-		return distance;
+		return Math.max(0, distance - (this.getVehicleLength()/2) - (other_car.getVehicleLength()/2));
 	}
 
 	// CHECKS
@@ -612,6 +614,10 @@ public class Car {
 		return this.in_traffic;
 	}
 
+	public boolean isWaiting() {
+		return (this.current_velocity < 5 && this.current_acceleration < 0);
+	}
+	
 	public boolean reachedDestination() {
 		return reached_destination;
 	}
