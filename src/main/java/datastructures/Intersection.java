@@ -43,7 +43,7 @@ public class Intersection {
 		this.x_coord = x;
 		this.y_coord = y;
 
-		this.tl_phase_length = 5;
+		this.tl_phase_length = 15;
 		this.time_till_toggle = this.tl_phase_length;
 
 		this.connections = new ArrayList<Connection>();
