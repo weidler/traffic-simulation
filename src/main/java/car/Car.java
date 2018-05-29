@@ -339,8 +339,9 @@ public class Car {
 	public boolean update(ArrayList<Car> list_of_cars, double delta_t, double current_time) {
 		if (!this.in_traffic) {
 			this.lane = this.current_road.getLanes();
-			if (this.getDistanceToCar(this.getLeadingCar(list_of_cars, lane)) > this.vehicle_length * 5 
-				&& this.getDistanceToCar(this.getFollowingCar(list_of_cars, lane)) > this.vehicle_length * 5) {
+//			if (this.getDistanceToCar(this.getLeadingCar(list_of_cars, lane)) > this.vehicle_length * 2 
+//				&& this.getDistanceToCar(this.getFollowingCar(list_of_cars, lane)) > this.vehicle_length * 2) {
+			if(this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
 				this.in_traffic = true;
 			}
 		} else {

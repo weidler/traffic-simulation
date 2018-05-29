@@ -1,5 +1,8 @@
 package core;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
@@ -35,7 +38,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 1;
+	private float simulated_seconds_per_real_second = 100;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -47,10 +50,12 @@ public class Simulation {
 	private double truck_rate = 0.2;
 	
 	// STATISTICS
-	private int measurement_interval = 1000;
+	private int measurement_interval_realistic_time_seconds = 60;
 	private double average_velocity;
 	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for
 											// that it simulates
+
+	private int current_run;
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -183,9 +188,9 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 20, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
-			this.simulation_schedule = new PoissonSchedule(this.street_map, 10);
+			this.simulation_schedule = new PoissonSchedule(this.street_map, 20);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
 			this.simulation_schedule = new GaussianSchedule(this.street_map, 10, 5);
 		}
@@ -210,7 +215,7 @@ public class Simulation {
 				is.initializeTrafficLightSettings();
 			}
 
-			double delta_t = 0.01; // in seconds
+			double delta_t = 0.05; // in seconds
 			this.adjustVisualizationFrequency(delta_t);
 			long total_calculation_time = 0;
 			int step = 0;
@@ -269,12 +274,11 @@ public class Simulation {
 				step++;
 				resettable_step++;
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
-				if (step % this.measurement_interval == 0) this.calcStatistics();
+				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
 					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
 					resettable_step = 0;
 					total_calculation_time = 0;
-					System.out.println("PERFORMANCE: "+ this.real_time_utilization);
 				}
 			}
 
@@ -291,13 +295,17 @@ public class Simulation {
 	public void calcStatistics() {
 		double total_velocity = 0;
 		double cars_in_queue = 0;
+
 		for (Car c : this.cars) {
 			total_velocity += c.getCurrentVelocity();
 			if (c.isWaiting()) cars_in_queue++;
 		}
 		
-		this.average_velocity = total_velocity / this.cars.size();
-
+		// ADD STATISTICS TO EXPERIMENT
+		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.cars.size(), this.current_run);
+		this.experiment.addAvgSpeed(total_velocity/this.cars.size(), this.current_run);
+		this.experiment.addNumbCars(this.cars.size(), this.current_run);
+		if (this.current_run == 0) this.experiment.addTimestep(this.current_time);
 		
 		//System.out.println(cars_in_queue);
 		// long start_time = 0;
@@ -347,6 +355,38 @@ public class Simulation {
 		
 		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
+		
+		// Write report
+		PrintWriter report_writer;
+		try {
+			report_writer = new PrintWriter("./simulation-reports/output.csv", "UTF-8");
+			
+			String sep = ";";
+			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
+			for (int i = 0; i < this.experiment.getMeasurementTimestamps().size(); i++) {
+				report_writer.println(
+						this.experiment.getMeasurementTimestamps().get(i) + sep + 
+						this.experiment.getAvgSpeed().get(0).get(i) + sep + 
+						this.experiment.getFractionsOfWaitingCars().get(0).get(i) + sep +
+						this.experiment.getNumbCars().get(0).get(i)
+				);
+			}
+			
+			report_writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public int getNumberCarsOutOfTraffic() {
+		int sum = 0;
+		for (Car c : this.cars) {
+			if (!c.inTraffic()) sum++;
+		}
+		
+		return sum;
 	}
 
 	public void stop() {

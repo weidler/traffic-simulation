@@ -2,33 +2,24 @@
 package graphical_interface;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.beans.XMLEncoder;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
@@ -50,23 +41,15 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
-import javax.swing.RepaintManager;
 import javax.swing.border.Border;
-
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.google.gson.Gson;
 
 import car.Car;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JRadioButton;
 
 /**
  * 
@@ -163,11 +146,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	 * create interface. including buttons and listeners
 	 */
 	public GraphicalInterface(Simulation simulation) {
-		String[] strateyList = { "circulating lights" };
-		String[] scheduleList = { "poisson", "gaussian" };
-		strategy = new JComboBox<>(strateyList);
-		schedule = new JComboBox<>(scheduleList);
-
 		this.simulation = simulation;
 		this.streetMap = simulation.getStreetMap();
 		this.visuals = new Visuals(simulation);
@@ -692,6 +670,11 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+				String[] strateyList = { "circulating lights" };
+				String[] scheduleList = { "poisson", "gaussian" , "empirical"};
+				strategy = new JComboBox<>(strateyList);
+				schedule = new JComboBox<>(scheduleList);
+				
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("duration in days:"));
 				myPanel.add(duration);
