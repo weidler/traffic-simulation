@@ -188,7 +188,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 20, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 45, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 20);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
@@ -201,6 +201,8 @@ public class Simulation {
 	public void start() {
 
 		this.simulation_schedule.updateToMap();
+		this.applyExperimentalSettings();
+		System.out.println(this.simulation_schedule);
 
 		if (this.is_running) {
 			System.out.println("Already Running.");
@@ -235,7 +237,7 @@ public class Simulation {
 				for (Road r : this.street_map.getRoads()) {
 					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
 						this.addCarAtRoad(r);
-						simulation_schedule.drawNextCarAt(r);// , realistic_time_in_seconds);
+						simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
 					}
 				}
 

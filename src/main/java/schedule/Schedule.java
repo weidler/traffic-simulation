@@ -41,6 +41,7 @@ public class Schedule {
 
 	public double drawInterarrivalTime() {
 		Random rand = new Random();
+		System.out.println("HALLO");
 		return rand.nextDouble() * 10;
 	}
 
