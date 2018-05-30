@@ -15,8 +15,9 @@ public class Experiment {
 	private int numb_runs;
 
 	/* CONTAINERS FOR OVER TIME STATISTICS */
-	private ArrayList<ArrayList<Integer>> cars_in_queue = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Double>> fractions_of_waiting_cars = new ArrayList<ArrayList<Double>>();
 	private ArrayList<ArrayList<Double>> avg_speed = new ArrayList<ArrayList<Double>>();
+	private ArrayList<ArrayList<Integer>> numb_cars = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<Double> measurement_timestamps = new ArrayList<Double>();
 	
 	/* CONSTRUCTORS */
@@ -29,6 +30,7 @@ public class Experiment {
 		this.vizualise = vizualise;
 		
 		this.numb_runs = 5;
+		for (int i = 0; i < this.numb_runs; i++) this.addRun();
 	}
 
 	/** DEFAULT CONSTRUCTOR
@@ -40,9 +42,9 @@ public class Experiment {
 
 	/* METHODS */
 	
-	public void addNumberOfCarsInQueue(int number, int run) {
+	public void addNumberOfCarsInQueue(double number, int run) {
 		 if (this.validateGivenRun(run)) {
-			 this.cars_in_queue.get(run).add(number);
+			 this.fractions_of_waiting_cars.get(run).add(number);
 		 }		
 	}
 	
@@ -50,6 +52,12 @@ public class Experiment {
 		 if (this.validateGivenRun(run)) {
 			 this.avg_speed.get(run).add(speed);
 		 }		
+	}
+	
+	public void addNumbCars(int numb_cars, int run) {
+		if (this.validateGivenRun(run)) {
+			 this.numb_cars.get(run).add(numb_cars);
+		 }
 	}
 	
 	public void addTimestep(double timestep) {
@@ -65,6 +73,11 @@ public class Experiment {
 		return true;
 	}
 	
+	public void addRun() {
+		fractions_of_waiting_cars.add(new ArrayList<Double>());
+		avg_speed.add(new ArrayList<Double>());
+		numb_cars.add(new ArrayList<Integer>());
+	}
 	
 	/* SETTERS AND GETTERS */
 	
@@ -103,5 +116,20 @@ public class Experiment {
 	public void setVizualise(boolean vizualise) {
 		this.vizualise = vizualise;
 	}
+	
+	public ArrayList<ArrayList<Double>> getFractionsOfWaitingCars() {
+		return fractions_of_waiting_cars;
+	}
 
+	public ArrayList<ArrayList<Double>> getAvgSpeed() {
+		return avg_speed;
+	}
+
+	public ArrayList<Double> getMeasurementTimestamps() {
+		return measurement_timestamps;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getNumbCars() {
+		return numb_cars;
+	}
 }

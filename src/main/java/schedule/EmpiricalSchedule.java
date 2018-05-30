@@ -52,7 +52,7 @@ public class EmpiricalSchedule extends Schedule {
 		while (thinned) {
 			// generate uniform random number
 			double u = rand.nextDouble();
-			final_interarrival_time += (u * mean) + mean;
+			final_interarrival_time += -mean * Math.log(rand.nextDouble());
 			realistic_arrival_time = realistic_time_in_seconds + final_interarrival_time;
 			while (Time.secondsToHours(realistic_arrival_time) >= 24) {
 				realistic_arrival_time = realistic_arrival_time - Time.hoursToSeconds(24);
