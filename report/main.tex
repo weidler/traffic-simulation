@@ -136,7 +136,13 @@ This type of traffic control system is preferred for areas with minimal obstruct
 \section{Methodology \& Experiments}
 \label{sec:experiments}
 
-In order to be able to measure and compare the efficiency of the different strategies applied, various measurements are taken while the simulation is running. One of these is the average speed of the vehicles of each road. Measuring this is done by starting a timer in cars when they get on a road and stopping it when they leave the road. Then by using the following formula, the average speed is calculated:   (v: velocity, s: road length, t: time spent on road). The second statistic measured is the amount of time each car spends waiting at traffic lights. This is achieved by checking at each timestep if a car is under a certain speed and is not accelerating. Whenever the previous conditions are fulfilled, the total amount of waiting time is increased by the size of the timestep. The aim of the strategies is to maximize the average speeds and minimize the time spent waiting.
+In order to be able to measure and compare the efficiency of the different strategies applied, various measurements are taken while the simulation is running. One of these is the average speed of the vehicles for each road. Measuring this is done by starting a timer for a car when it enters a road and stopping it when it leaves it. Then, by using the following formula, the average speed is calculated:   
+
+\begin{equation}
+	v = \frac{s}{t}
+\end{equation}
+
+where $v$ is the velocity, s the road length and t refers to the time spent on a road. Using this, we can also easily derive the average speed on each road. The second statistic measured is the amount of time each car spends waiting at traffic lights. This is achieved by checking at each time step if a car is under a certain speed and is not accelerating. Whenever the previous conditions are fulfilled, the total amount of waiting time is increased by the size of the time step. The purpose of the control strategies is to maximize the average speeds and minimize the time spent waiting in congestions.
 
 \subsection{Simulation Validation}
 In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
