@@ -410,7 +410,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						sc.useDelimiter(",");
 						String next = sc.next();
 						Boolean change = false;
-						while (next != null) {
+						while (!next.equals("p")) {
 
 							if (next.equals("#")) {
 								change = true;
@@ -433,6 +433,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
 								streetMap.addRoad(start, end);
 								next = sc.next();
+								System.out.println("next1: "+next);
+								streetMap.getRoads().get(streetMap.getRoads().size()-1).setRoadType(next);
+								next = sc.next();
+								System.out.println("next2: "+next);
+								streetMap.getRoads().get(streetMap.getRoads().size()-1).setLanes(Integer.parseInt(next));
+								System.out.println("next3: "+next);
+								next = sc.next();
+								System.out.println("next4: "+next);
 							}
 							System.out.println("loading..." + next);
 						}

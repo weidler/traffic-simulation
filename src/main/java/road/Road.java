@@ -74,6 +74,21 @@ public class Road {
 		this.allowed_max_speed = 50;
 		this.type = RoadType.ROAD;
 	}
+	public void setRoadType(String t)
+	{
+		if(t.equals("ROAD"))
+		{
+			//nothing
+		}
+		else if(t.equals("DIRT_ROAD"))
+		{
+			this.type = RoadType.DIRT_ROAD;
+		}
+		else if(t.equals("HIGHWAY"))
+		{
+			this.type = RoadType.HIGHWAY;
+		}
+	}
 
 	public void setStreetMap(StreetMap map) {
 		this.streetmap = map;
@@ -156,7 +171,10 @@ public class Road {
 
 		return neighbouring_roads;
 	}
-
+	public RoadType getRoadType()
+	{
+		return type;
+	}
 	public int getLanes() {
 		return this.lanes;
 	}
