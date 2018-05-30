@@ -392,7 +392,7 @@ public class Visuals extends JPanel {
 				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
 
-			System.out.println(to_x_right + ", " + to_y_right + ", " + to_x_left + ", " + to_y_left + ", " + from_x_right + ", " + from_y_right + ", " + from_x_left + ", " + from_y_left);
+			//System.out.println(to_x_right + ", " + to_y_right + ", " + to_x_left + ", " + to_y_left + ", " + from_x_right + ", " + from_y_right + ", " + from_x_left + ", " + from_y_left);
 			
 			// draw road background
 			Polygon bg_polygon = new Polygon();

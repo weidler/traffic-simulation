@@ -49,7 +49,7 @@ public class StreetMap {
 		result = result.concat("#,");
 
 		for (Road r : roads) {
-			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + ","+r.getRoadType() +","+r.getLanes() +",");
+			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + "," + r.getRoadType() + "," + r.getLanes() + ",");
 		}
 		result = result.concat("p,");
 		System.out.println(result);
@@ -129,12 +129,6 @@ public class StreetMap {
 	}
 
 	// GRAPH MODIFICATION
-
-	public void addRoad(Intersection start, Intersection end) {
-		Road new_road = new Road(start, end);
-		this.addRoad(new_road);
-	}
-
 	public void addRoad(Road road) {
 		Intersection int_a = this.getIntersectionByCoordinates(road.getX1(), road.getY1());
 		Intersection int_b = this.getIntersectionByCoordinates(road.getX2(), road.getY2());

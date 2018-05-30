@@ -429,16 +429,21 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								int x2 = Integer.parseInt(next);
 								next = sc.next();
 								int y2 = Integer.parseInt(next);
+								
 								Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
 								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
-								streetMap.addRoad(start, end);
+								
+								Road road = new Road(start, end);
+								road.setStreetMap(streetMap);
 								next = sc.next();
 								System.out.println("next1: "+next);
-								streetMap.getRoads().get(streetMap.getRoads().size()-1).setRoadType(next);
+								road.setRoadType(next);
 								next = sc.next();
 								System.out.println("next2: "+next);
-								streetMap.getRoads().get(streetMap.getRoads().size()-1).setLanes(Integer.parseInt(next));
-								System.out.println("next3: "+next);
+								road.setLanes(Integer.parseInt(next));
+								System.out.println("next3: "+next);								
+								streetMap.addRoad(road);
+								
 								next = sc.next();
 								System.out.println("next4: "+next);
 							}
