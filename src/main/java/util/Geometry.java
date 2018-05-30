@@ -45,18 +45,28 @@ public class Geometry {
 	    else return 2;
 	}
 	
-	public static Point intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
-			double y4) {
+	public static Point intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 		double m_a = slope(x1, y1, x2, y2);
-		double m_b = slope(x3, y3, x4, y4);
 		double b_a = yIntercept(x1, y1, x2, y2);
+
+		double m_b = slope(x3, y3, x4, y4);
 		double b_b = yIntercept(x3, y3, x4, y4);
-
+		
 		if (m_a == 0 && m_b == 0) return null;
-
-		double x = (b_b - b_a) / (m_a - m_b);
-		double y = m_a * x + b_a;
-
+		
+		double x, y;
+		// if one of the line is parallel to y axis
+		if (x1 == x2) {
+			x = x1;
+			y = m_b * x + b_b;
+		} else if (x3 == x4) {
+			x = x3;
+			y = m_a * x + b_a;
+		} else {
+			x = (b_b - b_a) / (m_a - m_b);
+			y = m_a * x + b_a;
+		}
+		
 		return new Point(x, y);
 	}
 	
@@ -146,7 +156,7 @@ public class Geometry {
 
 		double dot = centered_x1 * centered_x2 + centered_y1 * centered_y2;
 		double det = centered_x1 * centered_y2 - centered_y1 * centered_x2;
-
+		
 		double angle = toDegrees(Math.atan2(det, dot));
 		if (angle > 0) {
 			return angle;
@@ -262,39 +272,6 @@ public class Geometry {
 		return out;
 		
 	}
-     
-    /**
-     * https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
-     * FLAWED! MAY RESULT IN INFINITE LOOP
-     */
-    public static ArrayList<Point> convexHull(ArrayList<Point> points) {
-      
-    	if (points.size() <= 3) {
-    		return points;
-    	}
-    	
-    	// Initialize Result
-        ArrayList<Point> hull = new ArrayList<Point>();
-      
-        // Find the leftmost point
-        int l = 0;
-        for (int i = 1; i < points.size(); i++) {
-        	if (points.get(i).x < points.get(l).x) l = i;
-        }
-      
-        // find hull
-        int p = l, q;
-        do {
-            hull.add(points.get(p));
-            q = (p + 1) % points.size();
-            for (int i = 0; i < points.size(); i++) {
-               if (orientation(points.get(p), points.get(i), points.get(q)) == 2) q = i;
-            }
-            p = q;
-        } while (p != l);
-      
-        return hull;
-    }
 	
 	public static void main(String[] args) {
 
