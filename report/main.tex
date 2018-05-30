@@ -4,7 +4,7 @@
 \usepackage{times}
 \usepackage{url}
 \usepackage{amsmath}
-\usepackage[natbib=true,backend=bibtex,style=authoryear,language=german]{biblatex}
+\usepackage[natbib=true,backend=bibtex,style=authoryear,language=english]{biblatex}
 \usepackage{lipsum}
 \usepackage{latexsym}
 \usepackage[normalem]{ulem}
@@ -14,7 +14,7 @@
 \pagestyle{plain} 
 \usepackage{graphicx}
 \captionsetup[table]{skip=10pt}
-\title{Intelligent Road Control}
+\title{Intelligent Traffic Control}
 
 \addbibresource{references.bib}
 \AtBeginBibliography{\small}
@@ -125,6 +125,7 @@ While the Gaussian and Exponential distribution are standard distributions with 
 In this section, different traffic control strategies are highlighted as well as their effectiveness in different environments.
 
 \subsection{Benchmark Strategies}
+In order to provide a baseline of what advanced strategies should be able to outperform, we implement several simple benchmark strategies. \textit{Basic Cycling} refers to traffic light control based on a simple, fixed-time cycle in which one traffic light at a time is green. \textit{Informed Cycling} refers to a similar strategy, in which though a road's green phase is skipped if there are no cars on it. Ultimately, \textit{Weighted Cycling} adjusts the green phases linearly based on the density of the roads going into the intersection.
 
 \subsection{Coordinated Traffic Lights}
 Coordinated traffic lights are traffic lights that exchange information with each other in order to predict future traffic patterns and assure the least amount of congestion possible.  Each intersection is outfitted with different types of sensors, depending on the environment in which they are needed.  These sensors can include inductive loops, cameras, or microwave radar systems, each of which has its own pros and cons.
