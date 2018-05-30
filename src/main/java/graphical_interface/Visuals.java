@@ -407,7 +407,7 @@ public class Visuals extends JPanel {
 
 			// draw road outer lines
 			g2.setColor(Color.WHITE);
-			g2.setStroke(new BasicStroke((float) 1.5));
+			g2.setStroke(new BasicStroke(2));
 			g2.draw(new Line2D.Double((int) (to_x_right) * zoomMultiplier + changeX,
 					(int) (to_y_right) * zoomMultiplier + changeY, (int) (from_x_right) * zoomMultiplier + changeX,
 					(int) (from_y_right) * zoomMultiplier + changeY));
