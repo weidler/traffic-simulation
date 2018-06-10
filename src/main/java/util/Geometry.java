@@ -5,20 +5,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import datatype.Line;
 import datatype.Point;
 import road.Road;
 
 public class Geometry {
-
-	public static double slope(double x1, double y1, double x2, double y2) {
-		if (x2 - x1 == 0) return 0;
-		return (y2 - y1) / (x2 - x1);
-	}
-
-	public static double yIntercept(double x1, double y1, double x2, double y2) {
-		if (x2 - x1 == 0) return 0;
-		return (y1 * x2 - y2 * x1) / (x2 - x1);
-	}
 
 	public static boolean liesOnSegment(Point s_a, Point s_b, Point q) {
 	    if (q.x <= Math.max(s_a.x, s_b.x) && q.x >= Math.min(s_a.x, s_b.x) &&
@@ -42,22 +33,22 @@ public class Geometry {
 	    else return 2;
 	}
 	
-	public static Point intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-		double m_a = slope(x1, y1, x2, y2);
-		double b_a = yIntercept(x1, y1, x2, y2);
+	public static Point intersection(Line P, Line Q) {
+		double m_a = P.slope();
+		double b_a = P.yIntercept();
 
-		double m_b = slope(x3, y3, x4, y4);
-		double b_b = yIntercept(x3, y3, x4, y4);
+		double m_b = Q.slope();
+		double b_b = Q.yIntercept();
 		
 		if (m_a == 0 && m_b == 0) return null;
 		
 		double x, y;
 		// if one of the line is parallel to y axis
-		if (x1 == x2) {
-			x = x1;
+		if (P.A.x == P.B.x) {
+			x = P.A.x;
 			y = m_b * x + b_b;
-		} else if (x3 == x4) {
-			x = x3;
+		} else if (Q.A.x == Q.B.x) {
+			x = Q.A.x;
 			y = m_a * x + b_a;
 		} else {
 			x = (b_b - b_a) / (m_a - m_b);
@@ -65,10 +56,6 @@ public class Geometry {
 		}
 		
 		return new Point(x, y);
-	}
-	
-	public static Point intersection(Point a, Point b, Point c, Point d) {
-		return intersection(a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y);
 	}
 	
 	public static boolean lineSegmentsIntersect(Point a, Point b, Point c, Point d) {
@@ -88,35 +75,13 @@ public class Geometry {
 	    if (o1 != o2 && o3 != o4)
 	        return true;
 	 
-	    // Special Cases
-	    // a, b and c are colinear and c lies on segment ab
+
 	    if (o1 == 0 && liesOnSegment(a, c, b)) return true;
-	 
-	    // a, b and d are colinear and d lies on segment ab
 	    if (o2 == 0 && liesOnSegment(a, d, b)) return true;
-	 
-	    // c, d and a are colinear and a lies on segment cd
 	    if (o3 == 0 && liesOnSegment(c, a, d)) return true;
-	 
-	     // c, d and b are colinear and b lies on segment cd
 	    if (o4 == 0 && liesOnSegment(c, b, d)) return true;
 	 
-	    return false; // Doesn't fall in any of the above cases
-		
-//		double denom = (d.y - c.y) * (b.x - a.x) - (d.x - c.x) * (b.y - a.y);
-//
-//		if (denom == 0.0) return false;
-//
-//		double ua = ((d.x - c.x) * (a.y - c.y) - (d.y - c.y) * (a.x - c.x)) / denom;
-//		double ub = ((b.x - a.x) * (a.y - c.y) - (b.y - a.y) * (a.x - c.x)) / denom;
-//
-//		if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
-//			if (a.y != b.y && a.y != c.y && a.y != d.y && c.y != c.y && b.y != d.y && c.y != d.y) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
+	    return false;
 	}
 	
 	public static double vectorMagnitude(double x, double y) {
@@ -162,8 +127,8 @@ public class Geometry {
 		}
 	}
 
-	public static double distance(double x1, double y1, double x2, double y2) {
-		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+	public static double distance(Point A, Point B) {
+		return Math.sqrt(Math.pow((B.x - A.x), 2) + Math.pow(B.y - A.y, 2));
 	}
 
 	public static double[] offset(Road road, int lane_size) {
@@ -194,14 +159,14 @@ public class Geometry {
 		return true;
 
 	}
-	
-	public static double[] getPointBetween(double d, double x1, double y1, double x2, double y2) {
-		double distance_between = distance(x1, y1, x2, y2);
-		
+
+	public static double[] getPointBetween(double d, Point A, Point B) {
+		double distance_between = distance(A, B);
+
 		double[] new_point = new double[2];
-		new_point[0] = x1 + (d/distance_between) * (x2 - x1);
-		new_point[1] = y1 + (d/distance_between) * (y2 - y1);
-		
+		new_point[0] = A.x + (d/distance_between) * (B.x - A.x);
+		new_point[1] = A.y + (d/distance_between) * (B.y - A.y);
+
 		return new_point;
 	}
 
@@ -213,7 +178,7 @@ public class Geometry {
 		
 		return rotated;
 	}
-	
+
 	public static double[] midpoint(double x1, double y1, double x2, double y2) {
 		double[] mid = new double[2];
 		mid[0] = (x1 + x2) / 2;

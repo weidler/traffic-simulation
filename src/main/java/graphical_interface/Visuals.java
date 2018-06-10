@@ -22,6 +22,7 @@ import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
+import datatype.Line;
 import road.Road;
 import type.CarType;
 import type.RoadType;
@@ -185,6 +186,10 @@ public class Visuals extends JPanel {
 			double offsetAngle = precalculated_offsets.get(current_road)[2];
 
 			// recalculate initial start and end of road outer lines based on angular offset
+			Point to_right = new Point(current_road.getX1() - outer_offset_x, current_road.getY1() + outer_offset_y);
+			Point from_right = new Point(current_road.getX2() - outer_offset_x, current_road.getY2() + outer_offset_y);
+			Line outer_line_right = new Line(to_right, from_right);
+
 			double to_x_right = current_road.getX1() - outer_offset_x;
 			double to_y_right = current_road.getY1() + outer_offset_y;
 			double from_x_right = current_road.getX2() - outer_offset_x;
@@ -239,27 +244,27 @@ public class Visuals extends JPanel {
 						intersection_from.getYCoord() + (precalculated_offsets.get(next_clockwise_road_from)[1]
 								* next_clockwise_road_from.getLanes()))) {
 
-					line_intersection_right_from = Geometry.intersection(from_x_right, from_y_right, to_x_right,
-							to_y_right,
-							ncr_origin_x - (precalculated_offsets.get(next_clockwise_road_from)[0]
+					line_intersection_right_from = Geometry.intersection(new Line(from_x_right, from_y_right, to_x_right,
+							to_y_right),
+							new Line(ncr_origin_x - (precalculated_offsets.get(next_clockwise_road_from)[0]
 									* next_clockwise_road_from.getLanes()),
 							ncr_origin_y + (precalculated_offsets.get(next_clockwise_road_from)[1]
 									* next_clockwise_road_from.getLanes()),
 							intersection_from.getXCoord() - (precalculated_offsets.get(next_clockwise_road_from)[0]
 									* next_clockwise_road_from.getLanes()),
 							intersection_from.getYCoord() + (precalculated_offsets.get(next_clockwise_road_from)[1]
-									* next_clockwise_road_from.getLanes()));
+									* next_clockwise_road_from.getLanes())));
 				} else {
-					line_intersection_right_from = Geometry.intersection(from_x_right, from_y_right, to_x_right,
-							to_y_right,
-							ncr_origin_x + (precalculated_offsets.get(next_clockwise_road_from)[0]
+					line_intersection_right_from = Geometry.intersection(new Line(from_x_right, from_y_right, to_x_right,
+							to_y_right),
+							new Line(ncr_origin_x + (precalculated_offsets.get(next_clockwise_road_from)[0]
 									* next_clockwise_road_from.getLanes()),
 							ncr_origin_y - (precalculated_offsets.get(next_clockwise_road_from)[1]
 									* next_clockwise_road_from.getLanes()),
 							intersection_from.getXCoord() + (precalculated_offsets.get(next_clockwise_road_from)[0]
 									* next_clockwise_road_from.getLanes()),
 							intersection_from.getYCoord() - (precalculated_offsets.get(next_clockwise_road_from)[1]
-									* next_clockwise_road_from.getLanes()));
+									* next_clockwise_road_from.getLanes())));
 				}
 
 				// left line needs to cross counterclockwise right
@@ -271,8 +276,8 @@ public class Visuals extends JPanel {
 						intersection_from.getYCoord() - (precalculated_offsets.get(next_counterclockwise_road_from)[1]
 								* next_counterclockwise_road_from.getLanes()))) {
 
-					line_intersection_left_from = Geometry.intersection(from_x_left, from_y_left, to_x_left, to_y_left,
-							nccr_origin_x + (precalculated_offsets.get(next_counterclockwise_road_from)[0]
+					line_intersection_left_from = Geometry.intersection(new Line(from_x_left, from_y_left, to_x_left, to_y_left),
+							new Line(nccr_origin_x + (precalculated_offsets.get(next_counterclockwise_road_from)[0]
 									* next_counterclockwise_road_from.getLanes()),
 							nccr_origin_y - (precalculated_offsets.get(next_counterclockwise_road_from)[1]
 									* next_counterclockwise_road_from.getLanes()),
@@ -281,10 +286,10 @@ public class Visuals extends JPanel {
 											* next_counterclockwise_road_from.getLanes()),
 							intersection_from.getYCoord()
 									- (precalculated_offsets.get(next_counterclockwise_road_from)[1]
-											* next_counterclockwise_road_from.getLanes()));
+											* next_counterclockwise_road_from.getLanes())));
 				} else {
-					line_intersection_left_from = Geometry.intersection(from_x_left, from_y_left, to_x_left, to_y_left,
-							nccr_origin_x - (precalculated_offsets.get(next_counterclockwise_road_from)[0]
+					line_intersection_left_from = Geometry.intersection(new Line(from_x_left, from_y_left, to_x_left, to_y_left),
+							new Line(nccr_origin_x - (precalculated_offsets.get(next_counterclockwise_road_from)[0]
 									* next_counterclockwise_road_from.getLanes()),
 							nccr_origin_y + (precalculated_offsets.get(next_counterclockwise_road_from)[1]
 									* next_counterclockwise_road_from.getLanes()),
@@ -293,7 +298,7 @@ public class Visuals extends JPanel {
 											* next_counterclockwise_road_from.getLanes()),
 							intersection_from.getYCoord()
 									+ (precalculated_offsets.get(next_counterclockwise_road_from)[1]
-											* next_counterclockwise_road_from.getLanes()));
+											* next_counterclockwise_road_from.getLanes())));
 				}
 
 				from_x_right = line_intersection_right_from.x;
@@ -301,7 +306,7 @@ public class Visuals extends JPanel {
 
 				from_x_left = line_intersection_left_from.x;
 				from_y_left = line_intersection_left_from.y;
-				
+
 				chosen_line_intersections.get(intersection_from).add(line_intersection_left_from);
 				chosen_line_intersections.get(intersection_from).add(line_intersection_right_from);
 			}
@@ -329,27 +334,27 @@ public class Visuals extends JPanel {
 						intersection_to.getYCoord() + (precalculated_offsets.get(next_counterclockwise_road_to)[1]
 								* next_counterclockwise_road_to.getLanes()))) {
 
-					line_intersection_right_to = Geometry.intersection(from_x_right, from_y_right, to_x_right,
-							to_y_right,
-							nccr_origin_x - (precalculated_offsets.get(next_counterclockwise_road_to)[0]
+					line_intersection_right_to = Geometry.intersection(new Line(from_x_right, from_y_right, to_x_right,
+							to_y_right),
+							new Line(nccr_origin_x - (precalculated_offsets.get(next_counterclockwise_road_to)[0]
 									* next_counterclockwise_road_to.getLanes()),
 							nccr_origin_y + (precalculated_offsets.get(next_counterclockwise_road_to)[1]
 									* next_counterclockwise_road_to.getLanes()),
 							intersection_to.getXCoord() - (precalculated_offsets.get(next_counterclockwise_road_to)[0]
 									* next_counterclockwise_road_to.getLanes()),
 							intersection_to.getYCoord() + (precalculated_offsets.get(next_counterclockwise_road_to)[1]
-									* next_counterclockwise_road_to.getLanes()));
+									* next_counterclockwise_road_to.getLanes())));
 				} else {
-					line_intersection_right_to = Geometry.intersection(from_x_right, from_y_right, to_x_right,
-							to_y_right,
-							nccr_origin_x + (precalculated_offsets.get(next_counterclockwise_road_to)[0]
+					line_intersection_right_to = Geometry.intersection(new Line(from_x_right, from_y_right, to_x_right,
+							to_y_right),
+							new Line(nccr_origin_x + (precalculated_offsets.get(next_counterclockwise_road_to)[0]
 									* next_counterclockwise_road_to.getLanes()),
 							nccr_origin_y - (precalculated_offsets.get(next_counterclockwise_road_to)[1]
 									* next_counterclockwise_road_to.getLanes()),
 							intersection_to.getXCoord() + (precalculated_offsets.get(next_counterclockwise_road_to)[0]
 									* next_counterclockwise_road_to.getLanes()),
 							intersection_to.getYCoord() - (precalculated_offsets.get(next_counterclockwise_road_to)[1]
-									* next_counterclockwise_road_to.getLanes()));
+									* next_counterclockwise_road_to.getLanes())));
 				}
 
 				// left line needs to cross clockwise right
@@ -361,25 +366,25 @@ public class Visuals extends JPanel {
 						intersection_to.getYCoord() - (precalculated_offsets.get(next_clockwise_road_to)[1]
 								* next_clockwise_road_to.getLanes()))) {
 
-					line_intersection_left_to = Geometry.intersection(from_x_left, from_y_left, to_x_left, to_y_left,
-							ncr_origin_x + (precalculated_offsets.get(next_clockwise_road_to)[0]
+					line_intersection_left_to = Geometry.intersection(new Line(from_x_left, from_y_left, to_x_left, to_y_left),
+							new Line(ncr_origin_x + (precalculated_offsets.get(next_clockwise_road_to)[0]
 									* next_clockwise_road_to.getLanes()),
 							ncr_origin_y - (precalculated_offsets.get(next_clockwise_road_to)[1]
 									* next_clockwise_road_to.getLanes()),
 							intersection_to.getXCoord() + (precalculated_offsets.get(next_clockwise_road_to)[0]
 									* next_clockwise_road_to.getLanes()),
 							intersection_to.getYCoord() - (precalculated_offsets.get(next_clockwise_road_to)[1]
-									* next_clockwise_road_to.getLanes()));
+									* next_clockwise_road_to.getLanes())));
 				} else {
-					line_intersection_left_to = Geometry.intersection(from_x_left, from_y_left, to_x_left, to_y_left,
-							ncr_origin_x - (precalculated_offsets.get(next_clockwise_road_to)[0]
+					line_intersection_left_to = Geometry.intersection(new Line(from_x_left, from_y_left, to_x_left, to_y_left),
+							new Line(ncr_origin_x - (precalculated_offsets.get(next_clockwise_road_to)[0]
 									* next_clockwise_road_to.getLanes()),
 							ncr_origin_y + (precalculated_offsets.get(next_clockwise_road_to)[1]
 									* next_clockwise_road_to.getLanes()),
 							intersection_to.getXCoord() - (precalculated_offsets.get(next_clockwise_road_to)[0]
 									* next_clockwise_road_to.getLanes()),
 							intersection_to.getYCoord() + (precalculated_offsets.get(next_clockwise_road_to)[1]
-									* next_clockwise_road_to.getLanes()));
+									* next_clockwise_road_to.getLanes())));
 				}
 
 				to_x_right = line_intersection_right_to.x;
@@ -387,7 +392,7 @@ public class Visuals extends JPanel {
 
 				to_x_left = line_intersection_left_to.x;
 				to_y_left = line_intersection_left_to.y;
-				
+
 				chosen_line_intersections.get(intersection_to).add(line_intersection_left_to);
 				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
@@ -401,27 +406,6 @@ public class Visuals extends JPanel {
 			else if (roads.get(i).getType() == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
 			else if (roads.get(i).getType() == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
 			g2.fill(bg_polygon);
-
-			// fill intersection leftouts
-			if (streetMap.intersectionCount() > 1) {
-				for (Intersection inter : streetMap.getIntersections()) {
-					Polygon intersection_filling = new Polygon();
-					if (chosen_line_intersections.containsKey(inter)) {
-						for (Point point : Geometry.orderPointsClockwise((chosen_line_intersections.get(inter)), inter.getPoint())) {
-							if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
-								intersection_filling.addPoint(
-										(int) (point.x * zoomMultiplier + changeX),
-										(int) (point.y * zoomMultiplier + changeY)
-								);
-							}
-						}
-
-						g2.setColor(Color.decode(road_color));
-						g2.fill(intersection_filling);
-
-					}
-				}
-			}
 
 			// draw road outer lines
 			g2.setColor(Color.WHITE);
@@ -458,18 +442,14 @@ public class Visuals extends JPanel {
 
 				double[] tl_position_from = Geometry.getPointBetween(
 						lightDistanceFromIntersection, 
-						current_road.getX1(), 
-						current_road.getY1(), 
-						current_road.getX2(), 
-						current_road.getY2()
+						current_road.getPointA(),
+						current_road.getPointB()
 				);
 
 				double[] tl_position_to = Geometry.getPointBetween(
-						lightDistanceFromIntersection, 
-						current_road.getX2(), 
-						current_road.getY2(), 
-						current_road.getX1(), 
-						current_road.getY1()
+						lightDistanceFromIntersection,
+						current_road.getPointB(),
+						current_road.getPointA()
 				);
 
 				g2.setColor(Color.RED);
@@ -533,6 +513,27 @@ public class Visuals extends JPanel {
 
 			// draws the intersections
 			intersectionSize = 30;
+		}
+
+		// fill intersection leftouts
+		if (streetMap.intersectionCount() > 1) {
+			for (Intersection inter : streetMap.getIntersections()) {
+				Polygon intersection_filling = new Polygon();
+				if (chosen_line_intersections.containsKey(inter)) {
+					for (Point point : Geometry.orderPointsClockwise((chosen_line_intersections.get(inter)), inter.getPoint())) {
+						if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
+							intersection_filling.addPoint(
+									(int) (point.x * zoomMultiplier + changeX),
+									(int) (point.y * zoomMultiplier + changeY)
+							);
+						}
+					}
+
+					g2.setColor(Color.decode(road_color));
+					g2.fill(intersection_filling);
+
+				}
+			}
 		}
 
 		// draws the cars; Creating a deep copy of the car list in order to prevent 

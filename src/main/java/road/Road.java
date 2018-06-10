@@ -35,7 +35,7 @@ public class Road {
 		this.x2 = x2;
 		this.y2 = y2;
 
-		this.length = this.calcLength(x1, y1, x2, y2);
+		this.length = this.calcLength();
 
 		this.setTypeParameters();
 	}
@@ -242,8 +242,8 @@ public class Road {
 		return false;
 	}
 
-	private double calcLength(int x1, int y1, int x2, int y2) {
-		return Geometry.distance(x1, y1, x2, y2);
+	private double calcLength() {
+		return Geometry.distance(getPointA(), getPointB());
 	}
 
 }
