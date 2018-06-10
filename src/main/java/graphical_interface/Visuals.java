@@ -391,9 +391,6 @@ public class Visuals extends JPanel {
 				chosen_line_intersections.get(intersection_to).add(line_intersection_left_to);
 				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
-
-			//System.out.println(to_x_right + ", " + to_y_right + ", " + to_x_left + ", " + to_y_left + ", " + from_x_right + ", " + from_y_right + ", " + from_x_left + ", " + from_y_left);
-			
 			// draw road background
 			Polygon bg_polygon = new Polygon();
 			bg_polygon.addPoint((int) (to_x_right * zoomMultiplier + changeX), (int) (to_y_right * zoomMultiplier + changeY));
@@ -404,6 +401,27 @@ public class Visuals extends JPanel {
 			else if (roads.get(i).getType() == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
 			else if (roads.get(i).getType() == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
 			g2.fill(bg_polygon);
+
+			// fill intersection leftouts
+			if (streetMap.intersectionCount() > 1) {
+				for (Intersection inter : streetMap.getIntersections()) {
+					Polygon intersection_filling = new Polygon();
+					if (chosen_line_intersections.containsKey(inter)) {
+						for (Point point : Geometry.orderPointsClockwise((chosen_line_intersections.get(inter)), inter.getPoint())) {
+							if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
+								intersection_filling.addPoint(
+										(int) (point.x * zoomMultiplier + changeX),
+										(int) (point.y * zoomMultiplier + changeY)
+								);
+							}
+						}
+
+						g2.setColor(Color.decode(road_color));
+						g2.fill(intersection_filling);
+
+					}
+				}
+			}
 
 			// draw road outer lines
 			g2.setColor(Color.WHITE);
@@ -516,64 +534,45 @@ public class Visuals extends JPanel {
 			// draws the intersections
 			intersectionSize = 30;
 		}
-		
-		// fill intersection leftouts
-		if (streetMap.intersectionCount() > 1) {
-			for (Intersection inter : streetMap.getIntersections()) {
-				Polygon intersection_filling = new Polygon();
-				if (chosen_line_intersections.containsKey(inter)) {
-					for (Point point : Geometry.orderPointsClockwise((chosen_line_intersections.get(inter)), inter.getPoint())) {
-						if (!intersection_filling.contains((int) (point.x * zoomMultiplier + changeX), (int) (point.y * zoomMultiplier + changeY))) {
-							intersection_filling.addPoint(
-									(int) (point.x * zoomMultiplier + changeX), 
-									(int) (point.y * zoomMultiplier + changeY)
-							);
-						}
-					}
-					
-					g2.setColor(Color.decode(road_color));
-					g2.fill(intersection_filling);
-					
-				}
-			}			
-		}
 
 		// draws the cars; Creating a deep copy of the car list in order to prevent 
 		// concurrent modification errors occuring because the simulation alters the 
 		// list in a different thread. might look hacky, but my research showed this
 		// is common practice
-		for (Car c : new ArrayList<Car>(simulation.getCars())) {
-			if (c != null && !c.inTraffic() && !c.reachedDestination()) continue;
-			
-			c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);
+		for (ArrayList<Car> cars: simulation.getCars().values()) {
+			for (Car c : new ArrayList<Car>(cars)) {
+				if (c != null && !c.inTraffic() && !c.reachedDestination()) continue;
 
-			double car_center_x = c.getPositionX() + c.getOffsetX();
-			double car_center_y = c.getPositionY() + c.getOffsetY();
-			
-			// starting left bottom, clockwise
-			double[] car_rectangle = {
-					car_center_x - (int) (c.getVehicleLength() / 2),
-					car_center_y + (int) (this.car_width / 2),
-					
-					car_center_x - (int) (c.getVehicleLength() / 2),
-					car_center_y - (int) (this.car_width / 2),
-					
-					car_center_x + (int) (c.getVehicleLength() / 2),
-					car_center_y - (int) (this.car_width / 2),
-					
-					car_center_x + (int) (c.getVehicleLength() / 2),
-					car_center_y + (int) (this.car_width / 2),
-			};
-			
-			// subtract 180 to have orientation correct!
-			car_rectangle = Geometry.rotateRectangleAroundCenter(car_rectangle, Geometry.toDegrees(c.getAngle()) - 180);  
+				c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);
 
-			g2.setColor(c.getColor());
-			Polygon car_polygon = new Polygon();
-			for (int i = 0; i < 8; i += 2) {
-				car_polygon.addPoint((int) (car_rectangle[i] * zoomMultiplier + changeX), (int) (car_rectangle[i+1]* zoomMultiplier + changeY)); 
+				double car_center_x = c.getPositionX() + c.getOffsetX();
+				double car_center_y = c.getPositionY() + c.getOffsetY();
+
+				// starting left bottom, clockwise
+				double[] car_rectangle = {
+						car_center_x - (int) (c.getVehicleLength() / 2),
+						car_center_y + (int) (this.car_width / 2),
+
+						car_center_x - (int) (c.getVehicleLength() / 2),
+						car_center_y - (int) (this.car_width / 2),
+
+						car_center_x + (int) (c.getVehicleLength() / 2),
+						car_center_y - (int) (this.car_width / 2),
+
+						car_center_x + (int) (c.getVehicleLength() / 2),
+						car_center_y + (int) (this.car_width / 2),
+				};
+
+				// subtract 180 to have orientation correct!
+				car_rectangle = Geometry.rotateRectangleAroundCenter(car_rectangle, Geometry.toDegrees(c.getAngle()) - 180);
+
+				g2.setColor(c.getColor());
+				Polygon car_polygon = new Polygon();
+				for (int i = 0; i < 8; i += 2) {
+					car_polygon.addPoint((int) (car_rectangle[i] * zoomMultiplier + changeX), (int) (car_rectangle[i+1]* zoomMultiplier + changeY));
+				}
+				g2.fill(car_polygon);
 			}
-			g2.fill(car_polygon);
 		}
 
 		// draws intersection tooltip

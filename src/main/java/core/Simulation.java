@@ -3,7 +3,9 @@ package core;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +31,7 @@ public class Simulation {
 	private Properties props;
 
 	private StreetMap street_map;
-	private ArrayList<Car> cars;
+	private HashMap<Road, ArrayList<Car>> cars;
 	private ArrayList<Car> car_sink;
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
@@ -38,7 +40,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 100;
+	private float simulated_seconds_per_real_second = 101;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -61,7 +63,7 @@ public class Simulation {
 		this.props = props;
 
 		this.street_map = map;
-		this.cars = new ArrayList<Car>();
+		this.cars = new HashMap<Road, ArrayList<Car>>();
 		this.car_sink = new ArrayList<Car>();
 
 		this.is_running = false;
@@ -85,7 +87,7 @@ public class Simulation {
 		return is_running;
 	}
 
-	public ArrayList<Car> getCars() {
+	public HashMap<Road, ArrayList<Car>> getCars() {
 		return this.cars;
 	}
 
@@ -115,14 +117,7 @@ public class Simulation {
 	}
 
 	public void addCar(Car car) {
-		for (Car c : this.cars) {
-			if (c.getPositionX() == car.getPositionX() && c.getPositionY() == car.getPositionY()) {
-				System.out.println("Already a car standing at that position and I ain't stackin' them!");
-				return;
-			}
-		}
-
-		this.cars.add(car);
+		this.cars.get(car.getCurrentRoad()).add(car);
 	}
 
 	public void addRandomCar() {
@@ -190,9 +185,9 @@ public class Simulation {
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
 			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 45, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
-			this.simulation_schedule = new PoissonSchedule(this.street_map, 20);
+			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
-			this.simulation_schedule = new GaussianSchedule(this.street_map, 10, 5);
+			this.simulation_schedule = new GaussianSchedule(this.street_map, 50, 5);
 		}
 	}
 
@@ -200,6 +195,7 @@ public class Simulation {
 
 	public void start() {
 
+		this.updateCarListToMap();
 		this.simulation_schedule.updateToMap();
 		this.applyExperimentalSettings();
 		System.out.println(this.simulation_schedule);
@@ -246,16 +242,32 @@ public class Simulation {
 
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
-				for (Car car : this.cars) {
-					// recalculate car positions
-					if (car.update(this.cars, delta_t, current_time)) {
-						arrived_cars.add(car);
+				for (Road road : this.cars.keySet()) {
+					ArrayList<Car> cars = this.cars.get(road);
+					for (Car car : cars) {
+						// recalculate car position
+						if (car.update(this.cars, delta_t, current_time)) {
+							arrived_cars.add(car);
+						}
 					}
 				}
 
+				// update carlist for road assignments
+				HashMap<Road, ArrayList<Car>> new_cars = new HashMap<Road, ArrayList<Car>>();
+				for (Road r : cars.keySet()) {
+					new_cars.put(r, new ArrayList<Car>());
+				}
+
+				for (Road r : cars.keySet()) {
+					for (Car c : cars.get(r)) {
+						new_cars.get(c.getCurrentRoad()).add(c);
+					}
+				}
+				cars = new_cars;
+
 				// remove cars that reached their destination from the list
 				for (Car c : arrived_cars) {
-					this.cars.remove(c);
+					this.cars.get(c.getCurrentRoad()).remove(c);
 					this.car_sink.add(c);
 					c.setArrivalTime(this.current_time);
 				}
@@ -298,11 +310,13 @@ public class Simulation {
 		double total_velocity = 0;
 		double cars_in_queue = 0;
 
-		for (Car c : this.cars) {
-			total_velocity += c.getCurrentVelocity();
-			if (c.isWaiting()) cars_in_queue++;
+		for (ArrayList<Car> cars : this.cars.values()) {
+			for (Car c : cars) {
+				total_velocity += c.getCurrentVelocity();
+				if (c.isWaiting()) cars_in_queue++;
+			}
 		}
-		
+
 		// ADD STATISTICS TO EXPERIMENT
 		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.cars.size(), this.current_run);
 		this.experiment.addAvgSpeed(total_velocity/this.cars.size(), this.current_run);
@@ -384,11 +398,19 @@ public class Simulation {
 	
 	public int getNumberCarsOutOfTraffic() {
 		int sum = 0;
-		for (Car c : this.cars) {
-			if (!c.inTraffic()) sum++;
+		for (ArrayList<Car> cars : this.cars.values()) {
+			for (Car c : cars) {
+				if (!c.inTraffic()) sum++;
+			}
 		}
-		
+
 		return sum;
+	}
+
+	public void updateCarListToMap() {
+		for (Road road : this.street_map.getRoads()) {
+			if (!this.cars.containsKey(road)) this.cars.put(road, new ArrayList<>());
+		}
 	}
 
 	public void stop() {

@@ -3,10 +3,7 @@ package car;
 import java.awt.Color;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import datastructures.Intersection;
 import datastructures.StreetMap;
@@ -15,7 +12,6 @@ import model.IntelligentDriverModel;
 import model.MOBIL;
 import road.Road;
 import type.CarType;
-import type.RoadType;
 
 /**
  * 
@@ -25,7 +21,10 @@ import type.RoadType;
 public class Car {
 
 	// LOCALIZATION
-	protected ArrayList<Intersection> path;
+	protected ArrayList<Intersection> path_over_intersections;
+	protected ArrayList<Road> passed_roads;
+	protected ArrayList<Road> next_roads;
+
 	protected Road current_road;
 	protected Road roadToMeasure;
 	protected Intersection current_origin_intersection;
@@ -69,26 +68,22 @@ public class Car {
 	protected double startRoad;
 	protected double endRoad;
 	protected int roadSwitch = 1;
-	
-	protected int timeSwitch = 1;
-	protected double startWait;
-	protected double endWait;
+
 	protected double totalWait;
 	
 	protected double departure_time;
 	protected double arrival_time;
 
-	/**
-	 *
-	 * @param startPoint
-	 * @param endPoint
-	 * @param streetMap
-	 *            this object needs to be passed as parameter to find the road the
-	 *            car is in!
-	 */
-
 	public Car(ArrayList<Intersection> path, double departure_time, Properties props) {
-		this.path = path;
+		this.path_over_intersections = path;
+		this.next_roads = new ArrayList<Road>();
+		int next= 1;
+		for (Intersection inter : path_over_intersections) {
+			if (next >= path_over_intersections.size()) break;
+			this.next_roads.add(inter.getRoadTo(path_over_intersections.get(next)));
+			next++;
+		}
+		this.passed_roads = new ArrayList<Road>();
 
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
@@ -149,12 +144,12 @@ public class Car {
 		this.setPositionY(new_coordinates[1]);
 	}
 
-	public ArrayList<Intersection> getPath() {
-		return path;
+	public ArrayList<Intersection> getPath_over_intersections() {
+		return path_over_intersections;
 	}
 
-	public void setPath(ArrayList<Intersection> path) {
-		this.path = path;
+	public void setPath_over_intersections(ArrayList<Intersection> path_over_intersections) {
+		this.path_over_intersections = path_over_intersections;
 	}
 
 	public Road getCurrentRoad() {
@@ -336,11 +331,9 @@ public class Car {
 		offsetY = Math.sin(offsetAngle) * (width * lane - width / 2);
 	}
 
-	public boolean update(ArrayList<Car> list_of_cars, double delta_t, double current_time) {
+	public boolean update(HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t, double current_time) {
 		if (!this.in_traffic) {
 			this.lane = this.current_road.getLanes();
-//			if (this.getDistanceToCar(this.getLeadingCar(list_of_cars, lane)) > this.vehicle_length * 2 
-//				&& this.getDistanceToCar(this.getFollowingCar(list_of_cars, lane)) > this.vehicle_length * 2) {
 			if(this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
 				this.in_traffic = true;
 			}
@@ -375,7 +368,7 @@ public class Car {
 			
 			// Check if lane change is a good idea
 			for (int lane = 1; lane <= this.current_road.getLanes(); lane++) {
-				if (lane != this.lane) {
+				if (Math.abs(lane - this.lane) == 1) {
 					if (this.mobil.shouldChangeLane(this, leading_car, this.getLeadingCar(list_of_cars, lane),
 							this.getFollowingCar(list_of_cars, lane))) {
 						this.lane = lane;
@@ -386,7 +379,7 @@ public class Car {
 
 			// Check if at destination
 			if (this.position_on_road >= this.current_road.getLength()
-					&& this.current_destination_intersection == this.path.get(this.path.size() - 1)) {
+					&& this.current_destination_intersection == this.path_over_intersections.get(this.path_over_intersections.size() - 1)) {
 				this.reached_destination = true;
 				timeMeasure();
 			} else {
@@ -394,15 +387,16 @@ public class Car {
 				// Check if at new road
 				if (this.position_on_road >= this.current_road.getLength()) {
 					this.current_origin_intersection = this.current_destination_intersection;
-					this.current_destination_intersection = this.path
-							.get(this.path.indexOf(this.current_origin_intersection) + 1);
+					this.current_destination_intersection = this.path_over_intersections
+							.get(this.path_over_intersections.indexOf(this.current_origin_intersection) + 1);
 					
 					timeMeasure();
 					// change road
 					this.position_on_road = this.position_on_road - this.current_road.getLength();
-					this.current_road = this.current_origin_intersection.getRoadTo(this.current_destination_intersection);
+					this.current_road = next_roads.get(0);
 					this.lane = Math.min(this.lane, current_road.getLanes());
 					this.updateDesiredVelocity();
+					this.passed_roads.add(this.next_roads.remove(0));
 				}
 
 				// update x and y based on position on road
@@ -433,29 +427,29 @@ public class Car {
 	/**
 	 *
 	 * @param list_of_cars
-	 * @param car
 	 * @return true if there is no car on the same road that has bigger x coordinate
 	 *         than the car passed to the method
 	 */
-	public boolean hasLeadingCar(ArrayList<Car> list_of_cars) {
+	public boolean hasLeadingCar(HashMap<Road, ArrayList<Car>> list_of_cars) {
 		if (this.getLeadingCar(list_of_cars, this.lane) == null) return false;
 		return true;
 	}
 
-	public Car getLeadingCar(ArrayList<Car> list_of_cars, int lane) {
+	public Car getLeadingCar(HashMap<Road, ArrayList<Car>> list_of_cars, int lane) {
 		Car current_leading_car = null;
 
-		for (Car c : list_of_cars) {
-			// for the case it compares with itself skip to next iteration
-			if (this.equals(c) || !c.in_traffic) continue;
+		ArrayList<Road> roads_of_interest = new ArrayList<Road>(this.next_roads.subList(0, Math.min(2, next_roads.size())));
+
+		for (Road r : list_of_cars.keySet()) {
+			if (!roads_of_interest.contains(r)) continue;
 
 			// only compare if on required lane
-			if (c.lane == lane) {
-				// only compare if driving on cars path
-				if (c.isOnPath(new ArrayList<Intersection>(
-						this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+			for (Car c : list_of_cars.get(r)) {
+				if (this.equals(c) || !c.in_traffic) continue;
+
+				if (c.lane == lane) {
 					// only compare if driving in the same direction...
-					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path
+					if (this.path_over_intersections.indexOf(c.getCurrentOriginIntersection()) < this.path_over_intersections
 							.indexOf(c.getCurrentDestinationIntersection())) {
 						// only compare to cars in front
 						if (this.getPositionOnRoad() <= c.getPositionOnRoad()
@@ -495,20 +489,24 @@ public class Car {
 
 	}
 
-	public Car getFollowingCar(ArrayList<Car> list_of_cars, int lane) {
+	public Car getFollowingCar(HashMap<Road, ArrayList<Car>> list_of_cars, int lane) {
 		Car current_following_car = null;
 
-		for (Car c : list_of_cars) {
-			// for the case it compares with itself skip to next iteration
-			if (this.equals(c) || !c.in_traffic) continue;
+		ArrayList<Road> roads_of_interest = new ArrayList<Road>(this.passed_roads.subList(
+				passed_roads.size() - Math.min(passed_roads.size(), 3),
+				passed_roads.size()
+		));
 
-			// only compare if on required lane
-			if (c.lane == lane) {
-				// only compare if driving on cars path
-				if (c.isOnPath(new ArrayList<Intersection>(
-						this.path.subList(this.path.indexOf(this.getCurrentOriginIntersection()), this.path.size())))) {
+		for (Road r : list_of_cars.keySet()) {
+			if (!roads_of_interest.contains(r)) continue;
+
+			for (Car c : list_of_cars.get(r)) {
+				if (this.equals(c) || !c.in_traffic) continue;
+
+				// only compare if on required lane
+				if (c.lane == lane) {
 					// only compare if driving in the same direction...
-					if (this.path.indexOf(c.getCurrentOriginIntersection()) < this.path
+					if (this.path_over_intersections.indexOf(c.getCurrentOriginIntersection()) < this.path_over_intersections
 							.indexOf(c.getCurrentDestinationIntersection())) {
 						// only compare to cars behind
 						if (this.getPositionOnRoad() >= c.getPositionOnRoad()
@@ -541,14 +539,14 @@ public class Car {
 		} else {
 			// get distance over multiple roads
 			distance = 0;
-			for (int i = this.path.indexOf(this.current_destination_intersection); i <= this.path
+			for (int i = this.path_over_intersections.indexOf(this.current_destination_intersection); i <= this.path_over_intersections
 					.indexOf(other_car.current_destination_intersection); i++) {
-				if (i == this.path.indexOf(this.current_destination_intersection)) {
+				if (i == this.path_over_intersections.indexOf(this.current_destination_intersection)) {
 					distance += this.current_road.getLength() - this.getPositionOnRoad();
-				} else if (i == this.path.indexOf(other_car.current_destination_intersection)) {
+				} else if (i == this.path_over_intersections.indexOf(other_car.current_destination_intersection)) {
 					distance += other_car.getPositionOnRoad();
 				} else {
-					distance += this.path.get(i).getRoadTo(this.path.get(i - 1)).getLength();
+					distance += this.path_over_intersections.get(i).getRoadTo(this.path_over_intersections.get(i - 1)).getLength();
 				}
 			}
 		}
@@ -573,9 +571,9 @@ public class Car {
 	}
 	
 	public Road getNextRoad() {
-		int destind = this.path.indexOf(current_destination_intersection);
-		if (destind != this.path.size() - 1) {
-			return current_destination_intersection.getRoadTo(this.path.get(destind + 1));
+		int destind = this.path_over_intersections.indexOf(current_destination_intersection);
+		if (destind != this.path_over_intersections.size() - 1) {
+			return current_destination_intersection.getRoadTo(this.path_over_intersections.get(destind + 1));
 		} else return null;
 	}
 
