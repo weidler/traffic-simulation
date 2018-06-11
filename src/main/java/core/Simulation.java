@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JTextArea;
-import algorithms.AStar;
+import algorithms.AstarAdvanced;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
@@ -58,6 +58,8 @@ public class Simulation {
 											// that it simulates
 
 	private int current_run;
+	private double avgTravel;
+	private ArrayList<Double> travel_times = new ArrayList();
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -134,8 +136,9 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
+
 
 		// create vehicle
 		Car random_car;
@@ -163,8 +166,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
 
 		// create vehicle
 		Car random_car;
@@ -183,7 +186,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 45, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 30, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
@@ -218,7 +221,11 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
+			
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
+				//System.out.println(current_time);
+				
+				
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
@@ -361,15 +368,15 @@ public class Simulation {
 			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
 		}
 		
-		ArrayList<Double> travel_times = new ArrayList<Double>();
+		travel_times = new ArrayList<Double>();
 		ArrayList<Double> fractional_waiting_times = new ArrayList<Double>();
 		for (Car c : this.car_sink) {
 			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
 			travel_times.add(travel_time);
 			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
 		}
-		
-		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
+		avgTravel = Statistics.mean(travel_times);
+		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
 		
 		// Write report
