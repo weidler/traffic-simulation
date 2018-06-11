@@ -25,6 +25,7 @@ public class Road {
 	protected ArrayList<Integer> offsetX = new ArrayList<Integer>();
 	protected ArrayList<Integer> offsetY = new ArrayList<Integer>();
 	protected double angle;
+	protected boolean directed = false;
 
 	protected StreetMap streetmap;
 
@@ -100,6 +101,21 @@ public class Road {
 
 		this.calculateOffset(this.streetmap.getIntersectionByCoordinates(this.x1, this.y1),
 				this.streetmap.getIntersectionByCoordinates(this.x2, this.y2));
+	}
+	
+	public void toggleDirected() {
+		if(!this.directed)
+			this.directed=true;
+		else
+			this.directed=false;
+	}
+	
+	public Intersection getDirection() {
+		if (!this.directed)
+			return null;
+		else
+			return streetmap.getIntersectionByCoordinates(x2, y2);
+		
 	}
 
 	public RoadType getType() {
