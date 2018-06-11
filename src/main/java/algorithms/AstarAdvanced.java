@@ -13,7 +13,7 @@ public final class AstarAdvanced {
 
 	
 	private static double weightValuePoisson = 0;	
-	private static double weightValueEmpirical = 100;	
+	private static double weightValueEmpirical = 1;	
 	private static double weightValueGaussian = 1;
 	public static void setWeightValue(double multplier)
 	{
