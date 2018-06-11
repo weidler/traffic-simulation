@@ -2,6 +2,7 @@ package algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import car.Car;
 import core.Simulation;
@@ -13,7 +14,7 @@ import road.Road;
 public class CoordinatedTrafficLights {
 
 	ArrayList<ArrayList<TrafficLight>> traffic_lights = new ArrayList<ArrayList<TrafficLight>>();
-	ArrayList<Car> cars = new ArrayList<Car>();
+	HashMap<Road, ArrayList<Car>> cars = new HashMap<Road, ArrayList<Car>>();
 
 	Point prevPos;
 	Point curPos;
@@ -56,12 +57,7 @@ public class CoordinatedTrafficLights {
 		ArrayList<Integer> roadCounts = new ArrayList<Integer>();
 		for(int k = 0; k < intersections.size(); k++) {
 			Road curRoad = intersections.get(k).getRoadTo(i);
-			int carCount = 0;
-			for(int j = 0; j < cars.size(); j++) {
-				if(cars.get(j).getCurrentRoad() == curRoad){
-					carCount++;
-				}	
-			}
+			int carCount = cars.get(curRoad).size();
 			roadCounts.add(carCount);
 			
 		}
