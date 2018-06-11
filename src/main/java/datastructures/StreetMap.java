@@ -167,10 +167,23 @@ public class StreetMap {
 				this.removeRoad(crossed_road);
 
 				// add four new roads; do this recursively to allow multiple intersections
-				this.addRoad(new Road(int_a, new_intersection));
-				this.addRoad(new Road(int_b, new_intersection));
-				this.addRoad(new Road(crossed_road.getIntersections(this)[0], new_intersection));
-				this.addRoad(new Road(crossed_road.getIntersections(this)[1], new_intersection));
+				Road new_road_part_a = new Road(int_a, new_intersection);
+				Road new_road_part_b = new Road(int_b, new_intersection);
+				new_road_part_a.setStreetMap(this);
+				new_road_part_b.setStreetMap(this);
+				new_road_part_a.setLanes(road.getLanes());
+				new_road_part_b.setLanes(road.getLanes());
+				Road old_road_part_a = new Road(crossed_road.getIntersections(this)[0], new_intersection);
+				Road old_road_part_b = new Road(crossed_road.getIntersections(this)[1], new_intersection);
+				old_road_part_a.setStreetMap(this);
+				old_road_part_b.setStreetMap(this);
+				old_road_part_a.setLanes(crossed_road.getLanes());
+				old_road_part_b.setLanes(crossed_road.getLanes());
+
+				this.addRoad(new_road_part_a);
+				this.addRoad(new_road_part_b);
+				this.addRoad(old_road_part_a);
+				this.addRoad(old_road_part_b);
 			} else {
 				this.roads.add(road);
 				int_a.addConnection(road, int_b, null);
