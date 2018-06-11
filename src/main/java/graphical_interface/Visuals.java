@@ -473,17 +473,8 @@ public class Visuals extends JPanel {
 				TrafficLight tl_from = intersection_from.getTrafficLightsApproachingFrom(intersection_to, j);
 				TrafficLight tl_to = intersection_to.getTrafficLightsApproachingFrom(intersection_from, j);
 
-				double[] tl_position_from = Geometry.getPointBetween(
-						lightDistanceFromIntersection, 
-						current_road.getPointA(),
-						current_road.getPointB()
-				);
-
-				double[] tl_position_to = Geometry.getPointBetween(
-						lightDistanceFromIntersection,
-						current_road.getPointB(),
-						current_road.getPointA()
-				);
+				Point tl_position_from = closer_to_projected;
+				Point tl_position_to = closer_from_projected;
 
 				Color col = Color.RED;
 				if (tl_from.getStatus().equals("G")) {
@@ -492,16 +483,16 @@ public class Visuals extends JPanel {
 
 				if (intersection_from.isAt(current_road.getX1(), current_road.getY1())) {
 					tl_lines.get(col).add(new Line2D.Double(
-							(int) ((tl_position_from[0] + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
-							(int) ((tl_position_from[0] + (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] - (lane_offset_y)) * zoomMultiplier + changeY)));
+							(int) ((tl_position_from.x + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_from.y - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
+							(int) ((tl_position_from.x + (lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_from.y - (lane_offset_y)) * zoomMultiplier + changeY)));
 				} else {
 					tl_lines.get(col).add(new Line2D.Double(
-							(int) ((tl_position_to[0] + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
-							(int) ((tl_position_to[0] + (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] - (lane_offset_y)) * zoomMultiplier + changeY)));
+							(int) ((tl_position_to.x + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_to.y - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
+							(int) ((tl_position_to.x + (lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_to.y - (lane_offset_y)) * zoomMultiplier + changeY)));
 				}
 
 				col = Color.RED;
@@ -511,16 +502,16 @@ public class Visuals extends JPanel {
 
 				if (intersection_to.isAt(current_road.getX1(), current_road.getY1())) {
 					tl_lines.get(col).add(new Line2D.Double(
-							(int) ((tl_position_from[0] - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
-							(int) ((tl_position_from[0] - (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] + (lane_offset_y)) * zoomMultiplier + changeY)));
+							(int) ((tl_position_from.x - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_from.y + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
+							(int) ((tl_position_from.x - (lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_from.y + (lane_offset_y)) * zoomMultiplier + changeY)));
 				} else {
 					tl_lines.get(col).add(new Line2D.Double(
-							(int) ((tl_position_to[0] - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
-							(int) ((tl_position_to[0] - (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] + (lane_offset_y)) * zoomMultiplier + changeY)));
+							(int) ((tl_position_to.x - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_to.y + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
+							(int) ((tl_position_to.x - (lane_offset_x)) * zoomMultiplier + changeX),
+							(int) ((tl_position_to.y + (lane_offset_y)) * zoomMultiplier + changeY)));
 				}
 
 				// lane lines

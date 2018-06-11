@@ -136,14 +136,13 @@ public class Geometry {
 
 	}
 
-	public static double[] getPointBetween(double d, Point A, Point B) {
+	public static Point getPointBetween(double d, Point A, Point B) {
 		double distance_between = distance(A, B);
 
-		double[] new_point = new double[2];
-		new_point[0] = A.x + (d/distance_between) * (B.x - A.x);
-		new_point[1] = A.y + (d/distance_between) * (B.y - A.y);
-
-		return new_point;
+		return new Point(
+				A.x + (d/distance_between) * (B.x - A.x),
+				A.y + (d/distance_between) * (B.y - A.y)
+		);
 	}
 
 	public static double[] rotateByAngle(double x, double y, double angle) {

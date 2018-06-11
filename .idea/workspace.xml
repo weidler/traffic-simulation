@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/util/Geometry.java" line="230" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/util/Geometry.java" line="229" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd3cb89a-1fde-4f80-8d0a-ff03b3dcc2f3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/datatype/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/datatype/Point.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/util/Geometry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/Geometry.java" afterDir="false" />
     </list>
@@ -48,8 +46,8 @@
       <file leaf-file-name="Geometry.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/util/Geometry.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
+            <state relative-caret-position="224">
+              <caret line="138" column="23" selection-start-line="138" selection-start-column="23" selection-end-line="138" selection-end-column="23" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#525#526#0" expanded="true" />
@@ -107,8 +105,8 @@
       <file leaf-file-name="Visuals.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="454" column="117" selection-start-line="454" selection-start-column="117" selection-end-line="454" selection-end-column="117" />
+            <state relative-caret-position="74">
+              <caret line="476" column="50" selection-start-line="476" selection-start-column="50" selection-end-line="476" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -488,8 +486,8 @@
         <option value="$PROJECT_DIR$/src/main/java/road/Highway.java" />
         <option value="$PROJECT_DIR$/src/main/java/road/DirtRoad.java" />
         <option value="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/util/Geometry.java" />
         <option value="$PROJECT_DIR$/src/main/java/datatype/Point.java" />
+        <option value="$PROJECT_DIR$/src/main/java/util/Geometry.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" />
       </list>
     </option>
@@ -718,7 +716,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40687000" />
+    <option name="totallyTimeSpent" value="41187000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1073,32 +1071,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/util/Geometry.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#525#526#0" expanded="true" />
-            <element signature="e#584#585#0" expanded="true" />
-            <element signature="e#2616#2617#0" expanded="true" />
-            <element signature="e#2672#2673#0" expanded="true" />
-            <element signature="e#2727#2728#0" expanded="true" />
-            <element signature="e#2772#2773#0" expanded="true" />
-            <element signature="e#2852#2853#0" expanded="true" />
-            <element signature="e#2887#2888#0" expanded="true" />
-            <element signature="e#1856#1857#0" expanded="true" />
-            <element signature="e#1920#1921#0" expanded="true" />
-            <element signature="e#3070#3071#0" expanded="true" />
-            <element signature="e#3109#3110#0" expanded="true" />
-            <element signature="e#3161#3162#0" expanded="true" />
-            <element signature="e#3200#3201#0" expanded="true" />
-            <element signature="e#6249#6264#0" expanded="true" />
-            <element signature="e#6543#6550#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/road/Road.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="920">
@@ -1180,10 +1152,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/util/Geometry.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="138" column="23" selection-start-line="138" selection-start-column="23" selection-end-line="138" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#525#526#0" expanded="true" />
+            <element signature="e#584#585#0" expanded="true" />
+            <element signature="e#2616#2617#0" expanded="true" />
+            <element signature="e#2672#2673#0" expanded="true" />
+            <element signature="e#2727#2728#0" expanded="true" />
+            <element signature="e#2772#2773#0" expanded="true" />
+            <element signature="e#2852#2853#0" expanded="true" />
+            <element signature="e#2887#2888#0" expanded="true" />
+            <element signature="e#1856#1857#0" expanded="true" />
+            <element signature="e#1920#1921#0" expanded="true" />
+            <element signature="e#3070#3071#0" expanded="true" />
+            <element signature="e#3109#3110#0" expanded="true" />
+            <element signature="e#3161#3162#0" expanded="true" />
+            <element signature="e#3200#3201#0" expanded="true" />
+            <element signature="e#6249#6264#0" expanded="true" />
+            <element signature="e#6543#6550#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="454" column="117" selection-start-line="454" selection-start-column="117" selection-end-line="454" selection-end-column="117" />
+        <state relative-caret-position="74">
+          <caret line="476" column="50" selection-start-line="476" selection-start-column="50" selection-end-line="476" selection-end-column="50" />
         </state>
       </provider>
     </entry>
