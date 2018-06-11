@@ -2,14 +2,7 @@
 package graphical_interface;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -153,8 +146,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1200, 700);
 		this.adjustPanelSizes();
-		setResizable(false);
-		
+
+
 		contentPane.setBorder(BorderFactory.createEmptyBorder());
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -410,7 +403,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						sc.useDelimiter(",");
 						String next = sc.next();
 						Boolean change = false;
-						while (next != null) {
+						while (!next.equals("p")) {
 
 							if (next.equals("#")) {
 								change = true;
@@ -429,10 +422,23 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								int x2 = Integer.parseInt(next);
 								next = sc.next();
 								int y2 = Integer.parseInt(next);
+								
 								Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
 								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
-								streetMap.addRoad(start, end);
+								
+								Road road = new Road(start, end);
+								road.setStreetMap(streetMap);
 								next = sc.next();
+								System.out.println("next1: "+next);
+								road.setRoadType(next);
+								next = sc.next();
+								System.out.println("next2: "+next);
+								road.setLanes(Integer.parseInt(next));
+								System.out.println("next3: "+next);								
+								streetMap.addRoad(road);
+								
+								next = sc.next();
+								System.out.println("next4: "+next);
 							}
 							System.out.println("loading..." + next);
 						}
@@ -454,7 +460,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.add(slowDownButton);
 		slowDownButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				simulation.setSimulatedSecondsPerRealSecond(Math.max(0, simulation.getSimulatedSecondsperRealSecond() - 10));
+				simulation.setSimulatedSecondsPerRealSecond(Math.max(1, simulation.getSimulatedSecondsperRealSecond() - 100));
 			}
 		});
 		
@@ -465,7 +471,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.add(speedUpButton);
 		speedUpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 10);
+				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 100);
 			}
 		});
 		

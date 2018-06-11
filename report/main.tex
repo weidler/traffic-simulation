@@ -4,7 +4,7 @@
 \usepackage{times}
 \usepackage{url}
 \usepackage{amsmath}
-\usepackage[natbib=true,backend=bibtex,style=authoryear,language=german]{biblatex}
+\usepackage[natbib=true,backend=bibtex,style=authoryear,language=english]{biblatex}
 \usepackage{lipsum}
 \usepackage{latexsym}
 \usepackage[normalem]{ulem}
@@ -14,7 +14,7 @@
 \pagestyle{plain} 
 \usepackage{graphicx}
 \captionsetup[table]{skip=10pt}
-\title{Intelligent Road Control}
+\title{Intelligent Traffic Control}
 
 \addbibresource{references.bib}
 \AtBeginBibliography{\small}
@@ -36,37 +36,31 @@ An intelligent traffic control system adjusts traffic in order to assure all peo
 \subsection{Goal}
 In this work, we aim to evaluate different such "intelligent" traffic control strategies and compare their effect. Thereby, we hope to identify the best working solutions to traffic jams and other occurrences (such as closing of roads/tunnels) in cities and to show their workings. We attempt to to recreate a real life city's traffic flow in order to see how these systems would work in a realistic setting. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison of strategies is meaningful and provides valuable data regarding the potential application of the strategies.
 
+Our main contributions are as follows:
+
+
 \subsection{Approach}
 Hence, in order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this purpose, we created a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Maps are realised as undirected graphs in which vertices represent intersections and roads appear as edges between those. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. 
 
 \vspace{20pt}
 
-In the following sections we further describe our approach and the results of our experiments. We begin by reviewing the literature. Based on that, we will elaborate on the implementation of the simulation environment (section \ref{sec:envi}), followed by a description of different control strategies (section \ref{sec:strategies}). Following, we describe the experiments we conducted for those strategies and our evaluation methodology (section \ref{sec:experiments}). In section \ref{sec:results} we will report the results of these experiments.  We conclude this work by discussing our results and proposing future directions.
-
-\section{Related Work}
+\subsection{Related Work}
 \label{sec:related-work}
 There has been extensive work on the simulation of traffic flow as well as the development of traffic control strategies. Following up on different approaches on modelling car following behaviour \citep[e.g.][]{gipps1981behavioural}, \citet{treiber2000congested} developed the influential Intelligent Driver Model for the simulation of urban traffic. Similarly to the former, it creates a collision free environment where cars mind the a spacial and time-wise gap to the leading vehicle. The SUMO package \citep{krajzewicz2002sumo, behrisch2011sumo} utilizes the model by \citep{gipps1981behavioural} in an extended version \citep{krauss1998microscopic} in a complex simulation software. In contrast to their work, we use the IDM. Hence, our simulation is (quasi) time-continuous, rather than time-discrete.
+
+In the following sections we further describe our approach and the results of our experiments. We begin by elaborating on the implementation of the simulation environment (section \ref{sec:envi}), followed by a description of different control strategies (section \ref{sec:strategies}). Following, we describe the experiments we conducted for those strategies and our evaluation methodology (section \ref{sec:experiments}). In section \ref{sec:results} we will report the results of these experiments. We conclude this work by discussing our results and proposing future directions.
 	
 \section{Simulation Environment}
 \label{sec:envi}
 In the following subsections we describe the implementation and design choices of the simulation environment in which we evaluated the effect of different traffic control strategies.
 
 \subsection{Graphical User Interface}
-The Graphical User Interface (GUI) is designed for simplicity. The left panel is used to show and create interactive maps. These maps can be interactively created by clicking and dragging on the panel, which creates intersections and the connecting roads. If the right mouse button is clicked the creating of the road will be cancelled. The roads currently have two sides, one for each direction. In the next phase there will be more lanes available. In between the two lanes there is a coloured bar, representing the traffic light. On the right side of the screen there is a button panel.
+The Graphical User Interface (GUI) is designed for simplicity. It consists of three  panels. On the left side the main panel is located. Here, maps can be created and navigated through and the simulation process is visualized. Maps can be interactively constructed by clicking and dragging on the panel. Above the main panel there is an info panel that indicates different values such as the current time and day of the simulation. Finally, the right panel contains the controls for different functionalities such as the creation of maps, setting of experimental parameters and controlling the simulation. Figure \ref{fig:interface} shows this interface with a small map.
 
-From top to bottom the buttons are:
-\begin{itemize}
-	\setlength\itemsep{0.2em}
-	\item \textit{Clear}: clears the panel and triggers a model reset.
-	\item \textit{Reset Position}: resets the graph to its original location and size should this have been altered.
-	\item \textit{Plus and Minus}: allow the user to zoom in and out; arrow keys allow the user to move the graph.
-	\item \textit{Add car}: randomly places cars on the map.
-	\item \textit{Save and Load}: save and load road maps. 
-	\item \textit{Start and Pause}: start and pause the simulation.
-	\item \textit{Help}: provides explanation about the interface
-\end{itemize}
-
-During the interactive creation of a map, certain checks are run. Every intersection is restricted to not have more than four roads connected. If during two roads would cross each other, than at this crossing a new intersection is created.
+\begin{figure}
+	\includegraphics[width=\linewidth]{img/interface.png}
+	\caption{Interface of the interactive simulation environment. Different road colors indicate different road types (e.g. streets or highways). \label{fig:interface}}
+\end{figure}
 	
 \subsection{Traffic Flow Simulation}
 
@@ -95,35 +89,71 @@ In order to simulate a time-continuous model, we need to numerically approximate
 \subsection{Traffic Rule Compliance}
 Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights. Following, we briefly discuss the approaches we use in our simulation.
 
-\paragraph{Approaching Traffic Lights}
+\paragraph{Approaching Traffic Lights} When approaching red traffic lights, drivers will stop in a predefined distance from the intersection, comparable to stop bars in real world streets. Cars that have already exceeded this line will drive through the intersection. 
 
 \paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
 
-
-\subsubsection{Lane Changing}
+\subsection{Lane Changing}
+In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a continuous Simulation}
-Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size.
+Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size. The IAT can be drawn from the following distributions
+
+\begin{figure}[t]
+	\includegraphics[width=\linewidth]{img/traffic-data.jpeg}
+	\caption{Traffic data from the U.S. Department of Transportation. Graphic received from https://www.fhwa.dot.gov/policyinformation/tmguide/
+	tmg\_2013/traffic-monitoring-methodologies.cfm \label{fig:traffic-data}}
+\end{figure} 
+ 
+\begin{itemize}
+	\item Exponential (Poisson Process)
+	\item Gaussian
+	\item Realistic (Non stationary Poisson Process)
+\end{itemize}
+ 
+ 
+While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs based on a poisson process that is then converted to the data using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 8 to 9 am and 5 to 6 pm.
 
 \section{Traffic Control Strategies}
+
+\begin{figure*}[htb]
+	\includegraphics[width=\textwidth]{img/validation.png}
+	\caption{Number of cars (left) and average fractional waiting time of cars (right) in the system simulated for one day. IATs are generated from the empirical distribution shown in figure \ref{fig:traffic-data} \label{fig:validation}}
+\end{figure*}
+
 \label{sec:strategies}
 In this section, different traffic control strategies are highlighted as well as their effectiveness in different environments.
 
-\subsubsection{Benchmark Strategies}
+\subsection{Benchmark Strategies}
+In order to provide a baseline of what advanced strategies should be able to outperform, we implement several simple benchmark strategies. \textit{Basic Cycling} refers to traffic light control based on a simple, fixed-time cycle in which one traffic light at a time is green. \textit{Informed Cycling} refers to a similar strategy, in which though a road's green phase is skipped if there are no cars on it. Ultimately, \textit{Weighted Cycling} adjusts the green phases linearly based on the density of the roads going into the intersection.
 
-\subsubsection{Coordinated Traffic Lights}
+\subsection{Coordinated Traffic Lights}
 Coordinated traffic lights are traffic lights that exchange information with each other in order to predict future traffic patterns and assure the least amount of congestion possible.  Each intersection is outfitted with different types of sensors, depending on the environment in which they are needed.  These sensors can include inductive loops, cameras, or microwave radar systems, each of which has its own pros and cons.
 
-The coordinated traffic light strategy currently implemented uses features resembling that of a microwave motion sensor.  The reason of using this type of sensor is mainly because the detection range can be altered to each one depending on the area it is installed, the ability to accurately detect distance of vehicals, and also it is able to tell if cars are moving towards or away from it.  Other reasons for implementing this type of detection system is that in real-world situations, this device can be installed above ground, which greatly reduces cost of installation, and can also be installed very quickly at very low charge and cause minimal traffic disturbance.
+The coordinated traffic light strategy currently implemented uses features resembling that of a microwave motion sensor.  The reason of using this type of sensor is mainly because the detection range can be altered to each one depending on the area it is installed, the ability to accurately detect distance of vehicles, and also it is able to tell if cars are moving towards or away from it.  Other reasons for implementing this type of detection system is that in real-world situations, this device can be installed above ground, which greatly reduces cost of installation, and can also be installed very quickly at very low charge and cause minimal traffic disturbance.
 
-This type of traffic control system is preferred for areas with minimal obstructions (such as road signs or buildings).  Since our current traffic simulation does not have any external obstructions other than cars, this is the best strategy to use.  In cases where many obstractions are in play, it would be more recommended to use inductive loops (commonly thought of as 'pressure plates' installed into the road, but quite costly).
+This type of traffic control system is preferred for areas with minimal obstructions (such as road signs or buildings).  Since our current traffic simulation does not have any external obstructions other than cars, this is the best strategy to use.  In cases where many obstructions are in play, it would be more recommended to use inductive loops (commonly thought of as 'pressure plates' installed into the road, but quite costly).
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
 
+In order to be able to measure and compare the efficiency of the different strategies applied, various measurements are taken while the simulation is running. One of these is the average speed of the vehicles for each road. Measuring this is done by starting a timer for a car when it enters a road and stopping it when it leaves it. Then, by using the following formula, the average speed is calculated:   
+
+\begin{equation}
+	v = \frac{s}{t}
+\end{equation}
+
+where $v$ is the velocity, s the road length and t refers to the time spent on a road. Using this, we can also easily derive the average speed on each road. The second statistic measured is the amount of time each car spends waiting at traffic lights. This is achieved by checking at each time step if a car is under a certain speed and is not accelerating. Whenever the previous conditions are fulfilled, the total amount of waiting time is increased by the size of the time step. The purpose of the control strategies is to maximize the average speeds and minimize the time spent waiting in congestions.
+
+\subsection{Simulation Validation}
+In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
+
 \section{Results}
 \label{sec:results}
-	
+
+\section{Discussion}
+\label{sec:discussion}
+
 \section{Conclusion}
 \label{sec:conclusion}
 

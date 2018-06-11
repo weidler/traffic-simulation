@@ -66,6 +66,5 @@ public class EmpiricalSchedule extends Schedule {
 		}
 
 		return final_interarrival_time;
-	}
-
+	}	
 }

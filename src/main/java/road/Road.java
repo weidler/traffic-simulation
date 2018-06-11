@@ -35,7 +35,7 @@ public class Road {
 		this.x2 = x2;
 		this.y2 = y2;
 
-		this.length = this.calcLength(x1, y1, x2, y2);
+		this.length = this.calcLength();
 
 		this.setTypeParameters();
 	}
@@ -73,6 +73,21 @@ public class Road {
 	protected void setTypeParameters() {
 		this.allowed_max_speed = 50;
 		this.type = RoadType.ROAD;
+	}
+	public void setRoadType(String t)
+	{
+		if(t.equals("ROAD"))
+		{
+			//nothing
+		}
+		else if(t.equals("DIRT_ROAD"))
+		{
+			this.type = RoadType.DIRT_ROAD;
+		}
+		else if(t.equals("HIGHWAY"))
+		{
+			this.type = RoadType.HIGHWAY;
+		}
 	}
 
 	public void setStreetMap(StreetMap map) {
@@ -156,7 +171,10 @@ public class Road {
 
 		return neighbouring_roads;
 	}
-
+	public RoadType getRoadType()
+	{
+		return type;
+	}
 	public int getLanes() {
 		return this.lanes;
 	}
@@ -224,8 +242,8 @@ public class Road {
 		return false;
 	}
 
-	private double calcLength(int x1, int y1, int x2, int y2) {
-		return Geometry.distance(x1, y1, x2, y2);
+	private double calcLength() {
+		return Geometry.distance(getPointA(), getPointB());
 	}
 
 }
