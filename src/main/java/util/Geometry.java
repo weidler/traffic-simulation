@@ -145,43 +145,35 @@ public class Geometry {
 		);
 	}
 
-	public static double[] rotateByAngle(double x, double y, double angle) {
+	public static Point rotateByAngle(Point p, double angle) {
 		angle = toRadians(angle);
-		double[] rotated = new double[2];
-		rotated[0] = Math.cos(angle) * x - Math.sin(angle) * y;
-		rotated[1] = Math.sin(angle) * x + Math.cos(angle) * y;
-		
-		return rotated;
+		return new Point(Math.cos(angle) * p.x - Math.sin(angle) * p.y, Math.sin(angle) * p.x + Math.cos(angle) * p.y);
 	}
 
-	public static double[] midpoint(double x1, double y1, double x2, double y2) {
-		double[] mid = new double[2];
-		mid[0] = (x1 + x2) / 2;
-		mid[1] = (y1 + y2) / 2;
-		return mid;
+	public static Point midpoint(Point a, Point b) {
+		return new Point((a.x + b.x) / 2, (a.y + b.y) / 2);
 	}
 	
-	public static double[] rectangleCenter(double[] coordinates) {
-		double[] center = midpoint(coordinates[0], coordinates[1], coordinates[4], coordinates[5]);
-		return center;
+	public static Point rectangleCenter(double[] coordinates) {
+		return midpoint(new Point(coordinates[0], coordinates[1]), new Point(coordinates[4], coordinates[5]));
 	}
 	
 	public static double[] rotateRectangleAroundCenter(double[] coordinates, double angle) {
 		double[] new_coordinates = new double[8];
-		double[] center = rectangleCenter(coordinates);
+		Point center = rectangleCenter(coordinates);
 		
 		for (int i = 0; i < 8; i = i + 2) {
 			// move to origin
-			new_coordinates[i] = coordinates[i] - center[0];
-			new_coordinates[i + 1] = coordinates[i + 1] - center[1];
+			new_coordinates[i] = coordinates[i] - center.x;
+			new_coordinates[i + 1] = coordinates[i + 1] - center.y;
 			
-			double[] rotated = rotateByAngle(new_coordinates[i], new_coordinates[i + 1], angle);
-			new_coordinates[i] = rotated[0];
-			new_coordinates[i + 1] = rotated[1];
+			Point rotated = rotateByAngle(new Point(new_coordinates[i], new_coordinates[i + 1]), angle);
+			new_coordinates[i] = rotated.x;
+			new_coordinates[i + 1] = rotated.y;
 			
 			// move back
-			new_coordinates[i] = new_coordinates[i] + center[0];
-			new_coordinates[i + 1] = new_coordinates[i + 1] + center[1];
+			new_coordinates[i] = new_coordinates[i] + center.x;
+			new_coordinates[i + 1] = new_coordinates[i + 1] + center.y;
 		}
 		
 		return new_coordinates;
@@ -224,8 +216,6 @@ public class Geometry {
 		double a = Geometry.clockwiseAngle(1, 4, 4, 5, 3, 3);
 
 		System.out.println(a);
-
-		System.out.println(Arrays.toString(Geometry.rotateByAngle(4, 0, 180)));
 
 		System.out.println(Geometry.lineSegmentsIntersect(new Point(85, 170),
 				new Point(269, 493),
