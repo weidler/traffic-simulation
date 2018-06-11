@@ -59,28 +59,31 @@ public class Geometry {
 	}
 	
 	public static boolean lineSegmentsIntersect(Point a, Point b, Point c, Point d) {
-		
+
+//		Point intersect = Geometry.intersection(new Line(a, b), new Line(c, d));
+//		return (liesOnSegment(a, b, intersect));
+
 		if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
 			return false;
 		}
-		
+
 		// Find the four orientations needed for general and
 	    // special cases
 	    int o1 = orientation(a, b, c);
 	    int o2 = orientation(a, b, d);
 	    int o3 = orientation(c, d, a);
 	    int o4 = orientation(c, d, b);
-	 
+
 	    // General case
 	    if (o1 != o2 && o3 != o4)
 	        return true;
-	 
+
 
 	    if (o1 == 0 && liesOnSegment(a, c, b)) return true;
 	    if (o2 == 0 && liesOnSegment(a, d, b)) return true;
 	    if (o3 == 0 && liesOnSegment(c, a, d)) return true;
 	    if (o4 == 0 && liesOnSegment(c, b, d)) return true;
-	 
+
 	    return false;
 	}
 	

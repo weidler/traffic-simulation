@@ -235,7 +235,7 @@ public class Intersection {
 	}
 
 	public void adjustConnectionsAfterRoadRemoval(Road removed_road) {
-		for (Connection c : this.connections) {
+		for (Connection c : (ArrayList<Connection>) this.connections.clone()) {
 			if (c.getRoad() == removed_road) {
 				this.connections.remove(c);
 			}
