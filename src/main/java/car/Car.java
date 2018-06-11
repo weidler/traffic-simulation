@@ -83,6 +83,7 @@ public class Car {
 			this.next_roads.add(inter.getRoadTo(path_over_intersections.get(next)));
 			next++;
 		}
+		this.next_roads.remove(0); // remove initial road, since its not next but current
 		this.passed_roads = new ArrayList<Road>();
 
 		this.current_origin_intersection = path.get(0);
@@ -349,8 +350,9 @@ public class Car {
 				acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 			}
 
+
 			// React to traffic lights
-			if (this.getApproachedTrafficlight().isRed() 
+			if (this.getApproachedTrafficlight().isRed()
 					&& this.getApproachedIntersectionDistance() < this.tl_braking_distance + 5
 					&& this.getApproachedIntersectionDistance() > this.tl_braking_distance) { // do not break if already over tl line
 				this.current_velocity = 0;
@@ -386,17 +388,16 @@ public class Car {
 
 				// Check if at new road
 				if (this.position_on_road >= this.current_road.getLength()) {
+					timeMeasure();
+					// change road
 					this.current_origin_intersection = this.current_destination_intersection;
 					this.current_destination_intersection = this.path_over_intersections
 							.get(this.path_over_intersections.indexOf(this.current_origin_intersection) + 1);
-					
-					timeMeasure();
-					// change road
 					this.position_on_road = this.position_on_road - this.current_road.getLength();
-					this.current_road = next_roads.get(0);
+					this.passed_roads.add(this.current_road);
+					this.current_road = next_roads.remove(0);
 					this.lane = Math.min(this.lane, current_road.getLanes());
 					this.updateDesiredVelocity();
-					this.passed_roads.add(this.next_roads.remove(0));
 				}
 
 				// update x and y based on position on road
