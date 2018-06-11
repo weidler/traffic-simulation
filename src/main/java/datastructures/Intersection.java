@@ -1,11 +1,14 @@
 package datastructures;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import datatype.Point;
 import road.Road;
 import type.IntersectionTypes;
+import type.RoadType;
 
 public class Intersection {
 
@@ -169,6 +172,22 @@ public class Intersection {
 			if (t.getLane() == lane) return t;
 		}
 
+		return null;
+	}
+
+	public RoadType getMostCommonRoadType() {
+		HashMap<RoadType, Integer> counters = new HashMap<>();
+		for (Road r : getOutgoingRoads()) {
+			if (!counters.keySet().contains(r.getRoadType())) counters.put(r.getRoadType(), 0);
+			counters.put(r.getRoadType(), counters.get(r.getRoadType()) + 1);
+		}
+
+		int max_value = Collections.max(counters.values());
+		for (RoadType type : counters.keySet()) {
+			if (counters.get(type) == max_value) return type;
+		}
+
+		// this wont ever happen, dont worry
 		return null;
 	}
 

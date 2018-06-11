@@ -157,15 +157,15 @@ public class StreetMap {
 				
 //				Intersection new_intersection = new Intersection(Geometry.intersection(road.getPointA(), road.getPointB(), crossed_road.getPointA(), crossed_road.getPointB()));
 //				this.addIntersection(new_intersection);
-//				
+//
 //				// remove crossed road
 //				//this.removeRoad(crossed_road);
-//				
+//
 //				// add four new roads; do this recursively to allow multiple intersections
 //				this.addRoad(new Road(int_a, new_intersection));
 //				this.addRoad(new Road(int_b, new_intersection));
 //				this.addRoad(new Road(crossed_road.getIntersections(this)[0], new_intersection));
-//				this.addRoad(new Road(crossed_road.getIntersections(this)[1], new_intersection));				
+//				this.addRoad(new Road(crossed_road.getIntersections(this)[1], new_intersection));
 			} else {
 				this.roads.add(road);
 				int_a.addConnection(road, int_b, null);

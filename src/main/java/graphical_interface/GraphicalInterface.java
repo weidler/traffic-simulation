@@ -431,7 +431,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								road.setRoadType(sc.next());
 								road.setLanes(Integer.parseInt(sc.next()));
 								streetMap.addRoad(road);
-								System.out.println("PLEASE DONT BE NULL: " + start.getTrafficLightsApproachingFrom(end));
 								next = sc.next();
 							}
 						}

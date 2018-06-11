@@ -160,6 +160,17 @@ public class Visuals extends JPanel {
 		g2.setColor(Color.black);
 
 		HashMap<Intersection, ArrayList<Point>> chosen_line_intersections = new HashMap<Intersection, ArrayList<Point>>();
+
+		// Containers for stuff to be drawn
+		HashMap<RoadType, ArrayList<Polygon>> road_asphalts = new HashMap<RoadType, ArrayList<Polygon>>();
+		for (RoadType type : RoadType.values()) road_asphalts.put(type, new ArrayList<Polygon>());
+		ArrayList<Line2D> outer_lines = new ArrayList<Line2D>();
+		ArrayList<Line2D> lane_separation_line = new ArrayList<Line2D>();
+		HashMap<Color, ArrayList<Line2D>> tl_lines = new HashMap<Color, ArrayList<Line2D>>();
+		tl_lines.put(Color.RED, new ArrayList<Line2D>());
+		tl_lines.put(Color.GREEN, new ArrayList<Line2D>());
+		ArrayList<Line2D> mid_lines = new ArrayList<Line2D>();
+
 		for (int i = 0; i < roads.size(); i++) {
 			Road current_road = roads.get(i);
 			Intersection[] connected_intersections = current_road.getIntersections(this.streetMap);
@@ -396,47 +407,42 @@ public class Visuals extends JPanel {
 				chosen_line_intersections.get(intersection_to).add(line_intersection_left_to);
 				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
-			// draw road background
+
+			Line end_of_road_to = new Line(new Point(to_x_left, to_y_left), new Point(to_x_right, to_y_right));
+			Line end_of_road_from = new Line(new Point(from_x_left, from_y_left), new Point(from_x_right, from_y_right));
+
+			// road background polygons
 			Polygon bg_polygon = new Polygon();
 			bg_polygon.addPoint((int) (to_x_right * zoomMultiplier + changeX), (int) (to_y_right * zoomMultiplier + changeY));
 			bg_polygon.addPoint((int) (from_x_right * zoomMultiplier + changeX), (int) (from_y_right * zoomMultiplier + changeY));
 			bg_polygon.addPoint((int) (from_x_left * zoomMultiplier + changeX), (int) (from_y_left * zoomMultiplier + changeY));
 			bg_polygon.addPoint((int) (to_x_left * zoomMultiplier + changeX), (int) (to_y_left * zoomMultiplier + changeY));
-			if (roads.get(i).getType() == RoadType.ROAD) g2.setColor(Color.decode(road_color));
-			else if (roads.get(i).getType() == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
-			else if (roads.get(i).getType() == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
-			g2.fill(bg_polygon);
+			road_asphalts.get(current_road.getRoadType()).add(bg_polygon);
 
-			// draw road outer lines
-			g2.setColor(Color.WHITE);
-			g2.setStroke(new BasicStroke(2));
-			g2.draw(new Line2D.Double((int) (to_x_right) * zoomMultiplier + changeX,
+			// road outer lines
+			outer_lines.add(new Line2D.Double((int) (to_x_right) * zoomMultiplier + changeX,
 					(int) (to_y_right) * zoomMultiplier + changeY, (int) (from_x_right) * zoomMultiplier + changeX,
 					(int) (from_y_right) * zoomMultiplier + changeY));
-			g2.draw(new Line2D.Double((int) (to_x_left) * zoomMultiplier + changeX,
+			outer_lines.add(new Line2D.Double((int) (to_x_left) * zoomMultiplier + changeX,
 					(int) (to_y_left) * zoomMultiplier + changeY, (int) (from_x_left) * zoomMultiplier + changeX,
 					(int) (from_y_left) * zoomMultiplier + changeY));
 			
 			// draw mid line
-			g2.setColor(Color.WHITE);
-			g2.setStroke(dashed);
-			if (current_road.getLanes() > 1) g2.setStroke(new BasicStroke(2));
-			g2.draw(new Line2D.Double((int) (roads.get(i).getX1()) * zoomMultiplier + changeX,
-					(int) (roads.get(i).getY1()) * zoomMultiplier + changeY,
-					(int) (roads.get(i).getX2()) * zoomMultiplier + changeX,
-					(int) (roads.get(i).getY2()) * zoomMultiplier + changeY));
+			Line mid_line = new Line((roads.get(i).getX1()), (roads.get(i).getY1()), (roads.get(i).getX2()), (roads.get(i).getY2()));
+			mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.intersectionWith(end_of_road_to));
+
+			mid_lines.add(new Line2D.Double((int) mid_line.A.x * zoomMultiplier + changeX,
+					(int) mid_line.A.y * zoomMultiplier + changeY,
+					(int) mid_line.B.x * zoomMultiplier + changeX,
+					(int) mid_line.B.y * zoomMultiplier + changeY));
 			g2.setStroke(defaultStroke);
 
-			// Draw lanes
+			// Lanes
 			for (int j = 1; j <= current_road.getLanes(); j++) {
 
 				double lane_offset_x = offset_x * (j - 1);
 				double lane_offset_y = offset_y * (j - 1);
 				
-				// draw traffic lights
-				double stroke_width = this.laneSize * zoomMultiplier / 2;
-				g2.setStroke(new BasicStroke((int) (stroke_width)));
-
 				TrafficLight tl_from = intersection_from.getTrafficLightsApproachingFrom(intersection_to, j);
 				TrafficLight tl_to = intersection_to.getTrafficLightsApproachingFrom(intersection_from, j);
 
@@ -452,70 +458,86 @@ public class Visuals extends JPanel {
 						current_road.getPointA()
 				);
 
-				g2.setColor(Color.RED);
+				Color col = Color.RED;
 				if (tl_from.getStatus().equals("G")) {
-					g2.setColor(Color.GREEN);
+					col = Color.GREEN;
 				}
 
 				if (intersection_from.isAt(current_road.getX1(), current_road.getY1())) {
-					g2.drawLine(
+					tl_lines.get(col).add(new Line2D.Double(
 							(int) ((tl_position_from[0] + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
 							(int) ((tl_position_from[1] - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
 							(int) ((tl_position_from[0] + (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] - (lane_offset_y)) * zoomMultiplier + changeY));
+							(int) ((tl_position_from[1] - (lane_offset_y)) * zoomMultiplier + changeY)));
 				} else {
-					g2.drawLine(
+					tl_lines.get(col).add(new Line2D.Double(
 							(int) ((tl_position_to[0] + (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
 							(int) ((tl_position_to[1] - (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
 							(int) ((tl_position_to[0] + (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] - (lane_offset_y)) * zoomMultiplier + changeY));
+							(int) ((tl_position_to[1] - (lane_offset_y)) * zoomMultiplier + changeY)));
 				}
 
-				g2.setColor(Color.RED);
-				if (tl_to.getStatus().equals("G")) {
-					g2.setColor(Color.GREEN);
+				col = Color.RED;
+				if (tl_from.getStatus().equals("G")) {
+					col = Color.GREEN;
 				}
 
 				if (intersection_to.isAt(current_road.getX1(), current_road.getY1())) {
-					g2.drawLine(
+					tl_lines.get(col).add(new Line2D.Double(
 							(int) ((tl_position_from[0] - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
 							(int) ((tl_position_from[1] + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
 							(int) ((tl_position_from[0] - (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_from[1] + (lane_offset_y)) * zoomMultiplier + changeY));
+							(int) ((tl_position_from[1] + (lane_offset_y)) * zoomMultiplier + changeY)));
 				} else {
-					g2.drawLine(
+					tl_lines.get(col).add(new Line2D.Double(
 							(int) ((tl_position_to[0] - (offset_x + lane_offset_x)) * zoomMultiplier + changeX),
 							(int) ((tl_position_to[1] + (offset_y + lane_offset_y)) * zoomMultiplier + changeY),
 							(int) ((tl_position_to[0] - (lane_offset_x)) * zoomMultiplier + changeX),
-							(int) ((tl_position_to[1] + (lane_offset_y)) * zoomMultiplier + changeY));
+							(int) ((tl_position_to[1] + (lane_offset_y)) * zoomMultiplier + changeY)));
 				}
-
-				g2.setStroke(defaultStroke);
 
 				// lane lines
 				if (j > 1) {
-					g2.setStroke(dashed);
-					g2.setColor(Color.WHITE);
+					Point point_a = new Point((current_road.getX1() - lane_offset_x), (current_road.getY1() + lane_offset_y));
+					Point point_b = new Point((current_road.getX2() - lane_offset_x), (current_road.getY2() + lane_offset_y));
 
-					g2.draw(new Line2D.Double((int) (current_road.getX1() - lane_offset_x) * zoomMultiplier + changeX,
-							(int) (current_road.getY1() + lane_offset_y) * zoomMultiplier + changeY,
-							(int) (current_road.getX2() - lane_offset_x) * zoomMultiplier + changeX,
-							(int) (current_road.getY2() + lane_offset_y) * zoomMultiplier + changeY));
+					Point new_point_a = (new Line(point_a, point_b)).intersectionWith(end_of_road_from);
+					Point new_point_b = (new Line(point_a, point_b)).intersectionWith(end_of_road_to);
 
-					g2.draw(new Line2D.Double((int) (current_road.getX1() + lane_offset_x) * zoomMultiplier + changeX,
-							(int) (current_road.getY1() - lane_offset_y) * zoomMultiplier + changeY,
-							(int) (current_road.getX2() + lane_offset_x) * zoomMultiplier + changeX,
-							(int) (current_road.getY2() - lane_offset_y) * zoomMultiplier + changeY));
+					lane_separation_line.add(new Line2D.Double(
+							 (int) new_point_a.x * zoomMultiplier + changeX,
+							(int) new_point_a.y * zoomMultiplier + changeY,
+							(int) new_point_b.x * zoomMultiplier + changeX,
+							(int) new_point_b.y * zoomMultiplier + changeY));
+
+					point_a = new Point((current_road.getX1() + lane_offset_x), (current_road.getY1() - lane_offset_y));
+					point_b = new Point((current_road.getX2() + lane_offset_x), (current_road.getY2() - lane_offset_y));
+
+					new_point_a = (new Line(point_a, point_b)).intersectionWith(end_of_road_from);
+					new_point_b = (new Line(point_a, point_b)).intersectionWith(end_of_road_to);
+
+					lane_separation_line.add(new Line2D.Double(
+							(int) new_point_a.x * zoomMultiplier + changeX,
+							(int) new_point_a.y * zoomMultiplier + changeY,
+							(int) new_point_b.x * zoomMultiplier + changeX,
+							(int) new_point_b.y * zoomMultiplier + changeY));
 				}
 			}
 
 			g2.setStroke(defaultStroke);
-
-			// draws the intersections
 			intersectionSize = 30;
 		}
 
-		// fill intersection leftouts
+		// Draw asphalt
+		for (RoadType type : road_asphalts.keySet()) {
+			if (type == RoadType.ROAD) g2.setColor(Color.decode(road_color));
+			else if (type == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
+			else if (type == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
+			for (Polygon pol : road_asphalts.get(type)) {
+				g2.fill(pol);
+			}
+		}
+
 		if (streetMap.intersectionCount() > 1) {
 			for (Intersection inter : streetMap.getIntersections()) {
 				Polygon intersection_filling = new Polygon();
@@ -529,12 +551,36 @@ public class Visuals extends JPanel {
 						}
 					}
 
-					g2.setColor(Color.decode(road_color));
+					RoadType type = inter.getMostCommonRoadType();
+					if (type == RoadType.ROAD) g2.setColor(Color.decode(road_color));
+					else if (type == RoadType.DIRT_ROAD) g2.setColor(Color.decode(dirtroad_color));
+					else if (type == RoadType.HIGHWAY) g2.setColor(Color.decode(highway_color));
 					g2.fill(intersection_filling);
 
 				}
 			}
 		}
+
+		// Draw Lane lines
+		g2.setColor(Color.WHITE);
+		g2.setStroke(new BasicStroke(2));
+		for (Line2D line : mid_lines) g2.draw(line);
+
+		g2.setStroke(dashed);
+		for (Line2D line : lane_separation_line) g2.draw(line);
+
+		g2.setStroke(defaultStroke);
+		g2.setStroke(new BasicStroke(2));
+		for (Line2D line : outer_lines) g2.draw(line);
+
+		// Draw TLs
+		double stroke_width = this.laneSize * zoomMultiplier / 2;
+		g2.setStroke(new BasicStroke((int) (stroke_width)));
+		for (Color col : tl_lines.keySet()) {
+			g2.setColor(col);
+			for (Line2D line : tl_lines.get(col)) g2.draw(line);
+		}
+
 
 		// draws the cars; Creating a deep copy of the car list in order to prevent 
 		// concurrent modification errors occuring because the simulation alters the 
