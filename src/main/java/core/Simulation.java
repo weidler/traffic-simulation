@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JTextArea;
-import algorithms.AStar;
+import algorithms.AstarAdvanced;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
@@ -58,6 +58,8 @@ public class Simulation {
 											// that it simulates
 
 	private int current_run;
+	private double avgTravel;
+	private ArrayList<Double> travel_times;
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -134,8 +136,9 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
+
 
 		// create vehicle
 		Car random_car;
@@ -163,8 +166,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
 
 		// create vehicle
 		Car random_car;
@@ -218,7 +221,52 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
+			//ml
+			double weightMultiplier2 = 1;
+			double weightMultiplier1 = 1;
+			double weightMultiplier = 0.98;
+			double lastAvargeTravelTime = avgTravel;
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
+				
+				if(current_time%2 == 0 && current_time!=0)
+				{
+					if(current_time != 2)
+					{
+						if(lastAvargeTravelTime < Statistics.mean(travel_times))
+						{
+							if(weightMultiplier2 > weightMultiplier1)
+							{
+								weightMultiplier = weightMultiplier1 * 1.02;
+							}
+							else
+							{
+								weightMultiplier = weightMultiplier1 * 0.98;
+							}
+						}
+						else
+						{
+							if(weightMultiplier2 > weightMultiplier1)
+							{
+								weightMultiplier = weightMultiplier1 * 0.98;
+							}
+							else
+							{
+								weightMultiplier = weightMultiplier1 *1.02;
+							}
+						}
+					}
+					weightMultiplier2 = weightMultiplier1;
+					weightMultiplier1 = weightMultiplier;
+					if(weightMultiplier - AstarAdvanced.getWeightValue() > 0.01)
+					{
+						AstarAdvanced.setWeightValue(weightMultiplier);	
+					}
+					else 
+					{
+						System.out.println(AstarAdvanced.getWeightValue());
+						this.stop();
+					}									
+				}
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
@@ -361,15 +409,15 @@ public class Simulation {
 			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
 		}
 		
-		ArrayList<Double> travel_times = new ArrayList<Double>();
+		travel_times = new ArrayList<Double>();
 		ArrayList<Double> fractional_waiting_times = new ArrayList<Double>();
 		for (Car c : this.car_sink) {
 			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
 			travel_times.add(travel_time);
 			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
 		}
-		
-		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
+		avgTravel = Statistics.mean(travel_times);
+		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
 		
 		// Write report
