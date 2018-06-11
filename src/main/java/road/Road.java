@@ -44,6 +44,18 @@ public class Road {
 		this(intersection_from.getXCoord(), intersection_from.getYCoord(), intersection_to.getXCoord(), intersection_to.getYCoord());
 	}
 
+	public Road(Point A, Point B, StreetMap streetMap, int lanes) {
+		this((int) A.x,(int) A.y, (int) B.x, (int) B.y);
+		this.setStreetMap(streetMap);
+		this.setLanes(lanes);
+	}
+
+	public Road(Intersection a, Intersection b, StreetMap streetMap, int lanes) {
+		this(a, b);
+		this.setStreetMap(streetMap);
+		this.setLanes(lanes);
+	}
+
 	public ArrayList<Integer> getOffsetX() {
 		return this.offsetX;
 	}

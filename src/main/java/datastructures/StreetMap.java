@@ -5,7 +5,10 @@ import java.util.HashMap;
 
 import datatype.Line;
 import datatype.Point;
+import road.DirtRoad;
+import road.Highway;
 import road.Road;
+import type.RoadType;
 import util.Geometry;
 
 /**
@@ -167,18 +170,28 @@ public class StreetMap {
 				this.removeRoad(crossed_road);
 
 				// add four new roads; do this recursively to allow multiple intersections
-				Road new_road_part_a = new Road(int_a, new_intersection);
-				Road new_road_part_b = new Road(int_b, new_intersection);
-				new_road_part_a.setStreetMap(this);
-				new_road_part_b.setStreetMap(this);
-				new_road_part_a.setLanes(road.getLanes());
-				new_road_part_b.setLanes(road.getLanes());
-				Road old_road_part_a = new Road(crossed_road.getIntersections(this)[0], new_intersection);
-				Road old_road_part_b = new Road(crossed_road.getIntersections(this)[1], new_intersection);
-				old_road_part_a.setStreetMap(this);
-				old_road_part_b.setStreetMap(this);
-				old_road_part_a.setLanes(crossed_road.getLanes());
-				old_road_part_b.setLanes(crossed_road.getLanes());
+
+				Road new_road_part_a = new Road(int_a, new_intersection, this, road.getLanes());
+				Road new_road_part_b = new Road(int_b, new_intersection, this, road.getLanes());
+				if (road.getRoadType() == RoadType.HIGHWAY) {
+					new_road_part_a = new Highway(int_a, new_intersection, this, road.getLanes());
+					new_road_part_b = new Highway(int_b, new_intersection, this, road.getLanes());
+				} else if (road.getRoadType() == RoadType.HIGHWAY) {
+					new_road_part_a = new DirtRoad(int_a, new_intersection, this, road.getLanes());
+					new_road_part_b = new DirtRoad(int_b, new_intersection, this, road.getLanes());
+				}
+
+				Road old_road_part_a = new Road(crossed_road.getIntersections(this)[0], new_intersection,
+						this, crossed_road.getLanes());
+				Road old_road_part_b = new Road(crossed_road.getIntersections(this)[1], new_intersection,
+						this, crossed_road.getLanes());
+				if (road.getRoadType() == RoadType.DIRT_ROAD) {
+					old_road_part_a = new Highway(int_a, new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new Highway(int_b, new_intersection, this, crossed_road.getLanes());
+				} else if (road.getRoadType() == RoadType.DIRT_ROAD) {
+					old_road_part_a = new DirtRoad(int_a, new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new DirtRoad(int_b, new_intersection, this, crossed_road.getLanes());
+				}
 
 				this.addRoad(new_road_part_a);
 				this.addRoad(new_road_part_b);
