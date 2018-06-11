@@ -37,7 +37,6 @@ public class StreetMap {
 	}
 
 	/**
-	 * 
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
@@ -170,7 +169,6 @@ public class StreetMap {
 				this.removeRoad(crossed_road);
 
 				// add four new roads; do this recursively to allow multiple intersections
-
 				Road new_road_part_a = new Road(int_a, new_intersection, this, road.getLanes());
 				Road new_road_part_b = new Road(int_b, new_intersection, this, road.getLanes());
 				if (road.getRoadType() == RoadType.HIGHWAY) {

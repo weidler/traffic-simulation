@@ -171,6 +171,7 @@ public class Visuals extends JPanel {
 		tl_lines.put(Color.GREEN, new ArrayList<Line2D>());
 		ArrayList<Line2D> mid_lines = new ArrayList<Line2D>();
 
+		// calculate drawing positions
 		for (int i = 0; i < roads.size(); i++) {
 			Road current_road = roads.get(i);
 			Intersection[] connected_intersections = current_road.getIntersections(this.streetMap);
@@ -408,8 +409,28 @@ public class Visuals extends JPanel {
 				chosen_line_intersections.get(intersection_to).add(line_intersection_right_to);
 			}
 
-			Line end_of_road_to = new Line(new Point(to_x_left, to_y_left), new Point(to_x_right, to_y_right));
-			Line end_of_road_from = new Line(new Point(from_x_left, from_y_left), new Point(from_x_right, from_y_right));
+			// natural ends of lanes
+			Line midline = new Line(current_road.getPointA(), current_road.getPointB());
+			Point projected_to_left = new Point(to_x_left, to_y_left).projectOn(midline);
+			Point projected_to_right = new Point(to_x_right, to_y_right).projectOn(midline);
+			Point closer_to = new Point(to_x_left, to_y_left);
+			Point closer_to_projected = projected_to_left;
+			if (new Line(projected_to_right, midline.B).length() < new Line(projected_to_left, midline.B).length()) {
+				closer_to = new Point(to_x_right, to_y_right);
+				closer_to_projected = projected_to_right;
+			}
+
+			Point projected_from_left = new Point(from_x_left, from_y_left).projectOn(midline);
+			Point projected_from_right = new Point(from_x_right, from_y_right).projectOn(midline);
+			Point closer_from = new Point(from_x_left, from_y_left);
+			Point closer_from_projected = projected_from_left;
+			if (new Line(projected_from_right, midline.A).length() < new Line(projected_from_left, midline.A).length()) {
+				closer_from = new Point(from_x_right, from_y_right);
+				closer_from_projected = projected_from_right;
+			}
+
+			Line end_of_road_to = new Line(closer_to, closer_to_projected);
+			Line end_of_road_from = new Line(closer_from, closer_from_projected);
 
 			// road background polygons
 			Polygon bg_polygon = new Polygon();
@@ -427,9 +448,15 @@ public class Visuals extends JPanel {
 					(int) (to_y_left) * zoomMultiplier + changeY, (int) (from_x_left) * zoomMultiplier + changeX,
 					(int) (from_y_left) * zoomMultiplier + changeY));
 			
-			// draw mid line
-			Line mid_line = new Line((roads.get(i).getX1()), (roads.get(i).getY1()), (roads.get(i).getX2()), (roads.get(i).getY2()));
-			mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.intersectionWith(end_of_road_to));
+			// mid line
+			Line mid_line = new Line(current_road.getPointA(), current_road.getPointB());
+			if ((intersection_from.getConnections().size() > 2) && !(intersection_to.getConnections().size() > 2)) {
+				mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.A);
+			} else if (!(intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
+				mid_line = new Line(mid_line.B, mid_line.intersectionWith(end_of_road_to));
+			} else if ((intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
+				mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.intersectionWith(end_of_road_to));
+			}
 
 			mid_lines.add(new Line2D.Double((int) mid_line.A.x * zoomMultiplier + changeX,
 					(int) mid_line.A.y * zoomMultiplier + changeY,
@@ -501,8 +528,8 @@ public class Visuals extends JPanel {
 					Point point_a = new Point((current_road.getX1() - lane_offset_x), (current_road.getY1() + lane_offset_y));
 					Point point_b = new Point((current_road.getX2() - lane_offset_x), (current_road.getY2() + lane_offset_y));
 
-					Point new_point_a = (new Line(point_a, point_b)).intersectionWith(end_of_road_from);
-					Point new_point_b = (new Line(point_a, point_b)).intersectionWith(end_of_road_to);
+					Point new_point_a = (new Line(point_a, point_b)).intersectionWith(end_of_road_to);
+					Point new_point_b = (new Line(point_a, point_b)).intersectionWith(end_of_road_from);
 
 					lane_separation_line.add(new Line2D.Double(
 							 (int) new_point_a.x * zoomMultiplier + changeX,

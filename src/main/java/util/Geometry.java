@@ -72,6 +72,10 @@ public class Geometry {
 		return dotProduct(vec_a[0], vec_a[1], vec_b[0], vec_b[1]);
 	}
 
+	public static double dotProduct(Point A, Point B) {
+		return dotProduct(A.x, A.y, B.x, B.y);
+	}
+
 	public static double toDegrees(double radians) {
 		return radians * (180 / Math.PI);
 	}
