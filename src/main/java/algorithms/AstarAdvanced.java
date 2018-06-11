@@ -12,8 +12,8 @@ import road.Road;
 public final class AstarAdvanced {
 
 	
-	private static double weightValuePoisson = 1;	
-	private static double weightValueEmpirical = 1;	
+	private static double weightValuePoisson = 0;	
+	private static double weightValueEmpirical = 100;	
 	private static double weightValueGaussian = 1;
 	public static void setWeightValue(double multplier)
 	{
@@ -50,11 +50,12 @@ public final class AstarAdvanced {
 
 			for (int i = 0; i < currentParent.getConnections().size(); i++) {
 				Intersection currentConnected = currentParent.getConnections().get(i).getDestination();
+				Road r = streetmap.getRoadByCoordinates(currentParent.getXCoord(), currentParent.getYCoord(), currentConnected.getXCoord(), currentConnected.getYCoord());
+				
 				if (!closedList.contains(currentConnected)) {
 					double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
 					double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
 							+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
-					Road r = streetmap.getRoadByCoordinates(currentParent.getXCoord(), currentParent.getYCoord(), currentConnected.getXCoord(), currentConnected.getYCoord());
 					double distribution = carList.get(r).size()/r.getLength();
 					double d = distribution * weightValuePoisson;
 					double distance = h + g + d;

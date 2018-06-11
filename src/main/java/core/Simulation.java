@@ -59,7 +59,7 @@ public class Simulation {
 
 	private int current_run;
 	private double avgTravel;
-	private ArrayList<Double> travel_times;
+	private ArrayList<Double> travel_times = new ArrayList();
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -186,7 +186,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 45, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
@@ -221,52 +221,11 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
-			//ml
-			double weightMultiplier2 = 1;
-			double weightMultiplier1 = 1;
-			double weightMultiplier = 0.98;
-			double lastAvargeTravelTime = avgTravel;
+			
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
+				//System.out.println(current_time);
 				
-				if(current_time%2 == 0 && current_time!=0)
-				{
-					if(current_time != 2)
-					{
-						if(lastAvargeTravelTime < Statistics.mean(travel_times))
-						{
-							if(weightMultiplier2 > weightMultiplier1)
-							{
-								weightMultiplier = weightMultiplier1 * 1.02;
-							}
-							else
-							{
-								weightMultiplier = weightMultiplier1 * 0.98;
-							}
-						}
-						else
-						{
-							if(weightMultiplier2 > weightMultiplier1)
-							{
-								weightMultiplier = weightMultiplier1 * 0.98;
-							}
-							else
-							{
-								weightMultiplier = weightMultiplier1 *1.02;
-							}
-						}
-					}
-					weightMultiplier2 = weightMultiplier1;
-					weightMultiplier1 = weightMultiplier;
-					if(weightMultiplier - AstarAdvanced.getWeightValue() > 0.01)
-					{
-						AstarAdvanced.setWeightValue(weightMultiplier);	
-					}
-					else 
-					{
-						System.out.println(AstarAdvanced.getWeightValue());
-						this.stop();
-					}									
-				}
+				
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
