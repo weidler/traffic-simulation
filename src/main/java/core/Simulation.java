@@ -41,6 +41,7 @@ public class Simulation {
 	private boolean is_running;
 	private double current_time;
 	private float simulated_seconds_per_real_second = 101;
+	private boolean full_speed = false;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -223,9 +224,6 @@ public class Simulation {
 			int resettable_step = 0;
 			
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
-				//System.out.println(current_time);
-				
-				
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
@@ -280,13 +278,16 @@ public class Simulation {
 				}
 
 				// Wait for time step to be over
-				double ns_to_wait = Time.secondsToNanoseconds(delta_t/ simulated_seconds_per_real_second);
-				double ns_used = (System.nanoTime() - start_time);
-				total_calculation_time += ns_used;
-				try {
-					TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
-				} catch (InterruptedException e) {
-					System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
+				if (!full_speed) {
+					double ns_to_wait = Time.secondsToNanoseconds(delta_t/simulated_seconds_per_real_second);
+					double ns_used = (System.nanoTime() - start_time);
+					total_calculation_time += ns_used;
+					try {
+						System.out.println(Time.nanosecondsToSeconds(Math.max(0, ns_to_wait - ns_used)));
+						TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
+					} catch (InterruptedException e) {
+						System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
+					}
 				}
 
 				this.current_time += delta_t;
@@ -296,11 +297,6 @@ public class Simulation {
 				resettable_step++;
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
-				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
-					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
-					resettable_step = 0;
-					total_calculation_time = 0;
-				}
 			}
 
 			this.reportStatistics();
@@ -435,5 +431,19 @@ public class Simulation {
 
 	public int getCurrentDay() {
 		return this.days_simulated;
+	}
+
+	public int getNumbCars() {
+		int total = 0;
+		for (ArrayList<Car> al : cars.values()) total += al.size();
+		return total;
+	}
+
+	public boolean isFullSpeed() {
+		return full_speed;
+	}
+
+	public void setFullSpeed(boolean full_speed) {
+		this.full_speed = full_speed;
 	}
 }
