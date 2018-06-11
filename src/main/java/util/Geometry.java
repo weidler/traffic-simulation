@@ -18,19 +18,17 @@ public class Geometry {
 	 
 	    return false;
 	}
-	
-	// https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-	// To find orientation of ordered triplet (p, q, r).
-	// The function returns following values
-	// 0 --> p, q and r are colinear
-	// 1 --> Clockwise
-	// 2 --> Counterclockwise
-	public static int orientation(Point p, Point q, Point r) {
-	    double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-	 
-	    if (val == 0) return 0;	 
-	    else if (val > 0) return 1;
-	    else return 2;
+
+	public static boolean ccw(Point A, Point B, Point C) {
+		return (C.y-A.y) * (B.x-A.x) > (B.y-A.y) * (C.x-A.x);
+	}
+
+	public static boolean lineSegmentsIntersect(Point A, Point B, Point C, Point D) {
+		if (A.equals(C) || A.equals(D) || B.equals(C) || B.equals(D)) {
+			return false;
+		}
+
+		return ccw(A,C,D) != ccw(B,C,D) && ccw(A,B,C) != ccw(A,B,D);
 	}
 	
 	public static Point intersection(Line P, Line Q) {
@@ -56,35 +54,6 @@ public class Geometry {
 		}
 		
 		return new Point(x, y);
-	}
-	
-	public static boolean lineSegmentsIntersect(Point a, Point b, Point c, Point d) {
-
-//		Point intersect = Geometry.intersection(new Line(a, b), new Line(c, d));
-//		return (liesOnSegment(a, b, intersect));
-
-		if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
-			return false;
-		}
-
-		// Find the four orientations needed for general and
-	    // special cases
-	    int o1 = orientation(a, b, c);
-	    int o2 = orientation(a, b, d);
-	    int o3 = orientation(c, d, a);
-	    int o4 = orientation(c, d, b);
-
-	    // General case
-	    if (o1 != o2 && o3 != o4)
-	        return true;
-
-
-	    if (o1 == 0 && liesOnSegment(a, c, b)) return true;
-	    if (o2 == 0 && liesOnSegment(a, d, b)) return true;
-	    if (o3 == 0 && liesOnSegment(c, a, d)) return true;
-	    if (o4 == 0 && liesOnSegment(c, b, d)) return true;
-
-	    return false;
 	}
 	
 	public static double vectorMagnitude(double x, double y) {
@@ -239,7 +208,6 @@ public class Geometry {
 	}
 	
 	public static void main(String[] args) {
-
 		double Ax = -30;
 		double Ay = 10; // A(-30, 10)
 		double Bx = 29;
@@ -255,6 +223,11 @@ public class Geometry {
 		System.out.println(a);
 
 		System.out.println(Arrays.toString(Geometry.rotateByAngle(4, 0, 180)));
+
+		System.out.println(Geometry.lineSegmentsIntersect(new Point(85, 170),
+				new Point(269, 493),
+				new Point(113, 444),
+				new Point(295, 266)));
 		
 	}
 

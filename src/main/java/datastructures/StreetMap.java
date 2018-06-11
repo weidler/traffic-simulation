@@ -146,8 +146,10 @@ public class StreetMap {
 			// Check if road intersects other road
 			Road crossed_road = null;
 			for (Road r : this.roads) {
-				if (this.roadsIntersect(r, road)) crossed_road = r;
-				break;
+				if (this.roadsIntersect(r, road)) {
+					crossed_road = r;
+					break;
+				}
 			}
 			
 			System.out.println("CROSSSSED " + crossed_road);
