@@ -28,7 +28,7 @@ public class Road {
 	protected boolean directed = false;
 
 	protected StreetMap streetmap;
-	protected boolean directed = false;
+
 	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -115,12 +115,7 @@ public class Road {
 				this.streetmap.getIntersectionByCoordinates(this.x2, this.y2));
 	}
 	
-	public void toggleDirected() {
-		if(!this.directed)
-			this.directed=true;
-		else
-			this.directed=false;
-	}
+	
 	
 	public Intersection getDirection() {
 		if (!this.directed)
