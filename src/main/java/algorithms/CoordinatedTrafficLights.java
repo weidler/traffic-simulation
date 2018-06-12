@@ -63,8 +63,18 @@ public class CoordinatedTrafficLights {
 		ArrayList<Integer> roadCounts = new ArrayList<Integer>();
 		
 		for(int k = 0; k < intersections.size(); k++) {
+			int carCount = 0;
 			Road curRoad = intersections.get(k).getRoadTo(i);
-			int carCount = cars.get(curRoad).size();
+			for(Car car : cars.get(curRoad))
+			{ 
+				Intersection target = car.getCurrentDestinationIntersection();
+				
+				if(target == i && target != null)
+				{
+					carCount++;
+				}
+			}
+			//int carCount = cars.get(curRoad).size();
 			roadCounts.add(carCount);
 		}
 	
