@@ -51,22 +51,24 @@ public final class AstarAdvanced {
 			for (int i = 0; i < currentParent.getConnections().size(); i++) {
 				Intersection currentConnected = currentParent.getConnections().get(i).getDestination();
 				Road r = streetmap.getRoadByCoordinates(currentParent.getXCoord(), currentParent.getYCoord(), currentConnected.getXCoord(), currentConnected.getYCoord());
-				
-				if (!closedList.contains(currentConnected)) {
-					double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
-					double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
-							+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
-					double distribution = carList.get(r).size()/r.getLength();
-					double d = distribution * weightValuePoisson;
-					double distance = h + g + d;
-
-					openList.add(currentConnected);
-
-					if (currentConnected.getParent() == null || currentConnected.getG() > g) {
-						currentConnected.setParent(currentParent);
-						currentConnected.setCost(distance);
-						currentConnected.setG(g);
-						currentConnected.setH(h);
+				if(r.getDirected().size() > 1)
+				{
+					if (!closedList.contains(currentConnected)) {
+						double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
+						double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
+								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
+						double distribution = carList.get(r).size()/r.getLength();
+						double d = distribution * weightValuePoisson;
+						double distance = h + g + d;
+	
+						openList.add(currentConnected);
+	
+						if (currentConnected.getParent() == null || currentConnected.getG() > g) {
+							currentConnected.setParent(currentParent);
+							currentConnected.setCost(distance);
+							currentConnected.setG(g);
+							currentConnected.setH(h);
+						}
 					}
 				}
 			}
@@ -86,6 +88,7 @@ public final class AstarAdvanced {
 
 			if (!(lowestOpen == null) && lowestOpen.equals(end)) {
 				foundTarget = true;
+			
 			}
 		}
 

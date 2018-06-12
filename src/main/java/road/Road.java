@@ -27,7 +27,7 @@ public class Road {
 	protected double angle;
 
 	protected StreetMap streetmap;
-
+	protected boolean directed = false;
 	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -194,7 +194,7 @@ public class Road {
 	public double getLength() {
 		return this.length;
 	}
-
+	
 	public void setLength(int length) {
 		this.length = length;
 	}
@@ -237,6 +237,32 @@ public class Road {
 		intersections[1] = streetmap.getIntersectionByCoordinates(this.x2, this.y2);
 
 		return intersections;
+	}
+	public void toggleDirected()
+	{
+		if(directed)
+		{
+			directed = false;
+		}
+		else
+		{
+			directed = true;
+		}
+	}
+	public ArrayList<Intersection> getDirected()
+	{
+		ArrayList<Intersection> intersectionList = new ArrayList();
+		if(directed)
+		{
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x2, y2));			
+		}
+		else 
+		{
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x1, y1));
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x2, y2));
+		}
+		
+		return intersectionList;
 	}
 
 	@Override
