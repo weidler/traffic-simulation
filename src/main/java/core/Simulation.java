@@ -25,7 +25,11 @@ import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
 import strategy.BasicCycling;
+
 import strategy.Coordinated;
+
+import strategy.InformedCycling;
+
 import strategy.Strategy;
 import strategy.WeightedCycling;
 import type.Distribution;
@@ -48,7 +52,7 @@ public class Simulation {
 	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
-	private float simulated_seconds_per_real_second = 101;
+	private float simulated_seconds_per_real_second = 1;
 	private boolean full_speed = false;
 	private int visualization_frequency;
 	
@@ -205,16 +209,19 @@ public class Simulation {
 		// Strategy
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(15, street_map);
-		}
-		else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING)
-		{
+		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
 			this.strategy = new WeightedCycling(15, street_map);
+
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
 		{
 			this.strategy = new Coordinated(15, street_map);
 		}
-		else {
+
+		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
+			this.strategy = new InformedCycling(15, street_map);
+		} else {
+
 			this.strategy = new BasicCycling(15, street_map);
 		}
 	}

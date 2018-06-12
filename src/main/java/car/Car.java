@@ -334,6 +334,9 @@ public class Car {
 	}
 
 	public boolean update(HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t, double current_time) {
+		if (this.current_destination_intersection.getRoadTo(this.current_origin_intersection) != this.current_road)
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAH");
+
 		if (!this.in_traffic) {
 			this.lane = this.current_road.getLanes();
 			if(this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
@@ -443,7 +446,6 @@ public class Car {
 		for (Road r : list_of_cars.keySet()) {
 			if (!roads_of_interest.contains(r)) continue;
 
-			// only compare if on required lane
 			for (Car c : list_of_cars.get(r)) {
 				if (this.equals(c) || !c.in_traffic) continue;
 
@@ -469,6 +471,7 @@ public class Car {
 				}
 			}
 		}
+		
 		if (current_leading_car != null) System.out.println(current_leading_car);
 		return current_leading_car;
 	}
