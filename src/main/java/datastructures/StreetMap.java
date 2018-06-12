@@ -153,8 +153,7 @@ public class StreetMap {
 					break;
 				}
 			}
-			
-			System.out.println("CROSSSSED " + crossed_road);
+
 			if (crossed_road != null) {
 				Intersection new_intersection = new Intersection(
 					Geometry.intersection(
