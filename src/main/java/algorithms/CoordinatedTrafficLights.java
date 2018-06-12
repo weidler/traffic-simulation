@@ -50,17 +50,18 @@ public class CoordinatedTrafficLights {
 		int interY 	= i.getYCoord();
 		int index	= 0;
 		Road busiestRoad = null;
-		cars 		= s.getCars();
+		cars = s.getCars();
 		ArrayList<Intersection> intersections = new ArrayList<Intersection>();
 		
 		intersections = i.getConnectedIntersections();
 		ArrayList<Integer> roadCounts = new ArrayList<Integer>();
+		
 		for(int k = 0; k < intersections.size(); k++) {
 			Road curRoad = intersections.get(k).getRoadTo(i);
 			int carCount = cars.get(curRoad).size();
 			roadCounts.add(carCount);
-			
 		}
+	
 		for(int l = 0; l < roadCounts.size(); l++) {
 			int newNumber = roadCounts.get(l);
 			if((newNumber > roadCounts.get(index))) {
@@ -70,127 +71,6 @@ public class CoordinatedTrafficLights {
 		
 		busiestRoad = intersections.get(index).getRoadTo(i);
 		return busiestRoad;
-//		for(int j = 0; j < cars.size(); j++) {
-//			previousPosition(curPos);
-//			currentPosition(cars.get(j));
-//			Road curRoad = cars.get(j).getCurrentRoad();
-//
-//			//Checks if cars are within range of intersection
-//			if(curPos.getX() >= minusXdistance || curPos.getX() <= plusXdistance || curPos.getY() >= minusYdistance || curPos.getY() <= plusYdistance) {
-//
-//				//Checks only for cars moving towards the intersection
-//				if(((curPos.getX() - interX) < (prevPos.getX() - interX)) || (curPos.getY() - interY) < (prevPos.getY() - interY)) {
-//					
-//					//x is decreasing
-//					if((prevPos.getX() - curPos.getX()) > 0) {
-//
-//						//y is decreasing (South-West)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North-West)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//
-//						//y remains equal (West)
-//						else if((prevPos.getY() - curPos.getY()) == 0) {
-//
-//						}
-//					}
-//
-//					//x is increasing
-//					else if((prevPos.getX() - curPos.getX()) < 0) {
-//
-//						//y is decreasing (South-East)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North-East)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//
-//						//y remains equal (East)
-//						else if((prevPos.getY() - curPos.getY()) == 0) {
-//
-//						}
-//					}
-//
-//					//x remains the same
-//					else if((prevPos.getX() - curPos.getX()) == 0) {
-//
-//						//y is decreasing (South)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//					}
-//				}
-//				
-//				//Checks only for cars moving away from intersection
-//				if(((curPos.getX() - interX) < (prevPos.getX() - interX)) || (curPos.getY() - interY) < (prevPos.getY() - interY)) {
-//					
-//					//x is decreasing
-//					if((prevPos.getX() - curPos.getX()) > 0) {
-//
-//						//y is decreasing (South-West)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North-West)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//
-//						//y remains equal (West)
-//						else if((prevPos.getY() - curPos.getY()) == 0) {
-//
-//						}
-//					}
-//
-//					//x is increasing
-//					else if((prevPos.getX() - curPos.getX()) < 0) {
-//
-//						//y is decreasing (South-East)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North-East)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//
-//						//y remains equal (East)
-//						else if((prevPos.getY() - curPos.getY()) == 0) {
-//
-//						}
-//					}
-//
-//					//x remains the same
-//					else if((prevPos.getX() - curPos.getX()) == 0) {
-//
-//						//y is decreasing (South)
-//						if((prevPos.getY() - curPos.getY()) > 0) {
-//
-//						}
-//
-//						//y is increasing (North)
-//						else if((prevPos.getY() - curPos.getY()) < 0) {
-//
-//						}
-//					}
-//				}
-//			}
-//		}
 	}
 
 	//Must be called before currentPosition is called
