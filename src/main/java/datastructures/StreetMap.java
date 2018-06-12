@@ -30,7 +30,7 @@ public class StreetMap {
 	private int strategy = 2; //which strategy we use starting form 1;
 	private ArrayList<Intersection> intersections;
 	private static double CurrentTime = 0;
-	private static CoordinatedTrafficLights ctl = new CoordinatedTrafficLights();
+	
 	public void setCurrentTime(double t) {
 		CurrentTime = t;
 	}
@@ -308,10 +308,7 @@ public class StreetMap {
 	// ACTIONS
 
 	public void update(double delta_t, HashMap<Road, ArrayList<Car>> cars) {
-		for (Intersection intersection : this.intersections) {
-			Road busiest = ctl.checkRoads(intersection, cars);
-			intersection.updateTrafficLights(delta_t, strategy, busiest);
-		}
+		
 	}
 
 	// CHECKS

@@ -83,6 +83,7 @@ public class Car {
 			this.next_roads.add(inter.getRoadTo(path_over_intersections.get(next)));
 			next++;
 		}
+
 		this.next_roads.remove(0); // remove initial road, since its not next but current
 		this.passed_roads = new ArrayList<Road>();
 
@@ -468,7 +469,7 @@ public class Car {
 				}
 			}
 		}
-
+		if (current_leading_car != null) System.out.println(current_leading_car);
 		return current_leading_car;
 	}
 

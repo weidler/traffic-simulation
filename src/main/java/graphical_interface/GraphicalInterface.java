@@ -699,8 +699,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				String[] strateyList = { "circulating lights" };
-				String[] scheduleList = { "poisson", "gaussian" , "empirical"};
+				String[] strateyList = { "circulating lights", "weigthed cycling" };
+				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 				strategy = new JComboBox<>(strateyList);
 				schedule = new JComboBox<>(scheduleList);
 
@@ -743,12 +743,20 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							break;
 
 						default:
-							arrival_schedule = Distribution.GAUSSIAN;
+							arrival_schedule = Distribution.EMPIRICAL;
 							break;
 					}
 
 					Strategy control_strategy;
 					switch ((String) strategy.getSelectedItem()) {
+						case "circulating lights":
+							control_strategy = Strategy.BENCHMARK_CYCLING;
+							break;
+
+						case "weigthed cycling":
+							control_strategy = Strategy.WEIGHTED_CYCLING;
+							break;
+							
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;
 							break;

@@ -114,6 +114,14 @@ public class Intersection {
 		this.parent = parent;
 	}
 
+	public int getActiveLight() {
+		return active_light;
+	}
+
+	public void setActiveLight(int active_light) {
+		this.active_light = active_light;
+	}
+
 	public ArrayList<Road> getOutgoingRoads() {
 		ArrayList<Road> outgoing = new ArrayList<Road>();
 		for (Connection c : this.connections) {

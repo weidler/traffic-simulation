@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd3cb89a-1fde-4f80-8d0a-ff03b3dcc2f3" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/strategy/BasicCycling.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simulation-reports/output.csv" beforeDir="false" afterPath="$PROJECT_DIR$/simulation-reports/output.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/car/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/car/Car.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/core/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/datastructures/Intersection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/datastructures/Intersection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -54,17 +60,17 @@
       <file leaf-file-name="Car.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="413" column="67" selection-start-line="413" selection-start-column="67" selection-end-line="413" selection-end-column="67" />
+            <state relative-caret-position="256">
+              <caret line="507" column="53" selection-start-line="507" selection-start-column="53" selection-end-line="507" selection-end-column="53" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Simulation.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Simulation.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/core/Simulation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3492">
-              <caret line="220" lean-forward="true" selection-start-line="220" selection-end-line="220" />
+            <state relative-caret-position="542">
+              <caret line="267" column="21" lean-forward="true" selection-start-line="267" selection-start-column="21" selection-end-line="267" selection-end-column="21" />
               <folding>
                 <element signature="e#2225#2226#0" expanded="true" />
                 <element signature="e#2258#2259#0" expanded="true" />
@@ -103,11 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Visuals.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Visuals.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="476" column="38" selection-start-line="476" selection-start-column="38" selection-end-line="476" selection-end-column="38" />
+            <state relative-caret-position="256">
+              <caret line="586" column="26" selection-start-line="586" selection-start-column="26" selection-end-line="586" selection-end-column="26" />
               <folding>
                 <element signature="e#4271#4301#0" expanded="true" />
                 <element signature="e#4389#4397#0" expanded="true" />
@@ -119,25 +125,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Line.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/datatype/Line.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="37" column="5" lean-forward="true" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
-              <folding>
-                <element signature="e#748#749#0" expanded="true" />
-                <element signature="e#777#778#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Road.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/road/Road.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-2772">
               <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
               <folding>
+                <element signature="e#1536#1537#0" expanded="true" />
+                <element signature="e#1562#1563#0" expanded="true" />
+                <element signature="e#1605#1606#0" expanded="true" />
+                <element signature="e#1631#1632#0" expanded="true" />
+                <element signature="e#1661#1662#0" expanded="true" />
+                <element signature="e#1685#1686#0" expanded="true" />
+                <element signature="e#2649#2650#0" expanded="true" />
+                <element signature="e#2676#2677#0" expanded="true" />
                 <element signature="e#2995#2996#0" expanded="true" />
                 <element signature="e#3018#3019#0" expanded="true" />
                 <element signature="e#3512#3513#0" expanded="true" />
@@ -176,8 +177,8 @@
       <file leaf-file-name="StreetMap.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="124" column="81" lean-forward="true" selection-start-line="124" selection-start-column="81" selection-end-line="124" selection-end-column="81" />
+            <state relative-caret-position="110">
+              <caret line="301" column="5" selection-start-line="301" selection-start-column="5" selection-end-line="301" selection-end-column="5" />
               <folding>
                 <element signature="e#834#835#0" expanded="true" />
                 <element signature="e#856#857#0" expanded="true" />
@@ -199,8 +200,38 @@
       <file leaf-file-name="Intersection.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/Intersection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="234" column="5" lean-forward="true" selection-start-line="234" selection-start-column="5" selection-end-line="234" selection-end-column="5" />
+            <state relative-caret-position="1764">
+              <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
+              <folding>
+                <element signature="e#1912#1913#0" expanded="true" />
+                <element signature="e#1938#1939#0" expanded="true" />
+                <element signature="e#1988#1989#0" expanded="true" />
+                <element signature="e#2027#2028#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Strategy.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/strategy/Strategy.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="234">
+              <caret line="13" column="90" selection-start-line="13" selection-start-column="76" selection-end-line="13" selection-end-column="90" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BasicCycling.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/strategy/BasicCycling.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="68" lean-forward="true" selection-start-line="18" selection-start-column="68" selection-end-line="18" selection-end-column="68" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -222,6 +253,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -236,9 +268,11 @@
       <find>outer_line_right_B_y</find>
       <find>to_x_left</find>
       <find>y2</find>
-      <find>System</find>
       <find>\	\	if \(a\.equals\(c\) \|\| a\.equals\(d\) \|\| b\.equals\(c\) \|\| b\.equals\(d\)\) \{\n\	\	\	return false\;\n\	\	\}\n\n\	\	\/\/ Find the four orientations needed for general and\n\	    \/\/ special cases\n\	    int o1 \= orientation\(a\, b\, c\)\;\n\	    int o2 \= orientation\(a\, b\, d\)\;\n\	    int o3 \= orientation\(c\, d\, a\)\;\n\	    int o4 \= orientation\(c\, d\, b\)\;\n\n\	    \/\/ General case\n\	    if \(o1 \!\= o2 \&amp;\&amp; o3 \!\= o4\)\n\	        return true\;\n\n\n\	    if \(o1 \=\= 0 \&amp;\&amp; liesOnSegment\(a\, c\, b\)\) return true\;\n\	    if \(o2 \=\= 0 \&amp;\&amp; liesOnSegment\(a\, d\, b\)\) return true\;\n\	    if \(o3 \=\= 0 \&amp;\&amp; liesOnSegment\(c\, a\, d\)\) return true\;\n\	    if \(o4 \=\= 0 \&amp;\&amp; liesOnSegment\(c\, b\, d\)\) return true\;\n\n\	    return false\;|\	\	if \(a\.equals\(c\) \|\| a\.equals\(d\) \|\| b\.equals\(c\) \|\| b\.equals\(d\)\) \{\n\	\	\	return false\;\n\	\	\}\n\n\	\	\/\/ Find the four orientations needed for general and\n\	    \/\/ special cases\n\	    int o1 \= orientation\(a\, b\, c\)\;\n\	    int o2 \= orientation\(a\, b\, d\)\;\n\	    int o3 \= orientation\(c\, d\, a\)\;\n\	    int o4 \= orientation\(c\, d\, b\)\;\n\n\	    \/\/ General case\n\	    if \(o1 \!\= o2 \&amp;\&amp; o3 \!\= o4\)\n\	        return true\;\n\n\n\	    if \(o1 \=\= 0 \&amp;\&amp; liesOnSegment\(a\, c\, b\)\) return true\;\n\	    if \(o2 \=\= 0 \&amp;\&amp; liesOnSegment\(a\, d\, b\)\) return true\;\n\	    if \(o3 \=\= 0 \&amp;\&amp; liesOnSegment\(c\, a\, d\)\) return true\;\n\	    if \(o4 \=\= 0 \&amp;\&amp; liesOnSegment\(c\, b\, d\)\) return true\;\n\n\	    return false\;</find>
       <find>midline.A, midline.B</find>
+      <find>System</find>
+      <find>HEKK</find>
+      <find>HELL</find>
     </findStrings>
     <replaceStrings>
       <replace>A.y</replace>
@@ -551,7 +585,6 @@
         <option value="$PROJECT_DIR$/src/main/java/core/Core.java" />
         <option value="$PROJECT_DIR$/src/main/java/experiment/Experiment.java" />
         <option value="$PROJECT_DIR$/src/main/java/datatype/Line.java" />
-        <option value="$PROJECT_DIR$/src/main/java/datastructures/Intersection.java" />
         <option value="$PROJECT_DIR$/src/main/java/road/Road.java" />
         <option value="$PROJECT_DIR$/src/main/java/road/Highway.java" />
         <option value="$PROJECT_DIR$/src/main/java/road/DirtRoad.java" />
@@ -560,13 +593,16 @@
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/CriticalButtonUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/DefaultButtonUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/ImportantButtonUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/car/Car.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/InfoPanel.java" />
         <option value="$PROJECT_DIR$/src/main/java/util/Time.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/GraphicalInterface.java" />
-        <option value="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/core/Simulation.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" />
+        <option value="$PROJECT_DIR$/src/main/java/car/Car.java" />
+        <option value="$PROJECT_DIR$/src/main/java/datastructures/Intersection.java" />
+        <option value="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" />
+        <option value="$PROJECT_DIR$/src/main/java/strategy/BasicCycling.java" />
+        <option value="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/Simulation.java" />
       </list>
     </option>
   </component>
@@ -587,7 +623,7 @@
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="PackagesPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -596,66 +632,22 @@
           <expand>
             <path>
               <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
               <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
             </path>
             <path>
               <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
               <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="car" type="1f31426a:PackageElementNode" />
+              <item name="algorithms" type="1f31426a:PackageElementNode" />
             </path>
             <path>
               <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
               <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="core" type="1f31426a:PackageElementNode" />
+              <item name="strategy" type="1f31426a:PackageElementNode" />
             </path>
             <path>
               <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
               <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="datastructures" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="datatype" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="experiment" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="graphical_interface" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="road" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="schedule" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
-              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
-              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
-              <item name="util" type="1f31426a:PackageElementNode" />
+              <item name="type" type="1f31426a:PackageElementNode" />
             </path>
           </expand>
           <select />
@@ -848,7 +840,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48828000" />
+    <option name="totallyTimeSpent" value="52718000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -931,20 +923,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6800">
-          <caret line="430" column="70" selection-start-line="430" selection-start-column="58" selection-end-line="430" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/Core.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/Geometry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4260">
@@ -1134,13 +1112,6 @@
     <entry file="file://$PROJECT_DIR$/simulation-reports/output.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/Intersection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="234" column="5" lean-forward="true" selection-start-line="234" selection-start-column="5" selection-end-line="234" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/datatype/Line.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
@@ -1220,13 +1191,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="413" column="67" selection-start-line="413" selection-start-column="67" selection-end-line="413" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/schedule/EmpiricalSchedule.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
@@ -1265,11 +1229,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar!/java/lang/Runnable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/road/Road.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2772">
           <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
           <folding>
+            <element signature="e#1536#1537#0" expanded="true" />
+            <element signature="e#1562#1563#0" expanded="true" />
+            <element signature="e#1605#1606#0" expanded="true" />
+            <element signature="e#1631#1632#0" expanded="true" />
+            <element signature="e#1661#1662#0" expanded="true" />
+            <element signature="e#1685#1686#0" expanded="true" />
+            <element signature="e#2649#2650#0" expanded="true" />
+            <element signature="e#2676#2677#0" expanded="true" />
             <element signature="e#2995#2996#0" expanded="true" />
             <element signature="e#3018#3019#0" expanded="true" />
             <element signature="e#3512#3513#0" expanded="true" />
@@ -1304,10 +1283,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="586" column="26" selection-start-line="586" selection-start-column="26" selection-end-line="586" selection-end-column="26" />
+          <folding>
+            <element signature="e#4271#4301#0" expanded="true" />
+            <element signature="e#4389#4397#0" expanded="true" />
+            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#4583#4609#0" expanded="true" />
+            <element signature="e#4675#4683#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="507" column="53" selection-start-line="507" selection-start-column="53" selection-end-line="507" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="124" column="81" lean-forward="true" selection-start-line="124" selection-start-column="81" selection-end-line="124" selection-end-column="81" />
+        <state relative-caret-position="110">
+          <caret line="301" column="5" selection-start-line="301" selection-start-column="5" selection-end-line="301" selection-end-column="5" />
           <folding>
             <element signature="e#834#835#0" expanded="true" />
             <element signature="e#856#857#0" expanded="true" />
@@ -1325,17 +1325,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar!/java/lang/Runnable.class">
+    <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/Intersection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+        <state relative-caret-position="1764">
+          <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
+          <folding>
+            <element signature="e#1912#1913#0" expanded="true" />
+            <element signature="e#1938#1939#0" expanded="true" />
+            <element signature="e#1988#1989#0" expanded="true" />
+            <element signature="e#2027#2028#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/Strategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="90" selection-start-line="13" selection-start-column="76" selection-end-line="13" selection-end-column="90" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/BasicCycling.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="68" lean-forward="true" selection-start-line="18" selection-start-column="68" selection-end-line="18" selection-end-column="68" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/core/Simulation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3492">
-          <caret line="220" lean-forward="true" selection-start-line="220" selection-end-line="220" />
+        <state relative-caret-position="542">
+          <caret line="267" column="21" lean-forward="true" selection-start-line="267" selection-start-column="21" selection-end-line="267" selection-end-column="21" />
           <folding>
             <element signature="e#2225#2226#0" expanded="true" />
             <element signature="e#2258#2259#0" expanded="true" />
@@ -1369,20 +1395,6 @@
             <element signature="e#13082#13083#0" expanded="true" />
             <element signature="e#13131#13132#0" expanded="true" />
             <element signature="e#13166#13167#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="476" column="38" selection-start-line="476" selection-start-column="38" selection-end-line="476" selection-end-column="38" />
-          <folding>
-            <element signature="e#4271#4301#0" expanded="true" />
-            <element signature="e#4389#4397#0" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
-            <element signature="e#4583#4609#0" expanded="true" />
-            <element signature="e#4675#4683#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -24,6 +24,9 @@ import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
+import strategy.BasicCycling;
+import strategy.Strategy;
+import strategy.WeightedCycling;
 import type.Distribution;
 import util.Statistics;
 import util.Time;
@@ -38,6 +41,7 @@ public class Simulation {
 	private ArrayList<Car> car_sink;
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
+	private Strategy strategy;
 	
 	private long start_time;
 	private boolean showCarInfo = true;
@@ -196,6 +200,17 @@ public class Simulation {
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
 			this.simulation_schedule = new GaussianSchedule(this.street_map, 50, 5);
 		}
+
+		// Strategy
+		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
+			this.strategy = new BasicCycling(15, street_map);
+		}
+		else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING)
+		{
+			this.strategy = new WeightedCycling(15, street_map);
+		}else {
+			this.strategy = new BasicCycling(15, street_map);
+		}
 	}
 
 	// SIMULATION
@@ -216,9 +231,8 @@ public class Simulation {
 
 		Thread th = new Thread(() -> {
 			// Initialize
-			for (Intersection is : this.street_map.getIntersections()) {
-				is.initializeTrafficLightSettings();
-			}
+
+			this.strategy.initializeTrafficLightSettings();
 
 			double delta_t = 0.05; // in seconds
 			this.adjustVisualizationFrequency(delta_t);
@@ -246,7 +260,8 @@ public class Simulation {
 				}
 
 				// update traffic light statuses
-				this.street_map.update(delta_t, cars);
+				this.strategy.configureTrafficLights(this.cars, delta_t);
+
 
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();

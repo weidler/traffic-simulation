@@ -45,7 +45,13 @@ public class CoordinatedTrafficLights {
 	}
 
 	//Checks for which road is the busiest in an intersection
-	public Road checkRoads(Intersection i, HashMap<Road, ArrayList<Car>> cars) {
+
+
+	
+	
+
+	public Road weightedRoads(Intersection i, HashMap<Road, ArrayList<Car>> cars) {
+
 		int interX 	= i.getXCoord();
 		int interY 	= i.getYCoord();
 		int index	= 0;
@@ -72,6 +78,7 @@ public class CoordinatedTrafficLights {
 		busiestRoad = intersections.get(index).getRoadTo(i);
 		return busiestRoad;
 	}
+	
 
 	//Must be called before currentPosition is called
 	public Point previousPosition(Point current) {
