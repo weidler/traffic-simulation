@@ -20,6 +20,9 @@
 .idea/**/gradle.xml
 .idea/**/libraries
 
+.classpath
+./out/*.csv
+
 # CMake
 cmake-build-debug/
 cmake-build-release/

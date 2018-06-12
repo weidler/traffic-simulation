@@ -45,7 +45,8 @@ public class CoordinatedTrafficLights {
 	}
 
 	//Checks for which road is the busiest in an intersection
-	public Road weightedRoads(Intersection i, HashMap<Road,ArrayList<Car>> cars) {
+
+	public Road weightedRoads1(Intersection i, HashMap<Road,ArrayList<Car>> cars) {
 		int interX 	= i.getXCoord();
 		int interY 	= i.getYCoord();
 		int index	= 0;
@@ -80,10 +81,57 @@ public class CoordinatedTrafficLights {
 		busiestRoad = intersections.get(index).getRoadTo(i);
 		return busiestRoad;
 	}
-	
-	public Intersection adjustNextTL(Intersection i) {
-		return i;
+	public Road weightedRoads2(Intersection i, HashMap<Road,ArrayList<Car>> cars) {
+		int interX 	= i.getXCoord();
+		int interY 	= i.getYCoord();
+		int index	= 0;
+		Road busiestRoad = null;
+		ArrayList<Intersection> intersections = new ArrayList<Intersection>();
 		
+		intersections = i.getConnectedIntersections();
+		ArrayList<Integer> carCountList = new ArrayList<>();
+		ArrayList<Double> avgSpeed = new ArrayList<>();
+		for(int k = 0; k < intersections.size(); k++) {
+			int carCount = 0;
+			double sumSpeed = 0;
+			Road curRoad = intersections.get(k).getRoadTo(i);
+			for(Car car : cars.get(curRoad))
+			{ 
+				Intersection target = car.getCurrentDestinationIntersection();
+				
+				if(target == i && target != null)
+				{
+					sumSpeed = sumSpeed + car.getCurrentVelocity();
+					carCount++;
+				}
+			}
+			carCountList.add(carCount);
+			if(carCount == 0)
+			{
+				avgSpeed.add((double) (curRoad.getAllowedMaxSpeed()+20));
+			}
+			else 
+			{
+				avgSpeed.add(sumSpeed/carCount);
+			}
+		}
+	
+		for(int l = 0; l < avgSpeed.size(); l++) {
+			double newNumber = avgSpeed.get(l);
+			if(newNumber < (avgSpeed.get(index)+5)) {
+				index = avgSpeed.indexOf(newNumber);
+			}
+			else if(Math.abs(newNumber - avgSpeed.get(index)) <= 5 )
+			{
+				if(carCountList.get(avgSpeed.indexOf(newNumber)) > carCountList.get(index))
+				{
+					index = avgSpeed.indexOf(newNumber);
+				}
+			}
+		}
+		
+		busiestRoad = intersections.get(index).getRoadTo(i);
+		return busiestRoad;
 	}
 	
 

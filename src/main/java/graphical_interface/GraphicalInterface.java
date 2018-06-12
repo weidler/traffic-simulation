@@ -700,7 +700,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			public void actionPerformed(ActionEvent arg0) {
 
 
-				String[] strateyList = { "circulating lights", "weigthed cycling" };
+
+				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling" };
+
 				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 
 				strategy = new JComboBox<>(strateyList);
@@ -758,7 +760,17 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						case "weigthed cycling":
 							control_strategy = Strategy.WEIGHTED_CYCLING;
 							break;
+
+						case "coordinated":
+							control_strategy = Strategy.COORDINATED;
+							break;
+
+
+						case "informed cycling":
+							control_strategy = Strategy.INFORMED_CYCLING;
+							break;
 							
+
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;
 							break;
