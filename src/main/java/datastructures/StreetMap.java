@@ -301,14 +301,6 @@ public class StreetMap {
 		return path;
 	}
 
-	// ACTIONS
-
-	public void update(double delta_t) {
-		for (Intersection intersection : this.intersections) {
-			intersection.updateTrafficLights(delta_t);
-		}
-	}
-
 	// CHECKS
 
 	private boolean roadAlreadyOccupied(Road road) {
