@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 
 import algorithms.AStar;
 import algorithms.AstarAdvanced;
+import algorithms.CoordinatedTrafficLights;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
@@ -37,7 +38,7 @@ public class Simulation {
 	private ArrayList<Car> car_sink;
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
-
+	
 	private long start_time;
 	private boolean showCarInfo = true;
 	private boolean is_running;
@@ -245,7 +246,7 @@ public class Simulation {
 				}
 
 				// update traffic light statuses
-				this.street_map.update(delta_t);
+				this.street_map.update(delta_t, cars);
 
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();
