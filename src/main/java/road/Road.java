@@ -264,6 +264,10 @@ public class Road {
 		
 		return intersectionList;
 	}
+	public boolean getDirectedBoolean()
+	{
+		return directed;
+	}
 
 	@Override
 	public String toString() {
