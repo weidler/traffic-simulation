@@ -192,7 +192,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 30, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
