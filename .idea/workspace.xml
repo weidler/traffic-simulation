@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd3cb89a-1fde-4f80-8d0a-ff03b3dcc2f3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/simulation-reports/output.csv" beforeDir="false" afterPath="$PROJECT_DIR$/simulation-reports/output.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/car/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/car/Car.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -42,11 +44,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="225">
-      <file leaf-file-name="Car.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Car.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="499" column="44" selection-start-line="499" selection-start-column="44" selection-end-line="499" selection-end-column="44" />
+            <state relative-caret-position="102">
+              <caret line="478" column="31" selection-start-line="478" selection-start-column="31" selection-end-line="478" selection-end-column="31" />
               <folding>
                 <element signature="e#4195#4196#0" expanded="true" />
                 <element signature="e#4225#4226#0" expanded="true" />
@@ -131,13 +133,42 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="Strategy.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/strategy/Strategy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="26" column="11" selection-start-line="26" selection-start-column="11" selection-end-line="26" selection-end-column="11" />
+            <state relative-caret-position="300">
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InformedCycling.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="185">
+              <caret line="77" column="28" selection-start-line="77" selection-start-column="28" selection-end-line="77" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="294">
+              <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitattributes" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitattributes">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="TrafficLight.java" pinned="false" current-in-tab="false">
@@ -152,8 +183,8 @@
       <file leaf-file-name="Simulation.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/core/Simulation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="960">
-              <caret line="58" selection-start-line="58" selection-end-line="58" />
+            <state relative-caret-position="280">
+              <caret line="28" column="16" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="16" />
               <folding>
                 <element signature="e#12650#12651#0" expanded="true" />
                 <element signature="e#12680#12681#0" expanded="true" />
@@ -170,11 +201,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Strategy.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/type/Strategy.java">
+      <file leaf-file-name="Test.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/type/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+            <state relative-caret-position="100">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -192,7 +223,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/GraphicalInterface.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15120">
-              <caret line="797" column="44" selection-start-line="797" selection-start-column="44" selection-end-line="797" selection-end-column="44" />
+              <caret line="805" column="44" selection-start-line="805" selection-start-column="44" selection-end-line="805" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -550,14 +581,15 @@
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/Visuals.java" />
         <option value="$PROJECT_DIR$/src/main/java/datastructures/Intersection.java" />
         <option value="$PROJECT_DIR$/src/main/java/datastructures/StreetMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/java/strategy/BasicCycling.java" />
         <option value="$PROJECT_DIR$/src/main/java/type/Strategy.java" />
         <option value="$PROJECT_DIR$/src/main/java/graphical_interface/GraphicalInterface.java" />
-        <option value="$PROJECT_DIR$/src/main/java/core/Simulation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" />
         <option value="$PROJECT_DIR$/src/main/java/car/Car.java" />
+        <option value="$PROJECT_DIR$/src/main/java/strategy/Strategy.java" />
+        <option value="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/Simulation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/type/Test.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -578,7 +610,7 @@
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator currentView="PackagesPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -664,6 +696,24 @@
               <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
               <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
               <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
+              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
+              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
+              <item name="graphical_interface" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
+              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
+              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
+              <item name="strategy" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="traffic-simulation" type="58d84e3e:PackageViewProjectNode" />
+              <item name="traffic-simulation" type="eaaa3913:PackageViewModuleGroupNode" />
+              <item name="traffic-simulation_main" type="616d4139:PackageViewModuleNode" />
+              <item name="type" type="1f31426a:PackageElementNode" />
             </path>
           </expand>
           <select />
@@ -789,12 +839,12 @@
       <workItem from="1528623966283" duration="4679000" />
       <workItem from="1528704587308" duration="15038000" />
       <workItem from="1528747439736" duration="5168000" />
-      <workItem from="1528814992957" duration="670000" />
+      <workItem from="1528814992957" duration="2711000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60124000" />
+    <option name="totallyTimeSpent" value="62165000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -811,7 +861,7 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938644" />
-      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.23143165" />
+      <window_info anchor="bottom" id="Messages" order="7" visible="true" weight="0.23143165" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
@@ -823,7 +873,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2088204" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2088204" />
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Gradle" order="8" sideWeight="0.4965035" visible="true" weight="0.16206163" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -854,20 +904,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6880">
-          <caret line="434" column="62" lean-forward="true" selection-start-line="434" selection-start-column="62" selection-end-line="434" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/Core.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/Geometry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4260">
@@ -995,6 +1031,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="700">
           <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+          <folding>
+            <element signature="e#1253#1254#0" expanded="true" />
+            <element signature="e#1325#1326#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1015,6 +1055,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
           <caret line="37" column="5" lean-forward="true" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
+          <folding>
+            <element signature="e#748#749#0" expanded="true" />
+            <element signature="e#777#778#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1057,6 +1101,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#556#557#0" expanded="true" />
+            <element signature="e#590#591#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1071,6 +1119,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
+          <folding>
+            <element signature="e#910#911#0" expanded="true" />
+            <element signature="e#973#974#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1099,6 +1151,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-170">
           <caret line="58" column="24" lean-forward="true" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
+          <folding>
+            <element signature="e#525#526#0" expanded="true" />
+            <element signature="e#584#585#0" expanded="true" />
+            <element signature="e#1391#1392#0" expanded="true" />
+            <element signature="e#1447#1448#0" expanded="true" />
+            <element signature="e#1502#1503#0" expanded="true" />
+            <element signature="e#1547#1548#0" expanded="true" />
+            <element signature="e#1627#1628#0" expanded="true" />
+            <element signature="e#1662#1663#0" expanded="true" />
+            <element signature="e#1848#1849#0" expanded="true" />
+            <element signature="e#1892#1893#0" expanded="true" />
+            <element signature="e#1943#1944#0" expanded="true" />
+            <element signature="e#1982#1983#0" expanded="true" />
+            <element signature="e#2034#2035#0" expanded="true" />
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#4021#4022#0" expanded="true" />
+            <element signature="e#4078#4079#0" expanded="true" />
+            <element signature="e#5155#5170#0" expanded="true" />
+            <element signature="e#5449#5456#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1119,6 +1191,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
           <caret line="301" column="5" selection-start-line="301" selection-start-column="5" selection-end-line="301" selection-end-column="5" />
+          <folding>
+            <element signature="e#834#835#0" expanded="true" />
+            <element signature="e#856#857#0" expanded="true" />
+            <element signature="e#901#902#0" expanded="true" />
+            <element signature="e#926#927#0" expanded="true" />
+            <element signature="e#1027#1033#0" expanded="true" />
+            <element signature="e#1934#1935#0" expanded="true" />
+            <element signature="e#1953#1954#0" expanded="true" />
+            <element signature="e#2001#2002#0" expanded="true" />
+            <element signature="e#2041#2042#0" expanded="true" />
+            <element signature="e#2583#2584#0" expanded="true" />
+            <element signature="e#2610#2611#0" expanded="true" />
+            <element signature="e#3245#3259#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1178,8 +1264,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/car/Car.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="499" column="44" selection-start-line="499" selection-start-column="44" selection-end-line="499" selection-end-column="44" />
+        <state relative-caret-position="102">
+          <caret line="478" column="31" selection-start-line="478" selection-start-column="31" selection-end-line="478" selection-end-column="31" />
           <folding>
             <element signature="e#4195#4196#0" expanded="true" />
             <element signature="e#4225#4226#0" expanded="true" />
@@ -1263,14 +1349,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/Strategy.java" />
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="26" column="11" selection-start-line="26" selection-start-column="11" selection-end-line="26" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/datastructures/TrafficLight.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1282,7 +1360,27 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/graphical_interface/GraphicalInterface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15120">
-          <caret line="797" column="44" selection-start-line="797" selection-start-column="44" selection-end-line="797" selection-end-column="44" />
+          <caret line="805" column="44" selection-start-line="805" selection-start-column="44" selection-end-line="805" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/Strategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="77" column="28" selection-start-line="77" selection-start-column="28" selection-end-line="77" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1291,15 +1389,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/type/Strategy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        <state relative-caret-position="240">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/core/Simulation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="58" selection-start-line="58" selection-end-line="58" />
+        <state relative-caret-position="280">
+          <caret line="28" column="16" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="16" />
           <folding>
             <element signature="e#12650#12651#0" expanded="true" />
             <element signature="e#12680#12681#0" expanded="true" />
@@ -1315,7 +1413,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/type/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitattributes">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
