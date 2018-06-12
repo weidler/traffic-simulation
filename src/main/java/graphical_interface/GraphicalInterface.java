@@ -119,7 +119,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	/**
 	 * JPanel that shows the roads etc.
 	 */
-
+	private JCheckBox directedRoad;
 	private Visuals visuals;
 	private JTextField txtMinNumberOf;
 	private JTextField txtMaxNumberOf;
@@ -430,8 +430,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								road.setStreetMap(streetMap);
 								road.setRoadType(sc.next());
 								road.setLanes(Integer.parseInt(sc.next()));
+								next = sc.next();
+								if(next.equals("true"))
+								{
+									road.toggleDirected();
+								}
 								streetMap.addRoad(road);
 								next = sc.next();
+								
 							}
 						}
 						System.out.println("loaded");
@@ -653,6 +659,18 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 //		addLabel.setBounds(button_x, 354, 147, 14);
 //		menuPanel.add(addLabel);
 
+		directedRoad = new JCheckBox("directed");
+		directedRoad.setSelected(false);
+		directedRoad.setBounds(this.button_x, this.calculateInMenuYPosition(7), button_width, button_height);
+		directedRoad.setBackground(null);
+		directedRoad.setForeground(Color.WHITE);
+		menuPanel.add(directedRoad);
+		directedRoad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		
 		JButton addDeleteButton = new JButton("add/delete");
 		addDeleteButton.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
 		addDeleteButton.setUI(new DefaultButtonUI());
@@ -944,6 +962,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						int l = numb_lanes;
 
 						r.setLanes(l);
+						if (directedRoad.isSelected()) 
+						{
+							r.toggleDirected();
+						}
 						if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
 							streetMap.addRoad(r);
 						} else {
