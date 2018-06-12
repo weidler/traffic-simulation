@@ -44,8 +44,8 @@ public class CoordinatedTrafficLights {
 		plusYdistance 	= yCoord + searchRadius;
 	}
 
-	//Checks which cars are within range of intersection and then what direction they are traveling
-	public Road checkCarCounts(Intersection i, Simulation s) {
+	//Checks for which road is the busiest in an intersection
+	public Road checkRoads(Intersection i, Simulation s) {
 		int interX 	= i.getXCoord();
 		int interY 	= i.getYCoord();
 		int index	= 0;
@@ -85,7 +85,7 @@ public class CoordinatedTrafficLights {
 		int xPos = (int) c.getPositionX();
 		int yPos = (int) c.getPositionY();
 		curPos = new Point(xPos,yPos);
-
+		
 		return curPos;
 	}
 
