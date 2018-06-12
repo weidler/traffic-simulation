@@ -33,7 +33,7 @@ public class WeightedCycling implements Strategy {
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) {
 		for (Intersection intersection : this.intersections) {
-			Road busiest = ctl.weightedRoads(intersection, cars);
+			Road busiest = ctl.weightedRoads1(intersection, cars);
 			intersection.setTrafficLightActivity2(busiest);
 		}
 		
