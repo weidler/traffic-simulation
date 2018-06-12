@@ -45,12 +45,11 @@ public class CoordinatedTrafficLights {
 	}
 
 	//Checks for which road is the busiest in an intersection
-	public Road weightedRoads(Intersection i, Simulation s) {
+	public Road weightedRoads(Intersection i, HashMap<Road,ArrayList<Car>> cars) {
 		int interX 	= i.getXCoord();
 		int interY 	= i.getYCoord();
 		int index	= 0;
 		Road busiestRoad = null;
-		cars = s.getCars();
 		ArrayList<Intersection> intersections = new ArrayList<Intersection>();
 		
 		intersections = i.getConnectedIntersections();
@@ -68,7 +67,6 @@ public class CoordinatedTrafficLights {
 					carCount++;
 				}
 			}
-			//int carCount = cars.get(curRoad).size();
 			roadCounts.add(carCount);
 		}
 	
