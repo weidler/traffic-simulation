@@ -285,7 +285,6 @@ public class Simulation {
 					double ns_used = (System.nanoTime() - start_time);
 					total_calculation_time += ns_used;
 					try {
-						System.out.println(Time.nanosecondsToSeconds(Math.max(0, ns_to_wait - ns_used)));
 						TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
 					} catch (InterruptedException e) {
 						System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
