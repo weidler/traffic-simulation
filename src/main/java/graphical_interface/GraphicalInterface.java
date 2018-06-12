@@ -1,7 +1,7 @@
 
 package graphical_interface;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,7 +45,7 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 
 /**
- * 
+ *
  * @author thomas this class is the interface
  */
 
@@ -66,15 +66,15 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private final int menu_width = 200;
 	private int menu_height;
 	private Point menu_origin;
-	
+
 	private int map_width;
 	private int map_height;
 	private Point map_origin;
-	
+
 	private int info_width;
 	private final int info_height = 70;
 	private final Point info_origin = new Point(0, 0);
-	
+
 	private final int button_width = 150;
 	private final int button_height = 30;
 	private final int button_x = (this.menu_width - this.button_width) / 2;
@@ -83,11 +83,11 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private int button_x_diff = 10;
 	private int round_button_diameter = 50;
 	private Border button_border = BorderFactory.createEmptyBorder();
-	
+
 	private final Color menu_bg = Color.decode("#3a3a3a");
 	private final Color map_bg = Color.decode("#57af6b");
 	private final Color info_bg = Color.decode("#3a3a3a");
-	
+
 	/**
 	 * represent to position of the mouse at all times.
 	 */
@@ -151,7 +151,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		contentPane.setBorder(BorderFactory.createEmptyBorder());
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 
@@ -160,7 +160,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		drawPanel.setBorder(BorderFactory.createEmptyBorder());
 		drawPanel.setBackground(this.map_bg);
 		contentPane.add(drawPanel);
-		
+
 		JPanel infoPanel = new InfoPanel(simulation);
 		infoPanel.setBounds((int) info_origin.x, (int) info_origin.y, info_width, info_height);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -215,8 +215,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		/**
 		 * MENU ELEMENTs
 		 */
-		
-		
+
+
 		// PANEL
 		JPanel menuPanel = new MenuPanel(this.info_height);
 		menuPanel.setBounds((int) menu_origin.x, (int) menu_origin.y, menu_width, menu_height);
@@ -224,14 +224,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(menuPanel);
 		menuPanel.setLayout(null);
-		
+
 		menuPanel.setForeground(this.contrast_font_color );
-		
+
 		// TITLE
-		
-		
+
+
 		// BUTTONS
-		JButton clearButton = new JButton("clear");
+		JButton clearButton = new JButton("Clear");
 		clearButton.setLocation(button_x, this.calculateInMenuYPosition(0));
 		clearButton.setUI(new CriticalButtonUI());
 		clearButton.setBorder(this.button_border);
@@ -246,22 +246,22 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
-		JButton addCar = new JButton("add car");
-		addCar.setBorder(this.button_border);
-		addCar.setUI(new DefaultButtonUI());
-		addCar.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
-		menuPanel.add(addCar);
-		addCar.addActionListener(new ActionListener() {
+//		JButton addCar = new JButton("add car");
+//		addCar.setBorder(this.button_border);
+//		addCar.setUI(new DefaultButtonUI());
+//		addCar.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
+//		menuPanel.add(addCar);
+//		addCar.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				if (!simulation.isRunning() ) {// && !selected) {
+//					simulation.addRandomCar();
+//					repaint();
+//				}
+//			}
+//		});
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!simulation.isRunning() ) {// && !selected) {
-					simulation.addRandomCar();
-					repaint();
-				}
-			}
-		});
-		
 		JSlider slider = new JSlider();
 		slider.setBounds(button_x, this.calculateInMenuYPosition(3), button_width, button_height);
 		slider.setValue(50);
@@ -270,7 +270,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.add(slider);
 
 		JButton startButton = new JButton("Start");
-		startButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+		startButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		startButton.setUI(new ImportantButtonUI());
 		startButton.setBorder(this.button_border);
 		menuPanel.add(startButton);
@@ -282,9 +282,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			}
 		});
-		
-		JButton stopButton = new JButton("Pause");
-		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+
+		JButton stopButton = new JButton("Stop");
+		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		stopButton.setUI(new DefaultButtonUI());
 		menuPanel.add(stopButton);
 		stopButton.setBorder(this.button_border);
@@ -292,7 +292,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				simulation.stop();
 
 			}
@@ -348,7 +348,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton saveButton = new JButton("Save");
-		saveButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		saveButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width/2 - button_x_diff, button_height);
 		saveButton.setUI(new DefaultButtonUI());
 		saveButton.setBorder(this.button_border);
 		menuPanel.add(saveButton);
@@ -382,7 +382,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton loadButton = new JButton("Load");
-		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(9), button_width/2 - button_x_diff, button_height);
 		loadButton.setUI(new DefaultButtonUI());
 		loadButton.setBorder(this.button_border);
 		menuPanel.add(loadButton);
@@ -422,16 +422,15 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								int x2 = Integer.parseInt(next);
 								next = sc.next();
 								int y2 = Integer.parseInt(next);
-								
+
 								Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
 								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
-								
+
 								Road road = new Road(start, end);
 								road.setStreetMap(streetMap);
 								road.setRoadType(sc.next());
 								road.setLanes(Integer.parseInt(sc.next()));
 								streetMap.addRoad(road);
-								System.out.println("PLEASE DONT BE NULL: " + start.getTrafficLightsApproachingFrom(end));
 								next = sc.next();
 							}
 						}
@@ -444,10 +443,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				}
 			}
 		});
-		
+
 		// SIMULATION CONTROLS
 		JButton slowDownButton = new JButton("Speed-");
-		slowDownButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width/2 - this.button_x_diff, button_height);
+		slowDownButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - this.button_x_diff, button_height);
 		slowDownButton.setUI(new CriticalButtonUI());
 		slowDownButton.setBorder(this.button_border);
 		menuPanel.add(slowDownButton);
@@ -456,9 +455,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				simulation.setSimulatedSecondsPerRealSecond(Math.max(1, simulation.getSimulatedSecondsperRealSecond() - 100));
 			}
 		});
-		
+
 		JButton speedUpButton = new JButton("Speed+");
-		speedUpButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(12), button_width/2 - button_x_diff, button_height);
+		speedUpButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
 		speedUpButton.setUI(new ImportantButtonUI());
 		speedUpButton.setBorder(this.button_border);
 		menuPanel.add(speedUpButton);
@@ -467,7 +466,20 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 100);
 			}
 		});
-		
+
+		JCheckBox fullSpeedButton = new JCheckBox("Speedy Gonzales");
+		fullSpeedButton.setSelected(false);
+		fullSpeedButton.setBounds(this.button_x, this.calculateInMenuYPosition(12), button_width, button_height);
+		fullSpeedButton.setBackground(null);
+		fullSpeedButton.setForeground(Color.WHITE);
+		menuPanel.add(fullSpeedButton);
+		fullSpeedButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (fullSpeedButton.isSelected()) simulation.setFullSpeed(true);
+				else simulation.setFullSpeed(false);
+			}
+		});
+
 		// EXIT
 		JButton exitButton = new JButton("Exit");
 		exitButton.setBounds(this.menu_width/2 - this.button_width/4, (this.menu_height - 50) - button_height - button_y_diff, button_width/2, button_height);
@@ -480,7 +492,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				System.exit(0);
 			}
 		});
-		
+
 //
 //		txtMinNumberOf = new JTextField();
 //		txtMinNumberOf.setText("0");
@@ -598,18 +610,18 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 					case "Two":
 						numb_lanes = 2;
 						break;
-						
+
 					case "Three":
 						numb_lanes = 3;
 						break;
-					
+
 					default:
 						break;
 				}
 			}
 		});
 		menuPanel.add(numb_lanes_cbox);
-		
+
 		String[] road_options = {"Normal", "Highway", "Dirt"};
 		JComboBox<String> road_type_cbox = new JComboBox<String>(road_options);
 		road_type_cbox.setSelectedIndex(0);
@@ -626,23 +638,23 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 					case "Highway":
 						road_type = RoadType.HIGHWAY;
 						break;
-						
+
 					case "Dirt":
 						road_type = RoadType.DIRT_ROAD;
 						break;
-					
+
 					default:
 						break;
 				}
 			}
 		});
 		menuPanel.add(road_type_cbox);
-		
+
 //		addLabel.setBounds(button_x, 354, 147, 14);
 //		menuPanel.add(addLabel);
 
 		JButton addDeleteButton = new JButton("add/delete");
-		addDeleteButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
+		addDeleteButton.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
 		addDeleteButton.setUI(new DefaultButtonUI());
 		menuPanel.add(addDeleteButton);
 		addDeleteButton.setBorder(this.button_border);
@@ -660,7 +672,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton experimentButton = new JButton("Experiment");
-		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width, button_height);
+		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
 		experimentButton.setUI(new DefaultButtonUI());
 		experimentButton.setBorder(this.button_border);
 		menuPanel.add(experimentButton);
@@ -673,7 +685,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				String[] scheduleList = { "poisson", "gaussian" , "empirical"};
 				strategy = new JComboBox<>(strateyList);
 				schedule = new JComboBox<>(scheduleList);
-				
+
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("duration in days:"));
 				myPanel.add(duration);
@@ -747,10 +759,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		this.map_height = this.getHeight() - this.info_height;
 		this.map_width = this.getWidth() - this.menu_width;
 		this.map_origin = new Point(0, this.info_height);
-		
+
 		this.menu_height = this.getHeight();
 		this.menu_origin = new Point(this.map_width, 0);
-		
+
 		this.info_width = this.map_width;
 	}
 
@@ -764,9 +776,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	public void componentResized(ComponentEvent ce) {
 		adjustPanelSizes();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @author thomas this is the mouse/key listener. in here all the clicks and
 	 *         movement of the mouse are registered and roads and intersection are
 	 *         created.
@@ -896,7 +908,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							}
 
 						}
-						
+
 						if (distance < visuals.getMaxIntersectionSize()) {
 							endX = nearestX;
 							endY = nearestY;
@@ -913,7 +925,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							case ROAD:
 								r = new Road(startX, startY, endX, endY);
 								break;
-							
+
 							case DIRT_ROAD:
 								r = new DirtRoad(startX, startY, endX, endY);
 								break;
@@ -927,7 +939,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								r = new Road(startX, startY, endX, endY);
 								break;
 						}
-						
+
 						r.setStreetMap(streetMap);
 						int l = numb_lanes;
 
@@ -939,7 +951,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						}
 
 						clickCounter = 0;
-						
+
 						visuals.setDrawLine(false);
 					}
 
@@ -1078,7 +1090,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 				}
 			}
-			
+
 			visuals.setMousePosX(mouseX);
 			visuals.setMousePosY(mouseY);
 			repaint();
@@ -1086,7 +1098,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		}
 
 	}
-	
+
 	private int calculateInMenuYPosition(int position) {
 		return this.initial_button_offset + (position * this.button_height) + (position * this.button_y_diff);
 	}
@@ -1098,18 +1110,18 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	@Override
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -14,5 +14,5 @@ public class ImportantButtonUI extends DefaultButtonUI {
         this.pressedColor = Color.decode("#59af67");
 	}
 
-	
+
 }

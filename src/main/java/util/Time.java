@@ -21,6 +21,10 @@ public class Time {
 	public static double secondsToNanoseconds(double seconds) {
 		return seconds * 1000000000;
 	}
+
+	public static double nanosecondsToSeconds(double nanoseconds) {
+		return nanoseconds / 1000000000;
+	}
 	
 	// REPRESENTATION
 	

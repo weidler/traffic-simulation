@@ -25,6 +25,7 @@ public class Road {
 	protected ArrayList<Integer> offsetX = new ArrayList<Integer>();
 	protected ArrayList<Integer> offsetY = new ArrayList<Integer>();
 	protected double angle;
+	protected boolean directed = false;
 
 	protected StreetMap streetmap;
 
@@ -42,6 +43,18 @@ public class Road {
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {
 		this(intersection_from.getXCoord(), intersection_from.getYCoord(), intersection_to.getXCoord(), intersection_to.getYCoord());
+	}
+
+	public Road(Point A, Point B, StreetMap streetMap, int lanes) {
+		this((int) A.x,(int) A.y, (int) B.x, (int) B.y);
+		this.setStreetMap(streetMap);
+		this.setLanes(lanes);
+	}
+
+	public Road(Intersection a, Intersection b, StreetMap streetMap, int lanes) {
+		this(a, b);
+		this.setStreetMap(streetMap);
+		this.setLanes(lanes);
 	}
 
 	public ArrayList<Integer> getOffsetX() {
@@ -100,6 +113,16 @@ public class Road {
 
 		this.calculateOffset(this.streetmap.getIntersectionByCoordinates(this.x1, this.y1),
 				this.streetmap.getIntersectionByCoordinates(this.x2, this.y2));
+	}
+	
+	
+	
+	public Intersection getDirection() {
+		if (!this.directed)
+			return null;
+		else
+			return streetmap.getIntersectionByCoordinates(x2, y2);
+		
 	}
 
 	public RoadType getType() {
@@ -182,7 +205,7 @@ public class Road {
 	public double getLength() {
 		return this.length;
 	}
-
+	
 	public void setLength(int length) {
 		this.length = length;
 	}
@@ -225,6 +248,36 @@ public class Road {
 		intersections[1] = streetmap.getIntersectionByCoordinates(this.x2, this.y2);
 
 		return intersections;
+	}
+	public void toggleDirected()
+	{
+		if(directed)
+		{
+			directed = false;
+		}
+		else
+		{
+			directed = true;
+		}
+	}
+	public ArrayList<Intersection> getDirected()
+	{
+		ArrayList<Intersection> intersectionList = new ArrayList();
+		if(directed)
+		{
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x2, y2));			
+		}
+		else 
+		{
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x1, y1));
+			intersectionList.add(streetmap.getIntersectionByCoordinates(x2, y2));
+		}
+		
+		return intersectionList;
+	}
+	public boolean getDirectedBoolean()
+	{
+		return directed;
 	}
 
 	@Override
