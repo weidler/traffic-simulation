@@ -74,21 +74,17 @@ public class InformedCycling implements Strategy{
 
 	public void setTrafficLightActivity(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars) {
 		int current_tl = inter.getActiveLight();
-		int next_tl_increment = 0;
-		for (int i = 1; i < inter.getTrafficLights().size(); i++) {
+		int next_tl = current_tl;
+		for (int i = 1; i < inter.getTrafficLights().size() - 1; i++) {
 			int viewed_tl = i + current_tl;
-			if (viewed_tl > inter.getTrafficLights().size()) viewed_tl = viewed_tl - inter.getTrafficLights().size();
+			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size() - 1);
 			Road source_road = inter.getTrafficLights().get(viewed_tl).get(0).getRoad();
 			if (list_of_cars.get(source_road).size() > 0) {
-				next_tl_increment = i;
+				next_tl = viewed_tl;
 				break;
 			}
 		}
-
-		inter.setActiveLight(inter.getActiveLight() + next_tl_increment);
-		if (inter.getActiveLight() >= inter.getTrafficLights().size()) {
-			inter.setActiveLight((inter.getActiveLight() + next_tl_increment) - inter.getTrafficLights().size());
-		}
+		inter.setActiveLight(next_tl);
 
 		if (inter.getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : inter.getTrafficLights()) {
