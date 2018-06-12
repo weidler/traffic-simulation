@@ -25,7 +25,11 @@ import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
 import strategy.BasicCycling;
+
+import strategy.Coordinated;
+
 import strategy.InformedCycling;
+
 import strategy.Strategy;
 import strategy.WeightedCycling;
 import type.Distribution;
@@ -207,9 +211,17 @@ public class Simulation {
 			this.strategy = new BasicCycling(15, street_map);
 		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
 			this.strategy = new WeightedCycling(15, street_map);
-		} else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
+
+		}
+		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
+		{
+			this.strategy = new Coordinated(15, street_map);
+		}
+
+		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(15, street_map);
 		} else {
+
 			this.strategy = new BasicCycling(15, street_map);
 		}
 	}
