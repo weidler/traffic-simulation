@@ -12,23 +12,23 @@ import road.Road;
 public final class AstarAdvanced {
 
 	
-	private static double weightValuePoisson = 0;	
-	private static double weightValueEmpirical = 1;	
-	private static double weightValueGaussian = 1;
-	public static void setWeightValue(double multplier)
+	
+	private static double weightValueEmpirical = 0;	
+
+	/*public static void setWeightValue(double multplier)
 	{
 		weightValuePoisson = weightValuePoisson * multplier;
 	}
 	public static double getWeightValue()
 	{
 		return weightValuePoisson;
-	}
+	}*/
 	private AstarAdvanced() {
 		// for ml
-		Random r = new Random();
-		weightValuePoisson = r.nextInt(1-0) + 0;
-		weightValueEmpirical = r.nextInt(1-0) + 0;
-		weightValueGaussian = r.nextInt(1-0) + 0;
+		//Random r = new Random();
+
+		//weightValueEmpirical = r.nextInt(1-0) + 0;
+
 	}
 
 	public static ArrayList<Intersection> createPath(Intersection start, Intersection end, StreetMap streetmap, HashMap<Road, ArrayList<Car>> carList, String schedule) {
@@ -58,7 +58,7 @@ public final class AstarAdvanced {
 						double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
 						double distribution = carList.get(r).size()/r.getLength();
-						double d = distribution * weightValuePoisson;
+						double d = distribution * weightValueEmpirical;
 						double distance = h + g + d;
 	
 						openList.add(currentConnected);
