@@ -10,6 +10,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JTextArea;
+
+import algorithms.AStar;
 import algorithms.AstarAdvanced;
 import car.Car;
 import car.Truck;
@@ -137,8 +139,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
-				this.street_map, cars, simulation_schedule.toString());
+		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
+				this.street_map);
 
 
 		// create vehicle
@@ -167,8 +169,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
-				this.street_map, cars, simulation_schedule.toString());
+		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
+				this.street_map);
 
 		// create vehicle
 		Car random_car;
