@@ -37,6 +37,10 @@ public class Line {
 		return mid;
 	}
 
+	public Point intersectionWith(Line other) {
+		return Geometry.intersection(this, other);
+	}
+
 	public Line inverted() {
 		return new Line(B, A);
 	}

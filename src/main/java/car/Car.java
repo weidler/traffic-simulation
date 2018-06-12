@@ -350,7 +350,6 @@ public class Car {
 				acceleration = model.getAcceleration(this, dist_leading, leading_velocity);
 			}
 
-
 			// React to traffic lights
 			if (this.getApproachedTrafficlight().isRed()
 					&& this.getApproachedIntersectionDistance() < this.tl_braking_distance + 5
@@ -363,8 +362,7 @@ public class Car {
 			this.current_acceleration = acceleration; // this is needed to prevent redundant calcs in MOBIL
 			this.position_on_road += Math.max(this.current_velocity * delta_t, 0);
 			this.current_velocity = Math.max(this.current_velocity + acceleration * delta_t, 0);
-			
-			
+
 			// Calculate wait time
 			if (this.isWaiting()) totalWait += delta_t;
 			

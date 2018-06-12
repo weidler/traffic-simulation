@@ -3,8 +3,12 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import datatype.Line;
 import datatype.Point;
+import road.DirtRoad;
+import road.Highway;
 import road.Road;
+import type.RoadType;
 import util.Geometry;
 
 /**
@@ -33,7 +37,6 @@ public class StreetMap {
 	}
 
 	/**
-	 * 
 	 * Array List storing Roads of the map.;
 	 */
 	private ArrayList<Road> roads = new ArrayList<Road>();
@@ -145,27 +148,53 @@ public class StreetMap {
 			// Check if road intersects other road
 			Road crossed_road = null;
 			for (Road r : this.roads) {
-				if (this.roadsIntersect(r, road)) crossed_road = r;
-				break;
+				if (this.roadsIntersect(r, road)) {
+					crossed_road = r;
+					break;
+				}
 			}
 			
-			System.out.println(crossed_road);
-			
+			System.out.println("CROSSSSED " + crossed_road);
 			if (crossed_road != null) {
-				
-				System.out.println("LOOKI LOOKI");
-				
-//				Intersection new_intersection = new Intersection(Geometry.intersection(road.getPointA(), road.getPointB(), crossed_road.getPointA(), crossed_road.getPointB()));
-//				this.addIntersection(new_intersection);
-//				
-//				// remove crossed road
-//				//this.removeRoad(crossed_road);
-//				
-//				// add four new roads; do this recursively to allow multiple intersections
-//				this.addRoad(new Road(int_a, new_intersection));
-//				this.addRoad(new Road(int_b, new_intersection));
-//				this.addRoad(new Road(crossed_road.getIntersections(this)[0], new_intersection));
-//				this.addRoad(new Road(crossed_road.getIntersections(this)[1], new_intersection));				
+				Intersection new_intersection = new Intersection(
+					Geometry.intersection(
+							new Line(road.getPointA(), road.getPointB()),
+							new Line(crossed_road.getPointA(), crossed_road.getPointB())
+					)
+				);
+
+				this.addIntersection(new_intersection);
+
+				// remove crossed road
+				this.removeRoad(crossed_road);
+
+				// add four new roads; do this recursively to allow multiple intersections
+				Road new_road_part_a = new Road(int_a, new_intersection, this, road.getLanes());
+				Road new_road_part_b = new Road(int_b, new_intersection, this, road.getLanes());
+				if (road.getRoadType() == RoadType.HIGHWAY) {
+					new_road_part_a = new Highway(int_a, new_intersection, this, road.getLanes());
+					new_road_part_b = new Highway(int_b, new_intersection, this, road.getLanes());
+				} else if (road.getRoadType() == RoadType.HIGHWAY) {
+					new_road_part_a = new DirtRoad(int_a, new_intersection, this, road.getLanes());
+					new_road_part_b = new DirtRoad(int_b, new_intersection, this, road.getLanes());
+				}
+
+				Road old_road_part_a = new Road(crossed_road.getIntersections(this)[0], new_intersection,
+						this, crossed_road.getLanes());
+				Road old_road_part_b = new Road(crossed_road.getIntersections(this)[1], new_intersection,
+						this, crossed_road.getLanes());
+				if (road.getRoadType() == RoadType.DIRT_ROAD) {
+					old_road_part_a = new Highway(int_a, new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new Highway(int_b, new_intersection, this, crossed_road.getLanes());
+				} else if (road.getRoadType() == RoadType.DIRT_ROAD) {
+					old_road_part_a = new DirtRoad(int_a, new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new DirtRoad(int_b, new_intersection, this, crossed_road.getLanes());
+				}
+
+				this.addRoad(new_road_part_a);
+				this.addRoad(new_road_part_b);
+				this.addRoad(old_road_part_a);
+				this.addRoad(old_road_part_b);
 			} else {
 				this.roads.add(road);
 				int_a.addConnection(road, int_b, null);
@@ -304,6 +333,11 @@ public class StreetMap {
 	}
 	
 	private boolean roadsIntersect(Road a, Road b) {
-		return Geometry.lineSegmentsIntersect(new Point(a.getX1(), a.getY1()), new Point(a.getX2(), a.getY2()), new Point(b.getX1(), b.getY1()), new Point(b.getX2(), b.getY2()));
+		return Geometry.lineSegmentsIntersect(
+				a.getPointA(),
+				a.getPointB(),
+				b.getPointA(),
+				b.getPointB()
+		);
 	}
 }

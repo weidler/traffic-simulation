@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JTextArea;
-import algorithms.AStar;
+import algorithms.AstarAdvanced;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
@@ -41,6 +41,7 @@ public class Simulation {
 	private boolean is_running;
 	private double current_time;
 	private float simulated_seconds_per_real_second = 101;
+	private boolean full_speed = false;
 	private int visualization_frequency;
 	
 	private double realistic_time_in_seconds;
@@ -58,6 +59,8 @@ public class Simulation {
 											// that it simulates
 
 	private int current_run;
+	private double avgTravel;
+	private ArrayList<Double> travel_times = new ArrayList();
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
@@ -134,8 +137,9 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
+
 
 		// create vehicle
 		Car random_car;
@@ -163,8 +167,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, simulation_schedule.toString());
 
 		// create vehicle
 		Car random_car;
@@ -183,7 +187,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 45, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 30, "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
@@ -218,6 +222,7 @@ public class Simulation {
 			long total_calculation_time = 0;
 			int step = 0;
 			int resettable_step = 0;
+			
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
@@ -273,13 +278,16 @@ public class Simulation {
 				}
 
 				// Wait for time step to be over
-				double ns_to_wait = Time.secondsToNanoseconds(delta_t/ simulated_seconds_per_real_second);
-				double ns_used = (System.nanoTime() - start_time);
-				total_calculation_time += ns_used;
-				try {
-					TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
-				} catch (InterruptedException e) {
-					System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
+				if (!full_speed) {
+					double ns_to_wait = Time.secondsToNanoseconds(delta_t/simulated_seconds_per_real_second);
+					double ns_used = (System.nanoTime() - start_time);
+					total_calculation_time += ns_used;
+					try {
+						System.out.println(Time.nanosecondsToSeconds(Math.max(0, ns_to_wait - ns_used)));
+						TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
+					} catch (InterruptedException e) {
+						System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
+					}
 				}
 
 				this.current_time += delta_t;
@@ -289,11 +297,6 @@ public class Simulation {
 				resettable_step++;
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
-				if (step % (10 * this.simulated_seconds_per_real_second) == 0) {
-					this.real_time_utilization = (total_calculation_time / resettable_step) / ns_to_wait;
-					resettable_step = 0;
-					total_calculation_time = 0;
-				}
 			}
 
 			this.reportStatistics();
@@ -361,15 +364,15 @@ public class Simulation {
 			System.out.println("Road " + i + " has an avg speed of: " + street_map.getRoads().get(i).getAverageSpeed());
 		}
 		
-		ArrayList<Double> travel_times = new ArrayList<Double>();
+		travel_times = new ArrayList<Double>();
 		ArrayList<Double> fractional_waiting_times = new ArrayList<Double>();
 		for (Car c : this.car_sink) {
 			Double travel_time =  (c.getArrivalTime() - c.getDepartureTime());
 			travel_times.add(travel_time);
 			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
 		}
-		
-		System.out.println("Average Travel Time: " + Statistics.mean(travel_times));
+		avgTravel = Statistics.mean(travel_times);
+		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
 		
 		// Write report
@@ -428,5 +431,19 @@ public class Simulation {
 
 	public int getCurrentDay() {
 		return this.days_simulated;
+	}
+
+	public int getNumbCars() {
+		int total = 0;
+		for (ArrayList<Car> al : cars.values()) total += al.size();
+		return total;
+	}
+
+	public boolean isFullSpeed() {
+		return full_speed;
+	}
+
+	public void setFullSpeed(boolean full_speed) {
+		this.full_speed = full_speed;
 	}
 }
