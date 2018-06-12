@@ -442,6 +442,7 @@ public class Car {
 		Car current_leading_car = null;
 
 		ArrayList<Road> roads_of_interest = new ArrayList<Road>(this.next_roads.subList(0, Math.min(2, next_roads.size())));
+		roads_of_interest.add(current_road);
 
 		for (Road r : list_of_cars.keySet()) {
 			if (!roads_of_interest.contains(r)) continue;
@@ -454,18 +455,17 @@ public class Car {
 					if (this.path_over_intersections.indexOf(c.getCurrentOriginIntersection()) < this.path_over_intersections
 							.indexOf(c.getCurrentDestinationIntersection())) {
 						// only compare to cars in front
-						if (this.getPositionOnRoad() <= c.getPositionOnRoad()
-								|| c.getCurrentRoad() != this.getCurrentRoad()) {
+						if (this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
 							double dist_to_c = this.getDistanceToCar(c);
 							// only if car is in distance of sight
-							if (dist_to_c <= this.sight_distance) {
+//							if (dist_to_c <= this.sight_distance) {
 								// If car is closer than previous then update
 								if (current_leading_car == null) {
 									current_leading_car = c;
 								} else if (dist_to_c < this.getDistanceToCar(current_leading_car)) {
 									current_leading_car = c;
 								}
-							}
+//							}
 						}
 					}
 				}
@@ -477,7 +477,6 @@ public class Car {
 	}
 
 	public void timeMeasure() {
-
 		if (roadSwitch == 1) {
 			startRoad = StreetMap.getCurrentTime();
 			roadSwitch++;
@@ -489,7 +488,6 @@ public class Car {
 			roadToMeasure.computeAverageSpeed(spent);
 			// System.out.println("spent time: " + spent + "  start time: " + startRoad + "  end time: " + endRoad);
 		}
-
 	}
 
 	public Car getFollowingCar(HashMap<Road, ArrayList<Car>> list_of_cars, int lane) {
@@ -499,6 +497,7 @@ public class Car {
 				passed_roads.size() - Math.min(passed_roads.size(), 3),
 				passed_roads.size()
 		));
+		roads_of_interest.add(current_road);
 
 		for (Road r : list_of_cars.keySet()) {
 			if (!roads_of_interest.contains(r)) continue;
