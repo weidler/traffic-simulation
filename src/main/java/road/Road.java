@@ -242,7 +242,7 @@ public class Road {
 		this.allowed_max_speed = allowed_max_speed;
 	}
 
-	public Intersection[] getIntersections(StreetMap streetmap) {
+	public Intersection[] getIntersections() {
 		Intersection[] intersections = new Intersection[2];
 		intersections[0] = streetmap.getIntersectionByCoordinates(this.x1, this.y1);
 		intersections[1] = streetmap.getIntersectionByCoordinates(this.x2, this.y2);
