@@ -3,6 +3,8 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import algorithms.CoordinatedTrafficLights;
+import car.Car;
 import datatype.Line;
 import datatype.Point;
 import road.DirtRoad;
@@ -25,8 +27,10 @@ public class StreetMap {
 	 * Array List storing Intersections of the map. Index represents ID of the
 	 * Intersection inside the AdjacencyMatrix.
 	 */
+	private int strategy = 2; //which strategy we use starting form 1;
 	private ArrayList<Intersection> intersections;
 	private static double CurrentTime = 0;
+	
 	public void setCurrentTime(double t) {
 		CurrentTime = t;
 	}
@@ -178,9 +182,9 @@ public class StreetMap {
 					new_road_part_b = new DirtRoad(int_b, new_intersection, this, road.getLanes());
 				}
 
-				Road old_road_part_a = new Road(crossed_road.getIntersections(this)[0], new_intersection,
+				Road old_road_part_a = new Road(crossed_road.getIntersections()[0], new_intersection,
 						this, crossed_road.getLanes());
-				Road old_road_part_b = new Road(crossed_road.getIntersections(this)[1], new_intersection,
+				Road old_road_part_b = new Road(crossed_road.getIntersections()[1], new_intersection,
 						this, crossed_road.getLanes());
 				if (road.getRoadType() == RoadType.DIRT_ROAD) {
 					old_road_part_a = new Highway(int_a, new_intersection, this, crossed_road.getLanes());
@@ -299,6 +303,12 @@ public class StreetMap {
 		ArrayList<Integer> path = new ArrayList<Integer>();
 
 		return path;
+	}
+
+	// ACTIONS
+
+	public void update(double delta_t, HashMap<Road, ArrayList<Car>> cars) {
+		
 	}
 
 	// CHECKS

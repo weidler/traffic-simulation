@@ -261,6 +261,105 @@ public class Intersection {
 		return false;
 	}
 
+	// ACTIONS
+
+	public void setTrafficLightActivity1() {
+		if (getTrafficLights().size() <= 2) {
+			for (ArrayList<TrafficLight> tls : getTrafficLights()) {
+				for (TrafficLight t : tls) {
+					t.setStatus("G");
+				}
+			}
+		} else {
+			for (int i = 0; i < getTrafficLights().size(); i++) {
+				if (i == active_light) {
+					for (TrafficLight t : getTrafficLights().get(i)) {
+						t.setStatus("G");
+					}
+				} else {
+					for (TrafficLight t : getTrafficLights().get(i)) {
+						t.setStatus("R");
+					}
+				}
+			}
+		}
+
+		active_light++;
+		if (active_light >= getTrafficLights().size()) {
+			active_light = 0;
+		}
+
+	}
+	
+
+	public void updateTrafficLights(double delta_t, int s, Road busiest) {
+		this.time_till_toggle = this.time_till_toggle - delta_t;
+		if(s == 1)
+		{
+			if (this.time_till_toggle <= 0) {
+				this.setTrafficLightActivity1();
+				this.time_till_toggle = this.tl_phase_length;
+			}
+		}
+		else if(s == 2)
+		{
+			if (this.time_till_toggle <= 0) {
+				this.setTrafficLightActivity2(busiest);
+				this.time_till_toggle = this.tl_phase_length;
+			}
+		}		
+	}
+	public void setTrafficLightActivity2(Road busiest) {
+		if (getTrafficLights().size() <= 2) {
+			for (ArrayList<TrafficLight> tls : getTrafficLights()) {
+				for (TrafficLight t : tls) {
+					t.setStatus("G");
+				}
+			}
+		} else {
+			Intersection target;
+			Intersection[] busiestIntersections = busiest.getIntersections();
+			if(busiestIntersections[0].getXCoord() == this.getXCoord() && busiestIntersections[0].getYCoord() == this.getYCoord())
+			{
+				target = busiestIntersections[1];
+			}
+			else
+			{
+				target = busiestIntersections[0];
+			}
+			for (int i = 0; i < getTrafficLights().size(); i++) {
+				ArrayList<Connection> connections = getConnections();
+				for(int j = 0 ; j< connections.size(); j++)
+				{
+					if(connections.get(i).getDestination() == target)
+					{
+						for(TrafficLight t : connections.get(i).getTrafficlights())
+						{
+							t.setStatus("G");
+						}
+						
+					}
+					else 
+					{
+						for(TrafficLight t : connections.get(i).getTrafficlights())
+						{
+							t.setStatus("R");
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public void initializeTrafficLightSettings() {
+		// TODO make it so that facing roads have same initial status etc.
+		if (this.getTrafficLights().size() > 2) {
+			this.active_light = ThreadLocalRandom.current().nextInt(0, this.getTrafficLights().size());
+		}
+		this.setTrafficLightActivity1();
+	}
+
 	// OTHER
 
 	public int numbConnections() {

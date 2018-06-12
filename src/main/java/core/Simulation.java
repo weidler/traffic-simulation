@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 
 import algorithms.AStar;
 import algorithms.AstarAdvanced;
+import algorithms.CoordinatedTrafficLights;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
@@ -24,7 +25,9 @@ import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
 import strategy.BasicCycling;
+import strategy.InformedCycling;
 import strategy.Strategy;
+import strategy.WeightedCycling;
 import type.Distribution;
 import util.Statistics;
 import util.Time;
@@ -40,7 +43,7 @@ public class Simulation {
 	private GraphicalInterface gui;
 	private Schedule simulation_schedule;
 	private Strategy strategy;
-
+	
 	private long start_time;
 	private boolean showCarInfo = true;
 	private boolean is_running;
@@ -142,8 +145,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, "Empirical");
 
 
 		// create vehicle
@@ -172,8 +175,8 @@ public class Simulation {
 
 		Intersection origin_intersection = this.street_map.getIntersection(origin);
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
-		ArrayList<Intersection> shortest_path = AStar.createPath(origin_intersection, destination_intersection,
-				this.street_map);
+		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
+				this.street_map, cars, "Empirical");
 
 		// create vehicle
 		Car random_car;
@@ -192,7 +195,7 @@ public class Simulation {
 	public void applyExperimentalSettings() {
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, 10, "data/test.json");
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, this.experiment.getIaTime(), "data/test.json");
 		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
 		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
@@ -202,6 +205,10 @@ public class Simulation {
 		// Strategy
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(15, street_map);
+		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
+			this.strategy = new WeightedCycling(15, street_map);
+		} else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
+			this.strategy = new InformedCycling(15, street_map);
 		} else {
 			this.strategy = new BasicCycling(15, street_map);
 		}
@@ -255,6 +262,7 @@ public class Simulation {
 
 				// update traffic light statuses
 				this.strategy.configureTrafficLights(this.cars, delta_t);
+
 
 				// update car positions
 				ArrayList<Car> arrived_cars = new ArrayList<Car>();

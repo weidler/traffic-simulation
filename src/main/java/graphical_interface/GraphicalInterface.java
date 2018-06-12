@@ -53,7 +53,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 	private JCheckBox visualize = new JCheckBox("visualize?");
 	private JTextField duration = new JTextField(5); // in days
-	private JTextField density = new JTextField(5); // number of cars
+	private JTextField inter = new JTextField(5); // time for car arrival
 	private JComboBox<String> strategy;
 	private JComboBox<String> schedule;
 
@@ -699,8 +699,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				String[] strateyList = { "circulating lights" };
-				String[] scheduleList = { "poisson", "gaussian" , "empirical"};
+
+				String[] strateyList = { "basic cycling", "informed cycling", "weigthed cycling" };
+				String[] scheduleList = { "empirical", "poisson", "gaussian"};
+
 				strategy = new JComboBox<>(strateyList);
 				schedule = new JComboBox<>(scheduleList);
 
@@ -708,8 +710,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				myPanel.add(new JLabel("duration in days:"));
 				myPanel.add(duration);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("amout of cars per day:"));
-				myPanel.add(density);
+				myPanel.add(new JLabel("Inter arrival time thing:"));
+				myPanel.add(inter);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("strategy:"));
 				myPanel.add(strategy);
@@ -722,7 +724,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
 					System.out.println("duration value:  " + duration.getText());
-					System.out.println("density value:   " + density.getText());
+					System.out.println("Inter arrival time value:   " + inter.getText());
 					System.out.println("schedule value:  " + schedule.getSelectedIndex());
 					System.out.println("strategy value:  " + strategy.getSelectedIndex());
 					System.out.println("visualize value: " + visualize.isSelected());
@@ -743,19 +745,34 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							break;
 
 						default:
-							arrival_schedule = Distribution.GAUSSIAN;
+							arrival_schedule = Distribution.EMPIRICAL;
 							break;
 					}
 
 					Strategy control_strategy;
 					switch ((String) strategy.getSelectedItem()) {
+						case "circulating lights":
+							control_strategy = Strategy.BENCHMARK_CYCLING;
+							break;
+
+						case "weigthed cycling":
+							control_strategy = Strategy.WEIGHTED_CYCLING;
+							break;
+
+						case "informed cycling":
+							control_strategy = Strategy.INFORMED_CYCLING;
+							break;
+							
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;
 							break;
 					}
 
 					Experiment exp = new Experiment(arrival_schedule, control_strategy,
-							Integer.parseInt(duration.getText()), visualize.isSelected());
+							Integer.parseInt(duration.getText()), visualize.isSelected(), Integer.parseInt(inter.getText()));
+					
+					
+					
 					simulation.setExperiment(exp);
 
 				}

@@ -174,7 +174,7 @@ public class Visuals extends JPanel {
 		// calculate drawing positions
 		for (int i = 0; i < roads.size(); i++) {
 			Road current_road = roads.get(i);
-			Intersection[] connected_intersections = current_road.getIntersections(this.streetMap);
+			Intersection[] connected_intersections = current_road.getIntersections();
 			Intersection intersection_to = connected_intersections[0];
 			Intersection intersection_from = connected_intersections[1];
 			
