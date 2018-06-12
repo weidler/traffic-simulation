@@ -11,6 +11,9 @@ public class Experiment {
 	private Distribution arrival_generator;
 	private Strategy control_strategy;
 	private int simulation_length_in_days;
+	private int iaTime;
+
+
 	private boolean vizualise;
 	private int numb_runs;
 
@@ -23,11 +26,12 @@ public class Experiment {
 	/* CONSTRUCTORS */
 		
 	public Experiment(Distribution arrival_generator, Strategy control_strategy, int simulation_length_in_days,
-			boolean vizualise) {
+			boolean vizualise, int meanIA) {
 		this.arrival_generator = arrival_generator;
 		this.control_strategy = control_strategy;
 		this.simulation_length_in_days = simulation_length_in_days;
 		this.vizualise = vizualise;
+		this.iaTime = meanIA;
 		
 		this.numb_runs = 5;
 		for (int i = 0; i < this.numb_runs; i++) this.addRun();
@@ -37,7 +41,7 @@ public class Experiment {
 	 *  Uses poisson, benchmark, one day and visualizes.
 	 */
 	public Experiment() {
-		this(Distribution.EMPIRICAL, Strategy.BENCHMARK_CYCLING, 1, true);
+		this(Distribution.EMPIRICAL, Strategy.BENCHMARK_CYCLING, 1, true, 30);
 	}
 
 	/* METHODS */
@@ -131,5 +135,12 @@ public class Experiment {
 	
 	public ArrayList<ArrayList<Integer>> getNumbCars() {
 		return numb_cars;
+	}
+	public int getIaTime() {
+		return iaTime;
+	}
+
+	public void setIaTime(int iaTime) {
+		this.iaTime = iaTime;
 	}
 }
