@@ -458,21 +458,19 @@ public class Car {
 						if (this.getPositionOnRoad() <= c.getPositionOnRoad() || c.getCurrentRoad() != this.getCurrentRoad()) {
 							double dist_to_c = this.getDistanceToCar(c);
 							// only if car is in distance of sight
-//							if (dist_to_c <= this.sight_distance) {
+							if (dist_to_c <= this.sight_distance) {
 								// If car is closer than previous then update
 								if (current_leading_car == null) {
 									current_leading_car = c;
 								} else if (dist_to_c < this.getDistanceToCar(current_leading_car)) {
 									current_leading_car = c;
 								}
-//							}
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		if (current_leading_car != null) System.out.println(current_leading_car);
 		return current_leading_car;
 	}
 
