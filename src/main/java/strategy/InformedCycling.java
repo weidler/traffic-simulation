@@ -59,7 +59,9 @@ public class InformedCycling implements Strategy{
 			int viewed_tl = i + current_tl;
 			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size());
 			Road source_road = inter.getTrafficLights().get(viewed_tl).get(0).getRoad();
-			if (list_of_cars.get(source_road).size() > 0) {
+			int amount_of_cars = 0;
+			for (Car c : list_of_cars.get(source_road)) if (c.getCurrentDestinationIntersection() == inter) amount_of_cars++;
+			if (amount_of_cars > 0) {
 				next_tl = viewed_tl;
 				break;
 			}
