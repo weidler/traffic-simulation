@@ -87,6 +87,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private final Color menu_bg = Color.decode("#3a3a3a");
 	private final Color map_bg = Color.decode("#57af6b");
 	private final Color info_bg = Color.decode("#3a3a3a");
+	
+	private String fileName;
 
 	/**
 	 * represent to position of the mouse at all times.
@@ -487,14 +489,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		// EXIT
-		JButton exitButton = new JButton("Exit");
+		JButton exitButton = new JButton("Exit and save");
 		exitButton.setBounds(this.menu_width/2 - this.button_width/4, (this.menu_height - 50) - button_height - button_y_diff, button_width/2, button_height);
 		exitButton.setUI(new CriticalButtonUI());
 		exitButton.setBorder(this.button_border);
 		menuPanel.add(exitButton);
 		exitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				simulation.stop();
+			public void actionPerformed(ActionEvent arg0) {				
+				simulation.stop();			
 				System.exit(0);
 			}
 		});
@@ -1174,4 +1176,5 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		// TODO Auto-generated method stub
 
 	}
+
 }

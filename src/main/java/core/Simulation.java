@@ -9,7 +9,12 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import algorithms.AStar;
 import algorithms.AstarAdvanced;
@@ -25,11 +30,7 @@ import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
 import strategy.BasicCycling;
-
-import strategy.Coordinated;
-
 import strategy.InformedCycling;
-
 import strategy.Strategy;
 import strategy.WeightedCycling;
 import type.Distribution;
@@ -60,6 +61,8 @@ public class Simulation {
 	private int days_simulated;
 	
 	private Experiment experiment;
+	
+	private String name;
 
 	// PARAMETERS
 	private double truck_rate = 0.2;
@@ -210,18 +213,10 @@ public class Simulation {
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(15, street_map);
 		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
-			this.strategy = new WeightedCycling(5, street_map);
-
-		}
-		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
-		{
-			this.strategy = new Coordinated(5, street_map);
-		}
-
-		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
+			this.strategy = new WeightedCycling(15, street_map);
+		} else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(15, street_map);
 		} else {
-
 			this.strategy = new BasicCycling(15, street_map);
 		}
 	}
@@ -328,8 +323,8 @@ public class Simulation {
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
-
-			this.reportStatistics();
+			stop();
+			
 		});
 
 		th.start();
@@ -404,11 +399,13 @@ public class Simulation {
 		avgTravel = Statistics.mean(travel_times);
 		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
-		
+
 		// Write report
 		PrintWriter report_writer;
 		try {
-			report_writer = new PrintWriter("./simulation-reports/output.csv", "UTF-8");
+			
+			
+			report_writer = new PrintWriter("./simulation-reports/"+name+".csv", "UTF-8");
 			
 			String sep = ";";
 			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
@@ -447,7 +444,18 @@ public class Simulation {
 	}
 
 	public void stop() {
+		JPanel thisPanel = new JPanel();
+		JTextField name = new JTextField(5);
+		thisPanel.add(new JLabel("File name:"));
+		thisPanel.add(name);
+		
+		int result = JOptionPane.showConfirmDialog(null, thisPanel, "Please Enter data",
+				JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			setFileName(name.getText());
+		}
 		this.is_running = false;
+		this.reportStatistics();
 	}
 
 	public void reset() {
@@ -475,5 +483,8 @@ public class Simulation {
 
 	public void setFullSpeed(boolean full_speed) {
 		this.full_speed = full_speed;
+	}
+	public void setFileName(String name) {
+	this.name = name;
 	}
 }
