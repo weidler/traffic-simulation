@@ -215,7 +215,7 @@ public class Simulation {
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
 		{
-			this.strategy = new Coordinated(15, street_map);
+			this.strategy = new Coordinated(5, street_map);
 		}
 
 		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
