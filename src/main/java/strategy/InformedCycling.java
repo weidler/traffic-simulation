@@ -39,31 +39,11 @@ public class InformedCycling implements Strategy{
 				inter.setActiveLight(ThreadLocalRandom.current().nextInt(0, inter.getTrafficLights().size()));
 			}
 
-			if (inter.getTrafficLights().size() <= 2) {
-				for (ArrayList<TrafficLight> tls : inter.getTrafficLights()) {
-					for (TrafficLight t : tls) {
-						t.setStatus("G");
-					}
-				}
-			} else {
-				for (int i = 0; i < inter.getTrafficLights().size(); i++) {
-					if (i == inter.getActiveLight()) {
-						for (TrafficLight t : inter.getTrafficLights().get(i)) {
-							t.setStatus("G");
-						}
-					} else {
-						for (TrafficLight t : inter.getTrafficLights().get(i)) {
-							t.setStatus("R");
-						}
-					}
-				}
-			}
+			this.applySetting(inter);
 		}
-
-		System.out.println(this.times_till_toggle);
 	}
 
-	public void updateTrafficLights(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t) {
+	private void updateTrafficLights(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t) {
 		times_till_toggle.put(inter, times_till_toggle.get(inter) - delta_t);
 
 		if (times_till_toggle.get(inter) <= 0) {
@@ -72,20 +52,25 @@ public class InformedCycling implements Strategy{
 		}
 	}
 
-	public void setTrafficLightActivity(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars) {
+	private void setTrafficLightActivity(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars) {
 		int current_tl = inter.getActiveLight();
 		int next_tl = current_tl;
 		for (int i = 1; i <= inter.getTrafficLights().size(); i++) {
 			int viewed_tl = i + current_tl;
-			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size() - 1);
+			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size());
 			Road source_road = inter.getTrafficLights().get(viewed_tl).get(0).getRoad();
 			if (list_of_cars.get(source_road).size() > 0) {
 				next_tl = viewed_tl;
 				break;
 			}
 		}
+
 		inter.setActiveLight(next_tl);
 
+		this.applySetting(inter);
+	}
+
+	private void applySetting(Intersection inter) {
 		if (inter.getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : inter.getTrafficLights()) {
 				for (TrafficLight t : tls) {
@@ -105,5 +90,5 @@ public class InformedCycling implements Strategy{
 				}
 			}
 		}
-	}
+		}
 }

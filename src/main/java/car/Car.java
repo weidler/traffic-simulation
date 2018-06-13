@@ -335,7 +335,7 @@ public class Car {
 
 	public boolean update(HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t, double current_time) {
 		if (this.current_destination_intersection.getRoadTo(this.current_origin_intersection) != this.current_road)
-			System.out.println("AAAAAAAAAAAAAAAAAAAAAH");
+			System.out.println("Bin ich hier? Bin ich da? KEINER WEISS!");
 
 		if (!this.in_traffic) {
 			this.lane = this.current_road.getLanes();
