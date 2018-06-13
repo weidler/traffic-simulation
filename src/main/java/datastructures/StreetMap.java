@@ -3,7 +3,6 @@ package datastructures;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import algorithms.CoordinatedTrafficLights;
 import car.Car;
 import datatype.Line;
 import datatype.Point;
@@ -56,7 +55,7 @@ public class StreetMap {
 		result = result.concat("#,");
 
 		for (Road r : roads) {
-			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + "," + r.getRoadType() + "," + r.getLanes() + "," + r.getDirectedBoolean() + ",");
+			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + "," + r.getRoadType() + "," + r.getLanes() + "," + r.isOneWay() + ",");
 		}
 		result = result.concat("p,");
 		System.out.println(result);

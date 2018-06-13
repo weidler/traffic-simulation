@@ -251,14 +251,7 @@ public class Road {
 	}
 	public void toggleDirected()
 	{
-		if(directed)
-		{
-			directed = false;
-		}
-		else
-		{
-			directed = true;
-		}
+		directed = !directed;
 	}
 	public ArrayList<Intersection> getDirected()
 	{
@@ -275,7 +268,7 @@ public class Road {
 		
 		return intersectionList;
 	}
-	public boolean getDirectedBoolean()
+	public boolean isOneWay()
 	{
 		return directed;
 	}

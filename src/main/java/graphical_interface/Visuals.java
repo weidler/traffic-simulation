@@ -2,16 +2,13 @@ package graphical_interface;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -24,7 +21,6 @@ import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import datatype.Line;
 import road.Road;
-import type.CarType;
 import type.RoadType;
 import util.Geometry;
 import datatype.Point;
@@ -169,7 +165,7 @@ public class Visuals extends JPanel {
 		HashMap<Color, ArrayList<Line2D>> tl_lines = new HashMap<Color, ArrayList<Line2D>>();
 		tl_lines.put(Color.RED, new ArrayList<Line2D>());
 		tl_lines.put(Color.GREEN, new ArrayList<Line2D>());
-		ArrayList<Line2D> mid_lines = new ArrayList<Line2D>();
+		HashMap<Road, Line2D> mid_lines = new HashMap<Road, Line2D>();
 
 		// calculate drawing positions
 		for (int i = 0; i < roads.size(); i++) {
@@ -177,7 +173,7 @@ public class Visuals extends JPanel {
 			Intersection[] connected_intersections = current_road.getIntersections();
 			Intersection intersection_to = connected_intersections[0];
 			Intersection intersection_from = connected_intersections[1];
-			
+
 			if (!chosen_line_intersections.containsKey(intersection_from)) chosen_line_intersections.put(intersection_from, new ArrayList<Point>());
 			if (!chosen_line_intersections.containsKey(intersection_to)) chosen_line_intersections.put(intersection_to, new ArrayList<Point>());
 
@@ -449,24 +445,24 @@ public class Visuals extends JPanel {
 					(int) (from_y_left) * zoomMultiplier + changeY));
 			
 			// mid line
-			Line mid_line = new Line(current_road.getPointA(), current_road.getPointB());
-			if ((intersection_from.getConnections().size() > 2) && !(intersection_to.getConnections().size() > 2)) {
-				mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.A);
-			} else if (!(intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
-				mid_line = new Line(mid_line.B, mid_line.intersectionWith(end_of_road_to));
-			} else if ((intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
-				mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.intersectionWith(end_of_road_to));
-			}
+			if (!current_road.isOneWay()) {
+				Line mid_line = new Line(current_road.getPointA(), current_road.getPointB());
+				if ((intersection_from.getConnections().size() > 2) && !(intersection_to.getConnections().size() > 2)) {
+					mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.A);
+				} else if (!(intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
+					mid_line = new Line(mid_line.B, mid_line.intersectionWith(end_of_road_to));
+				} else if ((intersection_from.getConnections().size() > 2) && (intersection_to.getConnections().size() > 2)) {
+					mid_line = new Line(mid_line.intersectionWith(end_of_road_from), mid_line.intersectionWith(end_of_road_to));
+				}
 
-			mid_lines.add(new Line2D.Double((int) mid_line.A.x * zoomMultiplier + changeX,
-					(int) mid_line.A.y * zoomMultiplier + changeY,
-					(int) mid_line.B.x * zoomMultiplier + changeX,
-					(int) mid_line.B.y * zoomMultiplier + changeY));
-			g2.setStroke(defaultStroke);
+				mid_lines.put(current_road, new Line2D.Double((int) mid_line.A.x * zoomMultiplier + changeX,
+						(int) mid_line.A.y * zoomMultiplier + changeY,
+						(int) mid_line.B.x * zoomMultiplier + changeX,
+						(int) mid_line.B.y * zoomMultiplier + changeY));
+			}
 
 			// Lanes
 			for (int j = 1; j <= current_road.getLanes(); j++) {
-
 				double lane_offset_x = offset_x * (j - 1);
 				double lane_offset_y = offset_y * (j - 1);
 				
@@ -582,7 +578,11 @@ public class Visuals extends JPanel {
 		// Draw Lane lines
 		g2.setColor(Color.WHITE);
 		g2.setStroke(new BasicStroke(2));
-		for (Line2D line : mid_lines) g2.draw(line);
+		for (Road road : mid_lines.keySet()) {
+			if (road.getLanes() > 1 && !road.isOneWay()) g2.setStroke(new BasicStroke(2));
+			else g2.setStroke(dashed);
+			g2.draw(mid_lines.get(road));
+		}
 
 		g2.setStroke(dashed);
 		for (Line2D line : lane_separation_line) g2.draw(line);
