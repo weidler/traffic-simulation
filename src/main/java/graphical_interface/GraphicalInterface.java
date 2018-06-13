@@ -54,6 +54,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private JCheckBox visualize = new JCheckBox("visualize?");
 	private JTextField duration = new JTextField(5); // in days
 	private JTextField inter = new JTextField(5); // time for car arrival
+	private JTextField fileName = new JTextField(20);
 	private JComboBox<String> strategy;
 	private JComboBox<String> schedule;
 
@@ -359,24 +360,33 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			public void actionPerformed(ActionEvent arg0) {
 				count++;
 				streetMap.toString();
-
 				BufferedWriter bw = null;
 				FileWriter fw = null;
-				File f = new File("./savefiles/streetmap" + count + ".txt");
-				try {
-					while (f.exists() && !f.isDirectory()) {
-						count++;
-						f = new File("./savefiles/streetmap" + count + ".txt");
+				
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("file name: "));
+				fileName.setText("streetMap");
+				myPanel.add(fileName);
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					File f = new File("./savefiles/" + fileName.getText() + ".txt");				
+					try {
+						while (f.exists() && !f.isDirectory()) {
+							count++;
+							f = new File("./savefiles/streetmap" + count + ".txt");
+						}
+	
+						fw = new FileWriter(f);
+						bw = new BufferedWriter(fw);
+						bw.write(streetMap.toString());
+						bw.close();
+						fw.close();
+						
+						System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
+					} catch (IOException ex) {
+						ex.printStackTrace();
 					}
-
-					fw = new FileWriter(f);
-					bw = new BufferedWriter(fw);
-					bw.write(streetMap.toString());
-					bw.close();
-					fw.close();
-					System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
-				} catch (IOException ex) {
-					ex.printStackTrace();
 				}
 			}
 		});
@@ -701,7 +711,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 
 
-				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling" };
+				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
 
 				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 
@@ -767,12 +777,13 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						case "coordinated":
 							control_strategy = Strategy.COORDINATED;
 							break;
-
+						case "waiting":
+							control_strategy = Strategy.WAITING;
+							break;
 
 						case "informed cycling":
 							control_strategy = Strategy.INFORMED_CYCLING;
-							break;
-							
+							break;					
 
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;

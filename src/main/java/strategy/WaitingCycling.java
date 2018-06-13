@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import algorithms.CoordinatedTrafficLights;
+
 public class WaitingCycling implements Strategy{
 
+	protected static CoordinatedTrafficLights ctl = new CoordinatedTrafficLights();
 	protected double tl_phase_length;
 	protected StreetMap street_map;
 	protected HashMap<Intersection, Double> times_till_toggle;
@@ -28,6 +31,7 @@ public class WaitingCycling implements Strategy{
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t) {
 		for (Intersection inter : street_map.getIntersections()) {
+			
 			updateTrafficLights(inter, list_of_cars, delta_t);
 		}
 	}
@@ -59,6 +63,8 @@ public class WaitingCycling implements Strategy{
 			int viewed_tl = i + current_tl;
 			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size());
 			Road source_road = inter.getTrafficLights().get(viewed_tl).get(0).getRoad();
+			double newToggleTime = ctl.weightedRoads3(inter, list_of_cars, source_road);			
+			times_till_toggle.put(inter, tl_phase_length * newToggleTime );
 			if (list_of_cars.get(source_road).size() > 0) {
 				next_tl = viewed_tl;
 				break;
