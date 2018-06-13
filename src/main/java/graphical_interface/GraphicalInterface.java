@@ -54,6 +54,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private JCheckBox visualize = new JCheckBox("visualize?");
 	private JTextField duration = new JTextField(5); // in days
 	private JTextField inter = new JTextField(5); // time for car arrival
+	private JTextField fileName = new JTextField(20);
 	private JComboBox<String> strategy;
 	private JComboBox<String> schedule;
 
@@ -87,6 +88,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private final Color menu_bg = Color.decode("#3a3a3a");
 	private final Color map_bg = Color.decode("#57af6b");
 	private final Color info_bg = Color.decode("#3a3a3a");
+	
 
 	/**
 	 * represent to position of the mouse at all times.
@@ -359,24 +361,33 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			public void actionPerformed(ActionEvent arg0) {
 				count++;
 				streetMap.toString();
-
 				BufferedWriter bw = null;
 				FileWriter fw = null;
-				File f = new File("./savefiles/streetmap" + count + ".txt");
-				try {
-					while (f.exists() && !f.isDirectory()) {
-						count++;
-						f = new File("./savefiles/streetmap" + count + ".txt");
+				
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("file name: "));
+				fileName.setText("streetMap");
+				myPanel.add(fileName);
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					File f = new File("./savefiles/" + fileName.getText() + ".txt");				
+					try {
+						while (f.exists() && !f.isDirectory()) {
+							count++;
+							f = new File("./savefiles/streetmap" + count + ".txt");
+						}
+	
+						fw = new FileWriter(f);
+						bw = new BufferedWriter(fw);
+						bw.write(streetMap.toString());
+						bw.close();
+						fw.close();
+						
+						System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
+					} catch (IOException ex) {
+						ex.printStackTrace();
 					}
-
-					fw = new FileWriter(f);
-					bw = new BufferedWriter(fw);
-					bw.write(streetMap.toString());
-					bw.close();
-					fw.close();
-					System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
-				} catch (IOException ex) {
-					ex.printStackTrace();
 				}
 			}
 		});
@@ -487,14 +498,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		// EXIT
-		JButton exitButton = new JButton("Exit");
+		JButton exitButton = new JButton("Exit and save");
 		exitButton.setBounds(this.menu_width/2 - this.button_width/4, (this.menu_height - 50) - button_height - button_y_diff, button_width/2, button_height);
 		exitButton.setUI(new CriticalButtonUI());
 		exitButton.setBorder(this.button_border);
 		menuPanel.add(exitButton);
 		exitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				simulation.stop();
+			public void actionPerformed(ActionEvent arg0) {				
+				simulation.stop();			
 				System.exit(0);
 			}
 		});
@@ -701,7 +712,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 
 
-				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling" };
+				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
 
 				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 
@@ -710,9 +721,11 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("duration in days:"));
+				duration.setText("1");
 				myPanel.add(duration);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("Inter arrival time thing:"));
+				inter.setText("10");
 				myPanel.add(inter);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("strategy:"));
@@ -721,6 +734,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				myPanel.add(new JLabel("schedule:"));
 				myPanel.add(schedule);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				visualize.setSelected(true);
 				myPanel.add(visualize);
 				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
 						JOptionPane.OK_CANCEL_OPTION);
@@ -764,12 +778,13 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						case "coordinated":
 							control_strategy = Strategy.COORDINATED;
 							break;
-
+						case "waiting":
+							control_strategy = Strategy.WAITING;
+							break;
 
 						case "informed cycling":
 							control_strategy = Strategy.INFORMED_CYCLING;
-							break;
-							
+							break;					
 
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;
@@ -1171,4 +1186,5 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		// TODO Auto-generated method stub
 
 	}
+
 }

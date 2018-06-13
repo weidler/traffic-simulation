@@ -35,10 +35,14 @@ public class Coordinated implements Strategy {
 		
 		
 		for (Intersection intersection : this.intersections) {
-			Road busiest = ctl.weightedRoads2(intersection, cars);
-			intersection.setTrafficLightActivity2(busiest);
-		}
-		
+			times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
+			if(times_till_toggle.get(intersection) <= 0)
+			{
+				Road busiest = ctl.weightedRoads2(intersection, cars);
+				intersection.setTrafficLightActivity2(busiest);
+				times_till_toggle.put(intersection, tl_phase_length);
+			}			
+		}		
 	}
 	
 	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {

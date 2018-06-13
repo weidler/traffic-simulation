@@ -50,7 +50,15 @@ public final class AstarAdvanced {
 			for (int i = 0; i < currentParent.getConnections().size(); i++) {
 				Intersection currentConnected = currentParent.getConnections().get(i).getDestination();
 				Road r = streetmap.getRoadByCoordinates(currentParent.getXCoord(), currentParent.getYCoord(), currentConnected.getXCoord(), currentConnected.getYCoord());
-				if(!r.isOneWay())
+				boolean oke = true;
+				if(r.isOneWay())
+				{
+					if(r.getDirection() != currentConnected)
+					{
+						oke = false;
+					}
+				}
+				if(oke)
 				{
 					if (!closedList.contains(currentConnected)) {
 						double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
@@ -58,7 +66,10 @@ public final class AstarAdvanced {
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
 						double distribution = carList.get(r).size()/r.getLength();
 						double d = distribution * weightValueEmpirical;
-						double distance = h + g + d;
+						double s = streetmap.getRoads().get(i).getAverageSpeed();
+						double distance = h + g + d - s;
+						if (distance < 0)
+							distance = 0;
 	
 						openList.add(currentConnected);
 	
