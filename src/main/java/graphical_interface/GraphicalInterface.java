@@ -710,9 +710,11 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("duration in days:"));
+				duration.setText("1");
 				myPanel.add(duration);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("Inter arrival time thing:"));
+				inter.setText("10");
 				myPanel.add(inter);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("strategy:"));
@@ -721,6 +723,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				myPanel.add(new JLabel("schedule:"));
 				myPanel.add(schedule);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				visualize.setSelected(true);
 				myPanel.add(visualize);
 				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
 						JOptionPane.OK_CANCEL_OPTION);
