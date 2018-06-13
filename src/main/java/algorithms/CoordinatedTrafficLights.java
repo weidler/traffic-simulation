@@ -132,6 +132,48 @@ public class CoordinatedTrafficLights {
 		busiestRoad = intersections.get(index).getRoadTo(i);
 		return busiestRoad;
 	}
+	public Double weightedRoads3(Intersection i, HashMap<Road,ArrayList<Car>> cars, Road r) {
+		ArrayList<Intersection> intersections = new ArrayList<Intersection>();
+		
+		intersections = i.getConnectedIntersections();
+		ArrayList<Integer> carCountList = new ArrayList<>();
+		int curRoadCount = 0;
+		for(int k = 0; k < intersections.size(); k++) {
+			int carCount = 0;
+			
+			Road curRoad = intersections.get(k).getRoadTo(i);
+			for(Car car : cars.get(curRoad))
+			{ 
+				Intersection target = car.getCurrentDestinationIntersection();
+				
+				if(target == i && target != null)
+				{
+					
+					carCount++;
+				}
+			}
+			carCountList.add(carCount);
+			if(r == curRoad)
+			{
+				curRoadCount = carCount;
+			}
+			
+		}
+		int sumOfCars = 0;
+		for(Integer num : carCountList)
+		{
+			sumOfCars = sumOfCars + num;
+		}
+		if(sumOfCars!=0)
+		{
+			return (double) (curRoadCount / sumOfCars);
+		}
+		else 
+		{
+			return 1.0;
+		}
+			
+	}
 	public Intersection adjustNextTL(Intersection i) {
 		return i;
 		

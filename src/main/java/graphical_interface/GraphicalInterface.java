@@ -701,7 +701,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 
 
-				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling" };
+				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
 
 				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 
@@ -767,12 +767,13 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 						case "coordinated":
 							control_strategy = Strategy.COORDINATED;
 							break;
-
+						case "waiting":
+							control_strategy = Strategy.WAITING;
+							break;
 
 						case "informed cycling":
 							control_strategy = Strategy.INFORMED_CYCLING;
-							break;
-							
+							break;					
 
 						default:
 							control_strategy = Strategy.BENCHMARK_CYCLING;

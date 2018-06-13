@@ -31,6 +31,7 @@ import strategy.Coordinated;
 import strategy.InformedCycling;
 
 import strategy.Strategy;
+import strategy.WaitingCycling;
 import strategy.WeightedCycling;
 import type.Distribution;
 import util.Statistics;
@@ -217,7 +218,10 @@ public class Simulation {
 		{
 			this.strategy = new Coordinated(5, street_map);
 		}
-
+		else if(this.experiment.getControlStrategy() == type.Strategy.WAITING)
+		{
+			this.strategy = new WaitingCycling(5, street_map);
+		}
 		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(15, street_map);
 		} else {
