@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd3cb89a-1fde-4f80-8d0a-ff03b3dcc2f3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/core/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulation-reports/plot.R" beforeDir="false" afterPath="$PROJECT_DIR$/simulation-reports/plot.R" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -67,8 +65,8 @@
       <file leaf-file-name="InformedCycling.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="77" column="63" selection-start-line="77" selection-start-column="63" selection-end-line="77" selection-end-column="63" />
+            <state relative-caret-position="458">
+              <caret line="59" column="13" lean-forward="true" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -810,7 +808,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59454000" />
+    <option name="totallyTimeSpent" value="60100000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -835,11 +833,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32938644" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.17489271" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.17489271" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20520833" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20520833" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="Gradle" order="3" sideWeight="0.49892473" visible="true" weight="0.1625" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -1399,8 +1397,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/strategy/InformedCycling.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="77" column="63" selection-start-line="77" selection-start-column="63" selection-end-line="77" selection-end-column="63" />
+        <state relative-caret-position="458">
+          <caret line="59" column="13" lean-forward="true" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

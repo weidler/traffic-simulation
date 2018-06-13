@@ -27,3 +27,4 @@ plot_ly(x=data$time, y=data$frac_wait) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Fractional Waiting Time'),
          legend = list(x = 0.80, y = 0.90))
+
