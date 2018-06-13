@@ -291,5 +291,4 @@ public class Road {
 	private double calcLength() {
 		return Geometry.distance(getPointA(), getPointB());
 	}
-
 }
