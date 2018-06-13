@@ -216,7 +216,7 @@ public class Simulation {
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
 		{
-			this.strategy = new Coordinated(5, street_map);
+			this.strategy = new Coordinated(1, street_map);
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.WAITING)
 		{
@@ -357,40 +357,8 @@ public class Simulation {
 		// ADD STATISTICS TO EXPERIMENT
 		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.cars.size(), this.current_run);
 		this.experiment.addAvgSpeed(total_velocity/this.cars.size(), this.current_run);
-		this.experiment.addNumbCars(this.cars.size(), this.current_run);
+		this.experiment.addNumbCars(this.getNumbCars(), this.current_run);
 		if (this.current_run == 0) this.experiment.addTimestep(this.current_time);
-		
-		//System.out.println(cars_in_queue);
-		// long start_time = 0;
-		// long end_time = 0;
-		// int total_wait = 0;
-		// int i =0;
-		// ArrayList<Integer> waitingTimes = new ArrayList<>();
-		// for (Car c : this.cars)
-		// {
-		// if (c.getCurrentVelocity() == 0)
-		// {
-		// start_time = System.currentTimeMillis()/1000;
-		// while(c.getCurrentVelocity()==0)
-		// {
-		//
-		// end_time = System.currentTimeMillis()/1000;
-		// }
-		// }
-		// total_wait += end_time-start_time;
-		// if(i < waitingTimes.size())
-		// {
-		// waitingTimes.set(i, total_wait);
-		// }
-		// else
-		// {
-		// waitingTimes.add(total_wait);
-		// }
-		//
-		// total_wait = 0;
-		// i++;
-		//
-		// }
 	}
 	
 	private void reportStatistics() {

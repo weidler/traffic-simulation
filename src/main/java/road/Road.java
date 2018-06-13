@@ -248,10 +248,10 @@ public class Road {
 
 		return intersections;
 	}
-	public void toggleDirected()
-	{
+	public void toggleDirected() {
 		directed = !directed;
 	}
+
 	public ArrayList<Intersection> getDirected()
 	{
 		ArrayList<Intersection> intersectionList = new ArrayList();
