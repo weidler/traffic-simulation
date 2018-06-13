@@ -377,7 +377,7 @@ public class Simulation {
 		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
 		
-		// Write report
+		// Write Data
 		PrintWriter report_writer;
 		try {
 			report_writer = new PrintWriter("./simulation-reports/output.csv", "UTF-8");
@@ -398,7 +398,11 @@ public class Simulation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		// Create Graphical Report
+//		String command = "echo \"rmarkdown::render('report.Rmd', clean=TRUE, output_format='html_document')\" | R --slave";
+//		Process p = Runtime.getRuntime().exec(command);
+//		p.waitFor();
 	}
 	
 	public int getNumberCarsOutOfTraffic() {
