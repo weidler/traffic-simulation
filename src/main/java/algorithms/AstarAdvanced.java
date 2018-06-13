@@ -66,7 +66,10 @@ public final class AstarAdvanced {
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
 						double distribution = carList.get(r).size()/r.getLength();
 						double d = distribution * weightValueEmpirical;
-						double distance = h + g + d;
+						double s = streetmap.getRoads().get(i).getAverageSpeed();
+						double distance = h + g + d - s;
+						if (distance < 0)
+							distance = 0;
 	
 						openList.add(currentConnected);
 	
