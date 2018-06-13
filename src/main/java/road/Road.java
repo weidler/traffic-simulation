@@ -121,8 +121,7 @@ public class Road {
 		if (!this.directed)
 			return null;
 		else
-			return streetmap.getIntersectionByCoordinates(x2, y2);
-		
+			return streetmap.getIntersectionByCoordinates(x2, y2);		
 	}
 
 	public RoadType getType() {
