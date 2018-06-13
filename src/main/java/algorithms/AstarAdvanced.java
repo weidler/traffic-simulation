@@ -2,7 +2,6 @@ package algorithms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import car.Car;
 import datastructures.Intersection;
@@ -51,7 +50,15 @@ public final class AstarAdvanced {
 			for (int i = 0; i < currentParent.getConnections().size(); i++) {
 				Intersection currentConnected = currentParent.getConnections().get(i).getDestination();
 				Road r = streetmap.getRoadByCoordinates(currentParent.getXCoord(), currentParent.getYCoord(), currentConnected.getXCoord(), currentConnected.getYCoord());
-				if(!r.getDirectedBoolean())
+				boolean oke = true;
+				if(r.isOneWay())
+				{
+					if(r.getDirection() != currentConnected)
+					{
+						oke = false;
+					}
+				}
+				if(oke)
 				{
 					if (!closedList.contains(currentConnected)) {
 						double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();

@@ -12,15 +12,15 @@ import datastructures.StreetMap;
 import datastructures.TrafficLight;
 import road.Road;
 
-public class WeightedCycling implements Strategy {
-
+public class Coordinated implements Strategy {
+//try
 	private static CoordinatedTrafficLights ctl = new CoordinatedTrafficLights();
 	private ArrayList<Intersection> intersections;
 	private double tl_phase_length;
 	private StreetMap street_map;
 	private HashMap<Intersection, Double> times_till_toggle;
-
-	public WeightedCycling(double phase_length, StreetMap street_map) {
+	
+	public Coordinated(double phase_length, StreetMap street_map) {
 		this.tl_phase_length = phase_length;
 		this.street_map = street_map;
 		intersections = street_map.getIntersections();
@@ -32,11 +32,17 @@ public class WeightedCycling implements Strategy {
 	
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) {
-		for (Intersection intersection : this.intersections) {
-			Road busiest = ctl.weightedRoads1(intersection, cars);
-			intersection.setTrafficLightActivity2(busiest);
-		}
 		
+		
+		for (Intersection intersection : this.intersections) {
+			times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
+			if(times_till_toggle.get(intersection) <= 0)
+			{
+				Road busiest = ctl.weightedRoads2(intersection, cars);
+				intersection.setTrafficLightActivity2(busiest);
+				times_till_toggle.put(intersection, tl_phase_length);
+			}			
+		}		
 	}
 	
 	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {

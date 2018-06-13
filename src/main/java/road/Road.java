@@ -121,8 +121,7 @@ public class Road {
 		if (!this.directed)
 			return null;
 		else
-			return streetmap.getIntersectionByCoordinates(x2, y2);
-		
+			return streetmap.getIntersectionByCoordinates(x2, y2);		
 	}
 
 	public RoadType getType() {
@@ -249,17 +248,10 @@ public class Road {
 
 		return intersections;
 	}
-	public void toggleDirected()
-	{
-		if(directed)
-		{
-			directed = false;
-		}
-		else
-		{
-			directed = true;
-		}
+	public void toggleDirected() {
+		directed = !directed;
 	}
+
 	public ArrayList<Intersection> getDirected()
 	{
 		ArrayList<Intersection> intersectionList = new ArrayList();
@@ -275,7 +267,7 @@ public class Road {
 		
 		return intersectionList;
 	}
-	public boolean getDirectedBoolean()
+	public boolean isOneWay()
 	{
 		return directed;
 	}
