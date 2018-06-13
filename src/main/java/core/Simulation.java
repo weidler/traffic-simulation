@@ -210,7 +210,7 @@ public class Simulation {
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(15, street_map);
 		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
-			this.strategy = new WeightedCycling(15, street_map);
+			this.strategy = new WeightedCycling(5, street_map);
 
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
