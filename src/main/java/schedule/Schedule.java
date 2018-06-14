@@ -32,6 +32,10 @@ public class Schedule {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime());
 	}
 
+	public double weightOnRoadLength(Road r, double stat) {
+		return stat * (r.getLength() / 500);
+	}
+
 	/**
 	 * NOT IMPLEMENTED FOR THIS SCHEDULE
 	 */

@@ -40,7 +40,7 @@ public class EmpiricalSchedule extends Schedule {
 
 	public void drawNextCarAt(Road r, double realistic_time_in_seconds) {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r)
-				+ this.drawInterarrivalTime(this.mean_interarrival_time, realistic_time_in_seconds));
+				+ this.drawInterarrivalTime(weightOnRoadLength(r, this.mean_interarrival_time), realistic_time_in_seconds));
 	}
 
 	public double drawInterarrivalTime(double mean, double realistic_time_in_seconds) {

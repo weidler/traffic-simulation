@@ -377,8 +377,6 @@ public class Simulation {
 		// Write Data
 		PrintWriter report_writer;
 		try {
-			
-			
 			report_writer = new PrintWriter("./simulation-reports/csv-data/" + name + ".csv", "UTF-8");
 			
 			String sep = ";";
