@@ -32,9 +32,9 @@ public class Schedule {
 	public void drawNextCarAt(Road r) {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime());
 	}
-
+	
 	public double adjustStatisticToRoad(Road r, double stat) {
-		stat = stat * (r.getLength() / 500);
+		stat = stat * (500 / r.getLength());
 		switch (r.getZoneType()) {
 
 			case RESIDENTIAL:

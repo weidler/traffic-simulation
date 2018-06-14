@@ -118,10 +118,10 @@ public class CoordinatedTrafficLights {
 	
 		for(int l = 0; l < avgSpeed.size(); l++) {
 			double newNumber = avgSpeed.get(l);
-			if(newNumber < (avgSpeed.get(index)+5)) {
+			if(newNumber < (avgSpeed.get(index)-10)) {
 				index = avgSpeed.indexOf(newNumber);
 			}
-			else if(Math.abs(newNumber - avgSpeed.get(index)) <= 5 )
+			else if(Math.abs(newNumber - avgSpeed.get(index)) <= 10 )
 			{
 				if(carCountList.get(avgSpeed.indexOf(newNumber)) > carCountList.get(index))
 				{
