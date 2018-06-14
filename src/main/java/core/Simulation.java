@@ -194,6 +194,7 @@ public class Simulation {
 	}
 
 	public void applyExperimentalSettings() {
+		int phaseLength = experiment.getPhaseLength();
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
 			this.simulation_schedule = new EmpiricalSchedule(this.street_map, this.experiment.getIaTime(), "data/test.json");
@@ -205,25 +206,25 @@ public class Simulation {
 
 		// Strategy
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
-			this.strategy = new BasicCycling(15, street_map);
+			this.strategy = new BasicCycling(phaseLength, street_map);
 		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
 
-			this.strategy = new WeightedCycling(5, street_map);
+			this.strategy = new WeightedCycling(phaseLength, street_map);
 
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
 		{
-			this.strategy = new Coordinated(1, street_map);
+			this.strategy = new Coordinated(phaseLength, street_map);
 		}
 		else if(this.experiment.getControlStrategy() == type.Strategy.WAITING)
 		{
-			this.strategy = new WaitingCycling(5, street_map);
+			this.strategy = new WaitingCycling(phaseLength, street_map);
 		}
 		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 
-			this.strategy = new InformedCycling(15, street_map);
+			this.strategy = new InformedCycling(phaseLength, street_map);
 		} else {
-			this.strategy = new BasicCycling(15, street_map);
+			this.strategy = new BasicCycling(phaseLength, street_map);
 		}
 	}
 

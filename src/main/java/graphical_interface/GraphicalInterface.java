@@ -57,7 +57,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private JTextField fileName = new JTextField(20);
 	private JComboBox<String> strategy;
 	private JComboBox<String> schedule;
-
+	private JTextField phaseLength = new JTextField(5); // in days
 	private final JFileChooser fc = new JFileChooser();
 	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 
@@ -731,6 +731,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				myPanel.add(new JLabel("strategy:"));
 				myPanel.add(strategy);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("phase length:"));
+				phaseLength.setText("5");
+				myPanel.add(phaseLength);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("schedule:"));
 				myPanel.add(schedule);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
@@ -792,7 +796,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 					}
 
 					Experiment exp = new Experiment(arrival_schedule, control_strategy,
-							Integer.parseInt(duration.getText()), visualize.isSelected(), Integer.parseInt(inter.getText()));
+							Integer.parseInt(duration.getText()), visualize.isSelected(), Integer.parseInt(inter.getText()),Integer.parseInt(phaseLength.getText()));
 					
 					
 					
