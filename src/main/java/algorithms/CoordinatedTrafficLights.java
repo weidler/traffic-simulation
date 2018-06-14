@@ -131,7 +131,6 @@ public class CoordinatedTrafficLights {
 		}
 		
 		busiestRoad = intersections.get(index).getRoadTo(i);
-		System.out.println("max car number: "+ cars.get(busiestRoad));
 		return busiestRoad;
 	}
 
