@@ -46,6 +46,7 @@ public class Coordinated implements Strategy {
 	}
 	
 	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {
+		 
 		if (intersection.getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : intersection.getTrafficLights()) {
 				for (TrafficLight t : tls) {
