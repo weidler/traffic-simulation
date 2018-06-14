@@ -19,6 +19,10 @@ public class WeightedCycling implements Strategy {
 	private double tl_phase_length;
 	private StreetMap street_map;
 	private HashMap<Intersection, Double> times_till_toggle;
+	private double greenStart;
+	private double greenEnd;
+	private double redStart;
+	private double redEnd;
 
 	public WeightedCycling(double phase_length, StreetMap street_map) {
 		this.tl_phase_length = phase_length;
@@ -29,11 +33,11 @@ public class WeightedCycling implements Strategy {
 			times_till_toggle.put(inter, tl_phase_length);
 		}
 	}
-	
+
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) {
 		for (Intersection intersection : this.intersections) {
-			
+
 			times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
 			if(times_till_toggle.get(intersection) <= 0)
 			{
@@ -41,17 +45,22 @@ public class WeightedCycling implements Strategy {
 				intersection.setTrafficLightActivity2(busiest);
 				times_till_toggle.put(intersection, tl_phase_length);
 			}
-			
+
 		}
-		
-		
+
+
 	}
-	
+
 	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {
 		if (intersection.getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : intersection.getTrafficLights()) {
 				for (TrafficLight t : tls) {
 					t.setStatus("G");
+					redEnd = System.currentTimeMillis();
+					greenStart = System.currentTimeMillis();
+					if(redStart > 0) {
+						System.out.println("Red: "+(redEnd-redStart)/1000 + " Seconds");
+					}
 				}
 			}
 		} else {
@@ -74,14 +83,24 @@ public class WeightedCycling implements Strategy {
 						for(TrafficLight t : connections.get(i).getTrafficlights())
 						{
 							t.setStatus("G");
+							redEnd = System.currentTimeMillis();
+							greenStart = System.currentTimeMillis();
+							if(redStart > 0) {
+								System.out.println("Red: "+(redEnd-redStart)/1000 + " Seconds");
+							}
 						}
-						
+
 					}
 					else 
 					{
 						for(TrafficLight t : connections.get(i).getTrafficlights())
 						{
 							t.setStatus("R");
+							greenEnd = System.currentTimeMillis();
+							redStart = System.currentTimeMillis();
+							if(greenStart > 0) {
+								System.out.println("Green: "+(greenEnd-greenStart)/1000 + " Seconds");
+							}
 						}
 					}
 				}
@@ -102,12 +121,17 @@ public class WeightedCycling implements Strategy {
 
 		System.out.println(this.times_till_toggle);
 	}
-	
+
 	public void setTrafficLightActivity(Intersection inter) {
 		if (inter.getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : inter.getTrafficLights()) {
 				for (TrafficLight t : tls) {
 					t.setStatus("G");
+					greenStart = System.currentTimeMillis();
+					redEnd = System.currentTimeMillis();
+					if(redStart > 0) {
+						System.out.println("Red: "+(redEnd-redStart)/1000 + " Seconds");
+					}
 				}
 			}
 		} else {
@@ -115,10 +139,20 @@ public class WeightedCycling implements Strategy {
 				if (i == inter.getActiveLight()) {
 					for (TrafficLight t : inter.getTrafficLights().get(i)) {
 						t.setStatus("G");
+						greenStart = System.currentTimeMillis();
+						redEnd = System.currentTimeMillis();
+						if(redStart > 0) {
+							System.out.println("Red: "+(redEnd-redStart)/1000 + " Seconds");
+						}
 					}
 				} else {
 					for (TrafficLight t : inter.getTrafficLights().get(i)) {
 						t.setStatus("R");
+						greenEnd = System.currentTimeMillis();
+						redStart = System.currentTimeMillis();
+						if(greenStart > 0) {
+							System.out.println("Green:"+(greenEnd-greenStart)/1000 + " Seconds");
+						}
 					}
 				}
 			}
