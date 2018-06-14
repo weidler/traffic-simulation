@@ -34,7 +34,7 @@ public class Schedule {
 	}
 
 	public double adjustStatisticToRoad(Road r, double stat) {
-		stat = stat * (500 / r.getLength());
+		stat = stat * (100 / r.getLength());
 		switch (r.getZoneType()) {
 
 			case RESIDENTIAL:
