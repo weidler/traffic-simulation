@@ -24,7 +24,7 @@ public class Highway extends Road {
 	}
 
 	protected void setTypeParameters() {
-		type = RoadType.HIGHWAY;
+		road_type = RoadType.HIGHWAY;
 		allowed_max_speed = 120;
 	}
 }

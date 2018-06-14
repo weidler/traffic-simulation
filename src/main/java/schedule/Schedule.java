@@ -11,6 +11,7 @@ public class Schedule {
 
 	protected StreetMap street_map;
 	protected HashMap<Road, Double> arrival_times_per_road;
+	protected int population_per_meter;
 
 	public Schedule(StreetMap street_map) {
 		this.street_map = street_map;
@@ -32,8 +33,22 @@ public class Schedule {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r) + this.drawInterarrivalTime());
 	}
 
-	public double weightOnRoadLength(Road r, double stat) {
-		return stat * (r.getLength() / 500);
+	public double adjustStatisticToRoad(Road r, double stat) {
+		stat = stat * (r.getLength() / 500);
+		switch (r.getZoneType()) {
+
+			case RESIDENTIAL:
+				stat *= 0.5;
+				break;
+			case MIXED:
+				break;
+			case COMMERCIAL:
+				stat *= 1.4;
+			case INDUSTRIAL:
+				stat *= 2;
+		}
+
+		return stat;
 	}
 
 	/**

@@ -6,29 +6,38 @@ import datastructures.Intersection;
 import datastructures.StreetMap;
 import datatype.Point;
 import type.RoadType;
+import type.ZoneType;
 import util.Geometry;
 
 public class Road {
 
+	// LOCATION
 	protected int x1;
 	protected int y1;
 	protected int x2;
 	protected int y2;
 	protected double length;
-	protected int lanes = 1;
-	protected double avergeSpeed = 0;
-	protected double avg;
-	protected ArrayList<Double> averageSpeeds = new ArrayList<Double>();// in kmh
-
-	protected RoadType type = RoadType.ROAD;
-	protected int allowed_max_speed = 50;
 	protected ArrayList<Integer> offsetX = new ArrayList<Integer>();
 	protected ArrayList<Integer> offsetY = new ArrayList<Integer>();
 	protected double angle;
-	protected boolean directed = false;
 
+	// STATISTICS
+	protected double avg;
+	protected ArrayList<Double> averageSpeeds = new ArrayList<Double>();// in kmh
+	protected int availabe_population;
+
+	// PARAMETERS
+	protected ZoneType zone_type = ZoneType.MIXED;
+	protected RoadType road_type;
+	protected int allowed_max_speed;
+	protected int population_per_meter;
+	protected boolean directed = false;
+	protected int lanes = 1;
+
+	// REFERENCES
 	protected StreetMap streetmap;
 
+	// CONSTRUCTORS
 	public Road(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -39,6 +48,7 @@ public class Road {
 		this.length = this.calcLength();
 
 		this.setTypeParameters();
+		this.availabe_population = (int) this.length * this.population_per_meter;
 	}
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {
@@ -85,8 +95,10 @@ public class Road {
 
 	protected void setTypeParameters() {
 		this.allowed_max_speed = 50;
-		this.type = RoadType.ROAD;
+		this.population_per_meter = 10;
+		this.road_type = RoadType.ROAD;
 	}
+
 	public void setRoadType(String t)
 	{
 		if(t.equals("ROAD"))
@@ -95,11 +107,11 @@ public class Road {
 		}
 		else if(t.equals("DIRT_ROAD"))
 		{
-			this.type = RoadType.DIRT_ROAD;
+			this.road_type = RoadType.DIRT_ROAD;
 		}
 		else if(t.equals("HIGHWAY"))
 		{
-			this.type = RoadType.HIGHWAY;
+			this.road_type = RoadType.HIGHWAY;
 		}
 	}
 
@@ -124,8 +136,8 @@ public class Road {
 			return streetmap.getIntersectionByCoordinates(x2, y2);		
 	}
 
-	public RoadType getType() {
-		return this.type;
+	public RoadType getRoadType() {
+		return this.road_type;
 	}
 
 	public void computeAverageSpeed(double timeSpent) {
@@ -193,20 +205,13 @@ public class Road {
 
 		return neighbouring_roads;
 	}
-	public RoadType getRoadType()
-	{
-		return type;
-	}
+
 	public int getLanes() {
 		return this.lanes;
 	}
 
 	public double getLength() {
 		return this.length;
-	}
-	
-	public void setLength(int length) {
-		this.length = length;
 	}
 
 	public int getX1() {
@@ -231,6 +236,14 @@ public class Road {
 	
 	public Point getPointB() {
 		return new Point(x2, y2);
+	}
+
+	public int getAvailabePopulation() {
+		return availabe_population;
+	}
+
+	public void setAvailabePopulation(int availabe_population) {
+		this.availabe_population = availabe_population;
 	}
 
 	public int getAllowedMaxSpeed() {
@@ -289,5 +302,13 @@ public class Road {
 
 	private double calcLength() {
 		return Geometry.distance(getPointA(), getPointB());
+	}
+
+	public void incrementAvailablePopulation() {
+		this.availabe_population++;
+	}
+
+	public ZoneType getZoneType() {
+		return this.zone_type;
 	}
 }

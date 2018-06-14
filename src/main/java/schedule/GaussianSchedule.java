@@ -18,7 +18,7 @@ public class GaussianSchedule extends Schedule {
 
 	public void drawNextCarAt(Road r) {
 		arrival_times_per_road.put(r, arrival_times_per_road.get(r)
-				+ this.drawInterarrivalTime(weightOnRoadLength(r, this.mean_interarrival_time), this.sd_interarrival_times));
+				+ this.drawInterarrivalTime(adjustStatisticToRoad(r, this.mean_interarrival_time), this.sd_interarrival_times));
 	}
 
 	public double drawInterarrivalTime(double mean, double sd) {

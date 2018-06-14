@@ -17,7 +17,7 @@ public class PoissonSchedule extends Schedule {
 
 	public void drawNextCarAt(Road r) {
 		arrival_times_per_road.put(r,
-				arrival_times_per_road.get(r) + this.drawInterarrivalTime(weightOnRoadLength(r, this.mean_interarrival_time)));
+				arrival_times_per_road.get(r) + this.drawInterarrivalTime(adjustStatisticToRoad(r, this.mean_interarrival_time)));
 	}
 
 	public double drawInterarrivalTime(double mean) {

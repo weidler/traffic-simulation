@@ -266,10 +266,11 @@ public class Simulation {
 					days_simulated++;
 				}
 
-				// add new cars to the roads according to the schedule
+				// spawn new cars to the roads according to the schedule
 				for (Road r : this.street_map.getRoads()) {
 					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
-						this.addCarAtRoad(r);
+						if (r.getAvailabePopulation() > 0) this.addCarAtRoad(r);
+						else System.out.println("NO MORE PEOPLE HERE");
 						simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
 					}
 				}
@@ -286,6 +287,8 @@ public class Simulation {
 						// recalculate car position
 						if (car.update(this.cars, delta_t, current_time)) {
 							arrived_cars.add(car);
+							Road destination_road = car.getCurrentDestinationIntersection().getRoadTo(car.getCurrentOriginIntersection());
+							destination_road.incrementAvailablePopulation();
 						}
 					}
 				}
@@ -399,24 +402,29 @@ public class Simulation {
 
 		// Create Graphical Report
 		String command = "simulation-reports/create_report.sh " + name;
-		Process p;
-
+		Process p, q;
 		try {
 			p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 
-/*
-			if (SystemUtils.IS_OS_LINUX) {
-				Runtime.getRuntime().exec("xdg-open simulation-reports/" + name + ".html");
-			} else if (SystemUtils.IS_OS_WINDOWS) {
-				Runtime.getRuntime().exec("start simulation-reports/" + name + ".html");
-			}*/
 
+			if (SystemUtils.IS_OS_LINUX) {
+				System.out.println("LINUX IS LIFE");
+				q = Runtime.getRuntime().exec("xdg-open simulation-reports/html-reports/" + name + ".html");
+				q.waitFor();
+			} else if (SystemUtils.IS_OS_WINDOWS) {
+				q = Runtime.getRuntime().exec("start simulation-reports/html-reports/" + name + ".html");
+				q.waitFor();
+			} else {
+				System.out.println("OS NOT SUPPORTED");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("DONE");
 	}
 	
 	public int getNumberCarsOutOfTraffic() {
