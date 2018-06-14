@@ -120,9 +120,27 @@ public class Road {
 	}
 
 	public void setLanes(int l) {
-		if (l >= 1 && l < 4) this.lanes = l;
+		if (l >= 1 && l < 4) 
+		{
+			if(type == RoadType.HIGHWAY)
+			{
+				if(l>1)
+				{
+					this.lanes = l;
+				}
+				else
+				{
+					this.lanes = 2;
+				}
+			}
+			if(type == RoadType.DIRT_ROAD)
+			{
+				this.lanes = 1;
+			}
+			
+		}
 		else System.out.println("number of lanes is not allowed");
-
+		
 		this.calculateOffset(this.streetmap.getIntersectionByCoordinates(this.x1, this.y1),
 				this.streetmap.getIntersectionByCoordinates(this.x2, this.y2));
 	}
