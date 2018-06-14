@@ -12,7 +12,7 @@ public final class AstarAdvanced {
 
 	
 	
-	private static double weightValueEmpirical = 0;	
+	private static double weightValueEmpirical = 3;	
 
 	/*public static void setWeightValue(double multplier)
 	{
@@ -64,15 +64,37 @@ public final class AstarAdvanced {
 						double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
 						double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
-						double distribution = carList.get(r).size()/r.getLength();
+						double distribution = (carList.get(r).size() * 8)/r.getLength();
+						System.out.println("carlist: "+carList.get(r).size() *8+ " length: "+ r.getLength());
 						double d = distribution * weightValueEmpirical;
-						double s = streetmap.getRoads().get(i).getAverageSpeed();
+						double s = streetmap.getRoads().get(i).getAverageSpeed();						
+						int curRoadCount = 0;						
+						int carCount = 0;							
+						Road curRoad = r;
+						for(Car car : carList.get(curRoad))
+						{ 
+							Intersection target = car.getCurrentDestinationIntersection();
+							
+							if(target == currentConnected && target != null)
+							{
+								
+								carCount++;
+							}
+						}							
+						if(r == curRoad)
+						{
+							curRoadCount = carCount;
+						}
+						if(carCount == 0)
+						{
+							s = r.getAllowedMaxSpeed();
+						}
 						double distance = h + g + d - s;
 						if (distance < 0)
 							distance = 0;
 	
 						openList.add(currentConnected);
-	
+						System.out.println("s: "+s+ " d: "+ d);
 						if (currentConnected.getParent() == null || currentConnected.getG() > g) {
 							currentConnected.setParent(currentParent);
 							currentConnected.setCost(distance);

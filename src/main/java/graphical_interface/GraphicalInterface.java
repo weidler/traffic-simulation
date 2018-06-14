@@ -696,7 +696,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				} else {
 					addLabel.setText("add");
 				}
-
 			}
 		});
 
