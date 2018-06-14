@@ -63,7 +63,6 @@ public class Coordinated implements Strategy {
 					for(ArrayList<TrafficLight> tl : intersection.getTrafficLights())
 					{
 						last_turned_green.put(tl, last_turned_green.get(tl) - delta_t);
-						System.out.println("time not green: "+last_turned_green.get(tl));
 						if(last_turned_green.get(tl) <= 0)
 						{
 							for (TrafficLight t : tl) {
@@ -72,7 +71,6 @@ public class Coordinated implements Strategy {
 							}
 							last_turned_green.put(tl, tl_phase_length);
 							switched = true;	
-							System.out.println("switched");
 						}
 						else
 						{

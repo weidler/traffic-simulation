@@ -25,6 +25,7 @@ public class DirtRoad extends Road {
 
 	protected void setTypeParameters() {
 		type = RoadType.DIRT_ROAD;
+		
 		allowed_max_speed = 30;
 	}
 }
