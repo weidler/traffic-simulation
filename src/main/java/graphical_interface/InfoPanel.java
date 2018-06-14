@@ -33,7 +33,6 @@ public class InfoPanel extends JPanel {
         
         String time_string = Time.toSixtyMinuteFormat(Time.secondsToHours(sim.getRealisticTime()));
         String day_string = "Day " + Integer.toString(sim.getCurrentDay()) + ", " + sim.getNumbCars() + " cars";
-        String performance_string = "Current Performance : " + (Math.round(sim.getRealTimeUtilization() * 1000) / 1000);
         
         int y_diff = 10;
         

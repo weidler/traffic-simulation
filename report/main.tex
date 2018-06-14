@@ -29,6 +29,10 @@
 \begin{document}
 
 \maketitle
+\begin{abstract}
+\lipsum[1]
+{{\it \bf Keywords:} traffic simulation; intelligent traffic control; linear programming; machine learning}
+\end{abstract}
 
 \section{Introduction}
 An intelligent traffic control system adjusts traffic in order to assure all people reach their destinations in the most optimal time and distance. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problem areas.  It is important to constantly keep these systems updated to assure optimal performance and safety of the general public. With advancements in technology and artificial intelligence, new and more sophisticated strategies for traffic control become possible.
@@ -38,15 +42,14 @@ In this work, we aim to evaluate different such "intelligent" traffic control st
 
 Our main contributions are as follows:
 
-
 \subsection{Approach}
 Hence, in order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this purpose, we created a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Maps are realised as undirected graphs in which vertices represent intersections and roads appear as edges between those. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. 
-
-\vspace{20pt}
 
 \subsection{Related Work}
 \label{sec:related-work}
 There has been extensive work on the simulation of traffic flow as well as the development of traffic control strategies. Following up on different approaches on modelling car following behaviour \citep[e.g.][]{gipps1981behavioural}, \citet{treiber2000congested} developed the influential Intelligent Driver Model for the simulation of urban traffic. Similarly to the former, it creates a collision free environment where cars mind the a spacial and time-wise gap to the leading vehicle. The SUMO package \citep{krajzewicz2002sumo, behrisch2011sumo} utilizes the model by \citep{gipps1981behavioural} in an extended version \citep{krauss1998microscopic} in a complex simulation software. In contrast to their work, we use the IDM. Hence, our simulation is (quasi) time-continuous, rather than time-discrete.
+
+\vspace{20pt}
 
 In the following sections we further describe our approach and the results of our experiments. We begin by elaborating on the implementation of the simulation environment (section \ref{sec:envi}), followed by a description of different control strategies (section \ref{sec:strategies}). Following, we describe the experiments we conducted for those strategies and our evaluation methodology (section \ref{sec:experiments}). In section \ref{sec:results} we will report the results of these experiments. We conclude this work by discussing our results and proposing future directions.
 	
@@ -126,8 +129,9 @@ The advanced A* path finding algorithm is very similar to the original version, 
 \section{Traffic Control Strategies}
 
 \begin{figure*}[htb]
-	\includegraphics[width=\textwidth]{img/validation.png}
-	\caption{Number of cars (left) and average fractional waiting time of cars (right) in the system simulated for one day. IATs are generated from the empirical distribution shown in figure \ref{fig:traffic-data} \label{fig:validation}}
+	\includegraphics[width=0.5\textwidth]{img/number_of_cars_over_day.png}
+	\includegraphics[width=0.5\textwidth]{img/velocity_over_day.png}
+	\caption{Number of cars (left) and average velocity of cars (right) in the system simulated for one day. IATs are generated from the empirical distribution shown in figure \ref{fig:traffic-data}. \label{fig:validation}}
 \end{figure*}
 
 \label{sec:strategies}

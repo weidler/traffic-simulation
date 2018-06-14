@@ -1,8 +1,6 @@
 package core;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +22,7 @@ import car.Truck;
 import datastructures.StreetMap;
 import experiment.Experiment;
 import graphical_interface.GraphicalInterface;
+import org.apache.commons.lang3.SystemUtils;
 import road.Road;
 import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
@@ -71,9 +70,6 @@ public class Simulation {
 	
 	// STATISTICS
 	private int measurement_interval_realistic_time_seconds = 60;
-	private double average_velocity;
-	private double real_time_utilization; // this is the time used by the simulation as a fraction of the real time for
-											// that it simulates
 
 	private int current_run;
 	private double avgTravel;
@@ -123,10 +119,6 @@ public class Simulation {
 	}
 
 	// ACTIONS
-
-	public double getRealTimeUtilization() {
-		return real_time_utilization;
-	}
 
 	public float getSimulatedSecondsperRealSecond() {
 		return simulated_seconds_per_real_second;
@@ -387,7 +379,7 @@ public class Simulation {
 		try {
 			
 			
-			report_writer = new PrintWriter("./simulation-reports/"+name+".csv", "UTF-8");
+			report_writer = new PrintWriter("./simulation-reports/csv-data/" + name + ".csv", "UTF-8");
 			
 			String sep = ";";
 			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
@@ -407,9 +399,25 @@ public class Simulation {
 		}
 
 		// Create Graphical Report
-//		String command = "echo \"rmarkdown::render('report.Rmd', clean=TRUE, output_format='html_document')\" | R --slave";
-//		Process p = Runtime.getRuntime().exec(command);
-//		p.waitFor();
+		String command = "simulation-reports/create_report.sh " + name;
+		Process p;
+
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+
+/*
+			if (SystemUtils.IS_OS_LINUX) {
+				Runtime.getRuntime().exec("xdg-open simulation-reports/" + name + ".html");
+			} else if (SystemUtils.IS_OS_WINDOWS) {
+				Runtime.getRuntime().exec("start simulation-reports/" + name + ".html");
+			}*/
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public int getNumberCarsOutOfTraffic() {

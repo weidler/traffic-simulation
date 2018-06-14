@@ -14,7 +14,9 @@ library(plotly)
 ```
 
 ```{r include=FALSE}
-data <- read.csv("output.csv", sep = ";")
+srcFile <- commandArgs(TRUE)[1]
+
+data <- read.csv(srcFile, sep = ";")
 data$time <- data$time/60/60
 data$numb_cars[is.na(data$numb_cars)] <- 0
 data$avg_velo[is.na(data$avg_velo)] <- 0
