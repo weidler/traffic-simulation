@@ -94,8 +94,7 @@ public final class AstarAdvanced {
 							distance = 0;
 	
 						openList.add(currentConnected);
-						System.out.println("s: "+s+ " d: "+ d);
-						System.out.println("distance: "+distance);
+						
 						if (currentConnected.getParent() == null || currentConnected.getG() > g) {
 							currentConnected.setParent(currentParent);
 							currentConnected.setCost(distance);
