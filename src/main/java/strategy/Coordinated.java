@@ -19,6 +19,8 @@ public class Coordinated implements Strategy {
 	private double tl_phase_length;
 	private StreetMap street_map;
 	private HashMap<Intersection, Double> times_till_toggle;
+	private HashMap<ArrayList<TrafficLight>, Double> last_turned_green;
+	 
 	
 	public Coordinated(double phase_length, StreetMap street_map) {
 		this.tl_phase_length = phase_length;
@@ -28,32 +30,71 @@ public class Coordinated implements Strategy {
 		for (Intersection inter : street_map.getIntersections()) {
 			times_till_toggle.put(inter, tl_phase_length);
 		}
+		last_turned_green = new HashMap<ArrayList<TrafficLight>, Double>();
+		for (Intersection inter : street_map.getIntersections())
+		{
+			for (ArrayList<TrafficLight> tl : inter.getTrafficLights()) {
+				last_turned_green.put(tl, tl_phase_length);
+			}
+		}
 	}
 	
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) {
 		
 		
+		
 		for (Intersection intersection : this.intersections) {
-			times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
-			if(times_till_toggle.get(intersection) <= 0)
-			{
-				Road busiest = ctl.weightedRoads2(intersection, cars);
-				intersection.setTrafficLightActivity2(busiest);
-				times_till_toggle.put(intersection, tl_phase_length);
-			}			
+			
+			if (intersection.getTrafficLights().size() <= 2) {
+				for (ArrayList<TrafficLight> tls : intersection.getTrafficLights()) {
+					for (TrafficLight t : tls) {
+						t.setStatus("G");
+					}
+				}
+			}
+			else
+			{			
+				times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
+				if(times_till_toggle.get(intersection) <= 0)
+				{
+					boolean switched = false;
+					
+					for(ArrayList<TrafficLight> tl : intersection.getTrafficLights())
+					{
+						last_turned_green.put(tl, last_turned_green.get(tl) - delta_t);
+						System.out.println("time not green: "+last_turned_green.get(tl));
+						if(last_turned_green.get(tl) <= 0)
+						{
+							for (TrafficLight t : tl) {
+								t.setStatus("G");
+								
+							}
+							last_turned_green.put(tl, tl_phase_length);
+							switched = true;	
+							System.out.println("switched");
+						}
+						else
+						{
+							for (TrafficLight t : tl) {
+								t.setStatus("R");							
+							}
+						}					
+					}				
+					if(!switched)
+					{
+						Road busiest = ctl.weightedRoads2(intersection, cars);
+						setTrafficLightActivity2(busiest, intersection);
+						times_till_toggle.put(intersection, tl_phase_length);
+					}					
+				}	
+			}
 		}		
 	}
 	
-	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {
+	public void setTrafficLightActivity2(Road busiest, Intersection intersection ) {
 		 
-		if (intersection.getTrafficLights().size() <= 2) {
-			for (ArrayList<TrafficLight> tls : intersection.getTrafficLights()) {
-				for (TrafficLight t : tls) {
-					t.setStatus("G");
-				}
-			}
-		} else {
+		
 			Intersection target;
 			Intersection[] busiestIntersections = busiest.getIntersections();
 			if(busiestIntersections[0].getXCoord() == intersection.getXCoord() && busiestIntersections[0].getYCoord() == intersection.getYCoord())
@@ -73,6 +114,7 @@ public class Coordinated implements Strategy {
 						for(TrafficLight t : connections.get(i).getTrafficlights())
 						{
 							t.setStatus("G");
+							last_turned_green.put(connections.get(i).getTrafficlights(), tl_phase_length);
 						}
 						
 					}
@@ -87,7 +129,7 @@ public class Coordinated implements Strategy {
 			}
 		}
 
-	}
+	
 
 	@Override
 	public void initializeTrafficLightSettings() {
