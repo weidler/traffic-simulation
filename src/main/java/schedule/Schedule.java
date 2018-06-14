@@ -33,7 +33,7 @@ public class Schedule {
 	}
 
 	public double weightOnRoadLength(Road r, double stat) {
-		return stat * (r.getLength() / 500);
+		return stat * (500 / r.getLength());
 	}
 
 	/**
