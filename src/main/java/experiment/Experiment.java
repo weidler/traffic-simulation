@@ -12,6 +12,7 @@ public class Experiment {
 	private Strategy control_strategy;
 	private int simulation_length_in_days;
 	private int iaTime;
+	private int phaseLength;
 
 
 	private boolean vizualise;
@@ -26,12 +27,13 @@ public class Experiment {
 	/* CONSTRUCTORS */
 		
 	public Experiment(Distribution arrival_generator, Strategy control_strategy, int simulation_length_in_days,
-			boolean vizualise, int meanIA) {
+			boolean vizualise, int meanIA, int phaseLength) {
 		this.arrival_generator = arrival_generator;
 		this.control_strategy = control_strategy;
 		this.simulation_length_in_days = simulation_length_in_days;
 		this.vizualise = vizualise;
 		this.iaTime = meanIA;
+		this.phaseLength = phaseLength;
 		
 		this.numb_runs = 5;
 		for (int i = 0; i < this.numb_runs; i++) this.addRun();
@@ -41,7 +43,7 @@ public class Experiment {
 	 *  Uses poisson, benchmark, one day and visualizes.
 	 */
 	public Experiment() {
-		this(Distribution.EMPIRICAL, Strategy.BENCHMARK_CYCLING, 1, true, 30);
+		this(Distribution.EMPIRICAL, Strategy.BENCHMARK_CYCLING, 1, true, 30, 15);
 	}
 
 	/* METHODS */
@@ -84,7 +86,10 @@ public class Experiment {
 	}
 	
 	/* SETTERS AND GETTERS */
-	
+	public int getPhaseLength()
+	{
+		return phaseLength;
+	}
 	public int getNumberOfRuns() {
 		return numb_runs;
 	}
