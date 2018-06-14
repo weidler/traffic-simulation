@@ -12,7 +12,7 @@ public final class AstarAdvanced {
 
 	
 	
-	private static double weightValueEmpirical = 3;	
+	private static double weightValueEmpirical = 30;	
 
 	/*public static void setWeightValue(double multplier)
 	{
