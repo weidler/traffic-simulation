@@ -1,4 +1,4 @@
-package datatype;
+package geometry;
 
 import util.Geometry;
 

@@ -1,12 +1,11 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import datatype.Line;
-import datatype.Point;
+import geometry.Line;
+import geometry.Point;
 import road.Road;
 
 public class Geometry {

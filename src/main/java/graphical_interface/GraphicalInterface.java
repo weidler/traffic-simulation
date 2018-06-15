@@ -9,13 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
-import datatype.Point;
+import geometry.Point;
 import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
@@ -25,24 +24,9 @@ import type.RoadType;
 import type.Strategy;
 import type.ZoneType;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.InputMap;
-import javax.swing.JSlider;
-import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 
 import car.Car;
-
-import javax.swing.JTextField;
-import javax.swing.JLabel;
 
 /**
  *
@@ -598,9 +582,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 		menuPanel.add(area_type_cbox);
 
-//		addLabel.setBounds(button_x, 354, 147, 14);
-//		menuPanel.add(addLabel);
-
 		directedRoad = new JCheckBox("directed");
 		directedRoad.setSelected(false);
 		directedRoad.setBounds(this.button_x, this.calculateInMenuYPosition(8), button_width, button_height);
@@ -640,7 +621,12 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				populationPanel = new PopulationPanel(streetMap);
-				JOptionPane.showMessageDialog(null, populationPanel);
+				JOptionPane pane = new JOptionPane(null, JOptionPane.PLAIN_MESSAGE);
+				pane.add(populationPanel);
+
+				JDialog dialog = pane.createDialog(GraphicalInterface.this, "Population Overview");
+				dialog.setModal(false);
+				dialog.show();
 			}
 		});
 

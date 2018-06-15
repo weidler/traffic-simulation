@@ -19,11 +19,11 @@ import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
 import datastructures.TrafficLight;
-import datatype.Line;
+import geometry.Line;
 import road.Road;
 import type.RoadType;
 import util.Geometry;
-import datatype.Point;
+import geometry.Point;
 
 public class Visuals extends JPanel {
 	private Simulation simulation;
@@ -460,12 +460,12 @@ public class Visuals extends JPanel {
 					(int) (to_y_right * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[0].addPoint(
-					(int) ((to_x_right - offset_x) * zoomMultiplier + changeX),
-					(int) ((to_y_right + offset_y) * zoomMultiplier + changeY)
+					(int) ((to_x_right - offset_x*2) * zoomMultiplier + changeX),
+					(int) ((to_y_right + offset_y*2) * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[0].addPoint(
-					(int) ((from_x_right - offset_x) * zoomMultiplier + changeX),
-					(int) ((from_y_right + offset_y) * zoomMultiplier + changeY)
+					(int) ((from_x_right - offset_x*2) * zoomMultiplier + changeX),
+					(int) ((from_y_right + offset_y*2) * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[0].addPoint(
 					(int) (from_x_right * zoomMultiplier + changeX),
@@ -478,12 +478,12 @@ public class Visuals extends JPanel {
 					(int) (to_y_left * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[1].addPoint(
-					(int) ((to_x_left + offset_x) * zoomMultiplier + changeX),
-					(int) ((to_y_left - offset_y) * zoomMultiplier + changeY)
+					(int) ((to_x_left + offset_x*2) * zoomMultiplier + changeX),
+					(int) ((to_y_left - offset_y*2) * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[1].addPoint(
-					(int) ((from_x_left + offset_x) * zoomMultiplier + changeX),
-					(int) ((from_y_left - offset_y) * zoomMultiplier + changeY)
+					(int) ((from_x_left + offset_x*2) * zoomMultiplier + changeX),
+					(int) ((from_y_left - offset_y*2) * zoomMultiplier + changeY)
 			);
 			zone_areas.get(current_road)[1].addPoint(
 					(int) (from_x_left * zoomMultiplier + changeX),

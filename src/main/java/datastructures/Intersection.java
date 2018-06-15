@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import datatype.Point;
+import geometry.Point;
 import road.Road;
 import type.IntersectionTypes;
 import type.RoadType;

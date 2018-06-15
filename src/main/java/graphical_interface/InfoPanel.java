@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
 import core.Simulation;
-import datatype.Point;
+import geometry.Point;
 import util.Time;
 
 public class InfoPanel extends JPanel {

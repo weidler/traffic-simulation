@@ -2,7 +2,7 @@ package road;
 
 import datastructures.Intersection;
 import datastructures.StreetMap;
-import datatype.Point;
+import geometry.Point;
 import type.RoadType;
 
 public class DirtRoad extends Road {

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import car.Car;
-import datatype.Line;
-import datatype.Point;
+import geometry.Line;
+import geometry.Point;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
@@ -181,17 +181,21 @@ public class StreetMap {
 					new_road_part_b = new DirtRoad(int_b, new_intersection, this, road.getLanes());
 				}
 
-				Road old_road_part_a = new Road(crossed_road.getIntersections()[0], new_intersection,
-						this, crossed_road.getLanes());
-				Road old_road_part_b = new Road(crossed_road.getIntersections()[1], new_intersection,
-						this, crossed_road.getLanes());
-				if (road.getRoadType() == RoadType.HIGHWAY) {
-					old_road_part_a = new Highway(int_a, new_intersection, this, crossed_road.getLanes());
-					old_road_part_b = new Highway(int_b, new_intersection, this, crossed_road.getLanes());
-				} else if (road.getRoadType() == RoadType.DIRT_ROAD) {
-					old_road_part_a = new DirtRoad(int_a, new_intersection, this, crossed_road.getLanes());
-					old_road_part_b = new DirtRoad(int_b, new_intersection, this, crossed_road.getLanes());
+				Road old_road_part_a = new Road(crossed_road.getIntersections()[0], new_intersection,this, crossed_road.getLanes());
+				Road old_road_part_b = new Road(crossed_road.getIntersections()[1], new_intersection,this, crossed_road.getLanes());
+				if (crossed_road.getRoadType() == RoadType.HIGHWAY) {
+					old_road_part_a = new Highway(crossed_road.getIntersections()[0], new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new Highway(crossed_road.getIntersections()[1], new_intersection, this, crossed_road.getLanes());
+				} else if (crossed_road.getRoadType() == RoadType.DIRT_ROAD) {
+					old_road_part_a = new DirtRoad(crossed_road.getIntersections()[0], new_intersection, this, crossed_road.getLanes());
+					old_road_part_b = new DirtRoad(crossed_road.getIntersections()[1], new_intersection, this, crossed_road.getLanes());
 				}
+
+				// ADJUST ZONES
+				new_road_part_a.setZoneType(road.getZoneType());
+				new_road_part_b.setZoneType(road.getZoneType());
+				old_road_part_a.setZoneType(crossed_road.getZoneType());
+				old_road_part_b.setZoneType(crossed_road.getZoneType());
 
 				this.addRoad(new_road_part_a);
 				this.addRoad(new_road_part_b);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import datastructures.Intersection;
 import datastructures.StreetMap;
-import datatype.Point;
+import geometry.Point;
 import type.RoadType;
 import type.ZoneType;
 import util.Geometry;
