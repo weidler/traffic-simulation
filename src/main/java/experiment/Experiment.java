@@ -43,7 +43,7 @@ public class Experiment {
 	 *  Uses poisson, benchmark, one day and visualizes.
 	 */
 	public Experiment() {
-		this(Distribution.EMPIRICAL, Strategy.BENCHMARK_CYCLING, 1, true, 30, 15);
+		this(Distribution.EMPIRICAL, Strategy.INFORMED_CYCLING, 1, true, 50, 15);
 	}
 
 	/* METHODS */

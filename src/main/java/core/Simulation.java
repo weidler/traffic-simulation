@@ -333,6 +333,7 @@ public class Simulation {
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
+
 			stop();
 			
 		});
@@ -445,18 +446,22 @@ public class Simulation {
 	}
 
 	public void stop() {
-		JPanel thisPanel = new JPanel();
-		JTextField name = new JTextField(5);
-		thisPanel.add(new JLabel("File name:"));
-		thisPanel.add(name);
-		
-		int result = JOptionPane.showConfirmDialog(null, thisPanel, "Please Enter data",
-				JOptionPane.OK_CANCEL_OPTION);
-		if (result == JOptionPane.OK_OPTION) {
-			setFileName(name.getText());
+		if (is_running) {
+			this.is_running = false;
+
+			JPanel thisPanel = new JPanel();
+			JTextField name = new JTextField(5);
+			thisPanel.add(new JLabel("File name:"));
+			thisPanel.add(name);
+
+			int result = JOptionPane.showConfirmDialog(null, thisPanel, "Please Enter data",
+					JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				setFileName(name.getText());
+			}
+
+			this.reportStatistics();
 		}
-		this.is_running = false;
-		this.reportStatistics();
 	}
 
 	public void reset() {
@@ -485,7 +490,8 @@ public class Simulation {
 	public void setFullSpeed(boolean full_speed) {
 		this.full_speed = full_speed;
 	}
+
 	public void setFileName(String name) {
-	this.name = name;
+		this.name = name;
 	}
 }

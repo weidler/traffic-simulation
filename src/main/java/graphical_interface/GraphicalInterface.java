@@ -498,7 +498,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		// EXIT
-		JButton exitButton = new JButton("Exit and save");
+		JButton exitButton = new JButton("Exit");
 		exitButton.setBounds(this.menu_width/2 - this.button_width/4, (this.menu_height - 50) - button_height - button_y_diff, button_width/2, button_height);
 		exitButton.setUI(new CriticalButtonUI());
 		exitButton.setBorder(this.button_border);
@@ -509,107 +509,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				System.exit(0);
 			}
 		});
-
-//
-//		txtMinNumberOf = new JTextField();
-//		txtMinNumberOf.setText("0");
-//		txtMinNumberOf.setBounds(61, 559, 96, 20);
-//		menuPanel.add(txtMinNumberOf);
-//		txtMinNumberOf.setColumns(10);
-//
-//		txtMaxNumberOf = new JTextField();
-//		txtMaxNumberOf.setBounds(61, 590, 96, 20);
-//		txtMaxNumberOf.setText("0");
-//		menuPanel.add(txtMaxNumberOf);
-//		txtMaxNumberOf.setColumns(10);
-
-//		JLabel lblMin = new JLabel("Min");
-//		lblMin.setBounds(button_x, 562, 28, 14);
-//		lblMin.setForeground(this.contrast_font_color );
-//		menuPanel.add(lblMin);
-//
-//		JLabel lblMax = new JLabel("Max");
-//		lblMax.setBounds(button_x, 596, 28, 14);
-//		lblMax.setForeground(this.contrast_font_color );
-//		menuPanel.add(lblMax);
-//
-//		JButton randomGraphButton = new JButton("random graph");
-//		randomGraphButton.setUI(new DefaultButtonUI());
-//		Random rnd = new Random();
-//		int maxX = drawPanel.getX() + drawPanel.getBounds().width - 10;
-//		int minX = drawPanel.getX();
-//		int maxY = drawPanel.getY() + drawPanel.getBounds().height - 10;
-//		int minY = drawPanel.getY();
-//
-//		randomGraphButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width, button_height);
-//		menuPanel.add(randomGraphButton);
-//		randomGraphButton.setBorder(this.button_border);
-//		randomGraphButton.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//
-//				clearMap();
-//				int maxNumberOfRoads = Integer.parseInt(txtMaxNumberOf.getText());
-//				int minNumberOfRoads = Integer.parseInt(txtMinNumberOf.getText());
-//
-//				int numberOfRoads = rnd.nextInt(maxNumberOfRoads - minNumberOfRoads + 1) + minNumberOfRoads;
-//
-//				for (int i = 0; i < numberOfRoads; i++) {
-//					if (streetMap.getIntersections().size() == 0) {
-//						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-//						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-//						int coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
-//						int coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
-//						boolean oke = false;
-//						while (!oke) {
-//							double distance2 = (double) (Math.sqrt(Math.pow(coordinateX1 - coordinateX2, 2)
-//									+ (Math.pow(coordinateY1 - coordinateY2, 2))));
-//							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
-//								oke = true;
-//							} else {
-//								coordinateX2 = rnd.nextInt(maxX - minX + 1) + minX;
-//								coordinateY2 = rnd.nextInt(maxY - minY + 1) + minY;
-//							}
-//						}
-//
-//						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-//						streetMap.addIntersection(new Intersection(coordinateX2, coordinateY2));
-//						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
-//								streetMap.getIntersections().get(streetMap.getIntersections().size() - 2));
-//						r.setStreetMap(streetMap);
-//						streetMap.addRoad(r);
-//					} else {
-//						Intersection startIntersection = streetMap.getIntersections()
-//								.get(rnd.nextInt((streetMap.getIntersections().size() - 1) - 0 + 1) + 0);
-//						int coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-//						int coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-//
-//						boolean oke = false;
-//						while (!oke) {
-//							double distance2 = (double) (Math
-//									.sqrt(Math.pow(coordinateX1 - startIntersection.getXCoord(), 2)
-//											+ (Math.pow(coordinateY1 - startIntersection.getYCoord(), 2))));
-//							if (distance2 > DISTANCE_BETWEEN_INTERSECTIONS) {
-//								oke = true;
-//							} else {
-//								coordinateX1 = rnd.nextInt(maxX - minX + 1) + minX;
-//								coordinateY1 = rnd.nextInt(maxY - minY + 1) + minY;
-//							}
-//						}
-//
-//						streetMap.addIntersection(new Intersection(coordinateX1, coordinateY1));
-//						Road r = new Road(streetMap.getIntersections().get(streetMap.getIntersections().size() - 1),
-//								startIntersection);
-//						r.setStreetMap(streetMap);
-//						streetMap.addRoad(r);
-//					}
-//
-//				}
-//
-//				repaint();
-//			}
-//		});
 
 		String[] lane_options = {"One", "Two", "Three"};
 		JComboBox<String> numb_lanes_cbox = new JComboBox<String>(lane_options);
