@@ -329,4 +329,7 @@ public class Road {
 	public ZoneType getZoneType() {
 		return this.zone_type;
 	}
+	public void setZoneType(ZoneType t) {
+		zone_type = t;
+	}
 }

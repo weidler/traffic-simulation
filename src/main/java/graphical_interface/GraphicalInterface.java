@@ -428,6 +428,23 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								{
 									road.toggleDirected();
 								}
+								next = sc.next();
+								if(next.equals("RESIDENTIAL"))
+								{
+									road.setZoneType(ZoneType.RESIDENTIAL);
+								}
+								else if(next.equals("MIXED"))
+								{
+									road.setZoneType(ZoneType.MIXED);
+								}
+								else if(next.equals("COMMERCIAL"))
+								{
+									road.setZoneType(ZoneType.COMMERCIAL);
+								}
+								else if(next.equals("INDUSTRIAL"))
+								{
+									road.setZoneType(ZoneType.INDUSTRIAL);
+								}
 								streetMap.addRoad(road);
 								next = sc.next();
 								

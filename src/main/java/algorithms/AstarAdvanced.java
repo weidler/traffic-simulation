@@ -7,6 +7,7 @@ import car.Car;
 import datastructures.Intersection;
 import datastructures.StreetMap;
 import road.Road;
+import type.RoadType;
 
 public final class AstarAdvanced {
 
@@ -61,7 +62,16 @@ public final class AstarAdvanced {
 				if(oke)
 				{
 					if (!closedList.contains(currentConnected)) {
-						double g = currentParent.getConnections().get(i).getRoad().getLength() + currentParent.getG();
+						double roadLengthScaler = 1;
+						if(currentParent.getConnections().get(i).getRoad().getRoadType() == RoadType.HIGHWAY)
+						{
+							roadLengthScaler = 0.66667;
+						}
+						else if(currentParent.getConnections().get(i).getRoad().getRoadType() == RoadType.DIRT_ROAD)
+						{
+							roadLengthScaler = 1.33333;
+						}
+						double g = currentParent.getConnections().get(i).getRoad().getLength() * roadLengthScaler + currentParent.getG();
 						double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
 						double distribution = (carList.get(r).size() * 8)/r.getLength();

@@ -55,7 +55,7 @@ public class StreetMap {
 		result = result.concat("#,");
 
 		for (Road r : roads) {
-			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + "," + r.getRoadType() + "," + r.getLanes() + "," + r.isOneWay() + ",");
+			result = result.concat(r.getX1() + "," + r.getY1() + "," + r.getX2() + "," + r.getY2() + "," + r.getRoadType() + "," + r.getLanes() + "," + r.isOneWay() + "," + r.getZoneType() + ",");
 		}
 		result = result.concat("p,");
 		System.out.println(result);
