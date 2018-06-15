@@ -633,7 +633,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton populationPopUpButton = new JButton("Show Population Info");
-		populationPopUpButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
+		populationPopUpButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width, button_height);
 		populationPopUpButton.setUI(new DefaultButtonUI());
 		populationPopUpButton.setBorder(this.button_border);
 		menuPanel.add(populationPopUpButton);
@@ -998,6 +998,25 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 								r = new Road(startX, startY, endX, endY);
 								break;
 						}
+
+						switch (zone_type) {
+							case MIXED:
+								r.setZoneType(ZoneType.MIXED);
+								break;
+							case RESIDENTIAL:
+								r.setZoneType(ZoneType.RESIDENTIAL);
+								break;
+							case INDUSTRIAL:
+								r.setZoneType(ZoneType.INDUSTRIAL);
+								break;
+							case COMMERCIAL:
+								r.setZoneType(ZoneType.COMMERCIAL);
+								break;
+							default:
+								r.setZoneType(ZoneType.MIXED);
+								break;
+						}
+
 
 						r.setStreetMap(streetMap);
 						int l = numb_lanes;
