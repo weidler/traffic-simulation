@@ -452,9 +452,8 @@ public class Simulation {
 					JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
 				setFileName(name.getText());
-			}
-
-			this.reportStatistics();
+				this.reportStatistics();
+			}			
 			System.out.println("Calculation Time: " + Time.nanosecondsToSeconds(this.total_calculation_time) + " seconds (without visualization delay)");
 		}
 	}
