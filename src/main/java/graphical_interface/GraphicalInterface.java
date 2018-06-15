@@ -24,6 +24,7 @@ import road.Road;
 import type.Distribution;
 import type.RoadType;
 import type.Strategy;
+import type.ZoneType;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -132,6 +133,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 	private int numb_lanes = 1;
 	protected RoadType road_type = RoadType.ROAD;
+	protected ZoneType zone_type = ZoneType.RESIDENTIAL;
 	private Color contrast_font_color = Color.WHITE;
 
 
@@ -253,7 +255,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		menuPanel.add(slider);
 
 		JButton startButton = new JButton("Start");
-		startButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		startButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
 		startButton.setUI(new ImportantButtonUI());
 		startButton.setBorder(this.button_border);
 		menuPanel.add(startButton);
@@ -266,7 +268,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton stopButton = new JButton("Stop");
-		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
+		stopButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
 		stopButton.setUI(new DefaultButtonUI());
 		menuPanel.add(stopButton);
 		stopButton.setBorder(this.button_border);
@@ -330,7 +332,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton saveButton = new JButton("Save");
-		saveButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width/2 - button_x_diff, button_height);
+		saveButton.setBounds(button_x, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		saveButton.setUI(new DefaultButtonUI());
 		saveButton.setBorder(this.button_border);
 		menuPanel.add(saveButton);
@@ -373,7 +375,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton loadButton = new JButton("Load");
-		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(9), button_width/2 - button_x_diff, button_height);
+		loadButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(10), button_width/2 - button_x_diff, button_height);
 		loadButton.setUI(new DefaultButtonUI());
 		loadButton.setBorder(this.button_border);
 		menuPanel.add(loadButton);
@@ -443,7 +445,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 		// SIMULATION CONTROLS
 		JButton slowDownButton = new JButton("Speed-");
-		slowDownButton.setBounds(button_x, this.calculateInMenuYPosition(11), button_width/2 - this.button_x_diff, button_height);
+		slowDownButton.setBounds(button_x, this.calculateInMenuYPosition(12), button_width/2 - this.button_x_diff, button_height);
 		slowDownButton.setUI(new CriticalButtonUI());
 		slowDownButton.setBorder(this.button_border);
 		menuPanel.add(slowDownButton);
@@ -454,7 +456,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton speedUpButton = new JButton("Speed+");
-		speedUpButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(11), button_width/2 - button_x_diff, button_height);
+		speedUpButton.setBounds(this.button_x + this.button_width/2 + this.button_x_diff, this.calculateInMenuYPosition(12), button_width/2 - button_x_diff, button_height);
 		speedUpButton.setUI(new ImportantButtonUI());
 		speedUpButton.setBorder(this.button_border);
 		menuPanel.add(speedUpButton);
@@ -466,7 +468,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 		JCheckBox fullSpeedButton = new JCheckBox("Speedy Gonzales");
 		fullSpeedButton.setSelected(false);
-		fullSpeedButton.setBounds(this.button_x, this.calculateInMenuYPosition(12), button_width, button_height);
+		fullSpeedButton.setBounds(this.button_x, this.calculateInMenuYPosition(13), button_width, button_height);
 		fullSpeedButton.setBackground(null);
 		fullSpeedButton.setForeground(Color.WHITE);
 		menuPanel.add(fullSpeedButton);
@@ -545,13 +547,45 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 		menuPanel.add(road_type_cbox);
+		
+		String[] area_options = {"Residential","Mixed","Commercial","Industrial"};
+		JComboBox<String> area_type_cbox = new JComboBox<String>(area_options);
+		area_type_cbox.setSelectedIndex(0);
+		area_type_cbox.setBounds(this.button_x, this.calculateInMenuYPosition(7), this.button_width, this.button_height);
+		area_type_cbox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String) area_type_cbox.getSelectedItem()) {
+					case "Residential":
+						zone_type = ZoneType.RESIDENTIAL;
+						break;
+
+					case "Mixed":
+						zone_type = ZoneType.MIXED;
+						break;
+
+					case "Commercial":
+						zone_type = ZoneType.COMMERCIAL;
+						break;
+						
+					case "Industrial":
+						zone_type = ZoneType.INDUSTRIAL;
+						break;
+
+					default:
+						break;
+				}
+			}
+		});
+		menuPanel.add(area_type_cbox);
 
 //		addLabel.setBounds(button_x, 354, 147, 14);
 //		menuPanel.add(addLabel);
 
 		directedRoad = new JCheckBox("directed");
 		directedRoad.setSelected(false);
-		directedRoad.setBounds(this.button_x, this.calculateInMenuYPosition(7), button_width, button_height);
+		directedRoad.setBounds(this.button_x, this.calculateInMenuYPosition(8), button_width, button_height);
 		directedRoad.setBackground(null);
 		directedRoad.setForeground(Color.WHITE);
 		menuPanel.add(directedRoad);
@@ -579,7 +613,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		});
 
 		JButton experimentButton = new JButton("Experiment");
-		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
+		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(9), button_width, button_height);
 		experimentButton.setUI(new DefaultButtonUI());
 		experimentButton.setBorder(this.button_border);
 		menuPanel.add(experimentButton);

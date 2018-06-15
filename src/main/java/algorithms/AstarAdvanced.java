@@ -65,7 +65,6 @@ public final class AstarAdvanced {
 						double h = Math.sqrt(Math.pow(currentConnected.getXCoord() - end.getXCoord(), 2)
 								+ Math.pow(currentConnected.getYCoord() - end.getYCoord(), 2));
 						double distribution = (carList.get(r).size() * 8)/r.getLength();
-						//System.out.println("carlist: "+carList.get(r).size() *8+ " length: "+ r.getLength());
 						double d = distribution * weightValueEmpirical;
 						double s = streetmap.getRoads().get(i).getAverageSpeed();						
 						int curRoadCount = 0;						
