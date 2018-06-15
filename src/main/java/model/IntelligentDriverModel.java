@@ -32,4 +32,30 @@ public class IntelligentDriverModel {
 
 		return free_term + interaction_term;
 	}
+
+	// GETTER AND SETTER
+
+	public int getMinHeadway() {
+		return min_headway;
+	}
+
+	public void setMinHeadway(int minHeadway) {
+		this.min_headway = min_headway;
+	}
+
+	public int getMinSpacing() {
+		return min_spacing;
+	}
+
+	public void setMinSpacing(int minSpacing) {
+		this.min_spacing = min_spacing;
+	}
+
+	public int getDelta() {
+		return delta;
+	}
+
+	public void setDelta(int delta) {
+		this.delta = delta;
+	}
 }

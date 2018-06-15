@@ -26,7 +26,7 @@ public class Truck extends Car {
 		// PHYSICS
 		this.vehicle_length = Integer.parseInt(props.getProperty("truck_vehicle_length"));
 		this.color = Color.ORANGE;
-
+		this.max_passengers = Integer.parseInt(props.getProperty("truck_max_passengers"));
 	}
 
 }

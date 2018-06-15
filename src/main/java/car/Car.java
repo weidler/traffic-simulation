@@ -1,7 +1,6 @@
 package car;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -33,7 +32,6 @@ public class Car {
 	private double angle;
 	private boolean in_traffic;
 
-
 	// DYNAMIC VALUES
 	protected double current_velocity;
 	protected double current_acceleration;
@@ -60,6 +58,7 @@ public class Car {
 	protected double tl_braking_distance;
 	protected double vehicle_length;
 	protected double favored_velocity;
+	protected int max_passengers;
 	protected CarType type = CarType.CAR;
 
 	// TIME VARIABLES
@@ -69,10 +68,13 @@ public class Car {
 	protected double endRoad;
 	protected int roadSwitch = 1;
 
+	// STATISTICS
 	protected double totalWait;
-	
 	protected double departure_time;
 	protected double arrival_time;
+
+	// PARAMETERS
+	protected int passengers;
 
 	public Car(ArrayList<Intersection> path, double departure_time, Properties props) {
 		this.path_over_intersections = path;
@@ -83,18 +85,15 @@ public class Car {
 			this.next_roads.add(inter.getRoadTo(path_over_intersections.get(next)));
 			next++;
 		}
-
 		this.next_roads.remove(0); // remove initial road, since its not next but current
 		this.passed_roads = new ArrayList<Road>();
-
 		this.current_origin_intersection = path.get(0);
 		this.current_destination_intersection = path.get(1);
+		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
+		this.lane = current_road.getLanes();
 
 		this.positionX = (double) current_origin_intersection.getXCoord();
 		this.positionY = (double) current_origin_intersection.getYCoord();
-
-		this.current_road = current_origin_intersection.getRoadTo(current_destination_intersection);
-		this.lane = current_road.getLanes();
 
 		this.current_velocity = 0;
 
@@ -103,14 +102,14 @@ public class Car {
 
 		this.model = new IntelligentDriverModel(Integer.parseInt(props.getProperty("min_headway")),
 				Integer.parseInt(props.getProperty("min_spacing")), Integer.parseInt(props.getProperty("IDM_delta")));
-
 		this.mobil = new MOBIL(this.model, 1);
 
 		this.reached_destination = false;
-		
 		this.in_traffic = false;
-		
 		this.departure_time = departure_time;
+
+		// DEFAULT VALUES
+		this.passengers = 1;
 	}
 
 	private void updateDesiredVelocity() {
@@ -128,6 +127,7 @@ public class Car {
 		this.sight_distance = Integer.parseInt(props.getProperty("sight_distance"));
 		this.tl_braking_distance = Integer.parseInt(props.getProperty("tl_breaking_distance"));
 		this.favored_velocity = Integer.parseInt(props.getProperty("favored_velocity"));
+		this.max_passengers = Integer.parseInt(props.getProperty("max_passengers"));
 		this.type = CarType.CAR;
 		
 		// PHYSICS / VIZ
@@ -339,7 +339,9 @@ public class Car {
 
 		if (!this.in_traffic) {
 			this.lane = this.current_road.getLanes();
-			if(this.mobil.isSafe(this, null, this.getLeadingCar(list_of_cars, lane), this.getFollowingCar(list_of_cars, lane))) {
+			Car following_car_on_new_lane = this.getFollowingCar(list_of_cars, lane);
+			Car leading_car_on_new_lane = this.getLeadingCar(list_of_cars, lane);
+			if(this.mobil.isSafe(this, null, leading_car_on_new_lane, following_car_on_new_lane)) {
 				this.in_traffic = true;
 			}
 		} else {

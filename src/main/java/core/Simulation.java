@@ -356,8 +356,8 @@ public class Simulation {
 		}
 
 		// ADD STATISTICS TO EXPERIMENT
-		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.cars.size(), this.current_run);
-		this.experiment.addAvgSpeed(total_velocity/this.cars.size(), this.current_run);
+		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
+		this.experiment.addAvgSpeed(total_velocity/this.getNumbCars(), this.current_run);
 		this.experiment.addNumbCars(this.getNumbCars(), this.current_run);
 		if (this.current_run == 0) this.experiment.addTimestep(this.current_time);
 	}
