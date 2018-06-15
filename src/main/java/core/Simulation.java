@@ -89,9 +89,13 @@ public class Simulation {
 		this.travel_times  = new ArrayList();
 
 		this.days_simulated = 0;
+		this.current_time = 0;
 
 		this.experiment = new Experiment();
 		this.applyExperimentalSettings();
+
+		this.avgTravel = 0;
+		this.travel_times.clear();
 	}
 
 	// GETTERS / SETTERS
@@ -148,7 +152,6 @@ public class Simulation {
 		Intersection destination_intersection = this.street_map.getIntersection(destination);
 		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
 				this.street_map, cars, "Empirical");
-
 
 		// create vehicle
 		Car random_car;
