@@ -64,6 +64,11 @@ public class Visuals extends JPanel {
 	private String highway_color = "#5c85d6";
 	private String dirtroad_color = "#cc9900";
 
+	private String residential_color = "#2bb53b";
+	private String mixed_color = "#28b586";
+	private String industrial_color = "#b59229";
+	private String commercial_color = "#2a9bb5";
+
 	public Visuals(Simulation simulation) {
 		this.simulation = simulation;
 		this.streetMap = this.simulation.getStreetMap();
@@ -166,6 +171,7 @@ public class Visuals extends JPanel {
 		tl_lines.put(Color.RED, new ArrayList<Line2D>());
 		tl_lines.put(Color.GREEN, new ArrayList<Line2D>());
 		HashMap<Road, Line2D> mid_lines = new HashMap<Road, Line2D>();
+		HashMap<Road, Polygon[]> zone_areas = new HashMap<Road, Polygon[]>();
 
 		// calculate drawing positions
 		for (int i = 0; i < roads.size(); i++) {
@@ -443,7 +449,47 @@ public class Visuals extends JPanel {
 			outer_lines.add(new Line2D.Double((int) (to_x_left) * zoomMultiplier + changeX,
 					(int) (to_y_left) * zoomMultiplier + changeY, (int) (from_x_left) * zoomMultiplier + changeX,
 					(int) (from_y_left) * zoomMultiplier + changeY));
-			
+
+			//road zone polygons
+			zone_areas.put(current_road, new Polygon[2]);
+			zone_areas.get(current_road)[0] = new Polygon();
+			zone_areas.get(current_road)[1] = new Polygon();
+
+			zone_areas.get(current_road)[0].addPoint(
+					(int) (to_x_right * zoomMultiplier + changeX),
+					(int) (to_y_right * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[0].addPoint(
+					(int) ((to_x_right - offset_x) * zoomMultiplier + changeX),
+					(int) ((to_y_right + offset_y) * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[0].addPoint(
+					(int) ((from_x_right - offset_x) * zoomMultiplier + changeX),
+					(int) ((from_y_right + offset_y) * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[0].addPoint(
+					(int) (from_x_right * zoomMultiplier + changeX),
+					(int) (from_y_right * zoomMultiplier + changeY)
+			);
+
+
+			zone_areas.get(current_road)[1].addPoint(
+					(int) (to_x_left * zoomMultiplier + changeX),
+					(int) (to_y_left * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[1].addPoint(
+					(int) ((to_x_left + offset_x) * zoomMultiplier + changeX),
+					(int) ((to_y_left - offset_y) * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[1].addPoint(
+					(int) ((from_x_left + offset_x) * zoomMultiplier + changeX),
+					(int) ((from_y_left - offset_y) * zoomMultiplier + changeY)
+			);
+			zone_areas.get(current_road)[1].addPoint(
+					(int) (from_x_left * zoomMultiplier + changeX),
+					(int) (from_y_left * zoomMultiplier + changeY)
+			);
+
 			// mid line
 			if (!current_road.isOneWay()) {
 				Line mid_line = new Line(current_road.getPointA(), current_road.getPointB());
@@ -544,6 +590,27 @@ public class Visuals extends JPanel {
 
 			g2.setStroke(defaultStroke);
 			intersectionSize = 30;
+		}
+
+		// DRAW HOUSE BLOCKS
+		for (Road r : zone_areas.keySet()) {
+			switch (r.getZoneType()) {
+				case MIXED:
+					g2.setColor(Color.decode(this.mixed_color));
+					break;
+				case RESIDENTIAL:
+					g2.setColor(Color.decode(this.residential_color));
+					break;
+				case COMMERCIAL:
+					g2.setColor(Color.decode(this.commercial_color));
+					break;
+				case INDUSTRIAL:
+					g2.setColor(Color.decode(this.industrial_color));
+					break;
+			}
+
+			g2.fill(zone_areas.get(r)[0]);
+			g2.fill(zone_areas.get(r)[1]);
 		}
 
 		// Draw asphalt

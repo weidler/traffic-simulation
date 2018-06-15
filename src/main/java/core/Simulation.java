@@ -1,7 +1,6 @@
 package core;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -11,17 +10,15 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import algorithms.AStar;
 import algorithms.AstarAdvanced;
-import algorithms.CoordinatedTrafficLights;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
 import experiment.Experiment;
 import graphical_interface.GraphicalInterface;
+import graphical_interface.PopulationPanel;
 import org.apache.commons.lang3.SystemUtils;
 import road.Road;
 import schedule.EmpiricalSchedule;
@@ -249,7 +246,7 @@ public class Simulation {
 			this.adjustVisualizationFrequency(delta_t);
 			this.total_calculation_time = 0;
 			int step = 0;
-			
+
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
@@ -264,8 +261,10 @@ public class Simulation {
 				// spawn new cars to the roads according to the schedule
 				for (Road r : this.street_map.getRoads()) {
 					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
-						if (r.getAvailabePopulation() > 0) this.addCarAtRoad(r);
-						else System.out.println("NO MORE PEOPLE HERE");
+						if (r.getAvailabePopulation() > 0) {
+							this.addCarAtRoad(r);
+							r.decrementAvailablePopulation();
+						}
 						simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
 					}
 				}
@@ -324,13 +323,16 @@ public class Simulation {
 
 				// update graphics and statistics
 				step++;
-				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
+				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) {
+					gui.redraw();
+					((PopulationPanel) gui.getPopulationPanel()).updateCharts();
+				}
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
 
 			System.out.println("YELLOW");
 			stop();
-			
+
 		});
 
 		th.start();

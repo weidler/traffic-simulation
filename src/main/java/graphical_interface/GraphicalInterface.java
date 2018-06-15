@@ -17,8 +17,6 @@ import datastructures.Intersection;
 import datastructures.StreetMap;
 import datatype.Point;
 import experiment.Experiment;
-import org.knowm.xchart.*;
-import org.knowm.xchart.style.Styler;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
@@ -45,8 +43,6 @@ import car.Car;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-
-import type.ZoneType;
 
 /**
  *
@@ -90,7 +86,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	private Border button_border = BorderFactory.createEmptyBorder();
 
 	private final Color menu_bg = Color.decode("#3a3a3a");
-	private final Color map_bg = Color.decode("#57af6b");
+	private final Color map_bg = Color.decode("#5e5d5d");
 	private final Color info_bg = Color.decode("#3a3a3a");
 	
 
@@ -139,7 +135,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 	protected ZoneType zone_type = ZoneType.RESIDENTIAL;
 	private Color contrast_font_color = Color.WHITE;
 
-
+	JPanel populationPanel;
 
 
 	/**
@@ -173,6 +169,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		infoPanel.setBorder(BorderFactory.createEmptyBorder());
 		infoPanel.setBackground(this.info_bg);
 		contentPane.add(infoPanel);
+
+		populationPanel = new PopulationPanel(streetMap);
 
 		// ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -641,58 +639,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel populationPanel = new JPanel();
-
-				ArrayList<Integer> road_ids = new ArrayList<Integer>();
-				ArrayList<Integer> populations = new ArrayList<Integer>();
-				HashMap<ZoneType, Integer> population_per_zone = new HashMap<ZoneType, Integer>();
-				for (ZoneType zone : ZoneType.values()) {
-					population_per_zone.put(zone, 0);
-				}
-
-				int i = 0;
-				for (Road r : streetMap.getRoads()) {
-					road_ids.add(i);
-					populations.add(r.getAvailabePopulation());
-					population_per_zone.put(r.getZoneType(), population_per_zone.get(r.getZoneType()) + 1);
-					i++;
-				}
-
-				// ROAD POPULATION CHART
-				CategoryChart population_chart = new CategoryChartBuilder()
-						.width(400)
-						.height(400)
-						.title("Population per Road")
-						.xAxisTitle("Road")
-						.yAxisTitle("Population")
-						.build();
-
-				population_chart.addSeries(
-						"Population",
-						road_ids,
-						populations
-				);
-
-				// ZONE POPULATION CHART
-				PieChart zone_population_chart = new PieChartBuilder()
-						.width(400)
-						.height(400)
-						.title("Population per Road")
-						.build();
-
-				for (ZoneType zone : ZoneType.values()) {
-					zone_population_chart.addSeries(zone.toString(), population_per_zone.get(zone));
-				}
-
-				population_chart.getStyler().setLegendVisible(false);
-				zone_population_chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
-				zone_population_chart.getStyler().setLegendLayout(Styler.LegendLayout.Vertical);
-
-				JPanel population_chart_panel = new XChartPanel(population_chart);
-				JPanel zone_population_chart_panel = new XChartPanel(zone_population_chart);
-
-				populationPanel.add(population_chart_panel);
-				populationPanel.add(zone_population_chart_panel);
+				populationPanel = new PopulationPanel(streetMap);
 				JOptionPane.showMessageDialog(null, populationPanel);
 			}
 		});
@@ -1206,5 +1153,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		// TODO Auto-generated method stub
 
 	}
+
+	public Object getPopulationPanel() {
+		return this.populationPanel;
+	}
+
 
 }

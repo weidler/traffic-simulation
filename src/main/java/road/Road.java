@@ -24,7 +24,7 @@ public class Road {
 	// STATISTICS
 	protected double avg;
 	protected ArrayList<Double> averageSpeeds = new ArrayList<Double>();// in kmh
-	protected int availabe_population;
+	protected int available_population;
 
 	// PARAMETERS
 	protected ZoneType zone_type = ZoneType.MIXED;
@@ -48,7 +48,7 @@ public class Road {
 		this.length = this.calcLength();
 
 		this.setTypeParameters();
-		this.availabe_population = (int) this.length * this.population_per_meter;
+		this.available_population = (int) this.length * this.population_per_meter;
 	}
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {
@@ -257,11 +257,11 @@ public class Road {
 	}
 
 	public int getAvailabePopulation() {
-		return availabe_population;
+		return available_population;
 	}
 
 	public void setAvailabePopulation(int availabe_population) {
-		this.availabe_population = availabe_population;
+		this.available_population = availabe_population;
 	}
 
 	public int getAllowedMaxSpeed() {
@@ -323,7 +323,11 @@ public class Road {
 	}
 
 	public void incrementAvailablePopulation() {
-		this.availabe_population++;
+		this.available_population++;
+	}
+
+	public void decrementAvailablePopulation() {
+		this.available_population--;
 	}
 
 	public ZoneType getZoneType() {
@@ -332,4 +336,6 @@ public class Road {
 	public void setZoneType(ZoneType t) {
 		zone_type = t;
 	}
+
+
 }
