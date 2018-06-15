@@ -25,7 +25,12 @@ public class Time {
 	public static double nanosecondsToSeconds(double nanoseconds) {
 		return nanoseconds / 1000000000;
 	}
-	
+
+	public static double millisecondsToSeconds(long milliseconds) {
+		return milliseconds / 1000000;
+	}
+
+
 	// REPRESENTATION
 	
 	public static String toSixtyMinuteFormat(double hours) {

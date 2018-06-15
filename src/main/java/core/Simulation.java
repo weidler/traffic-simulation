@@ -51,9 +51,9 @@ public class Simulation {
 	private Strategy strategy;
 	
 	private long start_time;
-	private boolean showCarInfo = true;
 	private boolean is_running;
 	private double current_time;
+	private long total_calculation_time;
 	private float simulated_seconds_per_real_second = 1;
 	private boolean full_speed = false;
 	private int visualization_frequency;
@@ -73,28 +73,28 @@ public class Simulation {
 
 	private int current_run;
 	private double avgTravel;
-	private ArrayList<Double> travel_times = new ArrayList();
+	private ArrayList<Double> travel_times;
 
 	public Simulation(StreetMap map, Properties props) {
 		this.props = props;
-
 		this.street_map = map;
+
+		initializeSimulationParameters();
+	}
+
+	private void initializeSimulationParameters() {
 		this.cars = new HashMap<Road, ArrayList<Car>>();
 		this.car_sink = new ArrayList<Car>();
 
-		this.is_running = false;
-		this.current_time = 0;
-		this.realistic_time_in_seconds = 0;
+		this.travel_times  = new ArrayList();
+
+		this.days_simulated = 0;
 
 		this.experiment = new Experiment();
 		this.applyExperimentalSettings();
 	}
 
 	// GETTERS / SETTERS
-	public void setCarInfo() {
-		showCarInfo = !showCarInfo;
-	}
-
 	public void setGUI(GraphicalInterface gui) {
 		this.gui = gui;
 	}
@@ -195,6 +195,7 @@ public class Simulation {
 
 	public void applyExperimentalSettings() {
 		int phaseLength = experiment.getPhaseLength();
+
 		// Arrival Distribution
 		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
 			this.simulation_schedule = new EmpiricalSchedule(this.street_map, this.experiment.getIaTime(), "data/test.json");
@@ -208,20 +209,12 @@ public class Simulation {
 		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(phaseLength, street_map);
 		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
-
 			this.strategy = new WeightedCycling(phaseLength, street_map);
-
-		}
-		else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED)
-		{
+		} else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED) {
 			this.strategy = new Coordinated(phaseLength, street_map);
-		}
-		else if(this.experiment.getControlStrategy() == type.Strategy.WAITING)
-		{
+		} else if(this.experiment.getControlStrategy() == type.Strategy.WAITING) {
 			this.strategy = new WaitingCycling(phaseLength, street_map);
-		}
-		else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
-
+		} else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(phaseLength, street_map);
 		} else {
 			this.strategy = new BasicCycling(phaseLength, street_map);
@@ -251,9 +244,8 @@ public class Simulation {
 
 			double delta_t = 0.05; // in seconds
 			this.adjustVisualizationFrequency(delta_t);
-			long total_calculation_time = 0;
+			this.total_calculation_time = 0;
 			int step = 0;
-			int resettable_step = 0;
 			
 			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
@@ -314,10 +306,10 @@ public class Simulation {
 				}
 
 				// Wait for time step to be over
+				double ns_used = (System.nanoTime() - start_time);
+				total_calculation_time += ns_used;
 				if (!full_speed) {
 					double ns_to_wait = Time.secondsToNanoseconds(delta_t/simulated_seconds_per_real_second);
-					double ns_used = (System.nanoTime() - start_time);
-					total_calculation_time += ns_used;
 					try {
 						TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
 					} catch (InterruptedException e) {
@@ -329,11 +321,11 @@ public class Simulation {
 
 				// update graphics and statistics
 				step++;
-				resettable_step++;
 				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) gui.redraw();
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
 
+			System.out.println("YELLOW");
 			stop();
 			
 		});
@@ -375,6 +367,7 @@ public class Simulation {
 			travel_times.add(travel_time);
 			fractional_waiting_times.add(c.getTotalWaitingTime() / travel_time);
 		}
+
 		avgTravel = Statistics.mean(travel_times);
 		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
@@ -446,6 +439,7 @@ public class Simulation {
 	}
 
 	public void stop() {
+		System.out.println("HELLO");
 		if (is_running) {
 			this.is_running = false;
 
@@ -461,12 +455,12 @@ public class Simulation {
 			}
 
 			this.reportStatistics();
+			System.out.println("Calculation Time: " + Time.nanosecondsToSeconds(this.total_calculation_time) + " seconds (without visualization delay)");
 		}
 	}
 
 	public void reset() {
-		this.cars.clear();
-		this.car_sink.clear();
+		initializeSimulationParameters();
 	}
 
 	public double getRealisticTime() {

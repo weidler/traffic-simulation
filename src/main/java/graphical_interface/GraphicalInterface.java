@@ -229,11 +229,8 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 		menuPanel.setForeground(this.contrast_font_color );
 
-		// TITLE
-
-
 		// BUTTONS
-		JButton clearButton = new JButton("Clear");
+		JButton clearButton = new JButton("Reset");
 		clearButton.setLocation(button_x, this.calculateInMenuYPosition(0));
 		clearButton.setUI(new CriticalButtonUI());
 		clearButton.setBorder(this.button_border);
@@ -243,26 +240,10 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				clearMap();
+				reset();
 				simulation.stop();
 			}
 		});
-
-//		JButton addCar = new JButton("add car");
-//		addCar.setBorder(this.button_border);
-//		addCar.setUI(new DefaultButtonUI());
-//		addCar.setBounds(button_x, this.calculateInMenuYPosition(4), button_width, button_height);
-//		menuPanel.add(addCar);
-//		addCar.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				if (!simulation.isRunning() ) {// && !selected) {
-//					simulation.addRandomCar();
-//					repaint();
-//				}
-//			}
-//		});
 
 		JSlider slider = new JSlider();
 		slider.setBounds(button_x, this.calculateInMenuYPosition(3), button_width, button_height);
@@ -281,7 +262,6 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				simulation.start();
-
 			}
 		});
 
@@ -409,7 +389,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 					// JSON from file to Object
 					try {
-						clearMap();
+						reset();
 						Scanner sc = new Scanner(file);
 						sc.useDelimiter(",");
 						String next = sc.next();
@@ -726,7 +706,7 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 		this.info_width = this.map_width;
 	}
 
-	public void clearMap() {
+	public void reset() {
 		simulation.reset();
 		streetMap.clearMap();
 		visuals.resetZoomMultiplier();

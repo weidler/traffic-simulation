@@ -610,7 +610,7 @@ public class Visuals extends JPanel {
 		// is common practice
 		for (ArrayList<Car> cars: simulation.getCars().values()) {
 			for (Car c : new ArrayList<Car>(cars)) {
-				if (c != null && !c.inTraffic() && !c.reachedDestination()) continue;
+				if ((c != null && !c.inTraffic() && !c.reachedDestination()) || c == null) continue;
 
 				c.calculateOffset(c.getCurrentOriginIntersection(), c.getCurrentDestinationIntersection(), this.laneSize);
 
