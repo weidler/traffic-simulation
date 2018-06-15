@@ -95,7 +95,7 @@ public class Road {
 
 	protected void setTypeParameters() {
 		this.allowed_max_speed = 50;
-		this.population_per_meter = 10;
+		this.population_per_meter = 1;
 		this.road_type = RoadType.ROAD;
 	}
 

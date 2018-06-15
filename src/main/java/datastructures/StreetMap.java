@@ -176,7 +176,7 @@ public class StreetMap {
 				if (road.getRoadType() == RoadType.HIGHWAY) {
 					new_road_part_a = new Highway(int_a, new_intersection, this, road.getLanes());
 					new_road_part_b = new Highway(int_b, new_intersection, this, road.getLanes());
-				} else if (road.getRoadType() == RoadType.HIGHWAY) {
+				} else if (road.getRoadType() == RoadType.DIRT_ROAD) {
 					new_road_part_a = new DirtRoad(int_a, new_intersection, this, road.getLanes());
 					new_road_part_b = new DirtRoad(int_b, new_intersection, this, road.getLanes());
 				}
@@ -185,7 +185,7 @@ public class StreetMap {
 						this, crossed_road.getLanes());
 				Road old_road_part_b = new Road(crossed_road.getIntersections()[1], new_intersection,
 						this, crossed_road.getLanes());
-				if (road.getRoadType() == RoadType.DIRT_ROAD) {
+				if (road.getRoadType() == RoadType.HIGHWAY) {
 					old_road_part_a = new Highway(int_a, new_intersection, this, crossed_road.getLanes());
 					old_road_part_b = new Highway(int_b, new_intersection, this, crossed_road.getLanes());
 				} else if (road.getRoadType() == RoadType.DIRT_ROAD) {

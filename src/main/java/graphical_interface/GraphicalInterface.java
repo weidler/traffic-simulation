@@ -7,8 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,6 +17,8 @@ import datastructures.Intersection;
 import datastructures.StreetMap;
 import datatype.Point;
 import experiment.Experiment;
+import org.knowm.xchart.*;
+import org.knowm.xchart.style.Styler;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
@@ -43,6 +44,8 @@ import car.Car;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
+import type.ZoneType;
 
 /**
  *
@@ -578,6 +581,72 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 			}
 		});
 
+		JButton populationPopUpButton = new JButton("Show Population Info");
+		populationPopUpButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
+		populationPopUpButton.setUI(new DefaultButtonUI());
+		populationPopUpButton.setBorder(this.button_border);
+		menuPanel.add(populationPopUpButton);
+		populationPopUpButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel populationPanel = new JPanel();
+
+				ArrayList<Integer> road_ids = new ArrayList<Integer>();
+				ArrayList<Integer> populations = new ArrayList<Integer>();
+				HashMap<ZoneType, Integer> population_per_zone = new HashMap<ZoneType, Integer>();
+				for (ZoneType zone : ZoneType.values()) {
+					population_per_zone.put(zone, 0);
+				}
+
+				int i = 0;
+				for (Road r : streetMap.getRoads()) {
+					road_ids.add(i);
+					populations.add(r.getAvailabePopulation());
+					population_per_zone.put(r.getZoneType(), population_per_zone.get(r.getZoneType()) + 1);
+					i++;
+				}
+
+				// ROAD POPULATION CHART
+				CategoryChart population_chart = new CategoryChartBuilder()
+						.width(400)
+						.height(400)
+						.title("Population per Road")
+						.xAxisTitle("Road")
+						.yAxisTitle("Population")
+						.build();
+
+				population_chart.addSeries(
+						"Population",
+						road_ids,
+						populations
+				);
+
+				// ZONE POPULATION CHART
+				PieChart zone_population_chart = new PieChartBuilder()
+						.width(400)
+						.height(400)
+						.title("Population per Road")
+						.build();
+
+				for (ZoneType zone : ZoneType.values()) {
+					zone_population_chart.addSeries(zone.toString(), population_per_zone.get(zone));
+				}
+
+				population_chart.getStyler().setLegendVisible(false);
+				zone_population_chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
+				zone_population_chart.getStyler().setLegendLayout(Styler.LegendLayout.Vertical);
+
+				JPanel population_chart_panel = new XChartPanel(population_chart);
+				JPanel zone_population_chart_panel = new XChartPanel(zone_population_chart);
+
+				populationPanel.add(population_chart_panel);
+				populationPanel.add(zone_population_chart_panel);
+				JOptionPane.showMessageDialog(null, populationPanel);
+			}
+		});
+
+
 		JButton experimentButton = new JButton("Experiment");
 		experimentButton.setBounds(button_x, this.calculateInMenuYPosition(8), button_width, button_height);
 		experimentButton.setUI(new DefaultButtonUI());
@@ -587,33 +656,29 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-
-
-				String[] strateyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
-
+				String[] strategyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
 				String[] scheduleList = { "empirical", "poisson", "gaussian"};
 
-				strategy = new JComboBox<>(strateyList);
+				strategy = new JComboBox<>(strategyList);
 				schedule = new JComboBox<>(scheduleList);
 
 				JPanel myPanel = new JPanel();
-				myPanel.add(new JLabel("duration in days:"));
+				myPanel.add(new JLabel("Duration in Days:"));
 				duration.setText("1");
 				myPanel.add(duration);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Inter arrival time thing:"));
+				myPanel.add(new JLabel("Inter Arrival Time:"));
 				inter.setText("10");
 				myPanel.add(inter);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("strategy:"));
+				myPanel.add(new JLabel("Control Strategy:"));
 				myPanel.add(strategy);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("phase length:"));
+				myPanel.add(new JLabel("Phase Length:"));
 				phaseLength.setText("5");
 				myPanel.add(phaseLength);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("schedule:"));
+				myPanel.add(new JLabel("Schedule:"));
 				myPanel.add(schedule);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				visualize.setSelected(true);
@@ -673,11 +738,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 							break;
 					}
 
-					Experiment exp = new Experiment(arrival_schedule, control_strategy,
-							Integer.parseInt(duration.getText()), visualize.isSelected(), Integer.parseInt(inter.getText()),Integer.parseInt(phaseLength.getText()));
-					
-					
-					
+					Experiment exp = new Experiment(arrival_schedule,
+							control_strategy,
+							Integer.parseInt(duration.getText()),
+							visualize.isSelected(),
+							Integer.parseInt(inter.getText()),
+							Integer.parseInt(phaseLength.getText())
+					);
+
 					simulation.setExperiment(exp);
 
 				}
