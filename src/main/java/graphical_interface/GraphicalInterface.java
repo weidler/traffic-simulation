@@ -326,36 +326,14 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				count++;
-				streetMap.toString();
-				BufferedWriter bw = null;
-				FileWriter fw = null;
-				
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("file name: "));
-				fileName.setText("streetMap");
+				fileName.setText("new_map");
 				myPanel.add(fileName);
-				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter a Map Name",
 						JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-					File f = new File("./savefiles/" + fileName.getText() + ".txt");				
-					try {
-						while (f.exists() && !f.isDirectory()) {
-							count++;
-							f = new File("./savefiles/streetmap" + count + ".txt");
-						}
-	
-						fw = new FileWriter(f);
-						bw = new BufferedWriter(fw);
-						bw.write(streetMap.toString());
-						bw.close();
-						fw.close();
-						
-						System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-				}
+
+				streetMap.save(fileName.getText());
 			}
 		});
 
@@ -373,74 +351,9 @@ public class GraphicalInterface extends JFrame implements ComponentListener{
 				int returnVal = fc.showOpenDialog(drawPanel);
 				File file = fc.getSelectedFile();
 				if (file != null) {
-
-					// JSON from file to Object
-					try {
-						reset();
-						Scanner sc = new Scanner(file);
-						sc.useDelimiter(",");
-						String next = sc.next();
-						Boolean change = false;
-						while (!next.equals("p")) {
-
-							if (next.equals("#")) {
-								change = true;
-								next = sc.next();
-							} else if (!change) {
-								int x = Integer.parseInt(next);
-								next = sc.next();
-								int y = Integer.parseInt(next);
-								streetMap.addIntersection(new Intersection(x, y));
-								next = sc.next();
-							} else {
-								int x1 = Integer.parseInt(next);
-								next = sc.next();
-								int y1 = Integer.parseInt(next);
-								next = sc.next();
-								int x2 = Integer.parseInt(next);
-								next = sc.next();
-								int y2 = Integer.parseInt(next);
-
-								Intersection start = streetMap.getIntersectionByCoordinates(x1, y1);
-								Intersection end = streetMap.getIntersectionByCoordinates(x2, y2);
-
-								Road road = new Road(start, end);
-								road.setStreetMap(streetMap);
-								road.setRoadType(sc.next());
-								road.setLanes(Integer.parseInt(sc.next()));
-								next = sc.next();
-								if(next.equals("true"))
-								{
-									road.toggleDirected();
-								}
-								next = sc.next();
-								if(next.equals("RESIDENTIAL"))
-								{
-									road.setZoneType(ZoneType.RESIDENTIAL);
-								}
-								else if(next.equals("MIXED"))
-								{
-									road.setZoneType(ZoneType.MIXED);
-								}
-								else if(next.equals("COMMERCIAL"))
-								{
-									road.setZoneType(ZoneType.COMMERCIAL);
-								}
-								else if(next.equals("INDUSTRIAL"))
-								{
-									road.setZoneType(ZoneType.INDUSTRIAL);
-								}
-								streetMap.addRoad(road);
-								next = sc.next();
-								
-							}
-						}
-						System.out.println("loaded");
-						repaint();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					reset();
+					streetMap.load(file);
+					repaint();
 				}
 			}
 		});

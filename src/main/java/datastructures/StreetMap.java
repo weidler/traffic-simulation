@@ -1,7 +1,12 @@
 package datastructures;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import car.Car;
 import geometry.Line;
@@ -10,7 +15,10 @@ import road.DirtRoad;
 import road.Highway;
 import road.Road;
 import type.RoadType;
+import type.ZoneType;
 import util.Geometry;
+
+import javax.swing.*;
 
 /**
  * @author weidler
@@ -284,6 +292,32 @@ public class StreetMap {
 		this.roads.clear();
 	}
 
+	// SAVE / LOAD
+	public void save(String file_name) {
+
+		BufferedWriter bw;
+		FileWriter fw;
+		File f = new File("./savefiles/" + file_name + ".txt");
+
+		try {
+			int count = 1;
+			while (f.exists() && !f.isDirectory()) {
+				count++;
+				f = new File("./savefiles/streetmap" + count + ".txt");
+			}
+
+			fw = new FileWriter(f);
+			bw = new BufferedWriter(fw);
+			bw.write(this.toString());
+			bw.close();
+			fw.close();
+
+			System.out.println("saved: " + "./savefiles/streetmap" + count + ".txt");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	// META INFORMATION
 
 	public int roadCount() {
@@ -343,5 +377,72 @@ public class StreetMap {
 				b.getPointA(),
 				b.getPointB()
 		);
+	}
+
+	public void load(File file) {
+		// JSON from file to Object
+		try {
+			Scanner sc = new Scanner(file);
+			sc.useDelimiter(",");
+			String next = sc.next();
+			Boolean change = false;
+			while (!next.equals("p")) {
+
+				if (next.equals("#")) {
+					change = true;
+					next = sc.next();
+				} else if (!change) {
+					int x = Integer.parseInt(next);
+					next = sc.next();
+					int y = Integer.parseInt(next);
+					this.addIntersection(new Intersection(x, y));
+					next = sc.next();
+				} else {
+					int x1 = Integer.parseInt(next);
+					next = sc.next();
+					int y1 = Integer.parseInt(next);
+					next = sc.next();
+					int x2 = Integer.parseInt(next);
+					next = sc.next();
+					int y2 = Integer.parseInt(next);
+
+					Intersection start = this.getIntersectionByCoordinates(x1, y1);
+					Intersection end = this.getIntersectionByCoordinates(x2, y2);
+
+					Road road = new Road(start, end);
+					road.setStreetMap(this);
+					road.setRoadType(sc.next());
+					road.setLanes(Integer.parseInt(sc.next()));
+					next = sc.next();
+					if(next.equals("true"))
+					{
+						road.toggleDirected();
+					}
+					next = sc.next();
+					if(next.equals("RESIDENTIAL"))
+					{
+						road.setZoneType(ZoneType.RESIDENTIAL);
+					}
+					else if(next.equals("MIXED"))
+					{
+						road.setZoneType(ZoneType.MIXED);
+					}
+					else if(next.equals("COMMERCIAL"))
+					{
+						road.setZoneType(ZoneType.COMMERCIAL);
+					}
+					else if(next.equals("INDUSTRIAL"))
+					{
+						road.setZoneType(ZoneType.INDUSTRIAL);
+					}
+					this.addRoad(road);
+					next = sc.next();
+
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

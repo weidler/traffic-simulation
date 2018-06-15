@@ -114,7 +114,6 @@ public class PopulationPanel extends JPanel {
 		);
 
 		for (ZoneType zone : ZoneType.values()) {
-			System.out.println(zone.toString() + " " + population_per_zone.get(zone));
 			zone_population_chart.updatePieSeries(zone.toString(), population_per_zone.get(zone));
 		}
 
