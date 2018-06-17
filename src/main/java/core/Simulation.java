@@ -69,6 +69,10 @@ public class Simulation {
 		this.props = props;
 		this.street_map = map;
 
+		this.current_experiment = new Experiment();
+		this.experiment_wrapper = new ExperimentWrapper();
+		this.experiment_wrapper.addExperiment(current_experiment);
+
 		initializeSimulationParameters();
 	}
 
@@ -82,13 +86,10 @@ public class Simulation {
 		this.days_simulated = 0;
 		this.current_time = 0;
 
-		this.current_experiment = new Experiment();
-		this.experiment_wrapper = new ExperimentWrapper();
-		this.experiment_wrapper.addExperiment(current_experiment);
-		this.applyExperimentalSettings();
-
 		this.avgTravel = 0;
 		this.travel_times.clear();
+
+		this.applyExperimentalSettings();
 	}
 
 	// GETTERS / SETTERS
@@ -226,7 +227,6 @@ public class Simulation {
 
 		this.current_experiment = this.experiment_wrapper.currentExperiment();
 		this.applyExperimentalSettings();
-		System.out.println(this.simulation_schedule);
 
 		if (this.is_running) {
 			System.out.println("Already Running.");
@@ -328,15 +328,16 @@ public class Simulation {
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
 
-			if (!experiment_wrapper.isAllFinished()) {
-				current_experiment.save();
+
+			current_experiment.save();
+			this.experiment_wrapper.finishExperiment(current_experiment);
+			current_experiment = this.experiment_wrapper.currentExperiment();
+			stop();
+
+			if (!experiment_wrapper.isAllFinished() && !(current_experiment == null)) {
 				reset();
-				stop();
 				start();
-				this.experiment_wrapper.finishExperiment(this.current_experiment);
 			} else {
-				stop();
-				this.experiment_wrapper.finishExperiment(this.current_experiment);
 				this.experiment_wrapper.createFinalReport();
 			}
 		});
@@ -407,6 +408,14 @@ public class Simulation {
 	}
 
 	public void reset() {
+		initializeSimulationParameters();
+	}
+
+	public void fullReset() {
+		this.current_experiment = new Experiment();
+		this.experiment_wrapper = new ExperimentWrapper();
+		this.experiment_wrapper.addExperiment(current_experiment);
+
 		initializeSimulationParameters();
 	}
 

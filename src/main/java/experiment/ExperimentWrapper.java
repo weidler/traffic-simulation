@@ -14,6 +14,7 @@ public class ExperimentWrapper {
 
 	public Experiment finishExperiment(Experiment exp) {
 		this.experiments.remove(exp);
+		System.out.println(this.experiments.size());
 		this.finished_experiments.add(exp);
 
 		return exp;
@@ -68,5 +69,9 @@ public class ExperimentWrapper {
 
 	public Integer currentExperimentID() {
 		return finished_experiments.size() + 1;
+	}
+
+	public int remainingExperiments() {
+		return this.experiments.size();
 	}
 }

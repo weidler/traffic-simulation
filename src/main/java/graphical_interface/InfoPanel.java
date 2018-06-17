@@ -31,7 +31,9 @@ public class InfoPanel extends JPanel {
         g.setColor(Color.WHITE);
         
         String time_string = Time.toSixtyMinuteFormat(Time.secondsToHours(sim.getRealisticTime()));
-        String day_string = "Day " + Integer.toString(sim.getCurrentDay() + 1) + " of " +  sim.getExperimentWrapper().currentExperiment().getSimulationLengthInDays() + ", " + sim.getNumbCars() + " cars";
+        int max_days = 1;
+        if (sim.getExperimentWrapper().currentExperiment() != null) sim.getExperimentWrapper().currentExperiment().getSimulationLengthInDays();
+        String day_string = "Day " + Integer.toString(sim.getCurrentDay() + 1) + " of " +  max_days + ", " + sim.getNumbCars() + " cars";
         
         int y_diff = 10;
         

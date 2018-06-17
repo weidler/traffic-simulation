@@ -34,7 +34,7 @@ public class ExperimenterPanel extends JPanel {
 		this.simulation = simulation;
 
 		experiments_panel = new JPanel();
-		experiments_panel.setLayout(new BoxLayout(experiments_panel, BoxLayout.PAGE_AXIS));
+		experiments_panel.setLayout(new GridBagLayout());
 		JScrollPane scroller = new JScrollPane(
 				experiments_panel,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -158,11 +158,31 @@ public class ExperimenterPanel extends JPanel {
 	private void drawExperimentBars() {
 		experiments_panel.removeAll();
 
+		GridBagConstraints gbc;
+		int pos = 0;
 		ArrayList<ExperimentBar> bars = new ArrayList<>();
 		for (Experiment exp : this.simulation.getExperimentWrapper().getAllExperiments()) {
 			ExperimentBar bar = new ExperimentBar(exp);
 			bar.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
-			experiments_panel.add(bar);
+
+			gbc = new GridBagConstraints();
+			gbc.anchor = GridBagConstraints.NORTH;
+			gbc.gridx = 0;
+			gbc.gridy = pos;
+			gbc.weightx = 1;
+			experiments_panel.add(bar, gbc);
+
+			pos++;
 		}
+
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.SOUTH;
+		gbc.gridx = 0;
+		gbc.gridy = pos;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		JPanel spacer = new JPanel();
+		spacer.setBackground(null);
+		experiments_panel.add(spacer, gbc);
 	}
 }

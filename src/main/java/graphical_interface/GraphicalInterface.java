@@ -655,7 +655,7 @@ public class GraphicalInterface extends JFrame {
 	}
 
 	public void reset() {
-		simulation.reset();
+		simulation.fullReset();
 		streetMap.clearMap();
 		visuals.resetZoomMultiplier();
 		repaint();
