@@ -85,7 +85,6 @@ public class Road {
 		double offsetAngle = angle + Math.PI / 2;
 		if (offsetAngle > Math.PI * 2) offsetAngle -= Math.PI * 2;
 		for (int i = 0; i < this.lanes; i++) {
-			System.out.println("lane: " + i);
 			this.offsetX.add((int) (Math.round(Math.cos(offsetAngle) * 4 * i) - 4));
 			this.offsetY.add((int) (Math.round(Math.sin(offsetAngle) * 4 * i) - 4));
 		}

@@ -1,9 +1,6 @@
 package graphical_interface;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 
 import javax.swing.JPanel;
 
@@ -27,11 +24,14 @@ public class InfoPanel extends JPanel {
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         g.setColor(Color.WHITE);
         
         String time_string = Time.toSixtyMinuteFormat(Time.secondsToHours(sim.getRealisticTime()));
-        String day_string = "Day " + Integer.toString(sim.getCurrentDay()) + ", " + sim.getNumbCars() + " cars";
+        String day_string = "Day " + Integer.toString(sim.getCurrentDay() + 1) + " of " +  sim.getExperimentWrapper().currentExperiment().getSimulationLengthInDays() + ", " + sim.getNumbCars() + " cars";
         
         int y_diff = 10;
         

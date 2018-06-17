@@ -1,9 +1,17 @@
 package experiment;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.SystemUtils;
 import type.Distribution;
 import type.Strategy;
+import util.Time;
+
+import javax.swing.*;
 
 public class Experiment {
 
@@ -14,9 +22,11 @@ public class Experiment {
 	private int iaTime;
 	private int phaseLength;
 
-
 	private boolean vizualise;
 	private int numb_runs;
+
+
+	private String name;
 
 	/* CONTAINERS FOR OVER TIME STATISTICS */
 	private ArrayList<ArrayList<Double>> fractions_of_waiting_cars = new ArrayList<ArrayList<Double>>();
@@ -84,6 +94,67 @@ public class Experiment {
 		avg_speed.add(new ArrayList<Double>());
 		numb_cars.add(new ArrayList<Integer>());
 	}
+
+	/* ACTIONS */
+	public void save() {
+		if (this.name != null && this.name != "") {
+			JPanel thisPanel = new JPanel();
+			JTextField name_field = new JTextField(5);
+			thisPanel.add(new JLabel("File name:"));
+			thisPanel.add(name_field);
+
+			int result = JOptionPane.showConfirmDialog(null, thisPanel, "Please Enter a File Name", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				this.name = name_field.getText();
+			}
+		}
+
+		// WRITE CSV
+		PrintWriter report_writer;
+		try {
+			report_writer = new PrintWriter("./simulation-reports/csv-data/" + name + ".csv", "UTF-8");
+
+			String sep = ";";
+			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
+			for (int i = 0; i < this.getMeasurementTimestamps().size(); i++) {
+				report_writer.println(
+						this.getMeasurementTimestamps().get(i) + sep +
+								this.getAvgSpeed().get(0).get(i) + sep +
+								this.getFractionsOfWaitingCars().get(0).get(i) + sep +
+								this.getNumbCars().get(0).get(i)
+				);
+			}
+
+			report_writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Create Graphical Report
+		String command = "simulation-reports/create_report.sh " + name;
+		Process p, q;
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+
+
+			if (SystemUtils.IS_OS_LINUX) {
+				System.out.println("LINUX IS LIFE");
+				q = Runtime.getRuntime().exec("xdg-open simulation-reports/html-reports/" + name + ".html");
+				q.waitFor();
+			} else if (SystemUtils.IS_OS_WINDOWS) {
+				q = Runtime.getRuntime().exec("start simulation-reports/html-reports/" + name + ".html");
+				q.waitFor();
+			} else {
+				System.out.println("OS NOT SUPPORTED");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/* SETTERS AND GETTERS */
 	public int getPhaseLength()
@@ -141,11 +212,20 @@ public class Experiment {
 	public ArrayList<ArrayList<Integer>> getNumbCars() {
 		return numb_cars;
 	}
+
 	public int getIaTime() {
 		return iaTime;
 	}
 
 	public void setIaTime(int iaTime) {
 		this.iaTime = iaTime;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

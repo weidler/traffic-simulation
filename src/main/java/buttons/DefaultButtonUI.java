@@ -20,10 +20,10 @@ public class DefaultButtonUI extends BasicButtonUI implements MouseListener {
     protected Color     normalColor  = Color.decode("#5378b2");
     protected Color     pressedColor = Color.decode("#5378b2");
     protected Color     btnFontColor = Color.WHITE;
+
     protected ImageIcon normalIcon;
     protected ImageIcon hoverIcon;
     protected ImageIcon pressedIcon;
-    protected Font      btnFont;
     
     public DefaultButtonUI() {
 		super();
@@ -54,7 +54,6 @@ public class DefaultButtonUI extends BasicButtonUI implements MouseListener {
         btn.setIcon(this.normalIcon);
         btn.setBackground(this.normalColor);
         btn.setForeground(this.btnFontColor);
-        btn.setFont(this.btnFont);
         btn.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 

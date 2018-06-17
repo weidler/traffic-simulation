@@ -1,25 +1,19 @@
 package core;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import algorithms.AstarAdvanced;
 import car.Car;
 import car.Truck;
 import datastructures.StreetMap;
 import experiment.Experiment;
+import experiment.ExperimentWrapper;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.PopulationPanel;
-import org.apache.commons.lang3.SystemUtils;
 import road.Road;
 import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
@@ -58,9 +52,8 @@ public class Simulation {
 	private double realistic_time_in_seconds;
 	private int days_simulated;
 	
-	private Experiment experiment;
-	
-	private String name;
+	private Experiment current_experiment;
+	private ExperimentWrapper experiment_wrapper;
 
 	// PARAMETERS
 	private double truck_rate = 0.2;
@@ -85,10 +78,13 @@ public class Simulation {
 
 		this.travel_times  = new ArrayList();
 
+		this.current_run = 0;
 		this.days_simulated = 0;
 		this.current_time = 0;
 
-		this.experiment = new Experiment();
+		this.current_experiment = new Experiment();
+		this.experiment_wrapper = new ExperimentWrapper();
+		this.experiment_wrapper.addExperiment(current_experiment);
 		this.applyExperimentalSettings();
 
 		this.avgTravel = 0;
@@ -112,8 +108,8 @@ public class Simulation {
 		return this.street_map;
 	}
 
-	public void setExperiment(Experiment exp) {
-		this.experiment = exp;
+	public void setCurrentExperiment(Experiment exp) {
+		this.current_experiment = exp;
 	}
 	public long getStartTime() {
 		return this.start_time;
@@ -194,27 +190,27 @@ public class Simulation {
 	}
 
 	public void applyExperimentalSettings() {
-		int phaseLength = experiment.getPhaseLength();
+		int phaseLength = current_experiment.getPhaseLength();
 
 		// Arrival Distribution
-		if (this.experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
-			this.simulation_schedule = new EmpiricalSchedule(this.street_map, this.experiment.getIaTime(), "data/test.json");
-		} else if (this.experiment.getArrivalGenerator() == Distribution.POISSON) {
+		if (this.current_experiment.getArrivalGenerator() == Distribution.EMPIRICAL) {
+			this.simulation_schedule = new EmpiricalSchedule(this.street_map, this.current_experiment.getIaTime(), "data/test.json");
+		} else if (this.current_experiment.getArrivalGenerator() == Distribution.POISSON) {
 			this.simulation_schedule = new PoissonSchedule(this.street_map, 50);
-		} else if (this.experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
+		} else if (this.current_experiment.getArrivalGenerator() == Distribution.GAUSSIAN) {
 			this.simulation_schedule = new GaussianSchedule(this.street_map, 50, 5);
 		}
 
 		// Strategy
-		if (this.experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
+		if (this.current_experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
 			this.strategy = new BasicCycling(phaseLength, street_map);
-		} else if(this.experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
+		} else if(this.current_experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
 			this.strategy = new WeightedCycling(phaseLength, street_map);
-		} else if(this.experiment.getControlStrategy() == type.Strategy.COORDINATED) {
+		} else if(this.current_experiment.getControlStrategy() == type.Strategy.COORDINATED) {
 			this.strategy = new Coordinated(phaseLength, street_map);
-		} else if(this.experiment.getControlStrategy() == type.Strategy.WAITING) {
+		} else if(this.current_experiment.getControlStrategy() == type.Strategy.WAITING) {
 			this.strategy = new WaitingCycling(phaseLength, street_map);
-		} else if (this.experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
+		} else if (this.current_experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(phaseLength, street_map);
 		} else {
 			this.strategy = new BasicCycling(phaseLength, street_map);
@@ -227,6 +223,8 @@ public class Simulation {
 
 		this.updateCarListToMap();
 		this.simulation_schedule.updateToMap();
+
+		this.current_experiment = this.experiment_wrapper.currentExperiment();
 		this.applyExperimentalSettings();
 		System.out.println(this.simulation_schedule);
 
@@ -247,7 +245,7 @@ public class Simulation {
 			this.total_calculation_time = 0;
 			int step = 0;
 
-			while (this.is_running && days_simulated < this.experiment.getSimulationLengthInDays()) {
+			while (this.is_running && days_simulated < this.current_experiment.getSimulationLengthInDays()) {
 				start_time = System.nanoTime();
 				street_map.setCurrentTime(current_time);
 
@@ -323,16 +321,24 @@ public class Simulation {
 
 				// update graphics and statistics
 				step++;
-				if (step % this.visualization_frequency == 0 && this.experiment.isVizualise()) {
+				if (step % this.visualization_frequency == 0 && this.current_experiment.isVizualise()) {
 					gui.redraw();
 					((PopulationPanel) gui.getPopulationPanel()).updateCharts();
 				}
 				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 			}
 
-			System.out.println("YELLOW");
-			stop();
-
+			if (!experiment_wrapper.isAllFinished()) {
+				current_experiment.save();
+				reset();
+				stop();
+				start();
+				this.experiment_wrapper.finishExperiment(this.current_experiment);
+			} else {
+				stop();
+				this.experiment_wrapper.finishExperiment(this.current_experiment);
+				this.experiment_wrapper.createFinalReport();
+			}
 		});
 
 		th.start();
@@ -354,10 +360,10 @@ public class Simulation {
 		}
 
 		// ADD STATISTICS TO EXPERIMENT
-		this.experiment.addNumberOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
-		this.experiment.addAvgSpeed(total_velocity/this.getNumbCars(), this.current_run);
-		this.experiment.addNumbCars(this.getNumbCars(), this.current_run);
-		if (this.current_run == 0) this.experiment.addTimestep(this.current_time);
+		this.current_experiment.addNumberOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
+		this.current_experiment.addAvgSpeed(total_velocity/this.getNumbCars(), this.current_run);
+		this.current_experiment.addNumbCars(this.getNumbCars(), this.current_run);
+		if (this.current_run == 0) this.current_experiment.addTimestep(this.current_time);
 	}
 	
 	private void reportStatistics() {
@@ -376,57 +382,9 @@ public class Simulation {
 		avgTravel = Statistics.mean(travel_times);
 		System.out.println("Average Travel Time: " + avgTravel);
 		System.out.println("Average Fractional Waiting Time: " + Statistics.mean(fractional_waiting_times));
-
-		// Write Data
-		PrintWriter report_writer;
-		try {
-			report_writer = new PrintWriter("./simulation-reports/csv-data/" + name + ".csv", "UTF-8");
-			
-			String sep = ";";
-			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
-			for (int i = 0; i < this.experiment.getMeasurementTimestamps().size(); i++) {
-				report_writer.println(
-						this.experiment.getMeasurementTimestamps().get(i) + sep + 
-						this.experiment.getAvgSpeed().get(0).get(i) + sep + 
-						this.experiment.getFractionsOfWaitingCars().get(0).get(i) + sep +
-						this.experiment.getNumbCars().get(0).get(i)
-				);
-			}
-			
-			report_writer.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Create Graphical Report
-		String command = "simulation-reports/create_report.sh " + name;
-		Process p, q;
-		try {
-			p = Runtime.getRuntime().exec(command);
-			p.waitFor();
-
-
-			if (SystemUtils.IS_OS_LINUX) {
-				System.out.println("LINUX IS LIFE");
-				q = Runtime.getRuntime().exec("xdg-open simulation-reports/html-reports/" + name + ".html");
-				q.waitFor();
-			} else if (SystemUtils.IS_OS_WINDOWS) {
-				q = Runtime.getRuntime().exec("start simulation-reports/html-reports/" + name + ".html");
-				q.waitFor();
-			} else {
-				System.out.println("OS NOT SUPPORTED");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("DONE");
 	}
 	
-	public int getNumberCarsOutOfTraffic() {
+	public int getNumberOfCarsOutOfTraffic() {
 		int sum = 0;
 		for (ArrayList<Car> cars : this.cars.values()) {
 			for (Car c : cars) {
@@ -444,23 +402,8 @@ public class Simulation {
 	}
 
 	public void stop() {
-		System.out.println("HELLO");
-		if (is_running) {
-			this.is_running = false;
-
-			JPanel thisPanel = new JPanel();
-			JTextField name = new JTextField(5);
-			thisPanel.add(new JLabel("File name:"));
-			thisPanel.add(name);
-
-			int result = JOptionPane.showConfirmDialog(null, thisPanel, "Please Enter data",
-					JOptionPane.OK_CANCEL_OPTION);
-			if (result == JOptionPane.OK_OPTION) {
-				setFileName(name.getText());
-				this.reportStatistics();
-			}			
-			System.out.println("Calculation Time: " + Time.nanosecondsToSeconds(this.total_calculation_time) + " seconds (without visualization delay)");
-		}
+		System.out.println("Calculation Time: " + Time.nanosecondsToSeconds(this.total_calculation_time) + " seconds (without visualization delay)");
+		this.is_running = false;
 	}
 
 	public void reset() {
@@ -489,7 +432,11 @@ public class Simulation {
 		this.full_speed = full_speed;
 	}
 
-	public void setFileName(String name) {
-		this.name = name;
+	public ExperimentWrapper getExperimentWrapper() {
+		return this.experiment_wrapper;
+	}
+
+	public boolean getFullSpeed() {
+		return this.full_speed;
 	}
 }

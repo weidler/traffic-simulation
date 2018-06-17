@@ -4,21 +4,15 @@ package graphical_interface;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import javax.swing.*;
 
-import buttons.CriticalButtonUI;
-import buttons.DefaultButtonUI;
-import buttons.ImportantButtonUI;
+import buttons.*;
 import core.Simulation;
 import datastructures.Intersection;
 import datastructures.StreetMap;
 import experiment.Experiment;
-import jiconfont.icons.FontAwesome;
-import jiconfont.swing.IconFontSwing;
 import road.DirtRoad;
 import road.Highway;
 import road.Road;
@@ -40,13 +34,7 @@ import static com.sun.org.apache.xerces.internal.utils.SecuritySupport.getResour
 
 public class GraphicalInterface extends JFrame {
 
-	private JCheckBox visualize = new JCheckBox("visualize?");
-	private JTextField duration = new JTextField(5); // in days
-	private JTextField inter = new JTextField(5); // time for car arrival
 	private JTextField fileName = new JTextField(20);
-	private JComboBox<String> strategy;
-	private JComboBox<String> schedule;
-	private JTextField phaseLength = new JTextField(5); // in days
 	private final JFileChooser fc = new JFileChooser();
 	private final int DISTANCE_BETWEEN_INTERSECTIONS = 30;
 
@@ -56,7 +44,12 @@ public class GraphicalInterface extends JFrame {
 	private final Dimension button_dimensions = new Dimension(button_width, button_height);
 	private final Dimension small_button_dimensions = new Dimension(button_width/2, button_height);
 
+	private final Dimension round_button_dimensions = new Dimension(button_height, button_height);
+	private final Dimension small_round_button_dimensions = new Dimension((int) (button_height/1.5), (int) (button_height/1.5));
+
 	private Border button_border = BorderFactory.createEmptyBorder();
+	private Font icon_font = IconFont.getFontAwesome();
+	private Font small_icon_font = icon_font.deriveFont(Font.PLAIN, 9);
 
 	private final Color menu_bg = Color.decode("#3a3a3a");
 	private final Color map_bg = Color.decode("#5e5d5d");
@@ -111,6 +104,7 @@ public class GraphicalInterface extends JFrame {
 	private Color contrast_font_color = Color.WHITE;
 
 	JPanel populationPanel;
+	JPanel experimenterPanel;
 
 
 	/**
@@ -136,7 +130,7 @@ public class GraphicalInterface extends JFrame {
 		contentPane.setLayout(new GridBagLayout());
 
 		//  MENU PANEL
-		menuPanel = new JPanel(new GridBagLayout());
+		menuPanel = new MenuPanel(new GridBagLayout());
 		menuPanel.setPreferredSize(new Dimension(200, 700));
 		menuPanel.setMinimumSize(new Dimension(200, 700));
 		menuPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -157,8 +151,6 @@ public class GraphicalInterface extends JFrame {
 		topPanel.setMinimumSize(new Dimension(1000, 100));
 		topPanel.setBorder(BorderFactory.createEmptyBorder());
 		topPanel.setBackground(this.info_bg);
-
-		populationPanel = new PopulationPanel(streetMap);
 
 		GridBagConstraints c;
 		// TOP PANEL
@@ -222,7 +214,7 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		// BUTTONS
-		JButton clearButton = new JButton("Reset");
+		JButton clearButton = new MenuButton("Reset");
 		clearButton.setPreferredSize(button_dimensions);
 		clearButton.setUI(new CriticalButtonUI());
 		clearButton.setBorder(this.button_border);
@@ -241,20 +233,21 @@ public class GraphicalInterface extends JFrame {
 		slider.setEnabled(false);
 		slider.setBackground(null);
 
-		JButton startButton = new JButton("Start");
-		startButton.setPreferredSize(small_button_dimensions);
+		JButton startButton = new RoundButton("\uF04b");
+		startButton.setFont(icon_font);
+		startButton.setPreferredSize(round_button_dimensions);
 		startButton.setUI(new ImportantButtonUI());
 		startButton.setBorder(this.button_border);
 		startButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				simulation.start();
 			}
 		});
 
-		JButton stopButton = new JButton("Stop");
-		stopButton.setPreferredSize(small_button_dimensions);
+		JButton stopButton = new RoundButton("\uf04d");
+		stopButton.setFont(icon_font);
+		stopButton.setPreferredSize(round_button_dimensions);
 		stopButton.setUI(new DefaultButtonUI());
 		stopButton.setBorder(this.button_border);
 		stopButton.addActionListener(new ActionListener() {
@@ -267,7 +260,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton zoomInButton = new JButton("+");
+		JButton zoomInButton = new MenuButton("+");
 		zoomInButton.setPreferredSize(small_button_dimensions);
 		zoomInButton.setUI(new DefaultButtonUI());
 		zoomInButton.setBorder(this.button_border);
@@ -282,7 +275,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton zoomOutButton = new JButton("-");
+		JButton zoomOutButton = new MenuButton("-");
 		zoomOutButton.setPreferredSize(small_button_dimensions);
 		zoomOutButton.setUI(new DefaultButtonUI());
 		zoomOutButton.setBorder(this.button_border);
@@ -297,7 +290,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton resetPositionButton = new JButton("Reset Camera");
+		JButton resetPositionButton = new MenuButton("Reset Camera");
 		resetPositionButton.setPreferredSize(button_dimensions);
 		resetPositionButton.setUI(new DefaultButtonUI());
 		resetPositionButton.setBorder(this.button_border);
@@ -313,7 +306,8 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton saveButton = new JButton("Save");
+		JButton saveButton = new MenuButton("\uF0C7");
+		saveButton.setFont(icon_font);
 		saveButton.setPreferredSize(small_button_dimensions);
 		saveButton.setUI(new DefaultButtonUI());
 		saveButton.setBorder(this.button_border);
@@ -333,7 +327,8 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton loadButton = new JButton("Load");
+		JButton loadButton = new MenuButton("\uF07C");
+		loadButton.setFont(icon_font);
 		loadButton.setPreferredSize(small_button_dimensions);
 		loadButton.setUI(new DefaultButtonUI());
 		loadButton.setBorder(this.button_border);
@@ -354,39 +349,56 @@ public class GraphicalInterface extends JFrame {
 		});
 
 		// SIMULATION CONTROLS
-		JButton slowDownButton = new JButton("Speed-");
-		slowDownButton.setPreferredSize(small_button_dimensions);
-		slowDownButton.setUI(new CriticalButtonUI());
-		slowDownButton.setBorder(this.button_border);
-		slowDownButton.addActionListener(new ActionListener() {
+		JButton pauseButton = new RoundButton("\uF04C");
+		pauseButton.setFont(small_icon_font);
+		pauseButton.setPreferredSize(small_round_button_dimensions);
+		pauseButton.setUI(new DefaultButtonUI());
+		pauseButton.setBorder(this.button_border);
+		pauseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				simulation.setSimulatedSecondsPerRealSecond(Math.max(1, simulation.getSimulatedSecondsperRealSecond() - 100));
+				simulation.setSimulatedSecondsPerRealSecond(0);
+				simulation.setFullSpeed(false);
 			}
 		});
 
-		JButton speedUpButton = new JButton("Speed+");
-		speedUpButton.setPreferredSize(small_button_dimensions);
-		speedUpButton.setUI(new ImportantButtonUI());
-		speedUpButton.setBorder(this.button_border);
-		speedUpButton.addActionListener(new ActionListener() {
+		JButton normalSpeed = new RoundButton("\uF105");
+		normalSpeed.setFont(small_icon_font);
+		normalSpeed.setPreferredSize(small_round_button_dimensions);
+		normalSpeed.setUI(new DefaultButtonUI());
+		normalSpeed.setBorder(this.button_border);
+		normalSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				simulation.setSimulatedSecondsPerRealSecond(simulation.getSimulatedSecondsperRealSecond() + 100);
+				simulation.setSimulatedSecondsPerRealSecond(1);
+				simulation.setFullSpeed(false);
 			}
 		});
 
-		JCheckBox fullSpeedButton = new JCheckBox("Speedy Gonzales");
-		fullSpeedButton.setSelected(false);
-		fullSpeedButton.setBackground(null);
+		JButton fastSpeed = new RoundButton("\uF101");
+		fastSpeed.setFont(small_icon_font);
+		fastSpeed.setPreferredSize(small_round_button_dimensions);
+		fastSpeed.setUI(new DefaultButtonUI());
+		fastSpeed.setBorder(this.button_border);
+		fastSpeed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				simulation.setSimulatedSecondsPerRealSecond(100);
+				simulation.setFullSpeed(false);
+			}
+		});
+
+		JButton fullSpeedButton = new RoundButton("\uF135");
+		fullSpeedButton.setUI(new CriticalButtonUI());
 		fullSpeedButton.setForeground(Color.WHITE);
+		fullSpeedButton.setFont(small_icon_font);
+		fullSpeedButton.setPreferredSize(small_round_button_dimensions);
+		fullSpeedButton.setBorder(this.button_border);
 		fullSpeedButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (fullSpeedButton.isSelected()) simulation.setFullSpeed(true);
-				else simulation.setFullSpeed(false);
+				simulation.setFullSpeed(!simulation.getFullSpeed());
 			}
 		});
 
 		// EXIT
-		JButton exitButton = new JButton("Exit");
+		JButton exitButton = new MenuButton("Exit");
 		exitButton.setPreferredSize(button_dimensions);
 		exitButton.setUI(new CriticalButtonUI());
 		exitButton.setBorder(this.button_border);
@@ -506,7 +518,7 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton populationPopUpButton = new JButton("Show Population Info");
+		JButton populationPopUpButton = new MenuButton("Show Population Info");
 		populationPopUpButton.setPreferredSize(button_dimensions);
 		populationPopUpButton.setUI(new DefaultButtonUI());
 		populationPopUpButton.setBorder(this.button_border);
@@ -524,117 +536,36 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
-		JButton experimentButton = new JButton("Experiment");
-		experimentButton.setPreferredSize(button_dimensions);
-		experimentButton.setUI(new DefaultButtonUI());
-		experimentButton.setBorder(this.button_border);
-		experimentButton.addActionListener(new ActionListener() {
+		JButton openExperimenterButton = new MenuButton("\uF0C3 Open Experimenter");
+		openExperimenterButton.setFont(icon_font);
+		openExperimenterButton.setPreferredSize(button_dimensions);
+		openExperimenterButton.setUI(new DefaultButtonUI());
+		openExperimenterButton.setBorder(this.button_border);
+		openExperimenterButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String[] strategyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
-				String[] scheduleList = { "empirical", "poisson", "gaussian"};
+				experimenterPanel = new ExperimenterPanel(simulation);
+				JOptionPane pane = new JOptionPane(null, JOptionPane.PLAIN_MESSAGE);
+				pane.add(experimenterPanel);
 
-				strategy = new JComboBox<>(strategyList);
-				schedule = new JComboBox<>(scheduleList);
-
-				JPanel myPanel = new JPanel();
-				myPanel.add(new JLabel("Duration in Days:"));
-				duration.setText("1");
-				myPanel.add(duration);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Inter Arrival Time:"));
-				inter.setText("10");
-				myPanel.add(inter);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Control Strategy:"));
-				myPanel.add(strategy);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Phase Length:"));
-				phaseLength.setText("5");
-				myPanel.add(phaseLength);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Schedule:"));
-				myPanel.add(schedule);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				visualize.setSelected(true);
-				myPanel.add(visualize);
-				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
-						JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-					System.out.println("duration value:  " + duration.getText());
-					System.out.println("Inter arrival time value:   " + inter.getText());
-					System.out.println("schedule value:  " + schedule.getSelectedIndex());
-					System.out.println("strategy value:  " + strategy.getSelectedIndex());
-					System.out.println("visualize value: " + visualize.isSelected());
-					// then start experiment.
-
-					Distribution arrival_schedule;
-					switch ((String) schedule.getSelectedItem()) {
-						case "poisson":
-							arrival_schedule = Distribution.POISSON;
-							break;
-
-						case "gaussian":
-							arrival_schedule = Distribution.GAUSSIAN;
-							break;
-
-						case "empirical":
-							arrival_schedule = Distribution.EMPIRICAL;
-							break;
-
-						default:
-							arrival_schedule = Distribution.EMPIRICAL;
-							break;
-					}
-
-					Strategy control_strategy;
-					switch ((String) strategy.getSelectedItem()) {
-						case "circulating lights":
-							control_strategy = Strategy.BENCHMARK_CYCLING;
-							break;
-
-						case "weigthed cycling":
-							control_strategy = Strategy.WEIGHTED_CYCLING;
-							break;
-
-						case "coordinated":
-							control_strategy = Strategy.COORDINATED;
-							break;
-						case "waiting":
-							control_strategy = Strategy.WAITING;
-							break;
-
-						case "informed cycling":
-							control_strategy = Strategy.INFORMED_CYCLING;
-							break;
-
-						default:
-							control_strategy = Strategy.BENCHMARK_CYCLING;
-							break;
-					}
-
-					Experiment exp = new Experiment(arrival_schedule,
-							control_strategy,
-							Integer.parseInt(duration.getText()),
-							visualize.isSelected(),
-							Integer.parseInt(inter.getText()),
-							Integer.parseInt(phaseLength.getText())
-					);
-
-					simulation.setExperiment(exp);
-
-				}
-
+				JDialog dialog = pane.createDialog(GraphicalInterface.this, "Experiments");
+				dialog.setModal(false);
+				dialog.show();
 			}
 		});
 
 		// SOME PANELS
 
 		JPanel clock_panel = new InfoPanel(simulation);
-		clock_panel.setPreferredSize(new Dimension(100, 100));
+		clock_panel.setPreferredSize(new Dimension(150, 100));
 		clock_panel.setBorder(BorderFactory.createEmptyBorder());
 		clock_panel.setBackground(null);
+
+		clock_panel.add(pauseButton);
+		clock_panel.add(normalSpeed);
+		clock_panel.add(fastSpeed);
+		clock_panel.add(fullSpeedButton);
 
 		JPanel title_panel = new TitlePanel(100);
 		title_panel.setPreferredSize(new Dimension(200, 100));
@@ -642,12 +573,13 @@ public class GraphicalInterface extends JFrame {
 		title_panel.setBackground(null);
 		title_panel.setForeground(this.contrast_font_color);
 
+		populationPanel = new PopulationPanel(streetMap);
+
 		// APPEND THE ELEMENTS TO THEIR RESPECTIVE PANEL
-		topPanel.add(startButton);
-		topPanel.add(speedUpButton);
-		topPanel.add(clock_panel);
-		topPanel.add(slowDownButton);
+
 		topPanel.add(stopButton);
+		topPanel.add(clock_panel);
+		topPanel.add(startButton);
 
 		ArrayList<Component[]> menu_components = new ArrayList<>();
 		menu_components.add(new Component[]{clearButton});
@@ -662,12 +594,8 @@ public class GraphicalInterface extends JFrame {
 
 		menu_components.add(new Component[]{saveButton, loadButton});
 
-		menu_components.add(new Component[]{fullSpeedButton});
-
 		menu_components.add(new Component[]{populationPopUpButton});
-		menu_components.add(new Component[]{experimentButton});
-
-		menu_components.add(new Component[]{exitButton});
+		menu_components.add(new Component[]{openExperimenterButton});
 
 		// CREATE GRID
 		GridBagConstraints gbc_menu;
@@ -705,6 +633,14 @@ public class GraphicalInterface extends JFrame {
 		defineGBC(gbc_menu, GridBagConstraints.BOTH, 0, gridy, 2, 1, 1, 1);
 		gbc_menu.anchor = GridBagConstraints.SOUTHWEST;
 		menuPanel.add(spacer, gbc_menu);
+
+		// EXIT button
+		gbc_menu = new GridBagConstraints();
+		exitButton.setMinimumSize(button_dimensions);
+		defineGBC(gbc_menu, GridBagConstraints.BOTH, 0, gridy + 1, 2, 1, 1, 0);
+		gbc_menu.anchor = GridBagConstraints.NORTH;
+		gbc_menu.insets = new Insets(0, 50,10,50);
+		menuPanel.add(exitButton, gbc_menu);
 
 
 
