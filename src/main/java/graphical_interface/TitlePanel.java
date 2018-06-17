@@ -8,12 +8,12 @@ import javax.swing.JPanel;
 
 import geometry.Point;
 
-public class MenuPanel extends JPanel {
+public class TitlePanel extends JPanel {
 	private Font large_font;
 	private Font small_font;
 	private int title_height;
 	
-	public MenuPanel(int title_height) {
+	public TitlePanel(int title_height) {
 		this.title_height = title_height;
 		this.large_font = new Font("Calibri", Font.BOLD, 18);
 		this.small_font = new Font("TimesRoman", Font.PLAIN, 12);

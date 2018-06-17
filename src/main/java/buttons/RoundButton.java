@@ -1,4 +1,4 @@
-package graphical_interface;
+package buttons;
 
 import java.awt.*;
 import java.awt.geom.*;
