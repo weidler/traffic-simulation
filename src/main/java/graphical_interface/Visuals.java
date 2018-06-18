@@ -578,6 +578,7 @@ public class Visuals extends JPanel {
 					Point new_point_a = (new Line(point_a, point_b)).intersectionWith(end_of_road_to);
 					Point new_point_b = (new Line(point_a, point_b)).intersectionWith(end_of_road_from);
 
+					try {
 					lane_separation_line.add(new Line2D.Double(
 							(int) new_point_a.x * zoomMultiplier + changeX,
 							(int) new_point_a.y * zoomMultiplier + changeY,
@@ -595,6 +596,9 @@ public class Visuals extends JPanel {
 							(int) new_point_a.y * zoomMultiplier + changeY,
 							(int) new_point_b.x * zoomMultiplier + changeX,
 							(int) new_point_b.y * zoomMultiplier + changeY));
+					}catch(Exception e) {
+						
+					}
 				}
 			}
 
