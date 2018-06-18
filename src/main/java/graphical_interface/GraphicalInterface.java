@@ -25,7 +25,6 @@ import javax.swing.border.Border;
 
 import car.Car;
 
-import static com.sun.org.apache.xerces.internal.utils.SecuritySupport.getResourceAsStream;
 
 /**
  *
