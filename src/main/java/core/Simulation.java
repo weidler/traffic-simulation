@@ -221,128 +221,130 @@ public class Simulation {
 	// SIMULATION
 
 	public void start() {
-
-		this.updateCarListToMap();
-		this.simulation_schedule.updateToMap();
-
-		this.current_experiment = this.experiment_wrapper.currentExperiment();
-		this.applyExperimentalSettings();
-
-		if (this.is_running) {
-			System.out.println("Already Running.");
-			return;
+		if (street_map.getIntersections().size() > 0)
+		{
+			this.updateCarListToMap();
+			this.simulation_schedule.updateToMap();
+	
+			this.current_experiment = this.experiment_wrapper.currentExperiment();
+			this.applyExperimentalSettings();
+	
+			if (this.is_running) {
+				System.out.println("Already Running.");
+				return;
+			}
+	
+			this.is_running = true;
+	
+			Thread th = new Thread(() -> {
+				// Initialize
+	
+				this.strategy.initializeTrafficLightSettings();
+	
+				double delta_t = 0.05; // in seconds
+				this.adjustVisualizationFrequency(delta_t);
+				this.total_calculation_time = 0;
+				int step = 0;
+	
+				while (this.is_running && days_simulated < this.current_experiment.getSimulationLengthInDays()) {
+					start_time = System.nanoTime();
+					street_map.setCurrentTime(current_time);
+	
+					// update realistic time
+					realistic_time_in_seconds += delta_t;
+					if (Time.secondsToHours(realistic_time_in_seconds) >= 24) {
+						realistic_time_in_seconds = realistic_time_in_seconds - Time.hoursToSeconds(24);
+						days_simulated++;
+					}
+	
+					// spawn new cars to the roads according to the schedule
+					for (Road r : this.street_map.getRoads()) {
+						if (simulation_schedule.carWaitingAt(r, this.current_time)) {
+							if (r.getAvailabePopulation() > 0) {
+								this.addCarAtRoad(r);
+								r.decrementAvailablePopulation();
+							}
+							simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
+						}
+					}
+	
+					// update traffic light statuses
+					this.strategy.configureTrafficLights(this.cars, delta_t);
+	
+	
+					// update car positions
+					ArrayList<Car> arrived_cars = new ArrayList<Car>();
+					for (Road road : this.cars.keySet()) {
+						ArrayList<Car> cars = this.cars.get(road);
+						for (Car car : cars) {
+							// recalculate car position
+							if (car.update(this.cars, delta_t, current_time)) {
+								arrived_cars.add(car);
+								Road destination_road = car.getCurrentDestinationIntersection().getRoadTo(car.getCurrentOriginIntersection());
+								destination_road.incrementAvailablePopulation();
+							}
+						}
+					}
+	
+					// update carlist for road assignments
+					HashMap<Road, ArrayList<Car>> new_cars = new HashMap<Road, ArrayList<Car>>();
+					for (Road r : cars.keySet()) {
+						new_cars.put(r, new ArrayList<Car>());
+					}
+	
+					for (Road r : cars.keySet()) {
+						for (Car c : cars.get(r)) {
+							new_cars.get(c.getCurrentRoad()).add(c);
+						}
+					}
+					cars = new_cars;
+	
+					// remove cars that reached their destination from the list
+					for (Car c : arrived_cars) {
+						this.cars.get(c.getCurrentRoad()).remove(c);
+						this.car_sink.add(c);
+						c.setArrivalTime(this.current_time);
+					}
+	
+					// Wait for time step to be over
+					double ns_used = (System.nanoTime() - start_time);
+					total_calculation_time += ns_used;
+					if (!full_speed) {
+						double ns_to_wait = Time.secondsToNanoseconds(delta_t/simulated_seconds_per_real_second);
+						try {
+							TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
+						} catch (InterruptedException e) {
+							System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
+						}
+					}
+	
+					this.current_time += delta_t;
+	
+					// update graphics and statistics
+					step++;
+					if (step % this.visualization_frequency == 0 && this.current_experiment.isVizualise()) {
+						gui.redraw();
+						((PopulationPanel) gui.getPopulationPanel()).updateCharts();
+					}
+					if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
+				}
+	
+	
+				current_experiment.save();
+				this.experiment_wrapper.finishExperiment(current_experiment);
+				current_experiment = this.experiment_wrapper.currentExperiment();
+				stop();
+	
+				if (!experiment_wrapper.isAllFinished() && !(current_experiment == null)) {
+					reset();
+					start();
+				} else {
+					this.experiment_wrapper.createFinalReport();
+				}
+			});
+	
+			th.start();
 		}
-
-		this.is_running = true;
-
-		Thread th = new Thread(() -> {
-			// Initialize
-
-			this.strategy.initializeTrafficLightSettings();
-
-			double delta_t = 0.05; // in seconds
-			this.adjustVisualizationFrequency(delta_t);
-			this.total_calculation_time = 0;
-			int step = 0;
-
-			while (this.is_running && days_simulated < this.current_experiment.getSimulationLengthInDays()) {
-				start_time = System.nanoTime();
-				street_map.setCurrentTime(current_time);
-
-				// update realistic time
-				realistic_time_in_seconds += delta_t;
-				if (Time.secondsToHours(realistic_time_in_seconds) >= 24) {
-					realistic_time_in_seconds = realistic_time_in_seconds - Time.hoursToSeconds(24);
-					days_simulated++;
-				}
-
-				// spawn new cars to the roads according to the schedule
-				for (Road r : this.street_map.getRoads()) {
-					if (simulation_schedule.carWaitingAt(r, this.current_time)) {
-						if (r.getAvailabePopulation() > 0) {
-							this.addCarAtRoad(r);
-							r.decrementAvailablePopulation();
-						}
-						simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
-					}
-				}
-
-				// update traffic light statuses
-				this.strategy.configureTrafficLights(this.cars, delta_t);
-
-
-				// update car positions
-				ArrayList<Car> arrived_cars = new ArrayList<Car>();
-				for (Road road : this.cars.keySet()) {
-					ArrayList<Car> cars = this.cars.get(road);
-					for (Car car : cars) {
-						// recalculate car position
-						if (car.update(this.cars, delta_t, current_time)) {
-							arrived_cars.add(car);
-							Road destination_road = car.getCurrentDestinationIntersection().getRoadTo(car.getCurrentOriginIntersection());
-							destination_road.incrementAvailablePopulation();
-						}
-					}
-				}
-
-				// update carlist for road assignments
-				HashMap<Road, ArrayList<Car>> new_cars = new HashMap<Road, ArrayList<Car>>();
-				for (Road r : cars.keySet()) {
-					new_cars.put(r, new ArrayList<Car>());
-				}
-
-				for (Road r : cars.keySet()) {
-					for (Car c : cars.get(r)) {
-						new_cars.get(c.getCurrentRoad()).add(c);
-					}
-				}
-				cars = new_cars;
-
-				// remove cars that reached their destination from the list
-				for (Car c : arrived_cars) {
-					this.cars.get(c.getCurrentRoad()).remove(c);
-					this.car_sink.add(c);
-					c.setArrivalTime(this.current_time);
-				}
-
-				// Wait for time step to be over
-				double ns_used = (System.nanoTime() - start_time);
-				total_calculation_time += ns_used;
-				if (!full_speed) {
-					double ns_to_wait = Time.secondsToNanoseconds(delta_t/simulated_seconds_per_real_second);
-					try {
-						TimeUnit.NANOSECONDS.sleep((int) Math.max(0, ns_to_wait - ns_used));
-					} catch (InterruptedException e) {
-						System.out.println("Simulation sleeping (" + ns_to_wait + "ns) got interrupted!");
-					}
-				}
-
-				this.current_time += delta_t;
-
-				// update graphics and statistics
-				step++;
-				if (step % this.visualization_frequency == 0 && this.current_experiment.isVizualise()) {
-					gui.redraw();
-					((PopulationPanel) gui.getPopulationPanel()).updateCharts();
-				}
-				if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
-			}
-
-
-			current_experiment.save();
-			this.experiment_wrapper.finishExperiment(current_experiment);
-			current_experiment = this.experiment_wrapper.currentExperiment();
-			stop();
-
-			if (!experiment_wrapper.isAllFinished() && !(current_experiment == null)) {
-				reset();
-				start();
-			} else {
-				this.experiment_wrapper.createFinalReport();
-			}
-		});
-
-		th.start();
 	}
 
 	private void adjustVisualizationFrequency(double delta_t) {

@@ -136,6 +136,10 @@ public class Road {
 			{
 				this.lanes = 1;
 			}
+			else
+			{
+				this.lanes = l;
+			}
 			
 		}
 		else System.out.println("number of lanes is not allowed");
@@ -193,7 +197,11 @@ public class Road {
 	}
 
 	public Road[] getNeighbouringRoadsAt(Intersection at_int) {
-		if (at_int.numbConnections() == 0) return null;
+		if (at_int.numbConnections() == 0)
+		{
+			return null;
+		}
+			
 
 		Road closest_road = null;
 		Road farest_road = null;
