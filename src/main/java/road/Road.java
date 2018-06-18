@@ -304,7 +304,7 @@ public class Road {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "[" + this.x1 + "," + this.y1 + " -> " + this.x2 + "," + this.y2 + "]";
+		return this.getClass().getSimpleName() + "[" + this.x1 + "," + this.y1 + " -> " + this.x2 + "," + this.y2 + "; " + this.lanes + "]";
 	}
 
 	public boolean equalCoordinatesWith(Road road) {
