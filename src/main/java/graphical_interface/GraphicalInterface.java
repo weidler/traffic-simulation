@@ -74,6 +74,13 @@ public class GraphicalInterface extends JFrame {
 	private int startY;
 	private int endX;
 	private int endY;
+	private Intersection startIn;
+	private double startA1;
+	private double startA2;
+	private double endA1;
+	private double endA2;
+	Road[] destIntNe;
+	Road[] startIntNe;
 
 	/**
 	 * main panel.
@@ -755,8 +762,8 @@ public class GraphicalInterface extends JFrame {
 						}
 						startX = nearestX;
 						startY = nearestY;
-						Intersection in = new Intersection(startX, startY);
-						streetMap.addIntersection(in);
+						startIn = new Intersection(startX, startY);
+						streetMap.addIntersection(startIn);
 					}
 
 					visuals.setStartPosX(startX);
@@ -803,63 +810,82 @@ public class GraphicalInterface extends JFrame {
 
 						Intersection in = new Intersection(endX, endY);
 						streetMap.addIntersection(in);
+						
 
 						Road r;
-						switch (road_type) {
-							case ROAD:
-								r = new Road(startX, startY, endX, endY);
-								break;
-
-							case DIRT_ROAD:
-								r = new DirtRoad(startX, startY, endX, endY);
-								break;
-
-							case HIGHWAY:
-								r = new Highway(startX, startY, endX, endY);
-								break;
-
-							default:
-								// collect all unknown road types and standard road under default
-								r = new Road(startX, startY, endX, endY);
-								break;
+						/*r = new Road(startX, startY, endX, endY);
+						if (r.getNeighbouringRoadsAt(in) != null)
+							destIntNe = r.getNeighbouringRoadsAt(in);
+						if (r.getNeighbouringRoadsAt(startIn) != null)
+							startIntNe = r.getNeighbouringRoadsAt(startIn);
+						if (startIntNe != null) {
+							startA1 = r.getClockwiseAngleTo(startIntNe[0], startIn);
+							startA2 = r.getClockwiseAngleTo(startIntNe[1], startIn);
 						}
-
-						switch (zone_type) {
-							case MIXED:
-								r.setZoneType(ZoneType.MIXED);
-								break;
-							case RESIDENTIAL:
-								r.setZoneType(ZoneType.RESIDENTIAL);
-								break;
-							case INDUSTRIAL:
-								r.setZoneType(ZoneType.INDUSTRIAL);
-								break;
-							case COMMERCIAL:
-								r.setZoneType(ZoneType.COMMERCIAL);
-								break;
-							default:
-								r.setZoneType(ZoneType.MIXED);
-								break;
+						if (destIntNe != null) {
+							endA1 = r.getClockwiseAngleTo(destIntNe[0], in);
+							endA2 = r.getClockwiseAngleTo(destIntNe[1], in);
 						}
-
-
-						r.setStreetMap(streetMap);
-						int l = numb_lanes;
-
-						r.setLanes(l);
-						if (directedRoad.isSelected()) 
-						{
-							r.toggleDirected();
-						}
-						if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
-							streetMap.addRoad(r);
-						} else {
-							streetMap.removeIntersection(in);
-						}
-
-						clickCounter = 0;
-
-						visuals.setDrawLine(false);
+						if (startA1 < 15 || startA2 > 345 || endA1 < 15 || endA2 > 345)
+							streetMap.removeRoad(r);
+						else*/
+						//{
+							switch (road_type) {
+								case ROAD:
+									r = new Road(startX, startY, endX, endY);
+									break;
+	
+								case DIRT_ROAD:
+									r = new DirtRoad(startX, startY, endX, endY);
+									break;
+	
+								case HIGHWAY:
+									r = new Highway(startX, startY, endX, endY);
+									break;
+	
+								default:
+									// collect all unknown road types and standard road under default
+									r = new Road(startX, startY, endX, endY);
+									break;
+							}
+	
+							switch (zone_type) {
+								case MIXED:
+									r.setZoneType(ZoneType.MIXED);
+									break;
+								case RESIDENTIAL:
+									r.setZoneType(ZoneType.RESIDENTIAL);
+									break;
+								case INDUSTRIAL:
+									r.setZoneType(ZoneType.INDUSTRIAL);
+									break;
+								case COMMERCIAL:
+									r.setZoneType(ZoneType.COMMERCIAL);
+									break;
+								default:
+									r.setZoneType(ZoneType.MIXED);
+									break;
+							}
+	
+	
+							r.setStreetMap(streetMap);
+							int l = numb_lanes;
+	
+							r.setLanes(l);
+							if (directedRoad.isSelected()) 
+							{
+								r.toggleDirected();
+							}
+							if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
+								streetMap.addRoad(r);
+							} else {
+								streetMap.removeIntersection(in);
+							}
+	
+							clickCounter = 0;
+	
+							visuals.setDrawLine(false);
+						//}
 					}
 
 					System.out.println(streetMap.getIntersections());

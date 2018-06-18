@@ -197,7 +197,11 @@ public class Road {
 	}
 
 	public Road[] getNeighbouringRoadsAt(Intersection at_int) {
-		if (at_int.numbConnections() == 0) return null;
+		if (at_int.numbConnections() == 0)
+		{
+			return null;
+		}
+			
 
 		Road closest_road = null;
 		Road farest_road = null;
