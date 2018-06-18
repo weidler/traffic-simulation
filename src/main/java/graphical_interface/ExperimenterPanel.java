@@ -23,9 +23,9 @@ import java.util.HashMap;
 
 public class ExperimenterPanel extends JPanel {
 
-	Simulation simulation;
-	JButton addExperimentButton;
-	JPanel experiments_panel;
+	private Simulation simulation;
+	private JButton addExperimentButton;
+	private JPanel experiments_panel;
 
 	public ExperimenterPanel(Simulation simulation) {
 		super();
@@ -57,7 +57,8 @@ public class ExperimenterPanel extends JPanel {
 				JTextField duration = new JTextField(5); // in days
 				JTextField inter = new JTextField(5); // time for car arrival
 				JTextField phaseLength = new JTextField(5);
-
+				JTextField fileName = new JTextField(20);
+				
 				JPanel myPanel = new JPanel();
 				myPanel.add(new JLabel("Duration in Days:"));
 				duration.setText("1");
@@ -76,6 +77,9 @@ public class ExperimenterPanel extends JPanel {
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				myPanel.add(new JLabel("Schedule:"));
 				myPanel.add(schedule);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("fileName:"));
+				myPanel.add(fileName);
 				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 				visualize.setSelected(true);
 				myPanel.add(visualize);
@@ -141,6 +145,8 @@ public class ExperimenterPanel extends JPanel {
 							Integer.parseInt(inter.getText()),
 							Integer.parseInt(phaseLength.getText())
 					);
+					
+					exp.setName(fileName.getText());
 
 					simulation.getExperimentWrapper().addExperiment(exp);
 					drawExperimentBars();
