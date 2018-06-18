@@ -15,7 +15,7 @@ import datastructures.StreetMap;
 import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
-import road.Road; 
+import road.Road;
 import type.Distribution;
 import type.RoadType;
 import type.Strategy;
@@ -25,7 +25,7 @@ import javax.swing.border.Border;
 
 import car.Car;
 
-
+import static com.sun.org.apache.xerces.internal.utils.SecuritySupport.getResourceAsStream;
 
 /**
  *
@@ -698,22 +698,54 @@ public class GraphicalInterface extends JFrame {
 		 */
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
-
-			clickCounter++;
-
-			int x = (int) (e.getX() / visuals.getZoomMultiplier() - visuals.getChangeX());
-			int y = (int) (e.getY() / visuals.getZoomMultiplier() - visuals.getChangeY());
-
-			if (addLabel.getText().equals("add")) {
-				if (clickCounter == 1) {
-
-					if (e.getButton() == MouseEvent.BUTTON3) {
-						if (streetMap.getRoads().size() > 0) {
+			if(!simulation.isRunning())
+			{
+				clickCounter++;
+	
+				int x = (int) (e.getX() / visuals.getZoomMultiplier() - visuals.getChangeX());
+				int y = (int) (e.getY() / visuals.getZoomMultiplier() - visuals.getChangeY());
+	
+				if (addLabel.getText().equals("add")) {
+					if (clickCounter == 1) {
+	
+						if (e.getButton() == MouseEvent.BUTTON3) {
+							if (streetMap.getRoads().size() > 0) {
+								int nearestX = -1;
+								int nearestY = -1;
+								double distance = -1;
+								for (Intersection sec : streetMap.getIntersections()) {
+	
+									double distance2 = (double) (Math
+											.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+									// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+									if (distance == -1) {
+										distance = distance2;
+										nearestX = sec.getXCoord();
+										nearestY = sec.getYCoord();
+									} else if (distance2 < distance) {
+										// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+										distance = distance2;
+										nearestX = sec.getXCoord();
+										nearestY = sec.getYCoord();
+									}
+	
+								}
+	
+							}
+						}
+	
+						if (streetMap.getRoads().isEmpty()) {
+							startX = x;
+							startY = y;
+							Intersection in = new Intersection(startX, startY);
+							streetMap.addIntersection(in);
+	
+						} else {
 							int nearestX = -1;
 							int nearestY = -1;
 							double distance = -1;
 							for (Intersection sec : streetMap.getIntersections()) {
-
+	
 								double distance2 = (double) (Math
 										.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
 								// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
@@ -727,176 +759,173 @@ public class GraphicalInterface extends JFrame {
 									nearestX = sec.getXCoord();
 									nearestY = sec.getYCoord();
 								}
-
+	
 							}
-
+							startX = nearestX;
+							startY = nearestY;
+							startIn = new Intersection(startX, startY);
+							streetMap.addIntersection(startIn);
 						}
-					}
-
-					if (streetMap.getRoads().isEmpty()) {
-						startX = x;
-						startY = y;
-						Intersection in = new Intersection(startX, startY);
-						streetMap.addIntersection(in);
-
+	
+						visuals.setStartPosX(startX);
+						visuals.setStartPosY(startY);
+						if (clickCounter != 0) {
+							visuals.setDrawLine(true);
+						}
+	
 					} else {
-						int nearestX = -1;
-						int nearestY = -1;
-						double distance = -1;
-						for (Intersection sec : streetMap.getIntersections()) {
-
-							double distance2 = (double) (Math
-									.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
-							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-							if (distance == -1) {
-								distance = distance2;
-								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();
-							} else if (distance2 < distance) {
-								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-								distance = distance2;
-								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();
-							}
-
-						}
-						startX = nearestX;
-						startY = nearestY;
-						startIn = new Intersection(startX, startY);
-						streetMap.addIntersection(startIn);
-					}
-
-					visuals.setStartPosX(startX);
-					visuals.setStartPosY(startY);
-					if (clickCounter != 0) {
-						visuals.setDrawLine(true);
-					}
-
-				} else {
-
-					if (e.getButton() == MouseEvent.BUTTON3) {
-						visuals.setDrawLine(false);
-						clickCounter = 0;
-					} else {
-
-						int nearestX = -1;
-						int nearestY = -1;
-						double distance = -1;
-						for (Intersection sec : streetMap.getIntersections()) {
-
-							double distance2 = (double) (Math
-									.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
-							// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-							if (distance == -1) {
-								distance = distance2;
-								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();
-							} else if (distance2 < distance) {
-								// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-								distance = distance2;
-								nearestX = sec.getXCoord();
-								nearestY = sec.getYCoord();
-							}
-
-						}
-
-						if (distance < visuals.getMaxIntersectionSize()) {
-							endX = nearestX;
-							endY = nearestY;
-						} else {
-							endX = x;
-							endY = y;
-						}
-
-						Intersection in = new Intersection(endX, endY);
-						streetMap.addIntersection(in);
-						
-
-						Road r;
-						/*r = new Road(startX, startY, endX, endY);
-						if (r.getNeighbouringRoadsAt(in) != null)
-							destIntNe = r.getNeighbouringRoadsAt(in);
-						if (r.getNeighbouringRoadsAt(startIn) != null)
-							startIntNe = r.getNeighbouringRoadsAt(startIn);
-						if (startIntNe != null) {
-							startA1 = r.getClockwiseAngleTo(startIntNe[0], startIn);
-							startA2 = r.getClockwiseAngleTo(startIntNe[1], startIn);
-						}
-						if (destIntNe != null) {
-							endA1 = r.getClockwiseAngleTo(destIntNe[0], in);
-							endA2 = r.getClockwiseAngleTo(destIntNe[1], in);
-						}
-						if (startA1 < 15 || startA2 > 345 || endA1 < 15 || endA2 > 345)
-							streetMap.removeRoad(r);
-						else*/
-						//{
-							switch (road_type) {
-								case ROAD:
-									r = new Road(startX, startY, endX, endY);
-									break;
 	
-								case DIRT_ROAD:
-									r = new DirtRoad(startX, startY, endX, endY);
-									break;
-	
-								case HIGHWAY:
-									r = new Highway(startX, startY, endX, endY);
-									break;
-	
-								default:
-									// collect all unknown road types and standard road under default
-									r = new Road(startX, startY, endX, endY);
-									break;
-							}
-	
-							switch (zone_type) {
-								case MIXED:
-									r.setZoneType(ZoneType.MIXED);
-									break;
-								case RESIDENTIAL:
-									r.setZoneType(ZoneType.RESIDENTIAL);
-									break;
-								case INDUSTRIAL:
-									r.setZoneType(ZoneType.INDUSTRIAL);
-									break;
-								case COMMERCIAL:
-									r.setZoneType(ZoneType.COMMERCIAL);
-									break;
-								default:
-									r.setZoneType(ZoneType.MIXED);
-									break;
-							}
-	
-	
-							r.setStreetMap(streetMap);
-							int l = numb_lanes;
-	
-							r.setLanes(l);
-							if (directedRoad.isSelected()) 
-							{
-								r.toggleDirected();
-							}
-							if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
-								streetMap.addRoad(r);
-							} else {
-								streetMap.removeIntersection(in);
-							}
-	
-							clickCounter = 0;
-	
+						if (e.getButton() == MouseEvent.BUTTON3) {
 							visuals.setDrawLine(false);
-						//}
+							clickCounter = 0;
+						} else {
+	
+							int nearestX = -1;
+							int nearestY = -1;
+							double distance = -1;
+							for (Intersection sec : streetMap.getIntersections()) {
+	
+								double distance2 = (double) (Math
+										.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+								// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+								if (distance == -1) {
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								} else if (distance2 < distance) {
+									// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								}
+	
+							}
+	
+							if (distance < visuals.getMaxIntersectionSize()) {
+								endX = nearestX;
+								endY = nearestY;
+							} else {
+								endX = x;
+								endY = y;
+							}
+	
+							Intersection in = new Intersection(endX, endY);
+							streetMap.addIntersection(in);
+							
+	
+							Road r;
+							/*r = new Road(startX, startY, endX, endY);
+							if (r.getNeighbouringRoadsAt(in) != null)
+								destIntNe = r.getNeighbouringRoadsAt(in);
+							if (r.getNeighbouringRoadsAt(startIn) != null)
+								startIntNe = r.getNeighbouringRoadsAt(startIn);
+							if (startIntNe != null) {
+								startA1 = r.getClockwiseAngleTo(startIntNe[0], startIn);
+								startA2 = r.getClockwiseAngleTo(startIntNe[1], startIn);
+							}
+							if (destIntNe != null) {
+								endA1 = r.getClockwiseAngleTo(destIntNe[0], in);
+								endA2 = r.getClockwiseAngleTo(destIntNe[1], in);
+							}
+							if (startA1 < 15 || startA2 > 345 || endA1 < 15 || endA2 > 345)
+								streetMap.removeRoad(r);
+							else*/
+							//{
+								switch (road_type) {
+									case ROAD:
+										r = new Road(startX, startY, endX, endY);
+										break;
+		
+									case DIRT_ROAD:
+										r = new DirtRoad(startX, startY, endX, endY);
+										break;
+		
+									case HIGHWAY:
+										r = new Highway(startX, startY, endX, endY);
+										break;
+		
+									default:
+										// collect all unknown road types and standard road under default
+										r = new Road(startX, startY, endX, endY);
+										break;
+								}
+		
+								switch (zone_type) {
+									case MIXED:
+										r.setZoneType(ZoneType.MIXED);
+										break;
+									case RESIDENTIAL:
+										r.setZoneType(ZoneType.RESIDENTIAL);
+										break;
+									case INDUSTRIAL:
+										r.setZoneType(ZoneType.INDUSTRIAL);
+										break;
+									case COMMERCIAL:
+										r.setZoneType(ZoneType.COMMERCIAL);
+										break;
+									default:
+										r.setZoneType(ZoneType.MIXED);
+										break;
+								}
+		
+		
+								r.setStreetMap(streetMap);
+								int l = numb_lanes;
+		
+								r.setLanes(l);
+								if (directedRoad.isSelected()) 
+								{
+									r.toggleDirected();
+								}
+								if ((int) (r.getLength() / visuals.getDivider()) >= 2) {
+									streetMap.addRoad(r);
+								} else {
+									streetMap.removeIntersection(in);
+								}
+		
+								clickCounter = 0;
+		
+								visuals.setDrawLine(false);
+							//}
+						}
+	
+						System.out.println(streetMap.getIntersections());
+						System.out.println(streetMap.getRoads());
+						repaint();
 					}
-
-					System.out.println(streetMap.getIntersections());
-					System.out.println(streetMap.getRoads());
-					repaint();
-				}
-			} else {
-
-				if (clickCounter == 1) {
-					System.out.println("select first point to remove");
-					if (!streetMap.getRoads().isEmpty()) {
+				} else {
+	
+					if (clickCounter == 1) {
+						System.out.println("select first point to remove");
+						if (!streetMap.getRoads().isEmpty()) {
+							int nearestX = -1;
+							int nearestY = -1;
+							double distance = -1;
+							for (Intersection sec : streetMap.getIntersections()) {
+								double distance2 = (double) (Math
+										.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
+								// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
+								if (distance == -1) {
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								} else if (distance2 < distance) {
+									// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
+									distance = distance2;
+									nearestX = sec.getXCoord();
+									nearestY = sec.getYCoord();
+								}
+	
+							}
+							toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
+							System.out.println("toRemove size " + toRemove.size());
+						} else {
+							clickCounter--;
+						}
+	
+					} else {
+						System.out.println("select second point to remove");
+	
 						int nearestX = -1;
 						int nearestY = -1;
 						double distance = -1;
@@ -914,62 +943,34 @@ public class GraphicalInterface extends JFrame {
 								nearestX = sec.getXCoord();
 								nearestY = sec.getYCoord();
 							}
-
 						}
 						toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
-						System.out.println("toRemove size " + toRemove.size());
-					} else {
-						clickCounter--;
-					}
-
-				} else {
-					System.out.println("select second point to remove");
-
-					int nearestX = -1;
-					int nearestY = -1;
-					double distance = -1;
-					for (Intersection sec : streetMap.getIntersections()) {
-						double distance2 = (double) (Math
-								.sqrt(Math.pow(x - sec.getXCoord(), 2) + (Math.pow(y - sec.getYCoord(), 2))));
-						// System.out.println("1 distance "+ distance+" distance 2 "+distance2);
-						if (distance == -1) {
-							distance = distance2;
-							nearestX = sec.getXCoord();
-							nearestY = sec.getYCoord();
-						} else if (distance2 < distance) {
-							// System.out.println("2 distance "+ distance+" distance 2 "+distance2);
-							distance = distance2;
-							nearestX = sec.getXCoord();
-							nearestY = sec.getYCoord();
+						boolean remove1 = true;
+						boolean remove2 = true;
+						if (toRemove.get(0).getConnectedIntersections().size() > 1) {
+							System.out.println("connections " + toRemove.get(0).getConnectedIntersections().size());
+							remove1 = false;
 						}
+						if (toRemove.get(1).getConnectedIntersections().size() > 1) {
+							System.out.println("connections " + toRemove.get(1).getConnectedIntersections().size());
+							remove2 = false;
+						}
+	
+						System.out.println(
+								"toRemove size " + toRemove.size() + " remove1: " + remove1 + " remove2: " + remove2);
+						streetMap.removeRoadBetween(toRemove.get(0), toRemove.get(1));
+						if (remove1) {
+							streetMap.removeIntersection(toRemove.get(0));
+						}
+						if (remove2) {
+							streetMap.removeIntersection(toRemove.get(1));
+						}
+						toRemove.clear();
+						clickCounter = 0;
 					}
-					toRemove.add(streetMap.getIntersectionByCoordinates(nearestX, nearestY));
-					boolean remove1 = true;
-					boolean remove2 = true;
-					if (toRemove.get(0).getConnectedIntersections().size() > 1) {
-						System.out.println("connections " + toRemove.get(0).getConnectedIntersections().size());
-						remove1 = false;
-					}
-					if (toRemove.get(1).getConnectedIntersections().size() > 1) {
-						System.out.println("connections " + toRemove.get(1).getConnectedIntersections().size());
-						remove2 = false;
-					}
-
-					System.out.println(
-							"toRemove size " + toRemove.size() + " remove1: " + remove1 + " remove2: " + remove2);
-					streetMap.removeRoadBetween(toRemove.get(0), toRemove.get(1));
-					if (remove1) {
-						streetMap.removeIntersection(toRemove.get(0));
-					}
-					if (remove2) {
-						streetMap.removeIntersection(toRemove.get(1));
-					}
-					toRemove.clear();
-					clickCounter = 0;
+					repaint();
 				}
-				repaint();
 			}
-
 		}
 
 		@Override
