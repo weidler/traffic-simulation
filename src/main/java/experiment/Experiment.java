@@ -44,6 +44,7 @@ public class Experiment {
 		this.vizualise = vizualise;
 		this.iaTime = meanIA;
 		this.phaseLength = phaseLength;
+		this.name = "";
 		
 		this.numb_runs = 5;
 		for (int i = 0; i < this.numb_runs; i++) this.addRun();
@@ -97,6 +98,7 @@ public class Experiment {
 
 	/* ACTIONS */
 	public void save() {
+		System.out.println("MY NAME IS " + name);
 		if (this.name != null && this.name != "") {
 			JPanel thisPanel = new JPanel();
 			JTextField name_field = new JTextField(5);
