@@ -136,6 +136,10 @@ public class Road {
 			{
 				this.lanes = 1;
 			}
+			else
+			{
+				this.lanes = l;
+			}
 			
 		}
 		else System.out.println("number of lanes is not allowed");

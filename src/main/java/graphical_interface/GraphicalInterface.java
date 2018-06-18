@@ -15,7 +15,7 @@ import datastructures.StreetMap;
 import experiment.Experiment;
 import road.DirtRoad;
 import road.Highway;
-import road.Road;
+import road.Road; 
 import type.Distribution;
 import type.RoadType;
 import type.Strategy;
@@ -25,7 +25,7 @@ import javax.swing.border.Border;
 
 import car.Car;
 
-import static com.sun.org.apache.xerces.internal.utils.SecuritySupport.getResourceAsStream;
+
 
 /**
  *
