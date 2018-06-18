@@ -38,7 +38,7 @@ public class Intersection {
 	}
 
 	// Connections
-	private ArrayList<Connection> connections;
+	private ArrayList<Connection> connections =  new ArrayList<>();
 
 	// CONSTRUCTORS
 
