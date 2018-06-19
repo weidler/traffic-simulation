@@ -48,7 +48,7 @@ public class Road {
 		this.length = this.calcLength();
 
 		this.setTypeParameters();
-		this.available_population = (int) this.length * this.population_per_meter;
+		this.available_population = (int) (this.length / 10) * 2;
 	}
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {

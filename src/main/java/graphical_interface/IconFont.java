@@ -10,7 +10,7 @@ public class IconFont {
 
 	public static Font getFontAwesome() {
 		Font font = null;
-		String fName = "fa.otf";
+		String fName = "fa-solid-900.ttf";
 		try {
 			InputStream is = IconFont.class.getResourceAsStream(fName);
 			font = Font.createFont(Font.TRUETYPE_FONT, is);

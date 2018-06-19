@@ -94,7 +94,7 @@ public class DefaultButtonUI extends BasicButtonUI implements MouseListener {
     changeButtonStyle((JButton)e.getComponent(), this.normalColor, this.normalIcon);
   }
   
-  private void changeButtonStyle(JButton btn, Color color, ImageIcon icon){
+  protected void changeButtonStyle(JButton btn, Color color, ImageIcon icon){
       btn.setBackground(color);
       btn.setIcon(icon);
   }

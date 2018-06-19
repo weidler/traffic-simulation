@@ -174,7 +174,7 @@ public class ExperimenterPanel extends JPanel {
 		int pos = 0;
 		ArrayList<ExperimentBar> bars = new ArrayList<>();
 		for (Experiment exp : this.simulation.getExperimentWrapper().getAllExperiments()) {
-			ExperimentBar bar = new ExperimentBar(exp, this.simulation.getExperimentWrapper());
+			ExperimentBar bar = new ExperimentBar(exp, this.simulation.getExperimentWrapper(), this);
 			bar.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
 
 			gbc = new GridBagConstraints();

@@ -38,12 +38,12 @@ public class Schedule {
 		switch (r.getZoneType()) {
 
 			case RESIDENTIAL:
-				stat *= 0.5;
+				stat *= 0.9;
 				break;
 			case MIXED:
 				break;
 			case COMMERCIAL:
-				stat *= 1.4;
+				stat *= 1.1;
 			case INDUSTRIAL:
 				stat *= 2;
 		}

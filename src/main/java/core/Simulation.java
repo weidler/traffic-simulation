@@ -328,9 +328,7 @@ public class Simulation {
 					}
 					if (this.current_time % this.measurement_interval_realistic_time_seconds < delta_t) this.calcStatistics(); // hacky, but avoids double inprecision porblems
 				}
-	
-	
-				current_experiment.save();
+
 				this.experiment_wrapper.finishExperiment(current_experiment);
 				((ExperimenterPanel) this.gui.experimenterPanel).updateList();
 				current_experiment = this.experiment_wrapper.currentExperiment();
@@ -341,6 +339,7 @@ public class Simulation {
 					start();
 				} else {
 					this.experiment_wrapper.createFinalReport();
+					this.experiment_wrapper.saveAll();
 				}
 			});
 	
