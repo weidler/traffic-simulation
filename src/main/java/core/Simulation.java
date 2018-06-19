@@ -189,7 +189,7 @@ public class Simulation {
 		}
 		else if(time > 7*60*60 && time < 12*60*60) {
 			double ran = Math.random();
-			if (ran < 0.8) {
+			if (ran < 0.8 && (street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL).size() != 0 || street_map.getRoadsByZone().get(ZoneType.COMMERCIAL).size() != 0) ) {
 				
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
@@ -205,7 +205,7 @@ public class Simulation {
 		}
 		else {
 			double ran = Math.random();
-			if (ran < 1) {
+			if (ran < 1 && (street_map.getRoadsByZone().get(ZoneType.MIXED).size() != 0 || street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL).size() != 0) ) {
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
 			}
