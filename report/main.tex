@@ -8,6 +8,8 @@
 \usepackage{lipsum}
 \usepackage{latexsym}
 \usepackage[normalem]{ulem}
+\usepackage[ruled]{algorithm2e}
+\usepackage[]{setspace}
 \useunder{\uline}{\ul}{}
 \usepackage{caption} 
 \usepackage{lastpage}
@@ -66,8 +68,7 @@ The Graphical User Interface (GUI) is designed for simplicity. It consists of th
 \end{figure}
 	
 \subsection{Traffic Flow Simulation}
-
-As mentioned beforehand, we apply the IDM \citep{treiber2000congested} for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
+As mentioned beforehand, the IDM \citep{treiber2000congested} is applied for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
 
 \begin{equation}
 	\label{eq:free-road-term}
@@ -114,7 +115,6 @@ Rather than predefining arrival times for a fixed simulation duration, we dynami
 	\item Realistic (Non stationary Poisson Process)
 \end{itemize}
  
- 
 While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs based on a poisson process that is then converted to the data using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 8 to 9 am and 5 to 6 pm.
 
 \subsection{Path Finding}
@@ -125,6 +125,52 @@ This popular path finding algorithm, based on Dijkstra’s algorithm \citep{dijk
 
 \paragraph{Advanced A*}
 The advanced A* path finding algorithm is very similar to the original version, but also takes the traffic density of the roads into account. This is realized by calculating the traffic density of each road whenever the route of a car is created. The density of a road equals the number of cars on it divided by the length of the road, to get the number of cars per meter of road. The algorithm then adds a weighted density value to the G and H scores of the road to calculate the current best route.
+
+\subsection{Zone-based Scheduling}
+Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. A road's zone restricts its \textit{available population} in the beginning of the simulation. For instance, commercial zones start with a lower overall population than residential zones. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented. Additionally, the zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are seperated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{img/zoned-traffic-flow.png}
+	\caption{Traffic Flow between different zone types at different times of the day. \label{fig:zone-traffic-flow}}
+\end{figure}
+
+\subsection{Simulation Model}
+Putting the above parts together, the simulation procedure depicted by algorithm \ref{alg:simulation} is run.
+
+\DontPrintSemicolon
+\setstretch{1.2}
+\begin{algorithm}[h]
+	\;
+	\KwData{Map m, CarList c, Schedule s, days d, delta\_t}
+	\;
+	\textit{Initialize} trafficlights\;
+	\textit{Initialize} tracking variables\;
+	\; 
+	\While{simulated\_days $<$ d}{
+		\textit{update} time\_parameters\;
+		\;
+		\ForEach{Road r in m}{
+			\If{r.nextArrival == now}{
+				\textit{spawn} car\;
+				r.availablePopulation--\;
+				\textit{generate} nextIAT\;
+			}		
+		}
+		\;
+		\textit{update} trafficlights\;
+		\textit{update} car positions \textit{and} velocities\;
+		\textit{remove} arrived\_cars \textit{and} adjust population\;
+		\;
+		\textit{visualize}\;
+		\textit{track} statistics\;
+	}
+	\;
+	\textit{report} statistics\;	
+	
+	\caption{Simulation procedure. \label{alg:simulation}}
+
+\end{algorithm}
+\setstretch{1}
 
 \section{Traffic Control Strategies}
 

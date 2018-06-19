@@ -299,7 +299,6 @@ public class Simulation {
 			street_map.allocateRoadsByZone();
 			this.updateCarListToMap();
 			this.simulation_schedule.updateToMap();
-	
 			this.current_experiment = this.experiment_wrapper.currentExperiment();
 			this.applyExperimentalSettings();
 	
