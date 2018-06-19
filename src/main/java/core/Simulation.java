@@ -225,7 +225,6 @@ public class Simulation {
 		{
 			this.updateCarListToMap();
 			this.simulation_schedule.updateToMap();
-	
 			this.current_experiment = this.experiment_wrapper.currentExperiment();
 			this.applyExperimentalSettings();
 	
