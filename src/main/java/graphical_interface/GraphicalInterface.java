@@ -108,8 +108,8 @@ public class GraphicalInterface extends JFrame {
 	protected ZoneType zone_type = ZoneType.RESIDENTIAL;
 	private Color contrast_font_color = Color.WHITE;
 
-	JPanel populationPanel;
-	JPanel experimenterPanel;
+	public JPanel populationPanel;
+	public JPanel experimenterPanel;
 
 
 	/**

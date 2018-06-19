@@ -12,6 +12,7 @@ import car.Truck;
 import datastructures.StreetMap;
 import experiment.Experiment;
 import experiment.ExperimentWrapper;
+import graphical_interface.ExperimenterPanel;
 import graphical_interface.GraphicalInterface;
 import graphical_interface.PopulationPanel;
 import road.Road;
@@ -428,6 +429,7 @@ public class Simulation {
 	
 				current_experiment.save();
 				this.experiment_wrapper.finishExperiment(current_experiment);
+				((ExperimenterPanel) this.gui.experimenterPanel).updateList();
 				current_experiment = this.experiment_wrapper.currentExperiment();
 				stop();
 	
