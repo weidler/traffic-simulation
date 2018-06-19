@@ -37,7 +37,8 @@ public class StreetMap {
 	private int strategy = 2; //which strategy we use starting form 1;
 	private ArrayList<Intersection> intersections;
 	private static double CurrentTime = 0;
-	
+	HashMap<ZoneType, ArrayList<Road>> zones = new HashMap<>();
+
 	public void setCurrentTime(double t) {
 		CurrentTime = t;
 	}
@@ -90,7 +91,37 @@ public class StreetMap {
 	public ArrayList<Road> getRoads() {
 		return roads;
 	}
+	
+	public void allocateRoadsByZone(){
 
+		zones.put(ZoneType.COMMERCIAL, new ArrayList<Road>());
+		zones.put(ZoneType.RESIDENTIAL, new ArrayList<Road>());
+		zones.put(ZoneType.MIXED, new ArrayList<Road>());
+		zones.put(ZoneType.INDUSTRIAL, new ArrayList<Road>());
+		
+		for(Road r: roads)
+		{
+			switch (r.getZoneType()) {
+				case MIXED:
+					zones.get(ZoneType.MIXED).add(r);
+					break;
+				case RESIDENTIAL:
+					zones.get(ZoneType.RESIDENTIAL).add(r);
+					break;
+				case INDUSTRIAL:
+					zones.get(ZoneType.INDUSTRIAL).add(r);
+					break;
+				case COMMERCIAL:
+					zones.get(ZoneType.COMMERCIAL).add(r);
+					break;
+			}
+		}
+		System.out.println(zones);
+	}
+
+	public HashMap<ZoneType, ArrayList<Road>> getRoadsByZone(){
+		return zones;
+	}
 	public Intersection getIntersection(int ID) {
 		return this.intersections.get(ID);
 	}
