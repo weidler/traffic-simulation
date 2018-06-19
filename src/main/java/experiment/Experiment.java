@@ -34,7 +34,6 @@ public class Experiment {
 	private ArrayList<Double> measurement_timestamps = new ArrayList<Double>();
 	
 	/* CONSTRUCTORS */
-		
 	public Experiment(Distribution arrival_generator, Strategy control_strategy, int simulation_length_in_days,
 			boolean vizualise, int meanIA, int phaseLength) {
 		this.arrival_generator = arrival_generator;

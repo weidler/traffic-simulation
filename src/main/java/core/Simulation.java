@@ -56,13 +56,7 @@ public class Simulation {
 	
 	private Experiment current_experiment;
 	private ExperimentWrapper experiment_wrapper;
-	
-/*	Intersection destination_intersection;
-	Intersection[] options;
-	Intersection destination_intersection2=null;
-	Intersection destination_intersection1 =null;
-	Intersection origin_intersection;
-*/
+
 	// PARAMETERS
 	private double truck_rate = 0.2;
 	
@@ -188,14 +182,12 @@ public class Simulation {
 		{
 			ArrayList<Road> targets = new ArrayList<>();
 		if(time > 21*60*60 || time < 7*60*60) {
-			System.out.println("entered first phase");
 
 			do {
 				destination = rand.nextInt(this.street_map.getIntersections().size());
 			} while (destination == origin);
 		}
 		else if(time > 7*60*60 && time < 12*60*60) {
-			System.out.println("entered second phase");
 			double ran = Math.random();
 			if (ran < 0.8) {
 				
@@ -206,14 +198,12 @@ public class Simulation {
 			{
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
-			}	
-			System.out.println("Targets size: " + targets.size());
+			}
 			int randomest = (int) Math.floor((Math.random() * targets.size()));
 			roadToGet = randomest;
 			
 		}
 		else {
-			System.out.println("entered third phase");
 			double ran = Math.random();
 			if (ran < 1) {
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
@@ -224,9 +214,7 @@ public class Simulation {
 
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
-			}	
-//			System.out.println("Targets size: " + targets.size());
-
+			}
 			int randomest = (int) Math.floor((Math.random() * targets.size()));
 			
 			roadToGet = randomest;
