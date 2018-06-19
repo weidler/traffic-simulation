@@ -55,7 +55,13 @@ public class Simulation {
 	
 	private Experiment current_experiment;
 	private ExperimentWrapper experiment_wrapper;
-
+	
+/*	Intersection destination_intersection;
+	Intersection[] options;
+	Intersection destination_intersection2=null;
+	Intersection destination_intersection1 =null;
+	Intersection origin_intersection;
+*/
 	// PARAMETERS
 	private double truck_rate = 0.2;
 	
@@ -163,20 +169,31 @@ public class Simulation {
 	public void addCarAtRoad(Road r) {
 		this.street_map.getIntersections();
 		this.street_map.getRoads();
+		
+		Intersection destination_intersection = null;
+		Intersection[] options;
+		Intersection destination_intersection2=null;
+		Intersection destination_intersection1 =null;
+		Intersection origin_intersection = null;
+
 		double time = realistic_time_in_seconds;
-		ArrayList<Road> targets = new ArrayList<>();
+		
 		Random rand = new Random();
 		int origin = this.street_map.getIntersectionIdByCoordinates(r.getX1(), r.getY1());
 		int destination = -1;
 		int roadToGet = -1;
 		// generate random parameters
-		if(time > 19*60*60 || time < 7*60*60) {
+		while (destination_intersection == origin_intersection )
+		{
+			ArrayList<Road> targets = new ArrayList<>();
+		if(time > 21*60*60 || time < 7*60*60) {
+			System.out.println("entered first phase");
 
 			do {
 				destination = rand.nextInt(this.street_map.getIntersections().size());
 			} while (destination == origin);
 		}
-		else if(time > 7*60*60 || time < 12*60*60) {
+		else if(time > 7*60*60 && time < 12*60*60) {
 			System.out.println("entered second phase");
 			double ran = Math.random();
 			if (ran < 0.8) {
@@ -189,13 +206,15 @@ public class Simulation {
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
 			}	
-			int randomest = (int) (Math.random() * targets.size());
+			System.out.println("Targets size: " + targets.size());
+			int randomest = (int) Math.floor((Math.random() * targets.size()));
 			roadToGet = randomest;
 			
 		}
 		else {
+			System.out.println("entered third phase");
 			double ran = Math.random();
-			if (ran < 0.8) {
+			if (ran < 1) {
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
 			}
@@ -205,19 +224,20 @@ public class Simulation {
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
 				targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
 			}	
-			int randomest = (int) (Math.random() * targets.size());
+//			System.out.println("Targets size: " + targets.size());
+
+			int randomest = (int) Math.floor((Math.random() * targets.size()));
+			
 			roadToGet = randomest;
 		}
 		
 		int targetIntersection = 0;
 		double rands = Math.random();
 		
-		Intersection[] options;
-		Intersection destination_intersection2=null;
-		Intersection destination_intersection1 =null;
+
 		
 		if(roadToGet != -1) {
-			 options = street_map.getRoads().get(roadToGet).getIntersections();
+			 options = targets.get(roadToGet).getIntersections();
 			if(rands<0.5)
 			{
 				targetIntersection = 1;
@@ -231,24 +251,27 @@ public class Simulation {
 		
 		
 		
-		Intersection destination_intersection;
+		
 		if(destination_intersection1 != null)
-		{System.out.println("target1");
+		{//System.out.println("target1");
 			destination_intersection = destination_intersection1;
 		}
 		else
 		{
-			System.out.println("target2");
+			//System.out.println("target2");
 			destination_intersection = destination_intersection2;
 		}
 		
-		Intersection origin_intersection = this.street_map.getIntersection(origin);
-		System.out.println("Origin: " + origin_intersection);
-		System.out.println("Destination: " + destination_intersection);
-		System.out.println("before");
+		origin_intersection = this.street_map.getIntersection(origin);
+
+		}
+		
+		//System.out.println("Origin: " + origin_intersection);
+		//System.out.println("Destination: " + destination_intersection);
+		//System.out.println("before");
 		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
 				this.street_map, cars, "Empirical");
-		System.out.println("after");
+		//System.out.println("after");
 		// create vehicle
 		Car random_car;
 		double type_rand = rand.nextDouble();

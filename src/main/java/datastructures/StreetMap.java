@@ -116,6 +116,7 @@ public class StreetMap {
 					break;
 			}
 		}
+		System.out.println(zones);
 	}
 
 	public HashMap<ZoneType, ArrayList<Road>> getRoadsByZone(){
