@@ -1,6 +1,7 @@
 package graphical_interface;
 
 import experiment.Experiment;
+import experiment.ExperimentWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ public class ExperimentBar extends JPanel {
 
 	private Experiment experiment;
 
-	public ExperimentBar(Experiment exp) {
+	public ExperimentBar(Experiment exp, ExperimentWrapper wrapper) {
 		this.experiment = exp;
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.setPreferredSize(new Dimension(200, 50));
@@ -41,7 +42,15 @@ public class ExperimentBar extends JPanel {
 		JPanel status_panel = new JPanel();
 		status_panel.setPreferredSize(panel_dim);
 		status_panel.setForeground(Color.WHITE);
-		status_panel.setBackground(Color.lightGray);
+		JLabel status_label;
+		if (wrapper.isFinished(exp)) {
+			status_label = new JLabel("\uF00C");
+		} else {
+			status_label = new JLabel("");
+		}
+		status_label.setFont(IconFont.getFontAwesome());
+		status_panel.add(status_label);
+		status_panel.setBackground(null);
 
 		this.add(duration_panel);
 		this.add(distro_panel);

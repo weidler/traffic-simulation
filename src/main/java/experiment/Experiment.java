@@ -25,7 +25,6 @@ public class Experiment {
 	private boolean vizualise;
 	private int numb_runs;
 
-
 	private String name;
 
 	/* CONTAINERS FOR OVER TIME STATISTICS */
