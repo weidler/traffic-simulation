@@ -24,8 +24,8 @@ import strategy.BasicCycling;
 import strategy.Coordinated;
 import strategy.InformedCycling;
 import strategy.Strategy;
-import strategy.WaitingCycling;
 import strategy.WeightedCycling;
+import strategy.PriorityCycling;
 import type.Distribution;
 import type.ZoneType;
 import util.Statistics;
@@ -288,14 +288,14 @@ public class Simulation {
 		}
 
 		// Strategy
-		if (this.current_experiment.getControlStrategy() == type.Strategy.BENCHMARK_CYCLING) {
+		if (this.current_experiment.getControlStrategy() == type.Strategy.BASIC_CYCLING) {
 			this.strategy = new BasicCycling(phaseLength, street_map);
-		} else if(this.current_experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
-			this.strategy = new WeightedCycling(phaseLength, street_map);
+		} else if(this.current_experiment.getControlStrategy() == type.Strategy.PRIORITY_CYCLING) {
+			this.strategy = new PriorityCycling(phaseLength, street_map);
 		} else if(this.current_experiment.getControlStrategy() == type.Strategy.COORDINATED) {
 			this.strategy = new Coordinated(phaseLength, street_map);
-		} else if(this.current_experiment.getControlStrategy() == type.Strategy.WAITING) {
-			this.strategy = new WaitingCycling(phaseLength, street_map);
+		} else if(this.current_experiment.getControlStrategy() == type.Strategy.WEIGHTED_CYCLING) {
+			this.strategy = new WeightedCycling(phaseLength, street_map);
 		} else if (this.current_experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(phaseLength, street_map);
 		} else {

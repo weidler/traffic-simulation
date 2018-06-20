@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.SystemUtils;
 import type.Distribution;
 import type.Strategy;
-import util.Time;
 
 import javax.swing.*;
 
@@ -48,11 +47,8 @@ public class Experiment {
 		for (int i = 0; i < this.numb_runs; i++) this.addRun();
 	}
 
-	/** DEFAULT CONSTRUCTOR
-	 *  Uses poisson, benchmark, one day and visualizes.
-	 */
 	public Experiment() {
-		this(Distribution.EMPIRICAL, Strategy.WEIGHTED_CYCLING, 1, true, 60, 15);
+		this(Distribution.EMPIRICAL, Strategy.WEIGHTED_CYCLING, 1, true, 30, 60);
 		this.name = "Default";
 	}
 

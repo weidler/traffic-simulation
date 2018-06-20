@@ -1,26 +1,16 @@
 package graphical_interface;
 
 import buttons.DefaultButtonUI;
-import com.google.common.collect.Lists;
 import core.Simulation;
-import datastructures.StreetMap;
 import experiment.Experiment;
-import org.knowm.xchart.*;
-import org.knowm.xchart.style.Styler;
-import road.Road;
 import type.Distribution;
 import type.Strategy;
-import type.ZoneType;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class ExperimenterPanel extends JPanel {
 
@@ -49,42 +39,44 @@ public class ExperimenterPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String[] strategyList = { "circulating lights", "weigthed cycling","coordinated","informed cycling","waiting" };
-				String[] scheduleList = { "empirical", "poisson", "gaussian"};
+				String[] strategyList = { "Basic Cycling", "Priority Cycling", "Coordinated", "Informed Cycling", "Weighted Cycling" };
+				String[] scheduleList = { "Empirical", "Poisson", "Gaussian"};
 
 				JComboBox<String> strategy = new JComboBox<>(strategyList);
 				JComboBox<String> schedule = new JComboBox<>(scheduleList);
-				JCheckBox visualize = new JCheckBox("visualize?");
+				JCheckBox visualize = new JCheckBox("Visualize?");
+				Experiment default_exp = new Experiment();
+
 				JTextField duration = new JTextField(5); // in days
 				JTextField inter = new JTextField(5); // time for car arrival
 				JTextField phaseLength = new JTextField(5);
 				JTextField fileName = new JTextField(20);
 				
-				JPanel myPanel = new JPanel();
-				myPanel.add(new JLabel("Duration in Days:"));
-				duration.setText("1");
-				myPanel.add(duration);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Inter Arrival Time:"));
-				inter.setText("10");
-				myPanel.add(inter);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Control Strategy:"));
-				myPanel.add(strategy);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Phase Length:"));
-				phaseLength.setText("5");
-				myPanel.add(phaseLength);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("Schedule:"));
-				myPanel.add(schedule);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-				myPanel.add(new JLabel("fileName:"));
-				myPanel.add(fileName);
-				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				JPanel new_experiment_dialog = new JPanel(new FlowLayout());
+				new_experiment_dialog.add(new JLabel("Duration in Days:"));
+				duration.setText(Integer.toString(default_exp.getSimulationLengthInDays()));
+				new_experiment_dialog.add(duration);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
+				new_experiment_dialog.add(new JLabel("Inter Arrival Time:"));
+				inter.setText(Integer.toString(default_exp.getIaTime()));
+				new_experiment_dialog.add(inter);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
+				new_experiment_dialog.add(new JLabel("Control Strategy:"));
+				new_experiment_dialog.add(strategy);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
+				new_experiment_dialog.add(new JLabel("Phase Length:"));
+				phaseLength.setText(Integer.toString(default_exp.getPhaseLength()));
+				new_experiment_dialog.add(phaseLength);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
+				new_experiment_dialog.add(new JLabel("Schedule:"));
+				new_experiment_dialog.add(schedule);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
+				new_experiment_dialog.add(new JLabel("fileName:"));
+				new_experiment_dialog.add(fileName);
+				new_experiment_dialog.add(Box.createHorizontalStrut(15)); // a spacer
 				visualize.setSelected(true);
-				myPanel.add(visualize);
-				int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter data",
+				new_experiment_dialog.add(visualize);
+				int result = JOptionPane.showConfirmDialog(null, new_experiment_dialog, "Please Enter data",
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
 					System.out.println("duration value:  " + duration.getText());
@@ -115,27 +107,27 @@ public class ExperimenterPanel extends JPanel {
 
 					Strategy control_strategy;
 					switch ((String) strategy.getSelectedItem()) {
-						case "circulating lights":
-							control_strategy = Strategy.BENCHMARK_CYCLING;
+						case "Basic Cycling":
+							control_strategy = Strategy.BASIC_CYCLING;
 							break;
 
-						case "weigthed cycling":
+						case "Priority Cycling":
+							control_strategy = Strategy.PRIORITY_CYCLING;
+							break;
+
+						case "Coordinated":
+							control_strategy = Strategy.COORDINATED;
+							break;
+						case "Weighted Cycling":
 							control_strategy = Strategy.WEIGHTED_CYCLING;
 							break;
 
-						case "coordinated":
-							control_strategy = Strategy.COORDINATED;
-							break;
-						case "waiting":
-							control_strategy = Strategy.WAITING;
-							break;
-
-						case "informed cycling":
+						case "Informed Cycling":
 							control_strategy = Strategy.INFORMED_CYCLING;
 							break;
 
 						default:
-							control_strategy = Strategy.BENCHMARK_CYCLING;
+							control_strategy = Strategy.BASIC_CYCLING;
 							break;
 					}
 

@@ -209,6 +209,15 @@ where $v$ is the velocity, s the road length and t refers to the time spent on a
 \subsection{Simulation Validation}
 In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
 
+\section{Experiments}
+
+\subsection{Cases}
+
+\subsection{Methodology}
+It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. Since it is desirable in such a setting to not only compare these systems with a baseline or benchmark system but rather rank them by performance, a convenient framework for such a comparison is needed. An all-pairwise comparison is not desirable, since the total of 6 systems would require 30 comparisons, which would result in tiny confidence levels due to Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. In order to perform statistical calculations on the data, it is often necessary but at least useful to have IID observations. It is obvious that this independence can not be assumed in a traffic simulation between individual cars, since the delay of one car often influences that of others in shared roads and queues. While restarting the simulation $n$ times in order to get $n$ observations that can be combined to a grand mean seems an obvious choice, the day-based simulation also allows to run multiple days and assume independence between days, since traffic is supposed to somewhat reset during night.
+
+Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation.
+
 \section{Results}
 \label{sec:results}
 
@@ -218,7 +227,7 @@ In order to validate both the IA generation as well as the general behaviour of 
 \section{Conclusion}
 \label{sec:conclusion}
 
-- Often times, better road layout makes way more of a difference than different strategies (tiefighter example)
+%- Often times, better road layout makes way more of a difference than different strategies (tiefighter example)
 
 {\tiny\printbibliography}
 
