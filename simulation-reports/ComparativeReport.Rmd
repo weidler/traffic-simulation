@@ -1,0 +1,142 @@
+---
+title: "Comparative Analysis"
+author: "Tonio Weidler"
+date: "June 20, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(plotly)
+```
+
+```{r include=FALSE}
+srcFiles <- c("a.csv", "b.csv", "c.csv")
+
+## READ IN EXPERIMENTS
+data_frames <- list()
+i = 1
+for (filename in srcFiles) {
+  data_frames[[i]] = read.csv(paste("csv-data/", filename, sep=""), sep = ";");
+  i = i + 1
+}
+
+for (i in 1:length(data_frames)) {
+  data_frames[[i]]$time <- data_frames[[i]]$time/60/60
+  data_frames[[i]]$numb_cars[is.na(data_frames[[i]]$numb_cars)] <- 0
+  data_frames[[i]]$avg_velo[is.na(data_frames[[i]]$avg_velo)] <- 0
+  data_frames[[i]]$frac_wait[is.na(data_frames[[i]]$frac_wait)] <- 0
+}
+
+## AVERAGING OVER DAYS FOR EACH EXPERIMENT
+times <- data_frames[[1]]$time
+measurements_per_day <- length(times[times < 24])
+days_simulated <- length(times) %/% measurements_per_day
+
+frac_waits <- list()
+avg_speeds <- list()
+numb_cars <- list()
+
+rowVars <- function(x, ...) {
+  rowSums((x - rowMeans(x, ...))^2, ...)/(dim(x)[2] - 1)
+}
+
+for (i_exp in 1:length(data_frames)) {
+  data_frames[[i_exp]]$time <- data_frames[[i_exp]]$time %% 24;
+  
+  frac_waits[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(frac_waits[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
+  avg_speeds[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(avg_speeds[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
+  numb_cars[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(numb_cars[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
+  for (i in 1:measurements_per_day) {
+    frac_waits[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$frac_wait
+    )
+    
+    avg_speeds[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$avg_velo
+    )
+    
+    numb_cars[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$numb_cars
+    )
+  }
+  
+  frac_waits[[i_exp]]$mean <- rowMeans(frac_waits[[i_exp]][,3:(days_simulated+1)])
+  avg_speeds[[i_exp]]$mean <- rowMeans(avg_speeds[[i_exp]][,3:(days_simulated+1)])
+  numb_cars[[i_exp]]$mean <- rowMeans(numb_cars[[i_exp]][,3:(days_simulated+1)])
+  
+  frac_waits[[i_exp]]$var <- rowVars(frac_waits[[i_exp]][,3:(days_simulated+1)])
+  avg_speeds[[i_exp]]$var <- rowVars(avg_speeds[[i_exp]][,3:(days_simulated+1)])
+  numb_cars[[i_exp]]$var <- rowVars(numb_cars[[i_exp]][,3:(days_simulated+1)])
+}
+```
+
+## Number of Cars on the Map
+
+```{r echo=FALSE, message=FALSE}
+numb_cars_plot <- plot_ly(x=numb_cars[[1]]$time) %>%
+  layout(xaxis = list(title = 'Time (h)'),
+         yaxis = list(title = 'Number of Cars in System'),
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = TRUE)
+
+for (i in 1:length(numb_cars)) {
+  numb_cars_plot <- add_trace(
+    numb_cars_plot, 
+    y=fitted(loess(numb_cars[[i]]$mean ~ numb_cars[[i]]$time, span=0.2)), 
+    name = srcFiles[i], 
+    mode="lines")
+}
+
+numb_cars_plot
+```
+
+## Average Velocities
+
+```{r echo=FALSE, message=FALSE}
+avg_speeds_plot <- plot_ly(x=avg_speeds[[1]]$time) %>%
+  layout(xaxis = list(title = 'Time (h)'),
+         yaxis = list(title = 'Average Velocity'),
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = TRUE)
+
+for (i in 1:length(avg_speeds)) {
+  avg_speeds_plot <- add_trace(
+    avg_speeds_plot, 
+    y=fitted(loess(avg_speeds[[i]]$mean ~ avg_speeds[[i]]$time, span=0.2)), 
+    name = srcFiles[i], 
+    mode="lines")
+}
+
+avg_speeds_plot
+```
+
+## Average Fractional Waiting Times
+
+```{r echo=FALSE, message=FALSE}
+frac_waits_plot <- plot_ly(x=frac_waits[[1]]$time) %>%
+  layout(xaxis = list(title = 'Time (h)'),
+         yaxis = list(title = 'Average Fractional Waiting Time'),
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = TRUE)
+
+for (i in 1:length(frac_waits)) {
+  frac_waits_plot <- add_trace(
+    frac_waits_plot, 
+    y=fitted(loess(frac_waits[[i]]$mean ~ frac_waits[[i]]$time, span=0.2)), 
+    name = srcFiles[i], 
+    mode="lines")
+}
+
+frac_waits_plot
+```
