@@ -27,6 +27,7 @@ import strategy.Strategy;
 import strategy.WaitingCycling;
 import strategy.WeightedCycling;
 import type.Distribution;
+import type.RoadType;
 import type.ZoneType;
 import util.Statistics;
 import util.Time;
@@ -344,12 +345,14 @@ public class Simulation {
 	
 					// spawn new cars to the roads according to the schedule
 					for (Road r : this.street_map.getRoads()) {
-						if (simulation_schedule.carWaitingAt(r, this.current_time)) {
-							if (r.getAvailabePopulation() > 0) {
-								this.addCarAtRoad(r);
-								r.decrementAvailablePopulation();
+						if(r.getRoadType() != RoadType.HIGHWAY) {
+							if (simulation_schedule.carWaitingAt(r, this.current_time)) {
+								if (r.getAvailabePopulation() > 0) {
+									this.addCarAtRoad(r);
+									r.decrementAvailablePopulation();
+								}
+								simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
 							}
-							simulation_schedule.drawNextCarAt(r, realistic_time_in_seconds);
 						}
 					}
 	
