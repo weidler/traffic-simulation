@@ -440,13 +440,27 @@ public class StreetMap {
 					Intersection start = this.getIntersectionByCoordinates(x1, y1);
 					Intersection end = this.getIntersectionByCoordinates(x2, y2);
 
-					Road road = new Road(start, end);
+					Road road;
+					switch (sc.next()) {
+						case "ROAD":
+							road = new Road(start, end);
+							break;
+						case "HIGHWAY":
+							road = new Highway(start, end);
+							break;
+						case "DIRT_ROAD":
+							road = new DirtRoad(start, end);
+							break;
+						default:
+							road = new Road(start, end);
+							break;
+					}
+
 					road.setStreetMap(this);
-					road.setRoadType(sc.next());
 					road.setLanes(Integer.parseInt(sc.next()));
+
 					next = sc.next();
-					if(next.equals("true"))
-					{
+					if(next.equals("true")) {
 						road.toggleDirected();
 					}
 					next = sc.next();
@@ -465,7 +479,11 @@ public class StreetMap {
 					else if(next.equals("INDUSTRIAL"))
 					{
 						road.setZoneType(ZoneType.INDUSTRIAL);
+					} else {
+						road.setZoneType(ZoneType.NONE);
 					}
+
+					if (road.getRoadType() == RoadType.HIGHWAY) road.setZoneType(ZoneType.NONE);
 					this.addRoad(road);
 					next = sc.next();
 
