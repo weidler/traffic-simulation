@@ -49,6 +49,7 @@ public class Road {
 
 		this.setTypeParameters();
 		this.available_population = (int) (this.length / 10) * 2;
+		if (this.getRoadType() == RoadType.HIGHWAY) available_population = 0;
 	}
 
 	public Road(Intersection intersection_from, Intersection intersection_to) {

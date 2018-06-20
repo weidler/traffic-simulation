@@ -48,7 +48,7 @@ public class Experiment {
 	}
 
 	public Experiment() {
-		this(Distribution.EMPIRICAL, Strategy.WEIGHTED_CYCLING, 1, true, 30, 60);
+		this(Distribution.EMPIRICAL, Strategy.WEIGHTED_CYCLING, 1, true, 60, 60);
 		this.name = "Default";
 	}
 
