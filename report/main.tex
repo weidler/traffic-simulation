@@ -62,12 +62,7 @@ In the following sections we further describe our approach and the results of ou
 In the following subsections we describe the implementation and design choices of the simulation environment in which we evaluated the effect of different traffic control strategies.
 
 \subsection{Graphical User Interface}
-The Graphical User Interface (GUI) is designed for simplicity. It consists of three  panels. On the left side the main panel is located. Here, maps can be created and navigated through and the simulation process is visualized. Maps can be interactively constructed by clicking and dragging on the panel. Above the main panel there is an info panel that indicates different values such as the current time and day of the simulation. Finally, the right panel contains the controls for different functionalities such as the creation of maps, setting of experimental parameters and controlling the simulation. Figure \ref{fig:interface} shows this interface with a small map.
-
-\begin{figure}
-	\includegraphics[width=\linewidth]{img/interface.png}
-	\caption{Interface of the interactive simulation environment. Different road colors indicate different road types (e.g. streets or highways). \label{fig:interface}}
-\end{figure}
+The Graphical User Interface (GUI) is designed for simplicity. It consists of three  panels. On the left side the main panel is located. Here, maps can be created and navigated through and the simulation process is visualized. Maps can be interactively constructed by clicking and dragging on the panel. Above the main panel there is an info panel that indicates different values such as the current time and day of the simulation. Finally, the right panel contains the controls for different functionalities such as the creation of maps, setting of experimental parameters and controlling the simulation.
 	
 \subsection{Traffic Flow Simulation}
 As mentioned beforehand, the IDM \citep{treiber2000congested} is applied for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as

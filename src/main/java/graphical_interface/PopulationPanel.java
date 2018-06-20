@@ -8,6 +8,7 @@ import road.Road;
 import type.ZoneType;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -94,8 +95,26 @@ public class PopulationPanel extends JPanel {
 		ArrayList<Integer> road_ids = new ArrayList<Integer>();
 		ArrayList<Integer> populations = new ArrayList<Integer>();
 		HashMap<ZoneType, Integer> population_per_zone = new HashMap<ZoneType, Integer>();
+		ArrayList<Color> zone_colors = new ArrayList<Color>();
 		for (ZoneType zone : ZoneType.values()) {
 			population_per_zone.put(zone, 0);
+			switch (zone) {
+				case RESIDENTIAL:
+					zone_colors.add(Color.decode("#2bb53b"));
+					break;
+				case MIXED:
+					zone_colors.add(Color.decode("#28b586"));
+					break;
+				case COMMERCIAL:
+					zone_colors.add(Color.decode("#2a9bb5"));
+					break;
+				case INDUSTRIAL:
+					zone_colors.add(Color.decode("#b59229"));
+					break;
+				case NONE:
+					zone_colors.add(null);
+					break;
+			}
 		}
 
 		int i = 0;
@@ -112,6 +131,8 @@ public class PopulationPanel extends JPanel {
 				populations,
 				null
 		);
+
+		zone_population_chart.getStyler().setSeriesColors(zone_colors.toArray(new Color[zone_colors.size()]));
 
 		for (ZoneType zone : ZoneType.values()) {
 			zone_population_chart.updatePieSeries(zone.toString(), population_per_zone.get(zone));
