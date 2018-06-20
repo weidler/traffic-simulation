@@ -52,7 +52,7 @@ public class ExperimenterPanel extends JPanel {
 				JTextField phaseLength = new JTextField(5);
 				JTextField fileName = new JTextField(20);
 				
-				JPanel new_experiment_dialog = new JPanel(new FlowLayout());
+				JPanel new_experiment_dialog = new JPanel(new GridLayout(7, 2));
 				new_experiment_dialog.add(new JLabel("Duration in Days:"));
 				duration.setText(Integer.toString(default_exp.getSimulationLengthInDays()));
 				new_experiment_dialog.add(duration);
