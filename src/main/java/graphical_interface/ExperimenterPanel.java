@@ -14,6 +14,7 @@ import type.ZoneType;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -175,7 +176,11 @@ public class ExperimenterPanel extends JPanel {
 		ArrayList<ExperimentBar> bars = new ArrayList<>();
 		for (Experiment exp : this.simulation.getExperimentWrapper().getAllExperiments()) {
 			ExperimentBar bar = new ExperimentBar(exp, this.simulation.getExperimentWrapper(), this);
-			bar.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
+			if (this.simulation.getExperimentWrapper().currentExperiment() == exp) {
+				bar.setBorder(BorderFactory.createDashedBorder(Color.RED, 2, 2, 2, true));
+			} else {
+				bar.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+			}
 
 			gbc = new GridBagConstraints();
 			gbc.anchor = GridBagConstraints.NORTH;

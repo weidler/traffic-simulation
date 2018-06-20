@@ -16,8 +16,15 @@ public class Schedule {
 	public Schedule(StreetMap street_map) {
 		this.street_map = street_map;
 		this.arrival_times_per_road = new HashMap<Road, Double>();
+		initializeIATs();
+	}
+
+	public Schedule() {}
+
+	protected void initializeIATs() {
 		for (Road r : this.street_map.getRoads()) {
-			arrival_times_per_road.put(r, this.drawInterarrivalTime());
+			arrival_times_per_road.put(r, 0.0);
+			this.drawNextCarAt(r, 0);
 		}
 	}
 
@@ -55,7 +62,7 @@ public class Schedule {
 	 * NOT IMPLEMENTED FOR THIS SCHEDULE
 	 */
 	public void drawNextCarAt(Road r, double current_time) {
-		System.out.println("NOT IMPLEMENTED FOR THIS SCHEDULE.");
+		this.drawNextCarAt(r);
 	}
 
 	public double drawInterarrivalTime() {

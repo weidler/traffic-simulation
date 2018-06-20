@@ -1,5 +1,7 @@
 package experiment;
 
+import org.apache.commons.math3.analysis.function.Exp;
+
 import java.util.ArrayList;
 
 public class ExperimentWrapper {
@@ -73,5 +75,9 @@ public class ExperimentWrapper {
 
 	public int remainingExperiments() {
 		return this.experiments.size();
+	}
+
+	public ArrayList<Experiment> getRemainingExperiments() {
+		return this.experiments;
 	}
 }

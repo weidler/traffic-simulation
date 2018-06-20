@@ -53,6 +53,7 @@ public class Experiment {
 	 */
 	public Experiment() {
 		this(Distribution.EMPIRICAL, Strategy.WEIGHTED_CYCLING, 1, true, 60, 15);
+		this.name = "Default";
 	}
 
 	/* METHODS */
@@ -96,8 +97,8 @@ public class Experiment {
 
 	/* ACTIONS */
 	public void save() {
-		System.out.println("MY NAME IS " + name);
-		if (this.name != null && this.name != "") {
+		System.out.println(name);
+		if (this.name == null || this.name.isEmpty()) {
 			JPanel thisPanel = new JPanel();
 			JTextField name_field = new JTextField(5);
 			thisPanel.add(new JLabel("File name:"));

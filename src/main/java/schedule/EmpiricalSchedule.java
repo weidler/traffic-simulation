@@ -1,6 +1,7 @@
 package schedule;
 
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.json.simple.JSONObject;
@@ -17,7 +18,8 @@ public class EmpiricalSchedule extends Schedule {
 	private double[] rates = new double[24];
 
 	public EmpiricalSchedule(StreetMap street_map, double mean_interarrival_time, String data_file_path) {
-		super(street_map);
+		this.street_map = street_map;
+		this.arrival_times_per_road = new HashMap<Road, Double>();
 
 		try {
 			Object obj = new JSONParser().parse(new FileReader(data_file_path));
@@ -36,6 +38,7 @@ public class EmpiricalSchedule extends Schedule {
 		}
 
 		this.mean_interarrival_time = mean_interarrival_time;
+		this.initializeIATs();
 	}
 
 	public void drawNextCarAt(Road r, double realistic_time_in_seconds) {

@@ -5,6 +5,7 @@ import experiment.Experiment;
 import experiment.ExperimentWrapper;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,7 @@ public class ExperimentBar extends JPanel {
 	public ExperimentBar(Experiment exp, ExperimentWrapper wrapper, ExperimenterPanel container) {
 		this.experiment = exp;
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		this.setPreferredSize(new Dimension(200, 50));
+		this.setPreferredSize(new Dimension(250, 50));
 
 		Dimension panel_dim = new Dimension(50, 50);
 
@@ -49,6 +50,7 @@ public class ExperimentBar extends JPanel {
 			JLabel status_label = new JLabel("\uF00C");
 			status_label.setFont(IconFont.getFontAwesome());
 			status_panel.add(status_label);
+			status_label.setBackground(null);
 		} else {
 			status_panel.setLayout(new GridLayout(2, 1));
 
@@ -79,6 +81,7 @@ public class ExperimentBar extends JPanel {
 			});
 
 			remove_button.setUI(new IconButtonUI());
+			remove_button.setBackground(null);
 			remove_button.setBorderPainted(false);
 			remove_button.setContentAreaFilled(false);
 			remove_button.setOpaque(false);

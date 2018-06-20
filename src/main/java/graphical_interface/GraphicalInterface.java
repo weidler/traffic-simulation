@@ -173,6 +173,10 @@ public class GraphicalInterface extends JFrame {
 		defineGBC(c, GridBagConstraints.VERTICAL, 1, 0, 1, 2, 0, 1);
 		contentPane.add(menuPanel, c);
 
+		// WINDOWED PANELS
+		experimenterPanel = new ExperimenterPanel(simulation);
+		populationPanel = new PopulationPanel(streetMap);
+
 		// ARROW KEY LISTENERS
 		InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
@@ -531,7 +535,6 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				populationPanel = new PopulationPanel(streetMap);
 				JOptionPane pane = new JOptionPane(null, JOptionPane.PLAIN_MESSAGE);
 				pane.add(populationPanel);
 
@@ -550,7 +553,6 @@ public class GraphicalInterface extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				experimenterPanel = new ExperimenterPanel(simulation);
 				JOptionPane pane = new JOptionPane(null, JOptionPane.PLAIN_MESSAGE);
 				pane.add(experimenterPanel);
 
