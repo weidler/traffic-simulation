@@ -40,4 +40,9 @@ public class platoonDispersion {
 		int lc = 0;
 		return lc;
 	}
+	
+	public int outgoingFlow(int phase, Intersection i, int cycle, int interval, int time) {
+		int of = 0;
+		return of;
+	}
 }
