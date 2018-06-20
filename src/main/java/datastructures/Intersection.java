@@ -153,6 +153,17 @@ public class Intersection {
 	public ArrayList<Connection> getConnections() {
 		return this.connections;
 	}
+	
+	public boolean isInHighway()
+	{
+		
+		for(Intersection i : this.getConnectedIntersections())
+		{
+			if(getRoadTo(i).getRoadType() != RoadType.HIGHWAY)
+				return false;
+		}
+		return true;
+	}
 
 	public ArrayList<ArrayList<TrafficLight>> getTrafficLights() {
 		ArrayList<ArrayList<TrafficLight>> traffic_lights = new ArrayList<ArrayList<TrafficLight>>();

@@ -179,7 +179,7 @@ public class Simulation {
 		int destination = -1;
 		int roadToGet = -1;
 		// generate random parameters
-		while (destination_intersection == origin_intersection )
+		while (destination_intersection == origin_intersection  || destination_intersection.isInHighway())
 		{
 			ArrayList<Road> targets = new ArrayList<>();
 		if(time > 21*60*60 || time < 7*60*60) {
@@ -309,16 +309,16 @@ public class Simulation {
 	public void start() {
 		if (street_map.getIntersections().size() > 0)
 		{
+			if (this.is_running) {
+				System.out.println("Already Running.");
+				return;
+			}
+
 			street_map.allocateRoadsByZone();
 			this.updateCarListToMap();
 			this.simulation_schedule.updateToMap();
 			this.current_experiment = this.experiment_wrapper.currentExperiment();
 			this.applyExperimentalSettings();
-	
-			if (this.is_running) {
-				System.out.println("Already Running.");
-				return;
-			}
 	
 			this.is_running = true;
 	
