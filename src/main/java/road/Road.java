@@ -342,6 +342,8 @@ public class Road {
 	}
 	public void setZoneType(ZoneType t) {
 		zone_type = t;
+		if (getRoadType() == RoadType.HIGHWAY)
+			zone_type = ZoneType.NONE;
 	}
 
 

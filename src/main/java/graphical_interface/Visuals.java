@@ -621,6 +621,8 @@ public class Visuals extends JPanel {
 				case INDUSTRIAL:
 					g2.setColor(Color.decode(this.industrial_color));
 					break;
+				case NONE:
+					continue;
 			}
 
 			g2.fill(zone_areas.get(r)[0]);
