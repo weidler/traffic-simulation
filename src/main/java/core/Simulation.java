@@ -167,7 +167,7 @@ public class Simulation {
 		this.street_map.getRoads();
 		
 		Intersection destination_intersection = null;
-		Intersection[] options;
+		Intersection[] options = null;
 		Intersection destination_intersection2=null;
 		Intersection destination_intersection1 =null;
 		Intersection origin_intersection = null;
@@ -183,10 +183,7 @@ public class Simulation {
 		{
 			ArrayList<Road> targets = new ArrayList<>();
 		if(time > 21*60*60 || time < 7*60*60) {
-
-			do {
-				destination = rand.nextInt(this.street_map.getIntersections().size());
-			} while (destination == origin);
+			destination = rand.nextInt(this.street_map.getRoads().size());
 		}
 		else if(time > 7*60*60 && time < 12*60*60) {
 			double ran = Math.random();
@@ -228,16 +225,16 @@ public class Simulation {
 		
 		if(roadToGet != -1) {
 			 options = targets.get(roadToGet).getIntersections();
-			if(rands<0.5)
+		}
+		else
+		{
+			options = street_map.getRoads().get(destination).getIntersections();
+		}		
+		if(rands<0.5)
 			{
 				targetIntersection = 1;
 			}
 			destination_intersection1 = options[targetIntersection];
-		}
-		else
-		{
-			destination_intersection2 = this.street_map.getIntersection(destination);
-		}
 		
 		
 		
@@ -261,6 +258,30 @@ public class Simulation {
 		//System.out.println("before");
 		ArrayList<Intersection> shortest_path = AstarAdvanced.createPath(origin_intersection, destination_intersection,
 				this.street_map, cars, "Empirical");
+		
+		if(options[0] == shortest_path.get(shortest_path.size()-1))
+		{
+			if(options[1] == shortest_path.get(shortest_path.size()-2))
+			{
+				shortest_path = shortest_path;
+			}
+			else
+			{
+				shortest_path.add(options[1]);
+			}
+		}
+		else
+		{
+			if(options[0] == shortest_path.get(shortest_path.size()-2))
+			{
+				shortest_path = shortest_path;
+			}
+			else
+			{
+				shortest_path.add(options[0]);
+			}
+		}
+		
 		//System.out.println("after");
 		// create vehicle
 		Car random_car;
