@@ -183,39 +183,47 @@ public class Simulation {
 		{
 			ArrayList<Road> targets = new ArrayList<>();
 		if(time > 21*60*60 || time < 7*60*60) {
-			destination = rand.nextInt(this.street_map.getRoads().size());
+			do {
+				destination = rand.nextInt(this.street_map.getRoads().size());
+			} while (street_map.getRoads().get(destination).getRoadType() == RoadType.HIGHWAY);
+				
+		
 		}
 		else if(time > 7*60*60 && time < 12*60*60) {
-			double ran = Math.random();
-			if (ran < 0.8 && (street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL).size() != 0 || street_map.getRoadsByZone().get(ZoneType.COMMERCIAL).size() != 0) ) {
-				
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
-			}
-			else
-			{
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
-			}
-			int randomest = (int) Math.floor((Math.random() * targets.size()));
-			roadToGet = randomest;
+			do {
+				double ran = Math.random();
+				if (ran < 0.8 && (street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL).size() != 0 || street_map.getRoadsByZone().get(ZoneType.COMMERCIAL).size() != 0) ) {
+					
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
+				}
+				else
+				{
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
+				}
+				int randomest = (int) Math.floor((Math.random() * targets.size()));
+				roadToGet = randomest;
+			} while (targets.get(roadToGet).getRoadType() == RoadType.HIGHWAY);
 			
 		}
 		else {
-			double ran = Math.random();
-			if (ran < 1 && (street_map.getRoadsByZone().get(ZoneType.MIXED).size() != 0 || street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL).size() != 0) ) {
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
-			}
-			else
-			{
-
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
-				targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
-			}
-			int randomest = (int) Math.floor((Math.random() * targets.size()));
-			
-			roadToGet = randomest;
+			do {
+				double ran = Math.random();
+				if (ran < 1 && (street_map.getRoadsByZone().get(ZoneType.MIXED).size() != 0 || street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL).size() != 0) ) {
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.MIXED));
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.RESIDENTIAL));
+				}
+				else
+				{
+	
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.INDUSTRIAL));
+					targets.addAll(street_map.getRoadsByZone().get(ZoneType.COMMERCIAL));
+				}
+				int randomest = (int) Math.floor((Math.random() * targets.size()));
+				
+				roadToGet = randomest;
+			} while (targets.get(roadToGet).getRoadType() == RoadType.HIGHWAY);
 		}
 		
 		int targetIntersection = 0;
