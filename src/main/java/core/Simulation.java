@@ -179,7 +179,7 @@ public class Simulation {
 		int destination = -1;
 		int roadToGet = -1;
 		// generate random parameters
-		while (destination_intersection == origin_intersection )
+		while (destination_intersection == origin_intersection  || destination_intersection.isInHighway())
 		{
 			ArrayList<Road> targets = new ArrayList<>();
 		if(time > 21*60*60 || time < 7*60*60) {
