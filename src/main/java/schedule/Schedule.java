@@ -6,6 +6,7 @@ import java.util.Random;
 
 import datastructures.StreetMap;
 import road.Road;
+import type.RoadType;
 
 public class Schedule {
 
@@ -23,9 +24,12 @@ public class Schedule {
 
 	protected void initializeIATs() {
 		for (Road r : this.street_map.getRoads()) {
-			arrival_times_per_road.put(r, 0.0);
-			this.drawNextCarAt(r, 0);
+			if(r.getRoadType() != RoadType.HIGHWAY) {
+				arrival_times_per_road.put(r, 0.0);
+				this.drawNextCarAt(r, 0);
+			}
 		}
+		
 	}
 
 	public boolean carWaitingAt(Road r, double current_time) {
