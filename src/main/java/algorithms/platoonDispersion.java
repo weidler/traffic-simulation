@@ -4,7 +4,7 @@ import datastructures.Intersection;
 
 public class platoonDispersion {
 
-	public int queueGreen(int phase, Intersection i, int cycle, int interval, int time) {
+	/*public int queueGreen(int phase, Intersection i, int cycle, int interval, int time) {
 		int qg = 0;
 		qg = queueGreen(phase,i,cycle-1,interval,time) + (estimationGreen(phase,i,cycle,interval,time)/time)*lengthGreen(cycle,i,phase)-outgoingFlow(phase,i,cycle,interval,time);
 		return qg;
@@ -39,5 +39,5 @@ public class platoonDispersion {
 	public int lengthCycle(int cycle, Intersection i) {
 		int lc = 0;
 		return lc;
-	}
+	}*/
 }

@@ -30,7 +30,8 @@ plot_ly(x=data$time, y=data$avg_velo) %>%
   add_lines(y = ~fitted(loess(data$avg_velo ~ data$time, span=0.2))) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Average Velocity'),
-         legend = list(x = 0.80, y = 0.90))
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = FALSE)
 ```
 
 ### Number of Cars in Traffic
@@ -40,7 +41,8 @@ plot_ly(x=data$time, y=data$numb_cars) %>%
   add_lines(y = ~fitted(loess(data$numb_cars ~ data$time, span=0.2))) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Number of Cars in System'),
-         legend = list(x = 0.80, y = 0.90))
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = FALSE)
 ```
 
 ### Average Percentage of Time Spent Waiting
@@ -50,6 +52,7 @@ plot_ly(x=data$time, y=data$frac_wait) %>%
   add_lines(y = ~fitted(loess(data$frac_wait ~ data$time, span=0.2))) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Fractional Waiting Time'),
-         legend = list(x = 0.80, y = 0.90))
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = FALSE)
 
 ```

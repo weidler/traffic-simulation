@@ -309,16 +309,16 @@ public class Simulation {
 	public void start() {
 		if (street_map.getIntersections().size() > 0)
 		{
+			if (this.is_running) {
+				System.out.println("Already Running.");
+				return;
+			}
+
 			street_map.allocateRoadsByZone();
 			this.updateCarListToMap();
 			this.simulation_schedule.updateToMap();
 			this.current_experiment = this.experiment_wrapper.currentExperiment();
 			this.applyExperimentalSettings();
-	
-			if (this.is_running) {
-				System.out.println("Already Running.");
-				return;
-			}
 	
 			this.is_running = true;
 	
