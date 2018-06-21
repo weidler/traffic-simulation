@@ -12,7 +12,7 @@ library(plotly)
 ```
 
 ```{r include=FALSE}
-srcFiles <- c("a.csv", "b.csv", "c.csv")
+srcFiles <- c("Basic.csv", "Informed.csv", "Weighted.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
