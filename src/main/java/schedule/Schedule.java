@@ -45,20 +45,10 @@ public class Schedule {
 	}
 
 	public double adjustStatisticToRoad(Road r, double stat) {
-		stat = stat * (1000 / r.getLength());
-		switch (r.getZoneType()) {
-
-			case RESIDENTIAL:
-				stat *= 0.9;
-				break;
-			case MIXED:
-				break;
-			case COMMERCIAL:
-				stat *= 1.1;
-			case INDUSTRIAL:
-				stat *= 2;
-		}
-
+		double road_factor = Math.max(0.2, ((double) r.getAvailabePopulation()) / r.getDefaultPopulation());
+		stat = stat * (1000 / r.getLength());  // Adjust to Roads Length
+		stat = stat / road_factor; // Adjust to available population
+		System.out.println(road_factor + " --- " + stat);
 		return stat;
 	}
 
