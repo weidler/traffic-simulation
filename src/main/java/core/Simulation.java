@@ -483,7 +483,7 @@ public class Simulation {
 		}
 
 		// ADD STATISTICS TO EXPERIMENT
-		this.current_experiment.addNumberOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
+		this.current_experiment.addFractionOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
 		this.current_experiment.addAvgSpeed(total_velocity/this.getNumbCars(), this.current_run);
 		this.current_experiment.addNumbCars(this.getNumbCars(), this.current_run);
 		if (this.current_run == 0) this.current_experiment.addTimestep(this.current_time);

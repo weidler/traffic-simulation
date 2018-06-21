@@ -54,7 +54,7 @@ public class Experiment {
 
 	/* METHODS */
 	
-	public void addNumberOfCarsInQueue(double number, int run) {
+	public void addFractionOfCarsInQueue(double number, int run) {
 		 if (this.validateGivenRun(run)) {
 			 this.fractions_of_waiting_cars.get(run).add(number);
 		 }		
