@@ -1,6 +1,7 @@
 package graphical_interface;
 
 import buttons.DefaultButtonUI;
+import buttons.MenuButton;
 import core.Simulation;
 import experiment.Experiment;
 import type.Distribution;
@@ -10,12 +11,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 public class ExperimenterPanel extends JPanel {
 
 	private Simulation simulation;
 	private JButton addExperimentButton;
+	private JButton saveButton;
+	private JButton loadButton;
 	private JPanel experiments_panel;
 
 	public ExperimenterPanel(Simulation simulation) {
@@ -32,6 +36,40 @@ public class ExperimenterPanel extends JPanel {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 		);
 		scroller.setPreferredSize(new Dimension(this.getWidth(), 400));
+
+		saveButton = new MenuButton("Save");
+		saveButton.setUI(new DefaultButtonUI());
+		saveButton.addActionListener(new ActionListener() {
+			int count = 0;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("file name: "));
+				JTextField fileName = new JTextField(20);
+				myPanel.add(fileName);
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "Experiment Setup Name",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				simulation.getExperimentWrapper().saveSetup(fileName.getText());
+			}
+		});
+
+		loadButton = new MenuButton("Load");
+		loadButton.setUI(new DefaultButtonUI());
+		loadButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File("./savefiles/"));
+				int returnVal = fc.showOpenDialog(experiments_panel);
+				File file = fc.getSelectedFile();
+				if (file != null) {
+					simulation.getExperimentWrapper().loadSetup(file);
+					updateList();
+				}
+			}
+		});
 
 		addExperimentButton = new JButton("Add Experiment");
 		addExperimentButton.setUI(new DefaultButtonUI());
@@ -152,6 +190,8 @@ public class ExperimenterPanel extends JPanel {
 		drawExperimentBars();
 		this.add(scroller);
 		this.add(addExperimentButton);
+		this.add(saveButton);
+		this.add(loadButton);
 	}
 
 	public void updateList() {

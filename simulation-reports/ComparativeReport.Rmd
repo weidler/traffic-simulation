@@ -1,7 +1,7 @@
 ---
 title: "Comparative Analysis"
-author: "Tonio Weidler"
-date: "June 20, 2018"
+author: ""
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
@@ -9,10 +9,105 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(plotly)
+library(knitr)
 ```
 
 ```{r include=FALSE}
-srcFiles <- c("a.csv", "Informed.csv", "Weighted.csv")
+
+## FUNCTIONS
+rowVars <- function(x, ...) {
+  rowSums((x - rowMeans(x, ...))^2, ...)/(dim(x)[2] - 1)
+}
+
+meansFromTo <- function(datafr, from, to, days_simulated) {
+  means <- list()
+  for (i in 1:days_simulated) {
+    means[[i]] <- unlist(mean(datafr[datafr$time <= to & datafr$time >= from,][[paste("D", i, sep="")]]))
+  }
+  
+  return(unlist(means))
+}
+
+varsFromTo <- function(datafr, from, to, days_simulated) {
+  vars <- list()
+  for (i in 1:days_simulated) {
+    vars[[i]] <- unlist(var(datafr[datafr$time <= to & datafr$time >= from,][[paste("D", i, sep="")]]))
+  }
+  
+  return(unlist(vars))
+}
+
+confInt <- function(means, variances, alpha) {
+  n = length(means)
+  grandmean = mean(means);
+  grandvariance = mean(variances)/n
+  
+  half_length = qt(1-alpha, df=n-1) * sqrt(grandvariance)
+  
+  return(c(grandmean - half_length, grandmean + half_length))
+}
+
+confIntTable <- function(datafr, title) {
+  
+  means_7_9 = meansFromTo(datafr, 7, 9, days_simulated)
+  vars_7_9 = varsFromTo(datafr, 7, 9, days_simulated)
+  
+  means_17_19 = meansFromTo(datafr, 17, 19, days_simulated)
+  vars_17_19 = varsFromTo(datafr, 17, 19, days_simulated)
+  
+  cidf_7_9 = confInt(means_7_9, vars_7_9, 0.05)
+  cidf_17_19 = confInt(means_17_19, vars_17_19, 0.05)
+  
+  cidf_7_9_09 = confInt(means_7_9, vars_7_9, 0.1)
+  cidf_17_19_09 = confInt(means_17_19, vars_17_19, 0.1)
+  
+  cidf <- data.frame(
+    Time_Interval=c("7am - 9am", "17pm - 19pm"), 
+    Mean=c(mean(means_7_9), mean(means_17_19)),
+    Variance=c(mean(vars_7_9), mean(vars_17_19)),
+    ConfIntLower0.95=c(cidf_7_9[1], cidf_17_19[1]), 
+    ConfIntUpper0.95=c(cidf_7_9[2], cidf_17_19[2]),
+    ConfIntLower0.9=c(cidf_7_9_09[1], cidf_17_19_09[1]), 
+    ConfIntUpper0.9=c(cidf_7_9_09[2], cidf_17_19_09[2])
+  ) 
+  
+  return(kable(cidf, caption=title))
+}
+
+DDReps <- function(variance, k, d) {
+  if (k == 4) h = 3.101;
+  if (k == 5) h = 3.258;
+  if (k == 3) h = 2.872;
+  if (k == 6) h = 3.377;
+  
+  return(max(c(21, ceiling((h^2 * variance)/d^2))))
+}
+
+## PLOT FUNCTIONS
+bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
+  bplot <- plot_ly(
+    type="box",
+    legendgroup = "g1") %>%
+  layout(yaxis = list(title = title),
+         showlegend = TRUE)
+
+  for (i in 1:length(datafr)) {
+    bplot <- add_trace(
+    bplot, 
+    y=meansFromTo(datafr[[i]], from, to, days_simulated), 
+    name = srcFiles[i],
+    boxpoints = "all",
+    legendgroup = "g1",
+    showlegend=showlegend)
+  }
+  
+  return(bplot)
+}
+
+```
+
+```{r include=FALSE}
+srcFiles <- c("Basic.csv", "Informed.csv", "Weighted.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
@@ -38,9 +133,13 @@ frac_waits <- list()
 avg_speeds <- list()
 numb_cars <- list()
 
-rowVars <- function(x, ...) {
-  rowSums((x - rowMeans(x, ...))^2, ...)/(dim(x)[2] - 1)
-}
+avg_frac_waits <- list()
+avg_avg_speeds <- list()
+avg_numb_cars <- list()
+
+var_frac_waits <- list()
+var_avg_speeds <- list()
+var_numb_cars <- list()
 
 for (i_exp in 1:length(data_frames)) {
   data_frames[[i_exp]]$time <- data_frames[[i_exp]]$time %% 24;
@@ -75,15 +174,25 @@ for (i_exp in 1:length(data_frames)) {
   avg_speeds[[i_exp]]$mean <- rowMeans(avg_speeds[[i_exp]][,3:(days_simulated+1)])
   numb_cars[[i_exp]]$mean <- rowMeans(numb_cars[[i_exp]][,3:(days_simulated+1)])
   
+  avg_frac_waits[i_exp] <- mean(frac_waits[[i_exp]]$mean)
+  avg_avg_speeds[i_exp] <- mean(avg_speeds[[i_exp]]$mean)
+  avg_numb_cars[i_exp] <- mean(numb_cars[[i_exp]]$mean)
+  
   frac_waits[[i_exp]]$var <- rowVars(frac_waits[[i_exp]][,3:(days_simulated+1)])
   avg_speeds[[i_exp]]$var <- rowVars(avg_speeds[[i_exp]][,3:(days_simulated+1)])
   numb_cars[[i_exp]]$var <- rowVars(numb_cars[[i_exp]][,3:(days_simulated+1)])
+  
+  var_frac_waits[i_exp] <- mean(frac_waits[[i_exp]]$var)
+  var_avg_speeds[i_exp] <- mean(avg_speeds[[i_exp]]$var)
+  var_numb_cars[i_exp] <- mean(numb_cars[[i_exp]]$var)
 }
 ```
 
+
+
 ## Number of Cars on the Map
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, results="asis"}
 numb_cars_plot <- plot_ly(x=numb_cars[[1]]$time) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Number of Cars in System'),
@@ -98,12 +207,23 @@ for (i in 1:length(numb_cars)) {
     mode="lines")
 }
 
+numb_cars_bplot_morning <- bpOfMeans(numb_cars, 7, 9, days_simulated, "Number of Cars in System between 7am and 9am")
+numb_cars_bplot_afternoon <- bpOfMeans(numb_cars, 17, 19, days_simulated, "Number of Cars in System between 17pm and 19pm")
+
 numb_cars_plot
+numb_cars_bplot_morning
+numb_cars_bplot_afternoon
+for (i in 1:length(numb_cars)) {
+  print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
+
 ```
+
+
 
 ## Average Velocities
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, results="asis"}
 avg_speeds_plot <- plot_ly(x=avg_speeds[[1]]$time) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Average Velocity'),
@@ -118,12 +238,23 @@ for (i in 1:length(avg_speeds)) {
     mode="lines")
 }
 
+avg_speeds_bplot_morning <- bpOfMeans(avg_speeds, 7, 9, days_simulated, "Average Velocity between 7 and 9")
+avg_speeds_bplot_afternoon <- bpOfMeans(avg_speeds, 17, 19, days_simulated, "Average Velocity between 17 and 19")
+
 avg_speeds_plot
+avg_speeds_bplot_morning
+avg_speeds_bplot_afternoon
+for (i in 1:length(numb_cars)) {
+  print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
+
 ```
 
-## Average Fractional Waiting Times
 
-```{r echo=FALSE, message=FALSE}
+
+## Average Percentage of Cars Waiting
+
+```{r echo=FALSE, message=FALSE, results="asis"}
 frac_waits_plot <- plot_ly(x=frac_waits[[1]]$time) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Average Fractional Waiting Time'),
@@ -138,5 +269,15 @@ for (i in 1:length(frac_waits)) {
     mode="lines")
 }
 
+frac_waits_bplot_morning <- bpOfMeans(frac_waits, 7, 9, days_simulated, "Average Percentage of Cars waiting between 7 and 9")
+frac_waits_bplot_afternoon <- bpOfMeans(frac_waits, 17, 19, days_simulated, "Average Percentage of Cars waiting between 17 and 19")
+
 frac_waits_plot
+frac_waits_bplot_morning
+frac_waits_bplot_afternoon
+for (i in 1:length(numb_cars)) {
+  print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
+
 ```
+

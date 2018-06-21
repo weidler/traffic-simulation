@@ -1,7 +1,11 @@
 package experiment;
 
 import org.apache.commons.math3.analysis.function.Exp;
+import type.Distribution;
+import type.Strategy;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class ExperimentWrapper {
@@ -79,5 +83,63 @@ public class ExperimentWrapper {
 
 	public ArrayList<Experiment> getRemainingExperiments() {
 		return this.experiments;
+	}
+
+	public void clear() {
+		this.experiments = new ArrayList<>();
+		this.finished_experiments = new ArrayList<>();
+	}
+
+	public void saveSetup(String file_name) {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("./savefiles/" + file_name + ".experiment", "UTF-8");
+
+			for (Experiment exp : this.getAllExperiments()) {
+				writer.println(
+						exp.getName() + ";"
+						+ exp.getSimulationLengthInDays() + ";"
+						+ exp.getControlStrategy() + ";"
+						+ exp.getArrivalGenerator() + ";"
+						+ exp.getIaTime() + ";"
+						+ exp.getPhaseLength() + ";"
+						+ exp.isVizualise()
+				);
+			}
+
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void loadSetup(File file) {
+		BufferedReader br = null;
+		clear();
+		try {
+			br = new BufferedReader(new FileReader(file));
+
+			String st;
+			Experiment exp;
+			while ((st = br.readLine()) != null) {
+				String[] options = st.split(";");
+				exp = new Experiment(
+						Distribution.stringToType(options[3]),
+						Strategy.stringToType(options[2]),
+						Integer.parseInt(options[1]),
+						Boolean.parseBoolean(options[6]),
+						Integer.parseInt(options[4]),
+						Integer.parseInt(options[5])
+				);
+				exp.setName(options[0]);
+
+				this.experiments.add(exp);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

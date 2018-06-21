@@ -5,5 +5,5 @@ public enum ZoneType {
 	MIXED,
 	COMMERCIAL,
 	INDUSTRIAL,
-	NONE
+	NONE;
 }
