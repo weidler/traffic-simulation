@@ -498,11 +498,13 @@ public class Simulation {
 
 	public void calcStatistics() {
 		double total_velocity = 0;
+		double total_velocity_in_traffic = 0;
 		double cars_in_queue = 0;
 
 		for (ArrayList<Car> cars : this.cars.values()) {
 			for (Car c : cars) {
 				total_velocity += c.getCurrentVelocity();
+				if (c.inTraffic()) total_velocity_in_traffic += c.getCurrentVelocity();
 				if (c.isWaiting()) cars_in_queue++;
 			}
 		}
@@ -510,7 +512,10 @@ public class Simulation {
 		// ADD STATISTICS TO EXPERIMENT
 		this.current_experiment.addFractionOfCarsInQueue(cars_in_queue/this.getNumbCars(), this.current_run);
 		this.current_experiment.addAvgSpeed(total_velocity/this.getNumbCars(), this.current_run);
+		this.current_experiment.addAvgSpeedInTraffic(total_velocity_in_traffic/this.getNumberOfCarsInTraffic(), this.current_run);
 		this.current_experiment.addNumbCars(this.getNumbCars(), this.current_run);
+		this.current_experiment.addNumbCarsInTraffic(this.getNumberOfCarsInTraffic(), this.current_run);
+		this.current_experiment.addNumbCarsOutOfTraffic(this.getNumberOfCarsOutOfTraffic(), this.current_run);
 		if (this.current_run == 0) this.current_experiment.addTimestep(this.current_time);
 	}
 	
@@ -537,6 +542,17 @@ public class Simulation {
 		for (ArrayList<Car> cars : this.cars.values()) {
 			for (Car c : cars) {
 				if (!c.inTraffic()) sum++;
+			}
+		}
+
+		return sum;
+	}
+
+	public int getNumberOfCarsInTraffic() {
+		int sum = 0;
+		for (ArrayList<Car> cars : this.cars.values()) {
+			for (Car c : cars) {
+				if (c.inTraffic()) sum++;
 			}
 		}
 

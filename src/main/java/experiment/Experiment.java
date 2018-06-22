@@ -29,7 +29,10 @@ public class Experiment {
 	/* CONTAINERS FOR OVER TIME STATISTICS */
 	private ArrayList<ArrayList<Double>> fractions_of_waiting_cars = new ArrayList<ArrayList<Double>>();
 	private ArrayList<ArrayList<Double>> avg_speed = new ArrayList<ArrayList<Double>>();
+	private ArrayList<ArrayList<Double>> avg_speed_in_traffic = new ArrayList<ArrayList<Double>>();
 	private ArrayList<ArrayList<Integer>> numb_cars = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> numb_cars_in_traffic = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> numb_cars_out_of_traffic = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<Double> measurement_timestamps = new ArrayList<Double>();
 	
 	/* CONSTRUCTORS */
@@ -65,13 +68,31 @@ public class Experiment {
 			 this.avg_speed.get(run).add(speed);
 		 }		
 	}
+
+	public void addAvgSpeedInTraffic(double speed, int run) {
+		if (this.validateGivenRun(run)) {
+			this.avg_speed_in_traffic.get(run).add(speed);
+		}
+	}
 	
 	public void addNumbCars(int numb_cars, int run) {
 		if (this.validateGivenRun(run)) {
 			 this.numb_cars.get(run).add(numb_cars);
-		 }
+		}
 	}
-	
+
+	public void addNumbCarsInTraffic(int numberOfCarsInTraffic, int run) {
+		if (this.validateGivenRun(run)) {
+			this.numb_cars_in_traffic.get(run).add(numberOfCarsInTraffic);
+		}
+	}
+
+	public void addNumbCarsOutOfTraffic(int numberOfCarsOutOfTraffic, int run) {
+		if (this.validateGivenRun(run)) {
+			this.numb_cars_out_of_traffic.get(run).add(numberOfCarsOutOfTraffic);
+		}
+	}
+
 	public void addTimestep(double timestep) {
 		 this.measurement_timestamps.add(timestep);		
 	}
@@ -88,7 +109,10 @@ public class Experiment {
 	public void addRun() {
 		fractions_of_waiting_cars.add(new ArrayList<Double>());
 		avg_speed.add(new ArrayList<Double>());
+		avg_speed_in_traffic.add(new ArrayList<Double>());
 		numb_cars.add(new ArrayList<Integer>());
+		numb_cars_in_traffic.add(new ArrayList<Integer>());
+		numb_cars_out_of_traffic.add(new ArrayList<Integer>());
 	}
 
 	/* ACTIONS */
@@ -112,13 +136,18 @@ public class Experiment {
 			report_writer = new PrintWriter("./simulation-reports/csv-data/" + name + ".csv", "UTF-8");
 
 			String sep = ";";
-			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep + "numb_cars");
+			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep
+					+ "numb_cars" + sep + "numb_cars_in" + sep + "numb_cars_out" + sep + "avg_velo_in_traffic");
 			for (int i = 0; i < this.getMeasurementTimestamps().size(); i++) {
 				report_writer.println(
 						this.getMeasurementTimestamps().get(i) + sep +
-								this.getAvgSpeed().get(0).get(i) + sep +
-								this.getFractionsOfWaitingCars().get(0).get(i) + sep +
-								this.getNumbCars().get(0).get(i)
+						this.getAvgSpeed().get(0).get(i) + sep +
+						this.getFractionsOfWaitingCars().get(0).get(i) + sep +
+						this.getNumbCars().get(0).get(i) + sep +
+						this.getNumbCarsInTraffic().get(0).get(i) + sep +
+						this.getNumbCarsOutOfTraffic().get(0).get(i) + sep +
+						this.getNumbCarsInTraffic().get(0).get(i) + sep +
+						this.getAvgSpeedInTraffic().get(0).get(i) + sep
 				);
 			}
 
@@ -202,12 +231,24 @@ public class Experiment {
 		return avg_speed;
 	}
 
+	public ArrayList<ArrayList<Double>> getAvgSpeedInTraffic() {
+		return avg_speed_in_traffic;
+	}
+
 	public ArrayList<Double> getMeasurementTimestamps() {
 		return measurement_timestamps;
 	}
 	
 	public ArrayList<ArrayList<Integer>> getNumbCars() {
 		return numb_cars;
+	}
+
+	public ArrayList<ArrayList<Integer>> getNumbCarsInTraffic() {
+		return numb_cars_in_traffic;
+	}
+
+	public ArrayList<ArrayList<Integer>> getNumbCarsOutOfTraffic() {
+		return numb_cars_out_of_traffic;
 	}
 
 	public int getIaTime() {
