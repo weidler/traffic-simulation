@@ -5,7 +5,10 @@ public enum Strategy {
 	PRIORITY_CYCLING,
 	COORDINATED,
 	INFORMED_CYCLING,
-	WEIGHTED_CYCLING;
+	WEIGHTED_CYCLING,
+	DENSITY_WEIGHTED_CYCLING,
+	QUEUE_WEIGHTED_CYCLING,
+	FLOW_WEIGHTED_CYCLING;
 
 	public static Strategy stringToType(String s) {
 		switch (s) {
@@ -19,6 +22,12 @@ public enum Strategy {
 				return INFORMED_CYCLING;
 			case "WEIGHTED_CYCLING":
 				return WEIGHTED_CYCLING;
+			case "DENSITY_CYCLING":
+				return DENSITY_WEIGHTED_CYCLING;
+			case "FLOW_WEIGHTED_CYCLING":
+				return FLOW_WEIGHTED_CYCLING;
+			case "QUEUE_WEIGHTED_CYCLING":
+				return QUEUE_WEIGHTED_CYCLING;
 			default:
 				return BASIC_CYCLING;
 		}

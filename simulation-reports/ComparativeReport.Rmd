@@ -107,7 +107,7 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 ```
 
 ```{r include=FALSE}
-srcFiles <- c("Basic.csv", "Informed.csv", "Weighted.csv")
+srcFiles <- c("Basic.csv", "Informed.csv", "Weighted.csv", "FlowWeighted.csv", "QueueWeightedCycling.csv", "DensityWeightedCycling.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()

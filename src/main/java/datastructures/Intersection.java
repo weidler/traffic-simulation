@@ -29,6 +29,9 @@ public class Intersection {
 	private int active_light = 0;
 	private IntersectionTypes type;
 
+	// STATISTICS
+	protected HashMap<Road, Integer> previous_flows;
+
 	public IntersectionTypes getType() {
 		return type;
 	}
@@ -50,6 +53,9 @@ public class Intersection {
 		this.time_till_toggle = this.tl_phase_length;
 
 		this.connections = new ArrayList<Connection>();
+
+		this.previous_flows = new HashMap<>();
+		for (Road r : getOutgoingRoads()) previous_flows.put(r, 0);
 	}
 	
 	public Intersection(Point p) {
@@ -116,6 +122,10 @@ public class Intersection {
 
 	public int getActiveLight() {
 		return active_light;
+	}
+
+	public Road getRoadForActiveLight() {
+		return this.connections.get(this.active_light).getRoad();
 	}
 
 	public void setActiveLight(int active_light) {
@@ -210,18 +220,20 @@ public class Intersection {
 		return null;
 	}
 
+	public HashMap<Road, Integer> getPreviousFlows() {
+		return previous_flows;
+	}
+
+	public void incrementFlowFrom(Road r) {
+		this.previous_flows.put(r, previous_flows.get(r) + 1);
+	}
+
+	public void resetFlowFrom(Road r) {
+		this.previous_flows.put(r, 0);
+	}
+
 	// MODIFICATION
 
-	/**
-	 * 
-	 * @param road
-	 * @param intersection
-	 *            the intersection which this intersection has a new connection to
-	 *            and from
-	 * @param trafficlight
-	 *            the trafficlight that regulates cars coming INTO this intersection
-	 *            FROM the parameter intersection
-	 */
 	public void addConnection(Road road, Intersection intersection, ArrayList<TrafficLight> trafficlights) {
 		if (trafficlights == null) {
 			trafficlights = new ArrayList<TrafficLight>();
@@ -231,6 +243,8 @@ public class Intersection {
 		}
 
 		connections.add(new Connection(road, intersection, trafficlights));
+		this.previous_flows = new HashMap<>();
+		for (Road r : getOutgoingRoads()) previous_flows.put(r, 0);
 	}
 
 	public Road removeConnectionTo(Intersection intersection) {
@@ -242,6 +256,8 @@ public class Intersection {
 			}
 		}
 
+		this.previous_flows = new HashMap<>();
+		for (Road r : getOutgoingRoads()) previous_flows.put(r, 0);
 		return removed_road;
 	}
 
@@ -251,6 +267,9 @@ public class Intersection {
 				this.connections.remove(c);
 			}
 		}
+
+		this.previous_flows = new HashMap<>();
+		for (Road r : getOutgoingRoads()) previous_flows.put(r, 0);
 	}
 
 	public void adjustConnectionsAfterRoadRemoval(Road removed_road) {
@@ -259,6 +278,9 @@ public class Intersection {
 				this.connections.remove(c);
 			}
 		}
+
+		this.previous_flows = new HashMap<>();
+		for (Road r : getOutgoingRoads()) previous_flows.put(r, 0);
 	}
 
 	// CHECKS
@@ -274,52 +296,6 @@ public class Intersection {
 
 	// ACTIONS
 
-	public void setTrafficLightActivity1() {
-		if (getTrafficLights().size() <= 2) {
-			for (ArrayList<TrafficLight> tls : getTrafficLights()) {
-				for (TrafficLight t : tls) {
-					t.setStatus("G");
-				}
-			}
-		} else {
-			for (int i = 0; i < getTrafficLights().size(); i++) {
-				if (i == active_light) {
-					for (TrafficLight t : getTrafficLights().get(i)) {
-						t.setStatus("G");
-					}
-				} else {
-					for (TrafficLight t : getTrafficLights().get(i)) {
-						t.setStatus("R");
-					}
-				}
-			}
-		}
-
-		active_light++;
-		if (active_light >= getTrafficLights().size()) {
-			active_light = 0;
-		}
-
-	}
-	
-
-	public void updateTrafficLights(double delta_t, int s, Road busiest) {
-		this.time_till_toggle = this.time_till_toggle - delta_t;
-		if(s == 1)
-		{
-			if (this.time_till_toggle <= 0) {
-				this.setTrafficLightActivity1();
-				this.time_till_toggle = this.tl_phase_length;
-			}
-		}
-		else if(s == 2)
-		{
-			if (this.time_till_toggle <= 0) {
-				this.setTrafficLightActivity2(busiest);
-				this.time_till_toggle = this.tl_phase_length;
-			}
-		}		
-	}
 	public void setTrafficLightActivity2(Road busiest) {
 		if (getTrafficLights().size() <= 2) {
 			for (ArrayList<TrafficLight> tls : getTrafficLights()) {
@@ -348,9 +324,9 @@ public class Intersection {
 						{
 							t.setStatus("G");
 						}
-						
+
 					}
-					else 
+					else
 					{
 						for(TrafficLight t : connections.get(i).getTrafficlights())
 						{
@@ -361,14 +337,6 @@ public class Intersection {
 			}
 		}
 
-	}
-
-	public void initializeTrafficLightSettings() {
-		// TODO make it so that facing roads have same initial status etc.
-		if (this.getTrafficLights().size() > 2) {
-			this.active_light = ThreadLocalRandom.current().nextInt(0, this.getTrafficLights().size());
-		}
-		this.setTrafficLightActivity1();
 	}
 
 	// OTHER

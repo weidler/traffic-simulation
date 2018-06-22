@@ -77,7 +77,9 @@ public class ExperimenterPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String[] strategyList = { "Basic Cycling", "Priority Cycling", "Coordinated", "Informed Cycling", "Weighted Cycling" };
+				String[] strategyList = { "BASIC_CYCLING", "PRIORITY_CYCLING", "COORDINATE",
+						"INFORMED_CYCLING", "WEIGHTED_CYCLING", "QUEUE_WEIGHTED_CYCLING",
+						"FLOW_WEIGHTED_CYCLING", "DENSITY_WEIGHTED_CYCLING"};
 				String[] scheduleList = { "Empirical", "Poisson", "Gaussian"};
 
 				JComboBox<String> strategy = new JComboBox<>(strategyList);
@@ -143,31 +145,7 @@ public class ExperimenterPanel extends JPanel {
 							break;
 					}
 
-					Strategy control_strategy;
-					switch ((String) strategy.getSelectedItem()) {
-						case "Basic Cycling":
-							control_strategy = Strategy.BASIC_CYCLING;
-							break;
-
-						case "Priority Cycling":
-							control_strategy = Strategy.PRIORITY_CYCLING;
-							break;
-
-						case "Coordinated":
-							control_strategy = Strategy.COORDINATED;
-							break;
-						case "Weighted Cycling":
-							control_strategy = Strategy.WEIGHTED_CYCLING;
-							break;
-
-						case "Informed Cycling":
-							control_strategy = Strategy.INFORMED_CYCLING;
-							break;
-
-						default:
-							control_strategy = Strategy.BASIC_CYCLING;
-							break;
-					}
+					Strategy control_strategy = Strategy.stringToType((String) strategy.getSelectedItem());
 
 					Experiment exp = new Experiment(arrival_schedule,
 							control_strategy,

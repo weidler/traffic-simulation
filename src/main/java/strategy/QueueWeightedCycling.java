@@ -1,5 +1,6 @@
 package strategy;
 
+import algorithms.CoordinatedTrafficLights;
 import car.Car;
 import datastructures.Intersection;
 import datastructures.StreetMap;
@@ -10,28 +11,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import algorithms.CoordinatedTrafficLights;
-
-public class WeightedCycling implements Strategy{
+public class QueueWeightedCycling implements strategy.Strategy {
 
 	protected static CoordinatedTrafficLights ctl = new CoordinatedTrafficLights();
 	protected double tl_phase_length;
+	protected double total_tl_phase_length;
 	protected StreetMap street_map;
 	protected HashMap<Intersection, Double> times_till_toggle;
+	protected HashMap<Intersection, HashMap<Road, Double>> previous_phase_lengths;
 
-	public WeightedCycling(double phase_length, StreetMap street_map) {
+	public QueueWeightedCycling(double phase_length, StreetMap street_map) {
 		this.tl_phase_length = phase_length;
 		this.street_map = street_map;
 		this.times_till_toggle = new HashMap<Intersection, Double>();
 		for (Intersection inter : street_map.getIntersections()) {
 			times_till_toggle.put(inter, tl_phase_length);
 		}
+
+		this.previous_phase_lengths = new HashMap<>();
+		for (Intersection inter : street_map.getIntersections()) {
+			previous_phase_lengths.put(inter, new HashMap<>());
+			for (Road rd : inter.getOutgoingRoads()) {
+				previous_phase_lengths.get(inter).put(rd, tl_phase_length);
+			}
+		}
 	}
 
 	@Override
 	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> list_of_cars, double delta_t) {
 		for (Intersection inter : street_map.getIntersections()) {
-			
 			updateTrafficLights(inter, list_of_cars, delta_t);
 		}
 	}
@@ -52,27 +60,40 @@ public class WeightedCycling implements Strategy{
 
 		if (times_till_toggle.get(inter) <= 0) {
 			this.setTrafficLightActivity(inter, list_of_cars);
-			times_till_toggle.put(inter, tl_phase_length);
 		}
 	}
 
 	private void setTrafficLightActivity(Intersection inter, HashMap<Road, ArrayList<Car>> list_of_cars) {
 		int current_tl = inter.getActiveLight();
-		int next_tl = current_tl;
-		for (int i = 1; i <= inter.getTrafficLights().size(); i++) {
-			int viewed_tl = i + current_tl;
-			if (viewed_tl >= inter.getTrafficLights().size()) viewed_tl = viewed_tl - (inter.getTrafficLights().size());
-			Road source_road = inter.getTrafficLights().get(viewed_tl).get(0).getRoad();
-			double newToggleTime = ctl.weightedRoads3(inter, list_of_cars, source_road);			
-			times_till_toggle.put(inter, tl_phase_length * newToggleTime );
-			if (list_of_cars.get(source_road).size() > 0) {
-				next_tl = viewed_tl;
-				break;
+		inter.setActiveLight(inter.getActiveLight() + 1);
+		if (inter.getActiveLight() >= inter.getTrafficLights().size()) {
+			inter.setActiveLight(0);
+		}
+		Road road_for_new_active = inter.getRoadForActiveLight();
+
+		double next_phase_length;
+
+		int total_queued = 0;
+		for (Road r : inter.getOutgoingRoads()) {
+			for (Car c : list_of_cars.get(r)) {
+				if (c.getCurrentDestinationIntersection() == inter && c.isWaiting()) {
+					total_queued++;
+				}
 			}
 		}
 
-		inter.setActiveLight(next_tl);
+		double waiting_on_next_road = 0;
+		for (Car c : list_of_cars.get(road_for_new_active)) {
+			if (c.getCurrentDestinationIntersection() == inter && c.isWaiting()) {
+				waiting_on_next_road++;
+			}
+		}
 
+		double weight = waiting_on_next_road / Math.max(1, total_queued);
+		weight = Math.max(weight, 0.5);
+
+		times_till_toggle.put(inter, weight * tl_phase_length);
+		inter.getPreviousFlows().put(road_for_new_active, 0);
 		this.applySetting(inter);
 	}
 

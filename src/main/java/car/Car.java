@@ -393,6 +393,7 @@ public class Car {
 				// Check if at new road
 				if (this.position_on_road >= this.current_road.getLength()) {
 					timeMeasure();
+					this.current_destination_intersection.incrementFlowFrom(this.current_road);
 					// change road
 					this.current_origin_intersection = this.current_destination_intersection;
 					this.current_destination_intersection = this.path_over_intersections

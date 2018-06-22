@@ -1,6 +1,6 @@
 #### PROJECT SPECIFIC ####
 
-simulation-reports/**/*.csv
+##simulation-reports/**/*.csv
 simulation-reports/**/*.html
 
 ### EDITORS AND TOOLS ####

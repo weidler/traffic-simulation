@@ -48,7 +48,6 @@ public class Schedule {
 		double road_factor = Math.max(0.2, ((double) r.getAvailabePopulation()) / r.getDefaultPopulation());
 		stat = stat * (1000 / r.getLength());  // Adjust to Roads Length
 		stat = stat / road_factor; // Adjust to available population
-		System.out.println(road_factor + " --- " + stat);
 		return stat;
 	}
 

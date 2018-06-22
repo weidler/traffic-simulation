@@ -20,12 +20,7 @@ import schedule.EmpiricalSchedule;
 import schedule.GaussianSchedule;
 import schedule.PoissonSchedule;
 import schedule.Schedule;
-import strategy.BasicCycling;
-import strategy.Coordinated;
-import strategy.InformedCycling;
-import strategy.Strategy;
-import strategy.WeightedCycling;
-import strategy.PriorityCycling;
+import strategy.*;
 import type.Distribution;
 import type.RoadType;
 import type.ZoneType;
@@ -190,8 +185,8 @@ public class Simulation {
 		int workSize = work.size();
 		int totalSize = work.size()+home.size();
 		double prop = ((double)workSize/(double)totalSize);
-		System.out.println("work: " + work.size() + " total: "+ (work.size()+home.size()));
-		System.out.println("Prop: " + prop);
+//		System.out.println("work: " + work.size() + " total: "+ (work.size()+home.size()));
+//		System.out.println("Prop: " + prop);
 		int amount;
 		int amount2;
 		if (prop > 0.8)
@@ -204,7 +199,7 @@ public class Simulation {
 			amount = 2;
 		else
 			amount = 1;
-		System.out.println(amount);
+//		System.out.println(amount);
 		amount2 =amount+2;
 		// generate random parameters
 		while (destination_intersection == origin_intersection  || destination_intersection.isInHighway())
@@ -354,7 +349,13 @@ public class Simulation {
 			this.strategy = new WeightedCycling(phaseLength, street_map);
 		} else if (this.current_experiment.getControlStrategy() == type.Strategy.INFORMED_CYCLING) {
 			this.strategy = new InformedCycling(phaseLength, street_map);
-		} else {
+		} else if (this.current_experiment.getControlStrategy() == type.Strategy.FLOW_WEIGHTED_CYCLING) {
+			this.strategy = new FlowWeightedCycling(phaseLength, street_map);
+		} else if (this.current_experiment.getControlStrategy() == type.Strategy.QUEUE_WEIGHTED_CYCLING) {
+			this.strategy = new QueueWeightedCycling(phaseLength, street_map);
+		} else if (this.current_experiment.getControlStrategy() == type.Strategy.DENSITY_WEIGHTED_CYCLING) {
+			this.strategy = new DensityWeightedCycling(phaseLength, street_map);
+		}  else {
 			this.strategy = new BasicCycling(phaseLength, street_map);
 		}
 	}
@@ -477,8 +478,6 @@ public class Simulation {
 				((ExperimenterPanel) this.gui.experimenterPanel).updateList();
 				current_experiment = this.experiment_wrapper.currentExperiment();
 				stop();
-
-				System.out.println(experiment_wrapper.getRemainingExperiments());
 
 				if (!experiment_wrapper.isAllFinished() && !(current_experiment == null)) {
 					reset();
