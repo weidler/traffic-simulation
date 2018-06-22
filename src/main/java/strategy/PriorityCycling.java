@@ -35,9 +35,10 @@ public class PriorityCycling implements Strategy {
 	}
 
 	@Override
-	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) {
-		for (Intersection intersection : this.intersections) {
-
+	public void configureTrafficLights(HashMap<Road, ArrayList<Car>> cars, double delta_t) 
+	{
+		for (Intersection intersection : this.intersections) 
+		{
 			times_till_toggle.put(intersection, times_till_toggle.get(intersection) - delta_t);
 			if(times_till_toggle.get(intersection) <= 0)
 			{
@@ -45,10 +46,7 @@ public class PriorityCycling implements Strategy {
 				intersection.setTrafficLightActivity2(busiest);
 				times_till_toggle.put(intersection, tl_phase_length);
 			}
-
 		}
-
-
 	}
 
 	public void setTrafficLightActivity2(Road busiest, Intersection intersection) {
@@ -63,7 +61,8 @@ public class PriorityCycling implements Strategy {
 					}
 				}
 			}
-		} else {
+		} 
+		else {
 			Intersection target;
 			Intersection[] busiestIntersections = busiest.getIntersections();
 			if(busiestIntersections[0].getXCoord() == intersection.getXCoord() && busiestIntersections[0].getYCoord() == intersection.getYCoord())
