@@ -137,7 +137,7 @@ public class Experiment {
 
 			String sep = ";";
 			report_writer.println("time" + sep + "avg_velo" + sep + "frac_wait" + sep
-					+ "numb_cars" + sep + "numb_cars_in" + sep + "numb_cars_out" + sep + "avg_velo_in_traffic");
+					+ "numb_cars" + sep + "numb_cars_in" + sep + "numb_cars_out" + sep + "avg_velo_in_traffic" + sep);
 			for (int i = 0; i < this.getMeasurementTimestamps().size(); i++) {
 				report_writer.println(
 						this.getMeasurementTimestamps().get(i) + sep +
@@ -146,7 +146,6 @@ public class Experiment {
 						this.getNumbCars().get(0).get(i) + sep +
 						this.getNumbCarsInTraffic().get(0).get(i) + sep +
 						this.getNumbCarsOutOfTraffic().get(0).get(i) + sep +
-						this.getNumbCarsInTraffic().get(0).get(i) + sep +
 						this.getAvgSpeedInTraffic().get(0).get(i) + sep
 				);
 			}

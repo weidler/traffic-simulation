@@ -107,20 +107,23 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 ```
 
 ```{r include=FALSE}
-srcFiles <- c("Basic.csv", "Informed.csv", "Weighted.csv", "FlowWeighted.csv", "QueueWeightedCycling.csv", "DensityWeightedCycling.csv")
+srcFiles <- c("FlowWeightedCycling.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
 i = 1
 for (filename in srcFiles) {
-  data_frames[[i]] = read.csv(paste("csv-data/", filename, sep=""), sep = ";");
+  data_frames[[i]] <- read.csv(paste("csv-data/", filename, sep=""), sep = ";");
   i = i + 1
 }
 
 for (i in 1:length(data_frames)) {
   data_frames[[i]]$time <- data_frames[[i]]$time/60/60
   data_frames[[i]]$numb_cars[is.na(data_frames[[i]]$numb_cars)] <- 0
+  data_frames[[i]]$numb_cars_in[is.na(data_frames[[i]]$numb_cars_in)] <- 0
+  data_frames[[i]]$numb_cars_out[is.na(data_frames[[i]]$numb_cars_out)] <- 0
   data_frames[[i]]$avg_velo[is.na(data_frames[[i]]$avg_velo)] <- 0
+  data_frames[[i]]$avg_velo_in_traffic[is.na(data_frames[[i]]$avg_velo_in_traffic)] <- 0
   data_frames[[i]]$frac_wait[is.na(data_frames[[i]]$frac_wait)] <- 0
 }
 
@@ -131,15 +134,10 @@ days_simulated <- length(times) %/% measurements_per_day
 
 frac_waits <- list()
 avg_speeds <- list()
+avg_speeds_in <- list()
 numb_cars <- list()
-
-avg_frac_waits <- list()
-avg_avg_speeds <- list()
-avg_numb_cars <- list()
-
-var_frac_waits <- list()
-var_avg_speeds <- list()
-var_numb_cars <- list()
+numb_cars_in <- list()
+numb_cars_out <- list()
 
 for (i_exp in 1:length(data_frames)) {
   data_frames[[i_exp]]$time <- data_frames[[i_exp]]$time %% 24;
@@ -150,8 +148,17 @@ for (i_exp in 1:length(data_frames)) {
   avg_speeds[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
   colnames(avg_speeds[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
   
+  avg_speeds_in[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(avg_speeds_in[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
   numb_cars[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
   colnames(numb_cars[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
+  numb_cars_in[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(numb_cars_in[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
+  
+  numb_cars_out[[i_exp]] <- data.frame(matrix(ncol=days_simulated + 1, nrow=0))
+  colnames(numb_cars_out[[i_exp]]) <- c("time", paste("D", 1:days_simulated, sep = ""))
   
   for (i in 1:measurements_per_day) {
     frac_waits[[i_exp]][i,] = c(
@@ -164,27 +171,40 @@ for (i_exp in 1:length(data_frames)) {
       data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$avg_velo
     )
     
+    avg_speeds_in[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$avg_velo_in_traffic
+    )
+    
     numb_cars[[i_exp]][i,] = c(
       times[i], 
       data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$numb_cars
+    )
+    
+    numb_cars_in[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$numb_cars_in
+    )
+    
+    numb_cars_out[[i_exp]][i,] = c(
+      times[i], 
+      data_frames[[i_exp]][((0:(days_simulated-1)) * measurements_per_day) + i,]$numb_cars_out
     )
   }
   
   frac_waits[[i_exp]]$mean <- rowMeans(frac_waits[[i_exp]][,3:(days_simulated+1)])
   avg_speeds[[i_exp]]$mean <- rowMeans(avg_speeds[[i_exp]][,3:(days_simulated+1)])
+  avg_speeds_in[[i_exp]]$mean <- rowMeans(avg_speeds_in[[i_exp]][,3:(days_simulated+1)])
   numb_cars[[i_exp]]$mean <- rowMeans(numb_cars[[i_exp]][,3:(days_simulated+1)])
-  
-  avg_frac_waits[i_exp] <- mean(frac_waits[[i_exp]]$mean)
-  avg_avg_speeds[i_exp] <- mean(avg_speeds[[i_exp]]$mean)
-  avg_numb_cars[i_exp] <- mean(numb_cars[[i_exp]]$mean)
+  numb_cars_in[[i_exp]]$mean <- rowMeans(numb_cars_in[[i_exp]][,3:(days_simulated+1)])
+  numb_cars_out[[i_exp]]$mean <- rowMeans(numb_cars_out[[i_exp]][,3:(days_simulated+1)])
   
   frac_waits[[i_exp]]$var <- rowVars(frac_waits[[i_exp]][,3:(days_simulated+1)])
   avg_speeds[[i_exp]]$var <- rowVars(avg_speeds[[i_exp]][,3:(days_simulated+1)])
+  avg_speeds_in[[i_exp]]$var <- rowVars(avg_speeds_in[[i_exp]][,3:(days_simulated+1)])
   numb_cars[[i_exp]]$var <- rowVars(numb_cars[[i_exp]][,3:(days_simulated+1)])
-  
-  var_frac_waits[i_exp] <- mean(frac_waits[[i_exp]]$var)
-  var_avg_speeds[i_exp] <- mean(avg_speeds[[i_exp]]$var)
-  var_numb_cars[i_exp] <- mean(numb_cars[[i_exp]]$var)
+  numb_cars_in[[i_exp]]$var <- rowVars(numb_cars_in[[i_exp]][,3:(days_simulated+1)])
+  numb_cars_out[[i_exp]]$var <- rowVars(numb_cars_out[[i_exp]][,3:(days_simulated+1)])
 }
 ```
 
@@ -216,7 +236,34 @@ numb_cars_bplot_afternoon
 for (i in 1:length(numb_cars)) {
   print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
 }
+```
 
+## Number of Cars on the Map actually in Traffic
+
+```{r echo=FALSE, message=FALSE, results="asis"}
+numb_cars_in_plot <- plot_ly(x=numb_cars_in[[1]]$time) %>%
+  layout(xaxis = list(title = 'Time (h)'),
+         yaxis = list(title = 'Number of Cars in System'),
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = TRUE)
+
+for (i in 1:length(numb_cars_in)) {
+  numb_cars_in_plot <- add_trace(
+    numb_cars_in_plot, 
+    y=fitted(loess(numb_cars_in[[i]]$mean ~ numb_cars_in[[i]]$time, span=0.2)), 
+    name = srcFiles[i], 
+    mode="lines")
+}
+
+numb_cars_in_bplot_morning <- bpOfMeans(numb_cars_in, 7, 9, days_simulated, "Number of Cars actually in traffic between 7am and 9am")
+numb_cars_in_bplot_afternoon <- bpOfMeans(numb_cars_in, 17, 19, days_simulated, "Number of Cars actually in traffic between 17pm and 19pm")
+
+numb_cars_in_plot
+numb_cars_in_bplot_morning
+numb_cars_in_bplot_afternoon
+for (i in 1:length(numb_cars_in)) {
+  print(confIntTable(numb_cars_in[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
 ```
 
 
@@ -244,8 +291,37 @@ avg_speeds_bplot_afternoon <- bpOfMeans(avg_speeds, 17, 19, days_simulated, "Ave
 avg_speeds_plot
 avg_speeds_bplot_morning
 avg_speeds_bplot_afternoon
-for (i in 1:length(numb_cars)) {
-  print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+for (i in 1:length(avg_speeds)) {
+  print(confIntTable(avg_speeds[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
+
+```
+
+## Average Velocities of In-Traffic Cars
+
+```{r echo=FALSE, message=FALSE, results="asis"}
+avg_speeds_in_plot <- plot_ly(x=avg_speeds_in[[1]]$time) %>%
+  layout(xaxis = list(title = 'Time (h)'),
+         yaxis = list(title = 'Average Velocity'),
+         legend = list(x = 0.80, y = 0.90),
+         showlegend = TRUE)
+
+for (i in 1:length(avg_speeds_in)) {
+  avg_speeds_in_plot <- add_trace(
+    avg_speeds_in_plot, 
+    y=fitted(loess(avg_speeds_in[[i]]$mean ~ avg_speeds_in[[i]]$time, span=0.2)), 
+    name = srcFiles[i], 
+    mode="lines")
+}
+
+avg_speeds_in_bplot_morning <- bpOfMeans(avg_speeds_in, 7, 9, days_simulated, "Average Velocity between 7 and 9")
+avg_speeds_in_bplot_afternoon <- bpOfMeans(avg_speeds_in, 17, 19, days_simulated, "Average Velocity between 17 and 19")
+
+avg_speeds_in_plot
+avg_speeds_in_bplot_morning
+avg_speeds_in_bplot_afternoon
+for (i in 1:length(avg_speeds_in)) {
+  print(confIntTable(avg_speeds_in[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
 }
 
 ```
@@ -275,8 +351,8 @@ frac_waits_bplot_afternoon <- bpOfMeans(frac_waits, 17, 19, days_simulated, "Ave
 frac_waits_plot
 frac_waits_bplot_morning
 frac_waits_bplot_afternoon
-for (i in 1:length(numb_cars)) {
-  print(confIntTable(numb_cars[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+for (i in 1:length(frac_waits)) {
+  print(confIntTable(frac_waits[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
 }
 
 ```
