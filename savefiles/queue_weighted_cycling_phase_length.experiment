@@ -1,0 +1,5 @@
+queue_weighted_cycling_10;21;QUEUE_WEIGHTED_CYCLING;EMPIRICAL;60;10;true
+queue_weighted_cycling_20;21;QUEUE_WEIGHTED_CYCLING;EMPIRICAL;60;20;true
+queue_weighted_cycling_30;21;QUEUE_WEIGHTED_CYCLING;EMPIRICAL;60;30;true
+queue_weighted_cycling_40;21;QUEUE_WEIGHTED_CYCLING;EMPIRICAL;60;40;true
+queue_weighted_cycling_50;21;QUEUE_WEIGHTED_CYCLING;EMPIRICAL;60;50;true
