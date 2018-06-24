@@ -77,7 +77,7 @@ public class ExperimenterPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String[] strategyList = { "BASIC_CYCLING", "PRIORITY_CYCLING", "COORDINATE",
+				String[] strategyList = { "BASIC_CYCLING", "PRIORITY_CYCLING", "COORDINATED",
 						"INFORMED_CYCLING", "WEIGHTED_CYCLING", "QUEUE_WEIGHTED_CYCLING",
 						"FLOW_WEIGHTED_CYCLING", "DENSITY_WEIGHTED_CYCLING"};
 				String[] scheduleList = { "Empirical", "Poisson", "Gaussian"};

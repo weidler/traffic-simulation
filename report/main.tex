@@ -43,7 +43,7 @@ An intelligent traffic control system adjusts traffic in order to assure all peo
 This work aims to evaluate various traffic control strategies and compare their effect in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts or if there is the latter induce consistent rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads.
 
 \subsection{Approach}
-Hence, in order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this purpose, we created a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. 
+Hence, in order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this purpose, we created a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. We make our code publicly available at GitHub\footnote{https://github.com/weidler/traffic-simulation}.
 
 \subsection{Related Work}
 \label{sec:related-work}
@@ -58,9 +58,6 @@ In the following sections we further describe our approach and the results of ou
 \section{Simulation Environment}
 \label{sec:envi}
 In the following subsections we describe the implementation and design choices of the simulation environment in which we evaluated the effect of different traffic control strategies.
-
-\subsection{Graphical User Interface}
-The Graphical User Interface (GUI) is designed for simplicity. It consists of three  panels. On the left side the main panel is located. Here, maps can be created and navigated through and the simulation process is visualized. Maps can be interactively constructed by clicking and dragging on the panel. Above the main panel there is an info panel that indicates different values such as the current time and day of the simulation. Finally, the right panel contains the controls for different functionalities such as the creation of maps, setting of experimental parameters and controlling the simulation.
 	
 \subsection{Traffic Flow Simulation}
 As mentioned beforehand, the IDM \citep{treiber2000congested} is applied for the simulation of car dynamics. It models traffic flow time- and space-continuous as a combination of \textit{free-road} and \textit{interaction} behaviour. The \textit{free-road term} is governed by a car's intention to reach its desired speed. The acceleration for this behaviour is calculated \citep{treiber2000congested} as
@@ -95,7 +92,7 @@ Due to the large scale maps used in this work, drivers not only need to behave a
 \subsection{Lane Changing}
 In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
 
-\subsection{Arrival Times in a continuous Simulation}
+\subsection{Arrival Times in a Continuous Simulation}
 Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size. The IAT can be drawn from the following distributions
 
 \begin{figure}[t]
@@ -110,7 +107,7 @@ Rather than predefining arrival times for a fixed simulation duration, we dynami
 	\item Realistic (Non stationary Poisson Process)
 \end{itemize}
  
-While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs based on a poisson process that is then converted to the data using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 8 to 9 am and 5 to 6 pm.
+While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs based on a poisson process that is then fitted to the data using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 8 to 9 am and 5 to 6 pm.
 
 \subsection{Path Finding}
 Whenever a car enters the traffic, it needs to get a predefined route to take to its destination. In the simulation, each car runs an instance of a path finding algorithm, two of which were implemented.
@@ -213,12 +210,14 @@ where $v$ is the velocity, s the road length and t refers to the time spent on a
 \subsection{Simulated Maps}
 
 \subsection{Simulation Validation}
-In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.<
+In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
 
 \subsection{Methodology}
 It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. Since it is desirable in such a setting to not only compare these systems with a baseline or benchmark system but rather rank them by performance, a convenient framework for such a comparison is needed. An all-pairwise comparison is not desirable, since the total of  systems would require 30 comparisons, which would result in tiny confidence levels due to Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. In order to perform statistical calculations on the data, it is often necessary but at least useful to have IID observations. It is obvious that this independence can not be assumed in a traffic simulation between individual cars, since the delay of one car often influences that of others in shared roads and queues. While restarting the simulation $n$ times in order to get $n$ observations that can be combined to a grand mean seems an obvious choice, the day-based simulation also allows to run multiple days and assume independence between days, since traffic is supposed to somewhat reset during night.
 
 Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation.
+
+Three measures are employed to compare the performance strategies. Similarly to prior work CITE, the average velocity of cars in the system is measured
 
 \section{Results}
 \label{sec:results}

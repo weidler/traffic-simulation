@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+
 library(plotly)
 library(knitr)
 ```
@@ -107,7 +108,7 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 ```
 
 ```{r include=FALSE}
-srcFiles <- c("FlowWeightedCycling.csv")
+srcFiles <- c("informed_cycling_10.csv", "informed_cycling_20.csv", "informed_cycling_15.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
