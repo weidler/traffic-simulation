@@ -205,8 +205,6 @@ where $v$ is the velocity, s the road length and t refers to the time spent on a
 
 \paragraph{Two Districts} “Two Districts” is a small and simple map, designed to test the effects of modifying the most crucial roads in a map. The map has a residential district on the left and an industrial district on the right, connected by only one road, in order to force most vehicles to take it during the rush hours. This road is then modified in various ways, including adding lanes, changing it to a highway and also replaced by multiple one-way streets. 
 
-\paragraph{Chaos City} “Chaos City” is a medium sized map that was made to include all the features a map can have. It has all the road and zone types available, and is interesting to see how the different strategies try to handle all of these variables.
-
 \paragraph{Brusselsepoort} This map is modelled after a part of Maastricht called Brusselsepoort. It includes lots of residential areas, and a small commercial zone. This map was included in the testing as to have a “real world” scenario. This map was used to find the optimal phase lengths for the strategies.
 
 \paragraph{Tie Fighter} The “Tie Fighter” map has three sections. In the middle, there is a residential area, spawning most of the traffic in the morning. The left and right side of the map are industrial and commercial areas. The three sections are connected by three lane highways. The map is not the most realistic, but it can be a challenging case for the traffic light strategies, due to the often-saturated mid-section.
@@ -267,7 +265,7 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Brusselsepoort map.}
 \label{my-label}
-\begin{tabular}{llll}
+\begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 6.190          & 33.74             & 0.040                      \\
 \textbf{Informed}         & \textbf{9.524} & 74.75             & 0.156                      \\
@@ -276,6 +274,38 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{Flow W.}    & 9.198          & 17.50             & 0.177                      \\
 \textbf{Dynamic}          & 1.868          & 2.564             & 0.032                      \\
 \textbf{Dynamic+}         & -              & -                 & -                         
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.226          & 0.015             & 0.0005                     \\
+\textbf{Informed}   & 0.156          & 0.017             & 0.0004                     \\
+\textbf{Density W.} & 0.1607         & 0.0119            & 0.0002                     \\
+\textbf{Queue W.}   & 0.159          & 0.0123            & 0.0005                     \\
+\textbf{Flow W.}    & \textbf{0.139} & 0.010             & 0.0002                     \\
+\textbf{Dynamic}    & 0.2387         & 0.0156            & 0.0019                     \\
+\textbf{Dynamic+}   & -              & -                 & -                         
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.2553         & 0.014             & 0.0001                     \\
+\textbf{Informed}   & 0.182          & 0.016             & 0.0001                     \\
+\textbf{Density W.} & 0.1808         & 0.0104            & 0.0001                     \\
+\textbf{Queue W.}   & 0.1817         & 0.011             & 0.0001                     \\
+\textbf{Flow W.}    & \textbf{0.154} & 0.009             & 0.0001                     \\
+\textbf{Dynamic}    & 0.2814         & 0.012             & 0.0001                     \\
+\textbf{Dynamic+}   & -              & -                 & -                         
 \end{tabular}
 \end{table}
 
@@ -301,7 +331,7 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
 \label{my-label}
-\begin{tabular}{llll}
+\begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 5.109          & 40.03             & 0.091                      \\
 \textbf{Informed}         & 7.273          & 75.76             & 0.108                      \\
@@ -313,12 +343,46 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \end{tabular}
 \end{table}
 
+\begin{table}[]
+\centering
+\caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.256           & 0.016             & 0.0006                     \\
+\textbf{Informed}   & 0.1742          & 0.0215            & 0.0006                     \\
+\textbf{Density W.} & 0.1520          & 0.0127            & 0.0004                     \\
+\textbf{Queue W.}   & \textbf{0.1467} & 0.0132            & 0.0006                     \\
+\textbf{Flow W.}    & 0.1475          & 0.01287           & 0.0002                     \\
+\textbf{Dynamic}    & 0.2565          & 0.01699           & 0.0035                     \\
+\textbf{Dynamic+}   & 0.2284          & 0.014             & 0.0040                    
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.1934          & 0.0108            & 0.0001                     \\
+\textbf{Informed}   & 0.1402          & 0.0140            & 0.0001                     \\
+\textbf{Density W.} & 0.1221          & 0.009             & 0.0001                     \\
+\textbf{Queue W.}   & \textbf{0.1119} & 0.0094            & 0.0001                     \\
+\textbf{Flow W.}    & 0.1202          & 0.010             & 0.0001                     \\
+\textbf{Dynamic}    & 0.2193          & 0.0108            & 0.0001                     \\
+\textbf{Dynamic+}   & 0.1762          & 0.0100            & 0.0001                    
+\end{tabular}
+\end{table}
+
 \subsection{Urban Planning}
 To investigate the effect of measures related to urban planning, two ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible.
 
 \subsubsection{Introducing More Lanes}
 
 \subsubsection{One Way Roads}
+
+\subsection{Connecting Highway}
 
 \section{Discussion}
 \label{sec:discussion}
