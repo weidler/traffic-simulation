@@ -38,6 +38,22 @@ varsFromTo <- function(datafr, from, to, days_simulated) {
   return(unlist(vars))
 }
 
+meanDiffConfInt <- function(a, b, from, to, level) {
+  means_a = meansFromTo(a, from, to, days_simulated)
+  means_b = meansFromTo(b, from, to, days_simulated)
+  
+  differences = means_a - means_b
+  diff_var = var(differences)
+  
+  n = length(differences)
+  grandmean = mean(differences);
+  grandvariance = diff_var/n
+  
+  half_length = qt(1-level, df=n-1) * sqrt(grandvariance)
+  
+  return(c(grandmean - half_length, grandmean + half_length))
+}
+
 confInt <- function(means, variances, alpha) {
   n = length(means)
   grandmean = mean(means);
@@ -91,7 +107,8 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
     legendgroup = "g1") %>%
   layout(yaxis = list(title = title),
          showlegend = TRUE,
-         legend=list(orientation = "h"),
+         legend=list(x = 0.8, y = 0.9),
+         font = list(size = 18),
          xaxis = list(showticklabels = FALSE))
 
   for (i in 1:length(datafr)) {
@@ -112,9 +129,9 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 ```{r include=FALSE}
 # srcFiles <- c("coordiante_1.csv", "coordiante_3.csv", "coordiante_5.csv", "coordiante_7.csv", "coordiante_9.csv")
 # srcFiles <- c("basic_cycling_10.csv", "basic_cycling_15.csv", "basic_cycling_20.csv", "basic_cycling_25.csv", "basic_cycling_30.csv")
-# srcFiles <- c("informed_cycling_10.csv", "informed_cycling_15.csv", "informed_cycling_20.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
+srcFiles <- c("informed_cycling_10.csv", "informed_cycling_15.csv", "informed_cycling_20.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
 # srcFiles <- c("queue_weighted_cycling_10.csv", "queue_weighted_cycling_20.csv", "queue_weighted_cycling_30.csv", "queue_weighted_cycling_40.csv", "queue_weighted_cycling_50.csv")
-srcFiles <- c("flow_weighted_cycling_30.csv", "flow_weighted_cycling_40.csv", "flow_weighted_cycling_50.csv", "flow_weighted_cycling_60.csv", "flow_weighted_cycling_80.csv", "flow_weighted_cycling_100.csv", "flow_weighted_cycling_125.csv")
+# srcFiles <- c("flow_weighted_cycling_30.csv", "flow_weighted_cycling_40.csv", "flow_weighted_cycling_50.csv", "flow_weighted_cycling_60.csv", "flow_weighted_cycling_80.csv", "flow_weighted_cycling_100.csv", "flow_weighted_cycling_125.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
@@ -335,6 +352,8 @@ avg_speeds_in_bplot_afternoon
 for (i in 1:length(avg_speeds_in)) {
   print(confIntTable(avg_speeds_in[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
 }
+
+meanDiffConfInt(avg_speeds_in[[1]], avg_speeds_in[[5]], 7, 9, 0.05)
 
 ```
 
