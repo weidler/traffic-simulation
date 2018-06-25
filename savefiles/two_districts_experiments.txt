@@ -1,2 +1,2 @@
-two_districts_basic;51;BASIC_CYCLING;EMPIRICAL;60;25;true
-two_districts_informed;51;INFORMED_CYCLING;EMPIRICAL;60;25;true
+two_districts_weighted;51;WEIGHTED_CYCLING;EMPIRICAL;60;30;true
+two_districts_coordinated;51;COORDINATED;EMPIRICAL;60;30;true
