@@ -95,21 +95,18 @@ Due to the large scale maps used in this work, drivers not only need to behave a
 In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a Continuous Simulation}
-Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore the amount of traffic on a map grows automatically with its size. The IAT can be drawn from the following distributions
+Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore, the amount of traffic on a map grows automatically with its size. We use a non-stationary poisson process based on real world data from the U.S. Department of Transportation \citep{trafficdata}. The hourly data is used to draw IATs based on a poisson process that is then adjusted using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 7 to 9 am and 5 to 7 pm.
 
-\begin{figure}[t]
-	\includegraphics[width=\linewidth]{img/traffic-data.jpeg}
-	\caption{Traffic data from the U.S. Department of Transportation. Graphic received from https://www.fhwa.dot.gov/policyinformation/tmguide/
-	tmg\_2013/traffic-monitoring-methodologies.cfm \label{fig:traffic-data}}
-\end{figure} 
- 
-\begin{itemize}
-	\item Exponential (Poisson Process)
-	\item Gaussian
-	\item Realistic (Non stationary Poisson Process)
-\end{itemize}
- 
-While the Gaussian and Exponential distribution are standard distributions with adjustable paramters, the realistic distribution is based on real world data from the U.S. Department of Transportation \citep{trafficdata}. We use hourly data and draw IATs based on a poisson process that is then fitted to the data using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 8 to 9 am and 5 to 6 pm.
+\subsection{Population}
+As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented.
+
+\subsection{Zone-based Scheduling}
+Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. A road's zone restricts its \textit{available population} in the beginning of the simulation. For instance, commercial zones start with a lower overall population than residential zones. Additionally, the zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are separated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{img/zoned-traffic-flow.png}
+	\caption{Traffic Flow between different zone types at different times of the day. \label{fig:zone-traffic-flow}}
+\end{figure}
 
 \subsection{Path Finding}
 Whenever a car enters the traffic, it needs to get a predefined route to take to its destination. In the simulation, each car runs an instance of a path finding algorithm, two of which were implemented.
@@ -120,13 +117,7 @@ This popular path finding algorithm, based on Dijkstra’s algorithm \citep{dijk
 \paragraph{Advanced A*}
 The advanced A* path finding algorithm is very similar to the original version, but it also takes the traffic density and average speed of the roads into account. This is realized by calculating the traffic density and average speed of each road whenever the route of a car is created. The density of a road equals the number of cars on it divided by the length of the road, to get the number of cars per meter of road. The algorithm then adds a weighted density value to the G and H scores of the road to calculate the current best route. The average speed for the roads is taken from the continuously calculated statistics. The value of the average speed is taken away from the score of the road, in order to incentivize the use of roads with a higher speed.
 
-\subsection{Zone-based Scheduling}
-Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. A road's zone restricts its \textit{available population} in the beginning of the simulation. For instance, commercial zones start with a lower overall population than residential zones. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented. Additionally, the zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are seperated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
-
-\begin{figure}
-	\includegraphics[width=\linewidth]{img/zoned-traffic-flow.png}
-	\caption{Traffic Flow between different zone types at different times of the day. \label{fig:zone-traffic-flow}}
-\end{figure}
+Early experiments have shown that the advanced A* algorithm provides more safety against oversaturation of roads and therefore creates a more realistic simulation in which drivers are able to adjust their path based on their knowledge about the traffic.
 
 \subsection{Simulation Model}
 Putting the above parts together, the simulation procedure depicted by algorithm \ref{alg:simulation} is run.
@@ -182,9 +173,9 @@ In order to provide a baseline of what more advanced strategies should be able t
 
 \subsection{Responsive Strategies}
 \label{sec:responsive}
-These strategies should outperform the benchmark strategies as they are more dynamic and change their actions based on their surroundings. Weighted Cycling intends to reduce the time people spend waiting at a light. Simply put, the traffic lights give priority to those who are waiting at the light, and if no one is waiting, it gives priority to the street with the most cars incoming. This method seems to mimic real-world examples of traffic control systems by acting similar to a traffic light with some form of traffic sensors (pressure plates, traffic cameras, etc.). It also allows the most amount of people possible through fastest, which is extremely effective in situations where a large amount of cars approach from one side. 
+These methods mimic real-world examples of traffic control systems by acting similar to a traffic light with some form of traffic sensors (pressure plates, traffic cameras, etc.). 
 
-Additionally, three strategies are investigated that, similarly to \textit{Basic Cycling}, choose the next green light in a given order. Crucially though, they do not use fixed times for the green phase. Instead, the phaselength is determined by some strategy-specific measure of traffic, normalised by the total traffic surrounding the intersection.
+Three strategies are investigated that, similarly to \textit{Basic Cycling}, choose the next green light in a given order. Crucially though, they do not use fixed times for the green phase. Instead, the phaselength is determined by some strategy-specific measure of traffic, normalised by the total traffic surrounding the intersection.
 
 \paragraph{Density Weighted Cycling} The most simple of such strategies uses the total number of cars that come from a road to determine the phaselength of the traffic signal. It therefore assigns longer phaselengths to trafficlights that have more cars approaching the intersection relative to all other incoming roads.
 
@@ -194,9 +185,9 @@ Additionally, three strategies are investigated that, similarly to \textit{Basic
 
 Dynamic strategies are strategies that instead of deciding how long a light has to stay green decides which light to turn green based on the information that the intersection gathers. Currently there are two strategies that do this.
 
-\paragraph{Dynamic Cycling (WEIGHTED)} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
+\paragraph{Dynamic Cycling} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
 
-\paragraph{Dynamic Cycling+ (COORDINATED)} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
+\paragraph{Dynamic Cycling+} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
@@ -224,11 +215,13 @@ where $v$ is the velocity, s the road length and t refers to the time spent on a
 In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
 
 \subsection{Methodology}
-It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. Since it is desirable in such a setting to not only compare these systems with a baseline or benchmark system but rather rank them by performance, a convenient framework for such a comparison is needed. An all-pairwise comparison is not desirable, since the total of  systems would require 30 comparisons, which would result in tiny confidence levels due to Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. In order to perform statistical calculations on the data, it is often necessary but at least useful to have IID observations. It is obvious that this independence can not be assumed in a traffic simulation between individual cars, since the delay of one car often influences that of others in shared roads and queues. While restarting the simulation $n$ times in order to get $n$ observations that can be combined to a grand mean seems an obvious choice, the day-based simulation also allows to run multiple days and assume independence between days, since traffic is supposed to somewhat reset during night.
+In order to perform statistical calculations on the data, it is often necessary but at least useful to have IID observations. It is obvious that this independence can not be assumed in a traffic simulation between individual cars, since the delay of one car often influences that of others in shared roads and queues. While restarting the simulation $n$ times in order to get $n$ observations that can be combined to a grand mean seems an obvious choice, the day-based simulation also allows to run multiple days and assume independence between days, since traffic resets during night to a reasonable extend.
 
 Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation.
 
-Three measures are employed to compare the performance strategies. Similarly to prior work CITE, the average velocity of cars in the system is measured. Additionally, we report the number of cars on the map and the percentage of cars waiting (as defined in section \ref{sec:responsive}).
+It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. In order to rank these strategies, a convenient framework for such a comparison would be needed. An all-pairwise comparison is not desirable, since the total of  systems would require 30 comparisons, which would result in tiny confidence levels due to Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. Though, given the number of strategies to compare and the fact that we care about relatively small differences in the systems, fairly high numbers of simulated days would be necessary to guarantee a significant ranking with e.g. an significance level of $0.05$ (about 4000 days for e.g. flow weighted cycling). The computationally expensive simulation experiment used in this work does not allow us to run such large experiments in feasible time. We therefore fall back to a comparison with benchmark strategies and report significance of the differences.
+
+Three measures are employed to compare the performance strategies. Similarly to prior work \citep{srinivasan2006neural}, the average velocity of cars in the system is measured. Additionally, we report the number of cars on the map and the percentage of cars waiting (as defined in section \ref{sec:responsive}).
 
 \section{Results}
 \label{sec:results}
@@ -240,16 +233,88 @@ Experiments for the optimization of phase lengths in all strategies were conduct
 \begin{figure*}[t]
 \includegraphics[width=0.5\textwidth]{img/basic-opt.png}
 \includegraphics[width=0.5\textwidth]{img/informed-opt.png}
-\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
+\includegraphics[width=\textwidth]{img/flow-opt.png}
 
 \caption{\label{fig:opt-results}}
 \end{figure*}
 
-As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase lengths which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments.
+As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the flow weighted cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
+Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase.
+
+\subsection{Experiments on the Two-Districts Map}
+
+\subsection{Experiments on the Brusselsepoort Map}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 6.34          & 41.65             & 0.064                      \\
+\textbf{Informed}         & 9.86          & 90.13             & 0.240                      \\
+\textbf{Density W.} & 8.46          & 20.80             & 0.304                      \\
+\textbf{Queue W.}   & 7.55          & 20.07             & 0.649                      \\
+\textbf{Flow W.}    & 9.00          & 23.02             & 0.239                      \\
+\textbf{Dynamic}          & 1.99          & 3.997             & 0.073                      \\
+\textbf{Dynamic+}         & -             & -                 & -                    
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{llll}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 6.190          & 33.74             & 0.040                      \\
+\textbf{Informed}         & \textbf{9.524} & 74.75             & 0.156                      \\
+\textbf{Density W.} & 8.471          & 15.78             & 0.263                      \\
+\textbf{Queue W.}   & 7.534          & 15.55             & 0.352                      \\
+\textbf{Flow W.}    & 9.198          & 17.50             & 0.177                      \\
+\textbf{Dynamic}          & 1.868          & 2.564             & 0.032                      \\
+\textbf{Dynamic+}         & -              & -                 & -                         
+\end{tabular}
+\end{table}
+
+\subsection{Experiments on the Tie-Fighter Map}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 5.588          & 49.31             & 0.060                      \\
+\textbf{Informed}         & 8.710          & 91.42             & 0.1881                     \\
+\textbf{Density W.} & 8.482          & 28.14             & 0.365                      \\
+\textbf{Queue W.}   & 8.182          & 29.41             & 1.596                      \\
+\textbf{Flow W.}    & \textbf{9.002} & 31.77             & 0.328                      \\
+\textbf{Dynamic}          & 1.503          & 2.983             & 0.054                      \\
+\textbf{Dynamic+}         & 1.574          & 3.251             & 0.078                   
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{llll}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 5.109          & 40.03             & 0.091                      \\
+\textbf{Informed}         & 7.273          & 75.76             & 0.108                      \\
+\textbf{Density W.} & 7.481          & 22.69             & 0.295                      \\
+\textbf{Queue W.}   & 7.803          & 23.47             & 1.735                      \\
+\textbf{Flow W.}    & \textbf{7.826} & 23.13             & 0.261                      \\
+\textbf{Dynamic}          & 1.399          & 1.932             & 0.030                      \\
+\textbf{Dynamic+}         & 1.745          & 3.031             & 0.038                     
+\end{tabular}
+\end{table}
 
 \subsection{Urban Planning}
+To investigate the effect of measures related to urban planning, two ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible.
 
 \subsubsection{Introducing More Lanes}
 
@@ -257,6 +322,12 @@ As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 se
 
 \section{Discussion}
 \label{sec:discussion}
+
+\subsection{Limitations}
+
+
+\subsection{Future Work}
+
 
 \section{Conclusion}
 \label{sec:conclusion}

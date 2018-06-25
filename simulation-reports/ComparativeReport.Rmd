@@ -22,7 +22,7 @@ rowVars <- function(x, ...) {
 
 meansFromTo <- function(datafr, from, to, days_simulated) {
   means <- list()
-  for (i in 1:days_simulated) {
+  for (i in 2:days_simulated) {
     means[[i]] <- unlist(mean(datafr[datafr$time <= to & datafr$time >= from,][[paste("D", i, sep="")]]))
   }
   
@@ -31,11 +31,27 @@ meansFromTo <- function(datafr, from, to, days_simulated) {
 
 varsFromTo <- function(datafr, from, to, days_simulated) {
   vars <- list()
-  for (i in 1:days_simulated) {
+  for (i in 2:days_simulated) {
     vars[[i]] <- unlist(var(datafr[datafr$time <= to & datafr$time >= from,][[paste("D", i, sep="")]]))
   }
   
   return(unlist(vars))
+}
+
+meanDiffConfInt <- function(a, b, from, to, level) {
+  means_a = meansFromTo(a, from, to, days_simulated)
+  means_b = meansFromTo(b, from, to, days_simulated)
+  
+  differences = means_a - means_b
+  diff_var = var(differences)
+  
+  n = length(differences)
+  grandmean = mean(differences);
+  grandvariance = diff_var/n
+  
+  half_length = qt(1-level, df=n-1) * sqrt(grandvariance)
+  
+  return(c(grandmean - half_length, grandmean + half_length))
 }
 
 confInt <- function(means, variances, alpha) {
@@ -66,6 +82,7 @@ confIntTable <- function(datafr, title) {
     Time_Interval=c("7am - 9am", "17pm - 19pm"), 
     Mean=c(mean(means_7_9), mean(means_17_19)),
     Variance=c(mean(vars_7_9), mean(vars_17_19)),
+    VarianceOfMeans=c(var(means_7_9), var(means_17_19)),
     ConfIntLower0.95=c(cidf_7_9[1], cidf_17_19[1]), 
     ConfIntUpper0.95=c(cidf_7_9[2], cidf_17_19[2]),
     ConfIntLower0.9=c(cidf_7_9_09[1], cidf_17_19_09[1]), 
@@ -88,11 +105,14 @@ DDReps <- function(variance, k, d) {
 bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
   bplot <- plot_ly(
     type="box",
-    legendgroup = "g1") %>%
+    legendgroup = "g1",
+    width = 1200) %>%
   layout(yaxis = list(title = title),
          showlegend = TRUE,
-         legend=list(orientation = "h"),
-         xaxis = list(showticklabels = FALSE))
+         legend=list(x = 1, y = 0.9),
+         font = list(size = 18),
+         xaxis = list(showticklabels = FALSE)
+         )
 
   for (i in 1:length(datafr)) {
     bplot <- add_trace(
@@ -114,7 +134,12 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 # srcFiles <- c("basic_cycling_10.csv", "basic_cycling_15.csv", "basic_cycling_20.csv", "basic_cycling_25.csv", "basic_cycling_30.csv")
 # srcFiles <- c("informed_cycling_10.csv", "informed_cycling_15.csv", "informed_cycling_20.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
 # srcFiles <- c("queue_weighted_cycling_10.csv", "queue_weighted_cycling_20.csv", "queue_weighted_cycling_30.csv", "queue_weighted_cycling_40.csv", "queue_weighted_cycling_50.csv")
-srcFiles <- c("flow_weighted_cycling_30.csv", "flow_weighted_cycling_40.csv", "flow_weighted_cycling_50.csv", "flow_weighted_cycling_60.csv", "flow_weighted_cycling_80.csv", "flow_weighted_cycling_100.csv", "flow_weighted_cycling_125.csv")
+# srcFiles <- c("flow_weighted_cycling_30.csv", "flow_weighted_cycling_40.csv", "flow_weighted_cycling_50.csv", "flow_weighted_cycling_60.csv", "flow_weighted_cycling_80.csv", "flow_weighted_cycling_100.csv", "flow_weighted_cycling_125.csv")
+
+srcFiles <- c("tie_basic_iat30_pl25.csv", "tie_informed_iat30_pl25.csv", "tie_dens_iat30_pl30.csv", "tie_queue_iat30_pl30.csv", "tie_flow_iat30_pl30.csv", "tie_wei_iat30_pl30.csv", "tie_coord_iat30_pl30.csv")
+# srcFiles <- c("1way_(or_another).csv", "2lane.csv", "3lane.csv", "highway.csv")
+# srcFiles <- c("maas_home_basic.csv", "maas_home_informed.csv", "maas_home_density.csv", "maas_home_queue.csv", "maas_home_flow.csv", "maas_home_weighted.csv")
+# srcFiles <- c("two_districts_basic_30.csv", "1lane.csv", "two_districts_density_30.csv", "two_districts_queue_30.csv", "two_districts_flow_30.csv", "two_districts_weighted_30.csv", "two_districts_coordinated_30.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
@@ -315,7 +340,7 @@ for (i in 1:length(avg_speeds)) {
 avg_speeds_in_plot <- plot_ly(x=avg_speeds_in[[1]]$time) %>%
   layout(xaxis = list(title = 'Time (h)'),
          yaxis = list(title = 'Average Velocity'),
-         legend = list(x = 0.80, y = 0.90),
+         legend = list(x = 0.90, y = 0.90),
          showlegend = TRUE)
 
 for (i in 1:length(avg_speeds_in)) {
@@ -335,6 +360,12 @@ avg_speeds_in_bplot_afternoon
 for (i in 1:length(avg_speeds_in)) {
   print(confIntTable(avg_speeds_in[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
 }
+
+for (i in 3:length(avg_speeds_in)) {
+  print(srcFiles[i])
+  print(meanDiffConfInt(avg_speeds_in[[1]], avg_speeds_in[[i]], 7, 9, 0.05))
+}
+
 
 ```
 
@@ -365,6 +396,11 @@ frac_waits_bplot_morning
 frac_waits_bplot_afternoon
 for (i in 1:length(frac_waits)) {
   print(confIntTable(frac_waits[[i]], paste("Means and Confidence Intervals for", srcFiles[i])))
+}
+
+for (i in 3:length(frac_waits)) {
+  print(srcFiles[i])
+  print(meanDiffConfInt(frac_waits[[1]], frac_waits[[i]], 7, 9, 0.05))
 }
 
 ```
