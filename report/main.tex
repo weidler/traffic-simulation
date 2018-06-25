@@ -13,6 +13,7 @@
 \useunder{\uline}{\ul}{}
 \usepackage{caption} 
 \usepackage{lastpage}
+\usepackage[page]{appendix}
 \pagestyle{plain} 
 \usepackage{graphicx}
 \captionsetup[table]{skip=10pt}
@@ -239,11 +240,10 @@ Experiments for the optimization of phase lengths in all strategies were conduct
 As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the flow weighted cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
-Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase.
+Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix.
 
 \subsection{Experiments on the Two-Districts Map}
-
-\begin{table}[]
+\begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Two-Districts map.}
 \label{my-label}
@@ -251,97 +251,48 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 6.323          & 46.36             & 0.139                      \\
 \textbf{Informed}   & \textbf{11.58}          & 133.15            & 0.596                      \\
-\textbf{Density W.} & 9.231          & 34.61             & 0.434                      \\
-\textbf{Queue W.}   & 9.344 & 36.62             & 1.288                      \\
-\textbf{Flow W.}    & 9.536          & 35.81             & 0.3752                     \\
-\textbf{Dynamic}    & 6.015          & 36.75             & 0.0943                     \\
-\textbf{Dynamic+}   & 11.29          & 134.06            & 0.325                     
+\hline\textbf{Density W.} & 9.231*$^\dagger$          & 34.61             & 0.434                      \\
+\textbf{Queue W.}   & 9.344*$^\dagger$ & 36.62             & 1.288                      \\
+\textbf{Flow W.}    & 9.536*$^\dagger$          & 35.81             & 0.3752                     \\
+\textbf{Dynamic}    & 6.015*$^\dagger$          & 36.75             & 0.0943                     \\
+\textbf{Dynamic+}   & 11.29*$^\dagger$          & 134.06            & 0.325                     
 \end{tabular}
-\end{table}
-
-\begin{table}[]
-\centering
-\caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Two-Districts map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}      & 6.900            & 43.806            & 0.06631                    \\
-\textbf{Informed}   & \textbf{10.2690} & 106.758           & 0.2388                     \\
-\textbf{Density W.} & 8.9365           & 26.867            & 0.2742                     \\
-\textbf{Queue W.}   & 8.902            & 28.91             & 0.811                      \\
-\textbf{Flow W.}    & 9.105            & 28.58             & 0.2642                     \\
-\textbf{Dynamic}    & 5.9756           & 27.924            & 0.0824                     \\
-\textbf{Dynamic+}   & 9.9371           & 110.38            & 0.1399                    
-\end{tabular}
-\end{table}
-
-\begin{table}[]
+\vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Two-District map.}
 \label{my-label}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.2435          & 0.017             & 0.0004                     \\
-\textbf{Informed}   & \textbf{0.1229} & 0.0166            & 0.0004                     \\
-\textbf{Density W.} & 0.1409          & 0.014             & 0.0002                     \\
-\textbf{Queue W.}   & 0.1332          & 0.0137            & 0.0004                     \\
-\textbf{Flow W.}    & 0.1326          & 0.0139            & 0.0001                     \\
-\textbf{Dynamic}    & 0.242           & 0.242             & 0.0004                     \\
-\textbf{Dynamic+}   & 0.0930          & 0.012             & 0.0002                    
+\textbf{Informed}   & 0.1229 & 0.0166            & 0.0004                     \\
+\hline\textbf{Density W.} & 0.1409*$^\dagger$          & 0.014             & 0.0002                     \\
+\textbf{Queue W.}   & 0.1332*$^\dagger$          & 0.0137            & 0.0004                     \\
+\textbf{Flow W.}    & 0.1326*$^\dagger$      & 0.0139            & 0.0001                     \\
+\textbf{Dynamic}    & 0.242$^\dagger$          & 0.242             & 0.0004                     \\
+\textbf{Dynamic+}   & \textbf{0.0930*$^\dagger$}          & 0.012             & 0.0002                    
 \end{tabular}
 \end{table}
 
-\begin{table}[]
-\centering
-\caption{Fraction of Cars Waiting during first rush hour (between 17am and 19am) on the Two-District map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}      & 0.221            & 0.012             & 0.0001                     \\
-\textbf{Informed}   & 0.135            & 0.01492           & 0.0002                     \\
-\textbf{Density W.} & 0.1383           & 0.0123            & 0.0001                     \\
-\textbf{Queue W.}   & 0.1327           & 0.0118            & 0.0001                     \\
-\textbf{Flow W.}    & 0.1310           & 0.0119            & 0.0001                     \\
-\textbf{Dynamic}    & 0.252            & 0.0128            & 0.0002                     \\
-\textbf{Dynamic+}   & \textbf{0.10620} & 0.0121            & 0.0000                    
-\end{tabular}
-\end{table}
+On the first of three maps, the informed cycling strategy outperforms all other strategies significantly in average velocity. Notably, Dynamic+ is a very close runner-up with a difference of only 0.29. Except for Dynamic, all strategies outperform the Basic Cycling benchmark system.
+
+With respect to the fraction of cars waiting, Dynamic+ is the best numerically best performing strategy, outperforming both benchmark strategies significantly. All other strategies can outperform the basic cycling, but informed is significantly the second best strategy for that measure.
 
 \subsection{Experiments on the Brusselsepoort Map}
-
-\begin{table}[]
+\begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{my-label}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 6.34          & 41.65             & 0.064                      \\
-\textbf{Informed}         & 9.86          & 90.13             & 0.240                      \\
-\textbf{Density W.} & 8.46          & 20.80             & 0.304                      \\
-\textbf{Queue W.}   & 7.55          & 20.07             & 0.649                      \\
-\textbf{Flow W.}    & 9.00          & 23.02             & 0.239                      \\
-\textbf{Dynamic}          & 1.99          & 3.997             & 0.073                      \\
+\textbf{Informed}         & \textbf{9.86}          & 90.13             & 0.240                      \\
+\hline\textbf{Density W.} & 8.46*$^\dagger$          & 20.80             & 0.304                      \\
+\textbf{Queue W.}   & 7.55*$^\dagger$          & 20.07             & 0.649                      \\
+\textbf{Flow W.}    & 9.00*$^\dagger$          & 23.02             & 0.239                      \\
+\textbf{Dynamic}          & 1.99*$^\dagger$          & 3.997             & 0.073                      \\
 \textbf{Dynamic+}         & -             & -                 & -                    
 \end{tabular}
-\end{table}
-
-\begin{table}[]
-\centering
-\caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}            & 6.190          & 33.74             & 0.040                      \\
-\textbf{Informed}         & \textbf{9.524} & 74.75             & 0.156                      \\
-\textbf{Density W.} & 8.471          & 15.78             & 0.263                      \\
-\textbf{Queue W.}   & 7.534          & 15.55             & 0.352                      \\
-\textbf{Flow W.}    & 9.198          & 17.50             & 0.177                      \\
-\textbf{Dynamic}          & 1.868          & 2.564             & 0.032                      \\
-\textbf{Dynamic+}         & -              & -                 & -                         
-\end{tabular}
-\end{table}
-
-\begin{table}[]
+\vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{my-label}
@@ -349,33 +300,20 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.226          & 0.015             & 0.0005                     \\
 \textbf{Informed}   & 0.156          & 0.017             & 0.0004                     \\
-\textbf{Density W.} & 0.1607         & 0.0119            & 0.0002                     \\
-\textbf{Queue W.}   & 0.159          & 0.0123            & 0.0005                     \\
-\textbf{Flow W.}    & \textbf{0.139} & 0.010             & 0.0002                     \\
-\textbf{Dynamic}    & 0.2387         & 0.0156            & 0.0019                     \\
+\hline\textbf{Density W.} & 0.1607*$^\dagger$         & 0.0119            & 0.0002                     \\
+\textbf{Queue W.}   & 0.159*          & 0.0123            & 0.0005                     \\
+\textbf{Flow W.}    & \textbf{0.139*$^\dagger$} & 0.010             & 0.0002                     \\
+\textbf{Dynamic}    & 0.2387*$^\dagger$         & 0.0156            & 0.0019                     \\
 \textbf{Dynamic+}   & -              & -                 & -                         
 \end{tabular}
 \end{table}
 
-\begin{table}[]
-\centering
-\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}      & 0.2553         & 0.014             & 0.0001                     \\
-\textbf{Informed}   & 0.182          & 0.016             & 0.0001                     \\
-\textbf{Density W.} & 0.1808         & 0.0104            & 0.0001                     \\
-\textbf{Queue W.}   & 0.1817         & 0.011             & 0.0001                     \\
-\textbf{Flow W.}    & \textbf{0.154} & 0.009             & 0.0001                     \\
-\textbf{Dynamic}    & 0.2814         & 0.012             & 0.0001                     \\
-\textbf{Dynamic+}   & -              & -                 & -                         
-\end{tabular}
-\end{table}
+On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by flow weighted cycling. Dynamic cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform basic cycling.
+
+Measured in the fraction of waiting cars, flow weighted cycling is the best performing system, significantly better than both basic and informed cycling. Close runner-ups are informed cycling and queue weighted cycling. As was observed before, all strategies except for the dynamic ones, outperform the basic cycling benchmark.
 
 \subsection{Experiments on the Tie-Fighter Map}
-
-\begin{table}[]
+\begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{my-label}
@@ -383,31 +321,13 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 5.588          & 49.31             & 0.060                      \\
 \textbf{Informed}         & 8.710          & 91.42             & 0.1881                     \\
-\textbf{Density W.} & 8.482          & 28.14             & 0.365                      \\
-\textbf{Queue W.}   & 8.182          & 29.41             & 1.596                      \\
-\textbf{Flow W.}    & \textbf{9.002} & 31.77             & 0.328                      \\
-\textbf{Dynamic}          & 1.503          & 2.983             & 0.054                      \\
-\textbf{Dynamic+}         & 1.574          & 3.251             & 0.078                   
+\hline\textbf{Density W.} & 8.482*$^\dagger$          & 28.14             & 0.365                      \\
+\textbf{Queue W.}   & 8.182*$^\dagger$          & 29.41             & 1.596                      \\
+\textbf{Flow W.}    & \textbf{9.002*$^\dagger$} & 31.77             & 0.328                      \\
+\textbf{Dynamic}          & 1.503*$^\dagger$          & 2.983             & 0.054                      \\
+\textbf{Dynamic+}         & 1.574*$^\dagger$          & 3.251             & 0.078                   
 \end{tabular}
-\end{table}
-
-\begin{table}[]
-\centering
-\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}            & 5.109          & 40.03             & 0.091                      \\
-\textbf{Informed}         & 7.273          & 75.76             & 0.108                      \\
-\textbf{Density W.} & 7.481          & 22.69             & 0.295                      \\
-\textbf{Queue W.}   & 7.803          & 23.47             & 1.735                      \\
-\textbf{Flow W.}    & \textbf{7.826} & 23.13             & 0.261                      \\
-\textbf{Dynamic}          & 1.399          & 1.932             & 0.030                      \\
-\textbf{Dynamic+}         & 1.745          & 3.031             & 0.038                     
-\end{tabular}
-\end{table}
-
-\begin{table}[]
+\vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{my-label}
@@ -415,29 +335,15 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.256           & 0.016             & 0.0006                     \\
 \textbf{Informed}   & 0.1742          & 0.0215            & 0.0006                     \\
-\textbf{Density W.} & 0.1520          & 0.0127            & 0.0004                     \\
-\textbf{Queue W.}   & \textbf{0.1467} & 0.0132            & 0.0006                     \\
-\textbf{Flow W.}    & 0.1475          & 0.01287           & 0.0002                     \\
-\textbf{Dynamic}    & 0.2565          & 0.01699           & 0.0035                     \\
-\textbf{Dynamic+}   & 0.2284          & 0.014             & 0.0040                    
+\hline\textbf{Density W.} & 0.1520*$^\dagger$          & 0.0127            & 0.0004                     \\
+\textbf{Queue W.}   & \textbf{0.1467*$^\dagger$} & 0.0132            & 0.0006                     \\
+\textbf{Flow W.}    & 0.1475$^\dagger$          & 0.01287           & 0.0002                     \\
+\textbf{Dynamic}    & 0.2565*$^\dagger$          & 0.01699           & 0.0035                     \\
+\textbf{Dynamic+}   & 0.2284*$^\dagger$          & 0.014             & 0.0040                    
 \end{tabular}
 \end{table}
 
-\begin{table}[]
-\centering
-\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Tie-Fighter map.}
-\label{my-label}
-\begin{tabular}{l|l|l|l|}
-\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\hline\textbf{Basic}      & 0.1934          & 0.0108            & 0.0001                     \\
-\textbf{Informed}   & 0.1402          & 0.0140            & 0.0001                     \\
-\textbf{Density W.} & 0.1221          & 0.009             & 0.0001                     \\
-\textbf{Queue W.}   & \textbf{0.1119} & 0.0094            & 0.0001                     \\
-\textbf{Flow W.}    & 0.1202          & 0.010             & 0.0001                     \\
-\textbf{Dynamic}    & 0.2193          & 0.0108            & 0.0001                     \\
-\textbf{Dynamic+}   & 0.1762          & 0.0100            & 0.0001                    
-\end{tabular}
-\end{table}
+The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed is flow-weighted cyclingm followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map has its best score for queue weighted cycling, but flow weighted cycling follows iwth a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
 
 \subsection{Urban Planning}
 To investigate the effect of measures related to urban planning, two ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible.
@@ -463,5 +369,101 @@ To investigate the effect of measures related to urban planning, two ways of cha
 %- Often times, better road layout makes way more of a difference than different strategies (tiefighter example)
 
 {\tiny\printbibliography}
+
+
+\clearpage
+
+\section*{Appendix}
+
+\begin{table}[h]
+\centering
+\caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Two-Districts map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 6.900           & 43.806            & 0.06631                    \\
+\textbf{Informed}   & \textbf{10.2690} & 106.758           & 0.2388                     \\
+\hline\textbf{Density W.} & 8.9365*$^\dagger$           & 26.867            & 0.2742                     \\
+\textbf{Queue W.}   & 8.902*$^\dagger$            & 28.91             & 0.811                      \\
+\textbf{Flow W.}    & 9.105*$^\dagger$            & 28.58             & 0.2642                     \\
+\textbf{Dynamic}    & 5.9756*$^\dagger$          & 27.924            & 0.0824                     \\
+\textbf{Dynamic+}   & 9.9371*$^\dagger$           & 110.38            & 0.1399                    
+\end{tabular}
+
+\centering
+\caption{Fraction of Cars Waiting during first rush hour (between 17am and 19am) on the Two-District map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.221            & 0.012             & 0.0001                     \\
+\textbf{Informed}   & 0.135            & 0.01492           & 0.0002                     \\
+\hline\textbf{Density W.} & 0.1383*           & 0.0123            & 0.0001                     \\
+\textbf{Queue W.}   & 0.1327*           & 0.0118            & 0.0001                     \\
+\textbf{Flow W.}    & 0.1310*           & 0.0119            & 0.0001                     \\
+\textbf{Dynamic}    & 0.252*$^\dagger$            & 0.0128            & 0.0002                     \\
+\textbf{Dynamic+}   & \textbf{0.10620*$^\dagger$} & 0.0121            & 0.0000                    
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 6.190          & 33.74             & 0.040                      \\
+\textbf{Informed}         & \textbf{9.524} & 74.75             & 0.156                      \\
+\hline\textbf{Density W.} & 8.471*$^\dagger$          & 15.78             & 0.263                      \\
+\textbf{Queue W.}   & 7.534*$^\dagger$          & 15.55             & 0.352                      \\
+\textbf{Flow W.}    & 9.198*$^\dagger$          & 17.50             & 0.177                      \\
+\textbf{Dynamic}          & 1.868*$^\dagger$          & 2.564             & 0.032                      \\
+\textbf{Dynamic+}         & -              & -                 & -                         
+\end{tabular}
+
+\centering
+\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.2553         & 0.014             & 0.0001                     \\
+\textbf{Informed}   & 0.182          & 0.016             & 0.0001                     \\
+\hline\textbf{Density W.} & 0.1808*         & 0.0104            & 0.0001                     \\
+\textbf{Queue W.}   & 0.1817*         & 0.011             & 0.0001                     \\
+\textbf{Flow W.}    & \textbf{0.154*$^\dagger$} & 0.009             & 0.0001                     \\
+\textbf{Dynamic}    & 0.2814*$^\dagger$         & 0.012             & 0.0001                     \\
+\textbf{Dynamic+}   & -              & -                 & -                         
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 5.109          & 40.03             & 0.091                      \\
+\textbf{Informed}         & 7.273          & 75.76             & 0.108                      \\
+\hline\textbf{Density W.} & 7.481*$^\dagger$          & 22.69             & 0.295                      \\
+\textbf{Queue W.}   & 7.803*$^\dagger$          & 23.47             & 1.735                      \\
+\textbf{Flow W.}    & \textbf{7.826*$^\dagger$} & 23.13             & 0.261                      \\
+\textbf{Dynamic}          & 1.399*$^\dagger$          & 1.932             & 0.030                      \\
+\textbf{Dynamic+}         & 1.745*$^\dagger$         & 3.031             & 0.038                     
+\end{tabular}
+
+\centering
+\caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}      & 0.1934          & 0.0108            & 0.0001                     \\
+\textbf{Informed}   & 0.1402          & 0.0140            & 0.0001                     \\
+\hline\textbf{Density W.} & 0.1221*$^\dagger$          & 0.009             & 0.0001                     \\
+\textbf{Queue W.}   & \textbf{0.1119*$^\dagger$} & 0.0094            & 0.0001                     \\
+\textbf{Flow W.}    & 0.1202*$^\dagger$          & 0.010             & 0.0001                     \\
+\textbf{Dynamic}    & 0.2193*$^\dagger$         & 0.0108            & 0.0001                     \\
+\textbf{Dynamic+}   & 0.1762*$^\dagger$          & 0.0100            & 0.0001                    
+\end{tabular}
+\end{table}
+
 
 \end{document}

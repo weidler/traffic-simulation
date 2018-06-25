@@ -54,6 +54,11 @@ meanDiffConfInt <- function(a, b, from, to, level) {
   return(c(grandmean - half_length, grandmean + half_length))
 }
 
+meanDiffConfIntBool <- function(a, b, from, to, level) {
+  interval = meanDiffConfInt(a, b, from, to, level)
+  return(sign(interval[1]) == sign(interval[2]))
+}
+
 confInt <- function(means, variances, alpha) {
   n = length(means)
   grandmean = mean(means);
@@ -139,7 +144,7 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 # srcFiles <- c("tie_basic_iat30_pl25.csv", "tie_informed_iat30_pl25.csv", "tie_dens_iat30_pl30.csv", "tie_queue_iat30_pl30.csv", "tie_flow_iat30_pl30.csv", "tie_wei_iat30_pl30.csv", "tie_coord_iat30_pl30.csv")
 # srcFiles <- c("1way_(or_another).csv", "2lane.csv", "3lane.csv", "highway.csv")
 # srcFiles <- c("maas_home_basic.csv", "maas_home_informed.csv", "maas_home_density.csv", "maas_home_queue.csv", "maas_home_flow.csv", "maas_home_weighted.csv")
-srcFiles <- c("two_districts_basic_30.csv", "1lane.csv", "two_districts_density_weighted_30.csv", "two_districts_queue_30.csv", "two_districts_flow_30.csv", "two_districts_weighted_30.csv", "two_districts_coordinated_30.csv")
+srcFiles <- c("two_districts_basic_30.csv", "1lane.csv", "two_districts_density_weighted_30.csv", "two_districts_queue_30.csv", "two_districts_flow_30.csv", "two_districts_weighted_30.csv", "two_districts_coordinated_30.csv", "Two_Districts_Coordinated_30_2.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
@@ -363,7 +368,16 @@ for (i in 1:length(avg_speeds_in)) {
 
 for (i in 3:length(avg_speeds_in)) {
   print(srcFiles[i])
-  print(meanDiffConfInt(avg_speeds_in[[1]], avg_speeds_in[[i]], 7, 9, 0.05))
+  print(meanDiffConfIntBool(avg_speeds_in[[1]], avg_speeds_in[[i]], 7, 9, 0.05))
+  print(meanDiffConfIntBool(avg_speeds_in[[2]], avg_speeds_in[[i]], 7, 9, 0.05))
+}
+
+print("------------")
+
+for (i in 3:length(avg_speeds_in)) {
+  print(srcFiles[i])
+  print(meanDiffConfIntBool(avg_speeds_in[[1]], avg_speeds_in[[i]], 17, 19, 0.05))
+  print(meanDiffConfIntBool(avg_speeds_in[[2]], avg_speeds_in[[i]], 17, 19, 0.05))
 }
 
 
@@ -400,8 +414,16 @@ for (i in 1:length(frac_waits)) {
 
 for (i in 3:length(frac_waits)) {
   print(srcFiles[i])
-  print(meanDiffConfInt(frac_waits[[1]], frac_waits[[i]], 7, 9, 0.05))
+  print(meanDiffConfIntBool(frac_waits[[1]], frac_waits[[i]], 7, 9, 0.05))
+  print(meanDiffConfIntBool(frac_waits[[2]], frac_waits[[i]], 7, 9, 0.05))
 }
 
+print("---------")
+
+for (i in 3:length(frac_waits)) {
+  print(srcFiles[i])
+  print(meanDiffConfIntBool(frac_waits[[1]], frac_waits[[i]], 17, 19, 0.05))
+  print(meanDiffConfIntBool(frac_waits[[2]], frac_waits[[i]], 17, 19, 0.05))
+}
 ```
 
