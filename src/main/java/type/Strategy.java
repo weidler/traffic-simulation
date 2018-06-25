@@ -22,7 +22,7 @@ public enum Strategy {
 				return INFORMED_CYCLING;
 			case "WEIGHTED_CYCLING":
 				return WEIGHTED_CYCLING;
-			case "DENSITY_CYCLING":
+			case "DENSITY_WEIGHTED_CYCLING":
 				return DENSITY_WEIGHTED_CYCLING;
 			case "FLOW_WEIGHTED_CYCLING":
 				return FLOW_WEIGHTED_CYCLING;

@@ -1,4 +1,4 @@
-\documentclass[10pt]{article}
+\documentclass[11pt]{article}
 \usepackage{acl2014}
 \usepackage[utf8]{inputenc}
 \usepackage{times}
@@ -49,9 +49,9 @@ Hence, in order to test the effect of different intelligent traffic control stra
 \label{sec:related-work}
 In the following, previous research on this topic will be briefly summarized. There has been extensive work on the simulation of traffic flow as well as the development of traffic control strategies. Following up on different approaches on modelling car following behaviour \citep[e.g.][]{gipps1981behavioural}, \citet{treiber2000congested} developed the influential \textit{Intelligent Driver Model} for the simulation of urban traffic. Similarly to the former, it creates a collision free environment where cars mind the  spacial and time-wise gap to the leading vehicle. The SUMO package \citep{krajzewicz2002sumo, behrisch2011sumo} utilizes the model by \citep{gipps1981behavioural} in an extended version \citep{krauss1998microscopic} in a complex simulation software. In contrast to their research, this work uses the IDM. Hence, the simulation is time-continuous, rather than time-discrete.
 
-Often utilizing such simulation environments for evaluation purposes, a lot of research exists investigating the strengths of different approaches to the automatic control of traffic signals or traffic lights. \citet{papageorgiou2003review} have reviewed such research and identified two key characteristics according to which strategies may be classified. They distinguish between \textit{fixed-time} and \textit{traffic-responsive} strategies, as well as \textit{isolated} and \textit{coordinated} strategies. Fixed-time strategies use historical data to determine (e.g. by optimization) static cycle lengths, while traffic-responsive strategies may use different techniques (e.g. heuristics or optimization algorithms) in order to derive optimal cycle lengths from real-time data that has to be measured in some way. Isolated strategies are focused on a single intersection, while coordinated strategies are able to communicate information between multiple intersections and thereby make potentially joint decisions. \citet{coll2013linear} categorize strategies into four categories. They also distinguish between fixed-time and traffic-responsive approaches, but additionally differentiate \textit{adaptive systems} that apply optimization techniques and \textit{predictive strategies} that use both online and off-line information in order to predict future arrivals at the intersection \citep{coll2013linear}. In this work, the focus will be laid on the former two categories, that is fixed-time and responsive.
+Often utilizing such simulation environments for evaluation purposes, a lot of research exists investigating the strengths of different approaches to the automatic control of traffic signals or traffic lights. \citet{papageorgiou2003review} have reviewed such research and identified two key characteristics according to which strategies may be classified. They distinguish between \textit{fixed-time} and \textit{traffic-responsive} strategies, as well as \textit{isolated} and \textit{coordinated} strategies. Fixed-time strategies use historical data to determine (e.g. by optimization) static cycle lengths, while traffic-responsive strategies may use different techniques (e.g. heuristics or optimization algorithms) in order to derive optimal cycle lengths from real-time data that has to be measured in some way. Isolated strategies are focused on a single intersection, while coordinated strategies are able to communicate information between multiple intersections and thereby make potentially joint decisions. \citet{coll2013linear} categorize strategies into four categories. They also distinguish between fixed-time and traffic-responsive approaches, but additionally differentiate \textit{adaptive systems} that apply optimization techniques and \textit{predictive strategies} that use both online and off-line information in order to predict future arrivals at the intersection \citep{coll2013linear}. In this work, the focus will be laid on the former two categories, that is, fixed-time and responsive.
 
-The linear programming (LP) optimization was an attempt to optimize the duration of cycles for traffic lights using predictions based on the queue size at red and green lights, flow capacity, and cycle length from the previous time step.  As the incoming traffic density from each road entering an intersection changes, the length of green and red phases for the corresponding traffic light is gradually adjusted to assure an optimal output flow.  Using the LP strategy in conjunction with some other traffic control strategies, such as the weighted strategy, was predicted to further optimize the performance of the strategies as well as making the adjustments more smoothly than the traffic control strategies by themselves.
+There has also been research on more advanced strategies using e.g. different machine learning techniques like neural networks \citep[e.g.][]{srinivasan2006neural, chao2008intelligent} or linear programming \citep[e.g.][]{coll2013linear, lin2004enhanced} for optimizing the phase or cycle lengths of traffic lights. \citet[][]{coll2013linear} use predictions based on the queue size at red and green lights, flow capacity, and cycle length from the previous time step in order to optimize the cycle lengths with the help of linear programming. As the incoming traffic density from each road entering an intersection changes, the length of green and red phases for the corresponding traffic light is gradually adjusted to assure an optimal output flow. The objective function they optimize minimizes the queue lengths and maximizes the flow. 
 
 \vspace{20pt}
 
@@ -181,6 +181,7 @@ In this section, different traffic control strategies are highlighted as well as
 In order to provide a baseline of what more advanced strategies should be able to outperform, we implemented two simple benchmark strategies. The first one is \textbf{Basic Cycling} and refers to a traffic light control strategy based on a simple, fixed-time cycle in which one traffic light at a time is green. The second is \textbf{Informed Cycling} and refers to a similar strategy, in which a road's green phase is skipped if there are no cars waiting on it.
 
 \subsection{Responsive Strategies}
+\label{sec:responsive}
 These strategies should outperform the benchmark strategies as they are more dynamic and change their actions based on their surroundings. Weighted Cycling intends to reduce the time people spend waiting at a light. Simply put, the traffic lights give priority to those who are waiting at the light, and if no one is waiting, it gives priority to the street with the most cars incoming. This method seems to mimic real-world examples of traffic control systems by acting similar to a traffic light with some form of traffic sensors (pressure plates, traffic cameras, etc.). It also allows the most amount of people possible through fastest, which is extremely effective in situations where a large amount of cars approach from one side. 
 
 Additionally, three strategies are investigated that, similarly to \textit{Basic Cycling}, choose the next green light in a given order. Crucially though, they do not use fixed times for the green phase. Instead, the phaselength is determined by some strategy-specific measure of traffic, normalised by the total traffic surrounding the intersection.
@@ -191,15 +192,11 @@ Additionally, three strategies are investigated that, similarly to \textit{Basic
 
 \paragraph{Flow Weighted Cycling} Finally, the last of such strategies weights by taking into account the traffic flow coming from a road during its previous green phase. Thereby, roads are preferred that predictively enqueue the most cars when turned green. The most apparent advantage of this approach is the fact that it will not give too much attention to overfilled roads that can actually not be relieved when lights turn green because the following traffic disallows it.
 
-\paragraph{Dynamic Strategies} Dynamic strategies are strategies that instead of deciding how long a light has to stay green decides which light to turn green based on the information that the intersection gathers. Currently there are two strategies that do this.
+Dynamic strategies are strategies that instead of deciding how long a light has to stay green decides which light to turn green based on the information that the intersection gathers. Currently there are two strategies that do this.
 
-\paragraph{Dynamic Cycling (WEIGHTED)}
+\paragraph{Dynamic Cycling (WEIGHTED)} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
 
-The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
-
-\paragraph{Dynamic Cycling+ (COORDINATED)}
-
-The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
+\paragraph{Dynamic Cycling+ (COORDINATED)} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
@@ -215,13 +212,13 @@ where $v$ is the velocity, s the road length and t refers to the time spent on a
 
 \subsection{Simulated Maps}
 
-\paragraph{Two Districts}
+\paragraph{Two Districts} “Two Districts” is a small and simple map, designed to test the effects of modifying the most crucial roads in a map. The map has a residential district on the left and an industrial district on the right, connected by only one road, in order to force most vehicles to take it during the rush hours. This road is then modified in various ways, including adding lanes, changing it to a highway and also replaced by multiple one-way streets. 
 
-\paragraph{Chaos City}
+\paragraph{Chaos City} “Chaos City” is a medium sized map that was made to include all the features a map can have. It has all the road and zone types available, and is interesting to see how the different strategies try to handle all of these variables.
 
-\paragraph{Brusselsepoort}
+\paragraph{Brusselsepoort} This map is modelled after a part of Maastricht called Brusselsepoort. It includes lots of residential areas, and a small commercial zone. This map was included in the testing as to have a “real world” scenario. This map was used to find the optimal phase lengths for the strategies.
 
-\paragraph{Tie Fighter}
+\paragraph{Tie Fighter} The “Tie Fighter” map has three sections. In the middle, there is a residential area, spawning most of the traffic in the morning. The left and right side of the map are industrial and commercial areas. The three sections are connected by three lane highways. The map is not the most realistic, but it can be a challenging case for the traffic light strategies, due to the often-saturated mid-section.
 
 \subsection{Simulation Validation}
 In order to validate both the IA generation as well as the general behaviour of different measures and dynamics, we validated the simulation environment using the average speed of cars, their number on the map as well as fractional waiting times in the simulation as a development over one day. Figure \ref{fig:validation} shows the results in three graphs. As can be observed, not only the density, but also both other dependent measures resemble the rush hour pattern from the original data.
@@ -231,16 +228,24 @@ It is the objective of this work to compare multiple systems (i.e. strategies) u
 
 Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation.
 
-Three measures are employed to compare the performance strategies. Similarly to prior work CITE, the average velocity of cars in the system is measured
+Three measures are employed to compare the performance strategies. Similarly to prior work CITE, the average velocity of cars in the system is measured. Additionally, we report the number of cars on the map and the percentage of cars waiting (as defined in section \ref{sec:responsive}).
 
 \section{Results}
 \label{sec:results}
-
 In the following section, results for all experiments are presented. Firstly, the outcome of the optimization of the phase length parameter are reported and shortly discussed. Secondly, for each street layout, the performances of all strategies will be used to rank them. In the last subsection, the influence of some urban planning measures will be investigated.
 
 \subsection{Phase Length Optimization}
+Experiments for the optimization of phase lengths in all strategies were conducted on the Brusselsepoort map with 5 different configurations each and a simulation duration of 21 days (where the first day was removed as the transient phase. As the measure to be optimized on, we choose the average speed, since this is one of the most common metrics in the literature. Results of those experiments for the basic, informed and flow weighted strategy can be found in figure \ref{fig:opt-results} in the form of box plots as an average during the rush hour between 7 and 9 o'clock.
 
+\begin{figure*}[t]
+\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
+\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
+\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
 
+\caption{\label{fig:opt-results}}
+\end{figure*}
+
+As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase lengths which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments.
 
 \subsection{Relative Ranking of Strategies}
 
