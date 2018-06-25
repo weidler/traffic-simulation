@@ -136,10 +136,10 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 # srcFiles <- c("queue_weighted_cycling_10.csv", "queue_weighted_cycling_20.csv", "queue_weighted_cycling_30.csv", "queue_weighted_cycling_40.csv", "queue_weighted_cycling_50.csv")
 # srcFiles <- c("flow_weighted_cycling_30.csv", "flow_weighted_cycling_40.csv", "flow_weighted_cycling_50.csv", "flow_weighted_cycling_60.csv", "flow_weighted_cycling_80.csv", "flow_weighted_cycling_100.csv", "flow_weighted_cycling_125.csv")
 
-srcFiles <- c("tie_basic_iat30_pl25.csv", "tie_informed_iat30_pl25.csv", "tie_dens_iat30_pl30.csv", "tie_queue_iat30_pl30.csv", "tie_flow_iat30_pl30.csv", "tie_wei_iat30_pl30.csv", "tie_coord_iat30_pl30.csv")
+# srcFiles <- c("tie_basic_iat30_pl25.csv", "tie_informed_iat30_pl25.csv", "tie_dens_iat30_pl30.csv", "tie_queue_iat30_pl30.csv", "tie_flow_iat30_pl30.csv", "tie_wei_iat30_pl30.csv", "tie_coord_iat30_pl30.csv")
 # srcFiles <- c("1way_(or_another).csv", "2lane.csv", "3lane.csv", "highway.csv")
 # srcFiles <- c("maas_home_basic.csv", "maas_home_informed.csv", "maas_home_density.csv", "maas_home_queue.csv", "maas_home_flow.csv", "maas_home_weighted.csv")
-# srcFiles <- c("two_districts_basic_30.csv", "1lane.csv", "two_districts_density_30.csv", "two_districts_queue_30.csv", "two_districts_flow_30.csv", "two_districts_weighted_30.csv", "two_districts_coordinated_30.csv")
+srcFiles <- c("two_districts_basic_30.csv", "1lane.csv", "two_districts_density_weighted_30.csv", "two_districts_queue_30.csv", "two_districts_flow_30.csv", "two_districts_weighted_30.csv", "two_districts_coordinated_30.csv")
 
 ## READ IN EXPERIMENTS
 data_frames <- list()
