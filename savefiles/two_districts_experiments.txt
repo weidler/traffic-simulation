@@ -1,0 +1,2 @@
+two_districts_weighted;51;WEIGHTED_CYCLING;EMPIRICAL;60;30;true
+two_districts_coordinated;51;COORDINATED;EMPIRICAL;60;30;true
