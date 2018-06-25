@@ -1,5 +1,5 @@
-flow_weighted_cycling_10;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;10;true
-flow_weighted_cycling_20;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;20;true
-flow_weighted_cycling_30;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;30;true
-flow_weighted_cycling_40;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;40;true
 flow_weighted_cycling_50;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;50;true
+flow_weighted_cycling_60;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;60;true
+flow_weighted_cycling_80;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;80;true
+flow_weighted_cycling_100;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;100;true
+flow_weighted_cycling_125;21;FLOW_WEIGHTED_CYCLING;EMPIRICAL;60;125;true
