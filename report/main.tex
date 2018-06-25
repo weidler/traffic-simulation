@@ -185,9 +185,9 @@ Three strategies are investigated that, similarly to \textit{Basic Cycling}, cho
 
 Dynamic strategies are strategies that instead of deciding how long a light has to stay green decides which light to turn green based on the information that the intersection gathers. Currently there are two strategies that do this.
 
-\paragraph{Dynamic Cycling (WEIGHTED)} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
+\paragraph{Dynamic Cycling} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cares that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
 
-\paragraph{Dynamic Cycling+ (COORDINATED)} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
+\paragraph{Dynamic Cycling+} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
@@ -247,21 +247,69 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 
 \subsection{Experiments on the Brusselsepoort Map}
 
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 6.34          & 41.65             & 0.064                      \\
+\textbf{Informed}         & 9.86          & 90.13             & 0.240                      \\
+\textbf{Density W.} & 8.46          & 20.80             & 0.304                      \\
+\textbf{Queue W.}   & 7.55          & 20.07             & 0.649                      \\
+\textbf{Flow W.}    & 9.00          & 23.02             & 0.239                      \\
+\textbf{Dynamic}          & 1.99          & 3.997             & 0.073                      \\
+\textbf{Dynamic+}         & -             & -                 & -                    
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Brusselsepoort map.}
+\label{my-label}
+\begin{tabular}{llll}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 6.190          & 33.74             & 0.040                      \\
+\textbf{Informed}         & \textbf{9.524} & 74.75             & 0.156                      \\
+\textbf{Density W.} & 8.471          & 15.78             & 0.263                      \\
+\textbf{Queue W.}   & 7.534          & 15.55             & 0.352                      \\
+\textbf{Flow W.}    & 9.198          & 17.50             & 0.177                      \\
+\textbf{Dynamic}          & 1.868          & 2.564             & 0.032                      \\
+\textbf{Dynamic+}         & -              & -                 & -                         
+\end{tabular}
+\end{table}
+
 \subsection{Experiments on the Tie-Fighter Map}
 
 \begin{table}[]
 \centering
-\caption{My caption}
+\caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
+\label{my-label}
+\begin{tabular}{l|l|l|l|}
+\textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
+\hline\textbf{Basic}            & 5.588          & 49.31             & 0.060                      \\
+\textbf{Informed}         & 8.710          & 91.42             & 0.1881                     \\
+\textbf{Density W.} & 8.482          & 28.14             & 0.365                      \\
+\textbf{Queue W.}   & 8.182          & 29.41             & 1.596                      \\
+\textbf{Flow W.}    & \textbf{9.002} & 31.77             & 0.328                      \\
+\textbf{Dynamic}          & 1.503          & 2.983             & 0.054                      \\
+\textbf{Dynamic+}         & 1.574          & 3.251             & 0.078                   
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
 \label{my-label}
 \begin{tabular}{llll}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
-\textbf{Basic}            & 7.48          & 96.56             & 0.203                      \\
-\textbf{Informed}         & 13.41         & 220.52            & 0.901                      \\
-\textbf{Density W.} & 8.45          & 27.93             & 0.402                      \\
-\textbf{Queue W.}   & 8.10          & 29.11             & 1.858                      \\
-\textbf{Flow W.}    & 9.00          & 31.70             & 0.322                      \\
-\textbf{Dynamic}          & 1.50          & 2.95              & 0.053                      \\
-\textbf{Dynamic+}         & 1.57          & 3.22              & 0.077                     
+\hline\textbf{Basic}            & 5.109          & 40.03             & 0.091                      \\
+\textbf{Informed}         & 7.273          & 75.76             & 0.108                      \\
+\textbf{Density W.} & 7.481          & 22.69             & 0.295                      \\
+\textbf{Queue W.}   & 7.803          & 23.47             & 1.735                      \\
+\textbf{Flow W.}    & \textbf{7.826} & 23.13             & 0.261                      \\
+\textbf{Dynamic}          & 1.399          & 1.932             & 0.030                      \\
+\textbf{Dynamic+}         & 1.745          & 3.031             & 0.038                     
 \end{tabular}
 \end{table}
 
