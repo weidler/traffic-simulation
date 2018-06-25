@@ -90,7 +90,9 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
     type="box",
     legendgroup = "g1") %>%
   layout(yaxis = list(title = title),
-         showlegend = TRUE)
+         showlegend = TRUE,
+         legend=list(orientation = "h"),
+         xaxis = list(showticklabels = FALSE))
 
   for (i in 1:length(datafr)) {
     bplot <- add_trace(
@@ -109,8 +111,8 @@ bpOfMeans <- function(datafr, from, to, days_simulated, title, showlegend=T) {
 
 ```{r include=FALSE}
 # srcFiles <- c("coordiante_1.csv", "coordiante_3.csv", "coordiante_5.csv", "coordiante_7.csv", "coordiante_9.csv")
-srcFiles <- c("basic_cycling_10.csv", "basic_cycling_15.csv", "basic_cycling_20.csv", "basic_cycling_25.csv", "basic_cycling_30.csv")
-# srcFiles <- c("informed_cycling_10.csv", "informed_cycling_15.csv", "informed_cycling_20.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
+# srcFiles <- c("basic_cycling_10.csv", "basic_cycling_15.csv", "basic_cycling_20.csv", "basic_cycling_25.csv", "basic_cycling_30.csv")
+srcFiles <- c("informed_cycling_10.csv", "informed_cycling_15.csv", "informed_cycling_20.csv", "informed_cycling_25.csv", "informed_cycling_30.csv")
 # srcFiles <- c("queue_weighted_cycling_10.csv", "queue_weighted_cycling_20.csv", "queue_weighted_cycling_30.csv", "queue_weighted_cycling_40.csv", "queue_weighted_cycling_50.csv")
 
 ## READ IN EXPERIMENTS
