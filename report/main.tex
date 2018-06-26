@@ -34,18 +34,18 @@
 
 \maketitle
 \begin{abstract}
-\lipsum[1]
+!!!!!!!!!!!!!!!!!!!!1TODO!!!!!!!!!!!!!!!!!!!!1
 {{\it \bf Keywords:} traffic simulation; traffic control; strategies; linear programming; machine learning; realistic environment; IDM; MOBIL;}
 \end{abstract}
 
 \section{Introduction}
-An intelligent traffic control system adjusts traffic in order to assure all people reach their destinations in the most optimal time and distance. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas. It is important to constantly keep these systems updated to assure optimal performance and safety of the general public. With advancements in technology and artificial intelligence, new and more sophisticated strategies for traffic control become possible.
+Intelligent traffic control systems attempt to adjust traffic in order to assure that all people reach their destinations in the most optimal time by minimizing their delay. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas. TODO
 
 \subsection{Research Questions}
-This work aims to evaluate various traffic control strategies and compare their effect in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts or if there is the latter induce consistent rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads.
+This work aims to evaluate various traffic control strategies and compare their effect in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts or if there is the latter induce consistent rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controlling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads. We pose the question whether measures of urban planning can improve traffic beyond what was achieved by the best performing strategy.
 
 \subsection{Approach}
-Hence, in order to test the effect of different intelligent traffic control strategies, an appropriate simulation is required. For this purpose, we created a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. We make our code publicly available at GitHub\footnote{https://github.com/weidler/traffic-simulation}.
+Hence, in order to test the effect of different traffic control strategies, an appropriate simulation is required. For this purpose, we create a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. We make our code publicly available at GitHub\footnote{https://github.com/weidler/traffic-simulation}.
 
 \subsection{Related Work}
 \label{sec:related-work}
@@ -57,7 +57,7 @@ There has also been research on more advanced strategies using e.g. different ma
 
 \vspace{20pt}
 
-In the following sections we further describe our approach and the results of our experiments. We begin by elaborating on the implementation of the simulation environment (section \ref{sec:envi}), followed by a description of different control strategies (section \ref{sec:strategies}). Following, we describe the experiments we conducted for those strategies and our evaluation methodology (section \ref{sec:experiments}). In section \ref{sec:results} we will report the results of these experiments. We conclude this work by discussing our results and proposing future directions.
+In the following sections we further describe our approach and the results of our experiments. We begin by elaborating on the implementation of the simulation environment (section \ref{sec:envi}), followed by a description of different control strategies (section \ref{sec:strategies}). Following, the conducted experiments are described and the evaluation methodology is defined (section \ref{sec:experiments}). In section \ref{sec:results}, the results of these experiments will be reported. We conclude this work by discussing our results and proposing future directions.
 	
 \section{Simulation Environment}
 \label{sec:envi}
@@ -383,9 +383,7 @@ Interestingly, the weighted cycling strategies usually perform better when the m
 Dynamic+, even though it is the most adaptive strategy, does not perform well. Likely, this is caused by it always trying to resolve queues but in doing so it actually creates at least two new queues, depending on the number of roads connected to the intersection. This happens because the algorithm decides on which light to turn green based on the average speed and amount of cars on the road. However if for example we have an intersection with 4 connected roads and one road has a big queue, this road will continuously be selected as the traffic light that needs to be green. Unfortunately this causes the other roads to clutter up until they are weighted heavier that the currently most cluttered road. It was attempted to avoid this from happening by making every traffic light turn green once in a while but this impact was clearly not enough to counteract this problem.
 
 \subsection{Future Work}
-
 In future work, it could be promising to investigate more maps in order to identify exact road layouts that favour specific strategies. One hypothesis that the results on our maps for instance create, is that the grid-like layout of the Two-District map is a map type best suited for informed cycling. Furthermore, it should also be investigated whether our observations generalize to more advanced strategies using elaborate optimization techniques.
-
 
 \section{Conclusion}
 \label{sec:conclusion}
