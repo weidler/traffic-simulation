@@ -99,7 +99,7 @@ Due to the large scale maps used in this work, drivers not only need to behave a
 \paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
 
 \subsection{Lane Changing}
-In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed and distance of the approaching car on the new lane.
+In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentivized} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a Continuous Simulation}
 Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore, the amount of traffic on a map grows automatically with its size. We use a non-stationary poisson process based on real world data from the U.S. Department of Transportation \citep{trafficdata}. The hourly data is used to draw IATs based on a poisson process that is then adjusted using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 7 to 9 am and 5 to 7 pm.
@@ -206,6 +206,7 @@ Dynamic strategies are strategies that instead of deciding how long a light has 
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
+In the following, we outline the experiments conducted in this work and describe our methodological framework. We also briefly touch on the validation of the simulation environment used for these experiments and described in section \ref{sec:envi}.
 
 \subsection{Simulated Maps}
 Experiments are conducted on three different maps.They differ in the challenges that they impose on the traffic light systems and are therefore supposed to test their strengths and weaknesses. In the following, the three maps are described and motivated. Images can be found in the Appendix.
@@ -399,7 +400,6 @@ The results of the first three experiments on three different maps, ranking the 
 
 {\tiny\printbibliography}
 
-
 \clearpage
 \raggedbottom
 \appendix
@@ -522,11 +522,11 @@ The results of the first three experiments on three different maps, ranking the 
 
 \section{Phase Length Optimization}
 \nopagebreak
-\begin{figure*}[h!]
+\begin{figure}[h]
 	\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
 	\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
 	\includegraphics[width=\textwidth]{img/flow-opt.png}
 	\caption{Results for the phaselength optimization experiments for Basic Cycling, Informed Cycling and Flow Weighted Cycling. \label{fig:opt-results}}
-\end{figure*}
+\end{figure}
 
 \end{document}
