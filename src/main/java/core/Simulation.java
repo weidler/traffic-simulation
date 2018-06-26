@@ -503,6 +503,7 @@ public class Simulation {
 
 		for (ArrayList<Car> cars : this.cars.values()) {
 			for (Car c : cars) {
+				System.out.println(c.getCurrentVelocity());
 				total_velocity += c.getCurrentVelocity();
 				if (c.inTraffic()) total_velocity_in_traffic += c.getCurrentVelocity();
 				if (c.isWaiting()) cars_in_queue++;
