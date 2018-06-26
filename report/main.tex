@@ -246,7 +246,7 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Two-Districts map.}
-\label{my-label}
+\label{tab:velo-morning-twodi}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 6.323          & 46.36             & 0.139                      \\
@@ -255,33 +255,33 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{Queue W.}   & 9.344*$^\dagger$ & 36.62             & 1.288                      \\
 \textbf{Flow W.}    & 9.536*$^\dagger$          & 35.81             & 0.3752                     \\
 \textbf{Dynamic}    & 6.015*$^\dagger$          & 36.75             & 0.0943                     \\
-\textbf{Dynamic+}   & 11.29*$^\dagger$          & 134.06            & 0.325                     
+\textbf{Dynamic+}   & 2.461*$^\dagger$          & 8.5459            & 0.104                     
 \end{tabular}
 \vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Two-District map.}
-\label{my-label}
+\label{tab:waiting-morning-twodi}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.2435          & 0.017             & 0.0004                     \\
-\textbf{Informed}   & 0.1229 & 0.0166            & 0.0004                     \\
+\textbf{Informed}   & \textbf{0.1229} & 0.0166            & 0.0004                     \\
 \hline\textbf{Density W.} & 0.1409*$^\dagger$          & 0.014             & 0.0002                     \\
 \textbf{Queue W.}   & 0.1332*$^\dagger$          & 0.0137            & 0.0004                     \\
 \textbf{Flow W.}    & 0.1326*$^\dagger$      & 0.0139            & 0.0001                     \\
 \textbf{Dynamic}    & 0.242$^\dagger$          & 0.242             & 0.0004                     \\
-\textbf{Dynamic+}   & \textbf{0.0930*$^\dagger$}          & 0.012             & 0.0002                    
+\textbf{Dynamic+}   & 0.189*$^\dagger$          & 0.0149             & 0.001                    
 \end{tabular}
 \end{table}
 
-On the first of three maps, the informed cycling strategy outperforms all other strategies significantly in average velocity. Notably, Dynamic+ is a very close runner-up with a difference of only 0.29. Except for Dynamic, all strategies outperform the Basic Cycling benchmark system.
+On the first of three maps, the informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
 
-With respect to the fraction of cars waiting, Dynamic+ is the best numerically best performing strategy, outperforming both benchmark strategies significantly. All other strategies can outperform the basic cycling, but informed is significantly the second best strategy for that measure.
+With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but the dynamic ones can outperform the basic cylcing benchmark.
 
 \subsection{Experiments on the Brusselsepoort Map}
 \begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
-\label{my-label}
+\label{tab:velo-morning-brussel}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 6.34          & 41.65             & 0.064                      \\
@@ -295,7 +295,7 @@ With respect to the fraction of cars waiting, Dynamic+ is the best numerically b
 \vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
-\label{my-label}
+\label{tab:waiting-morning-brussel}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.226          & 0.015             & 0.0005                     \\
@@ -308,15 +308,15 @@ With respect to the fraction of cars waiting, Dynamic+ is the best numerically b
 \end{tabular}
 \end{table}
 
-On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by flow weighted cycling. Dynamic cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform basic cycling.
+On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by flow weighted cycling for average speed (see table \ref{tab:waiting-morning-brussel}. Dynamic cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform basic cycling.
 
-Measured in the fraction of waiting cars, flow weighted cycling is the best performing system, significantly better than both basic and informed cycling. Close runner-ups are informed cycling and queue weighted cycling. As was observed before, all strategies except for the dynamic ones, outperform the basic cycling benchmark.
+Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel}, flow weighted cycling is the best performing system, significantly better than both basic and informed cycling. Close runner-ups are informed cycling and queue weighted cycling. As was observed before, all strategies except for the dynamic ones, outperform the basic cycling benchmark.
 
 \subsection{Experiments on the Tie-Fighter Map}
 \begin{table}
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
-\label{my-label}
+\label{tab:velo-morning-tie}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}            & 5.588          & 49.31             & 0.060                      \\
@@ -330,7 +330,7 @@ Measured in the fraction of waiting cars, flow weighted cycling is the best perf
 \vspace{20pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
-\label{my-label}
+\label{tab:waiting-morning-tie}
 \begin{tabular}{l|l|l|l|}
 \textbf{}                 & \textbf{Mean} & \textbf{$S^2(n)$} & \textbf{$S_{Means}^2(n)$} \\
 \hline\textbf{Basic}      & 0.256           & 0.016             & 0.0006                     \\
@@ -343,7 +343,7 @@ Measured in the fraction of waiting cars, flow weighted cycling is the best perf
 \end{tabular}
 \end{table}
 
-The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed is flow-weighted cyclingm followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map has its best score for queue weighted cycling, but flow weighted cycling follows iwth a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
+The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed (table \ref{tab:velo-morning-tie}) is flow-weighted cycling, followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for queue weighted cycling, but flow weighted cycling follows iwth a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
 
 \subsection{Urban Planning}
 To investigate the effect of measures related to urban planning, two ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible.
@@ -357,10 +357,15 @@ To investigate the effect of measures related to urban planning, two ways of cha
 \section{Discussion}
 \label{sec:discussion}
 
+On the simple map Two-Districts, Informed is best strategy by some margin. More complicated maps result in flow and sometimes queue weighted cycling to be superior, in particular when measured in fraction of cars waiting. This shows that the map design is an important factor for the choice of strategy. It can not be assumed that there is a definite ranking in performance for such strategies.
+
 \subsection{Limitations}
 
 
 \subsection{Future Work}
+
+- test more maps and find reasons for differneces in maps: are grid maps resulting in informed to be better?
+- see if that also applies to more advanced strategies
 
 
 \section{Conclusion}
