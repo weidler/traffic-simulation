@@ -239,7 +239,7 @@ Experiments for the optimization of phase lengths in all strategies were conduct
 In both Basic and Informed Cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the Flow Weighted Cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
-Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix.
+Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix. All tables report the grand mean of all days (except the first one), the mean of the variances of each day ($S^2(n)$) as well as the variance of the means of all days ($S^2_{Means}(n)$)
 
 \begin{figure*}[t]
 	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_twodistr.png}
@@ -256,7 +256,9 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \end{figure*}
 
 \subsection{Experiments on the Two-Districts Map}
-\begin{table}[t]
+On the first of three maps, the Informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
+
+\begin{table}[!htbp]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Two-Districts map.}
 \label{tab:velo-morning-twodi}
@@ -288,8 +290,6 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-On the first of three maps, the Informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
-
 With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but Dynamic Cycling can outperform the Basic Cylcing benchmark.
 
 \subsection{Experiments on the Brusselsepoort Map}
@@ -311,7 +311,7 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \textbf{Dynamic}          & 1.99*$^\dagger$          & 3.997             & 0.073                      \\
 \textbf{Dynamic+}         & -             & -                 & -                    
 \end{tabular}
-\vspace{20pt}
+\vspace{10pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{tab:waiting-morning-brussel}
@@ -332,7 +332,7 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \subsection{Experiments on the Tie-Fighter Map}
 The Tie-Fighter map yields similar results to those of Brusselsepoort. The best-performing system measured in average speed (table \ref{tab:velo-morning-tie}) is Flow-Weighted Cycling, followed by Informed Cycling. Except for the dynamic strategies, all strategies significantly outperform Basic Cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for Queue Weighted Cycling, but Flow Weighted Cycling follows with a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform Basic Cycling significantly.
 
-\begin{table}[H]
+\begin{table}[t]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:velo-morning-tie}
@@ -346,7 +346,7 @@ The Tie-Fighter map yields similar results to those of Brusselsepoort. The best-
 \textbf{Dynamic}          & 1.503*$^\dagger$          & 2.983             & 0.054                      \\
 \textbf{Dynamic+}         & 1.574*$^\dagger$          & 3.251             & 0.078                   
 \end{tabular}
-\vspace{20pt}
+\vspace{10pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:waiting-morning-tie}
@@ -377,7 +377,7 @@ To investigate the effect of measures related to urban planning, three ways of c
 	\caption{Fraction of cars waiting and average velocity for different map configurations in the form of boxplots. Default map is Two-Districts, the strategy used is informed cycling. \label{fig:urban-planning-stats}}
 \end{figure*}
 
-As can be observer, all measures improve the fraction of cars waiting. The smallest effect comes from one-way roads, while highways have the largest effect. There is no difference in the mean between two and three lanes, but for three lanes, the quantiles are shifted downwards. For the average velocity, only the introduction of a highway improved the result, while the other measures even slightly decrease the average velocity.
+As can be observed, all measures improve the fraction of cars waiting. The smallest effect comes from one-way roads, while highways have the largest effect. There is no difference in the mean between two and three lanes, but for three lanes, the quantiles are shifted downwards. For the average velocity, only the introduction of a highway improved the result, while the other measures even slightly decrease the average velocity.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -405,7 +405,7 @@ The results of the first three experiments on three different maps, ranking the 
 \appendix
 
 \section{Maps}
-\begin{figure}[h]
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{img/twodistr.jpeg}
 	\caption{Map Two-Districts.}
 \end{figure}
