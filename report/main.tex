@@ -18,7 +18,7 @@
 \pagestyle{plain} 
 \usepackage{graphicx}
 \captionsetup[table]{skip=10pt}
-\title{Intelligent Traffic Control}
+\title{Comparing Traffic Control Strategies under Varying Conditions}
 
 \addbibresource{references.bib}
 \AtBeginBibliography{\small}
@@ -39,13 +39,17 @@
 \end{abstract}
 
 \section{Introduction}
-Intelligent traffic control systems attempt to adjust traffic in order to assure that all people reach their destinations in the most optimal time by minimizing their delay. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas. TODO
+Intelligent traffic control systems attempt to regulate traffic in order to assure that all people reach their destinations in the most optimal time by minimizing their delay. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas.
 
 \subsection{Research Questions}
-This work aims to evaluate various traffic control strategies and compare their effect in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts or if there is the latter induce consistent rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controlling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads. We pose the question whether measures of urban planning can improve traffic beyond what was achieved by the best performing strategy.
+This work aims to evaluate various traffic control strategies and compare their effectiveness in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts, or if all maps induce consistent performance rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controlling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads. We pose the question whether measures of urban planning can improve traffic beyond what was achieved by the best performing strategy.
 
 \subsection{Approach}
-Hence, in order to test the effect of different traffic control strategies, an appropriate simulation is required. For this purpose, we create a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. We make our code publicly available at GitHub\footnote{https://github.com/weidler/traffic-simulation}.
+Hence, in order to test the effect of different traffic control strategies, an appropriate simulation is required. For this purpose, we create a simulation environment which allows the incorporation of different such strategies into a dynamic traffic model. Our simulation aims to model the dynamics of a realistic environment as close as possible within the scope of the project, so that the comparison is meaningful and provides valuable data regarding the potential application of the strategies. 
+
+The simulation is \textit{microscopic}. That is, instead of globally controlling traffic (\textit{macroscopic}), the atomic parts of the simulation are locally controlled cars \citep[see also][]{krajzewicz2002sumo}. Driving behaviour is modelled using the time- and space-continuous \textit{Intelligent Driver Model} (IDM) \citep{treiber2000congested}. 
+
+We make our code publicly available at GitHub\footnote{https://github.com/weidler/traffic-simulation}.
 
 \subsection{Related Work}
 \label{sec:related-work}
@@ -78,7 +82,7 @@ where $a$ refers to a cars maximum acceleration, $v_a$ is its current velocity a
 	\dot{v}_a^{\mathrm{int}}(t) = - a ( \frac{s_0 + v_a T}{s_a} + \frac{v_a \Delta v_a}{2 \sqrt{ab} s_a} )^2
 \end{equation}
 
-In the equation above, $s_0$ and $T$ restrict the cars minimum distance in space and time respectively. The interaction term will hence attenuate the free road term when approaching other cars, given by the complete equation for acceleration $\dot{v}(t)$
+In the equation above, $s_0$ and $T$ restrict the car's minimum distance in space and time respectively. The interaction term will hence attenuate the free road term when approaching other cars, given by the complete equation for acceleration $\dot{v}(t)$
 
 \begin{equation}
 	\dot{v}(t) = \dot{v}_a^{\mathrm{free}}(t) + \dot{v}_a^{\mathrm{int}}(t)
@@ -109,7 +113,7 @@ Rather than predefining arrival times for a fixed simulation duration, we dynami
 As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented.
 
 \subsection{Zone-based Scheduling}
-Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. A road's zone restricts its \textit{available population} in the beginning of the simulation. For instance, commercial zones start with a lower overall population than residential zones. Additionally, the zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are separated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
+Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. The zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are separated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
 
 \begin{figure}
 	\includegraphics[width=\linewidth]{img/zoned-traffic-flow.png}
@@ -117,13 +121,13 @@ Aiming to increase the level of realism, roads on the simulated map have differe
 \end{figure}
 
 \subsection{Path Finding}
-Whenever a car enters the traffic, it needs to get a predefined route to take to its destination. In the simulation, each car runs an instance of a path finding algorithm, two of which were implemented.
+Whenever a car enters the traffic, it needs to get a predefined route to take to its destination. In the simulation, each car runs an instance of a path finding algorithm, two of which were considered.
 
 \paragraph{A*}
 This popular path finding algorithm, based on Dijkstra’s algorithm \citep{dijkstra1959note}, was first introduced in 1968, by \citet{hart1968formal}. It finds the shortest path between the origin and the destination of the cars, given the map only taking the length of the path into account. This is done by using two scores for each node: H and G score. The H score is equal to the Euclidean distance from the node to the destination. The G score is the total distance travelled from the start node to the current node. Based on these two scores, the algorithm finds the shortest path between two points in a graph. 
 
 \paragraph{Advanced A*}
-The advanced A* path finding algorithm is very similar to the original version, but it also takes the traffic density and average speed of the roads into account. This is realized by calculating the traffic density and average speed of each road whenever the route of a car is created. The density of a road equals the number of cars on it divided by the length of the road, to get the number of cars per meter of road. The algorithm then adds a weighted density value to the G and H scores of the road to calculate the current best route. The average speed for the roads is taken from the continuously calculated statistics. The value of the average speed is taken away from the score of the road, in order to incentivize the use of roads with a higher speed.
+The advanced A* path finding algorithm is very similar to the original version, but it also takes the traffic density and average speed of the roads into account. This is realized by calculating the traffic density and average speed of each road whenever the route of a car is created. The density of a road equals the number of cars on it divided by the length of the road, to get the number of cars per meter of road. The algorithm then adds a weighted density value to the G and H scores of the road to calculate the current best route. The average speed for the roads is taken from the continuously calculated statistics. The value of the average speed is subtracted from the score of the road, in order to incentivize the use of roads with a higher speed.
 
 Early experiments have shown that the advanced A* algorithm provides more safety against oversaturation of roads and therefore creates a more realistic simulation in which drivers are able to adjust their path based on their knowledge about the traffic.
 
@@ -175,10 +179,10 @@ Putting the above parts together, the simulation procedure depicted by algorithm
 \end{figure*}
 
 \label{sec:strategies}
-In this section, different traffic control strategies are highlighted as well as their effectiveness in different environments.
+In this section, the different traffic control strategies that will be compared in section \ref{sec:results} are described.
 
 \subsection{Benchmark Strategies} 
-In order to provide a baseline of what more advanced strategies should be able to outperform, we implemented two simple benchmark strategies. The first one is \textbf{Basic Cycling} and refers to a traffic light control strategy based on a simple, fixed-time cycle in which one traffic light at a time is green. The second is \textbf{Informed Cycling} and refers to a similar strategy, in which a road's green phase is skipped if there are no cars waiting on it.
+In order to provide a baseline of what more advanced strategies should be able to outperform, two simple benchmark strategies were implemented. The first one is \textbf{Basic Cycling} and refers to a traffic light control strategy based on a simple, fixed-time cycle in which one traffic light at a time is green. The second one is \textbf{Informed Cycling} and refers to a similar strategy, in which a road's green phase is skipped if there are no cars waiting on it.
 
 \subsection{Responsive Strategies}
 \label{sec:responsive}
@@ -216,11 +220,11 @@ In order to validate both the IA generation as well as the general behaviour of 
 \subsection{Methodology}
 In order to perform statistical calculations on the data, it is often necessary but at least useful to have IID observations. It is obvious that this independence can not be assumed in a traffic simulation between individual cars, since the delay of one car often influences that of others in shared roads and queues. While restarting the simulation $n$ times in order to get $n$ observations that can be combined to a grand mean seems an obvious choice, the day-based simulation also allows to run multiple days and assume independence between days, since traffic resets during night to a reasonable extend.
 
-Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation.
+Since this is a non-terminating simulation, it is furthermore necessary to take a so called \textit{warm-up period} or \textit{transient phase} into account. It is the result of starting the simulation in an initial state that might not represent an actual state of the simulation in steady-state or inside a cycle. Therefore, the period where the simulation enters the steady-state needs to be removed from any statistical calculation such that it does not bias their results to the initial situation. Arguably, simulating traffic on the basis of days results in a cyclic simulation. Importantly though, this will not necessarily mean that the simulation entirely resets to zero cars in the system at midnight. For those reasons and the sake of convenience, in any experiment, the first simulated day will be removed from the simulation. 
 
-It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. In order to rank these strategies, a convenient framework for such a comparison would be needed. An all-pairwise comparison is not desirable, since the total of  systems would require 30 comparisons, which would result in tiny confidence levels due to Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. Though, given the number of strategies to compare and the fact that we care about relatively small differences in the systems, fairly high numbers of simulated days would be necessary to guarantee a significant ranking with e.g. an significance level of $0.05$ (about 4000 days for e.g. flow weighted cycling). The computationally expensive simulation experiment used in this work does not allow us to run such large experiments in feasible time. We therefore fall back to a comparison with benchmark strategies and report significance of the differences.
+It is the objective of this work to compare multiple systems (i.e. strategies) under different conditions. In order to rank these strategies, a convenient framework for such a comparison would be needed. An all-pairwise comparison is not desirable, since the total of 7 systems would require 30 comparisons, which would result in tiny confidence levels due to the Bonferroni inequality \citep[see e.g.][]{law2007simulation}. Instead, the sample size required for each system in order to achieve a confidence level of $\alpha$ for the complete ranking can be determined by the approach of \citet{dudewicz1975allocation}. Though, given the number of strategies to compare and the fact that we care about relatively small differences in the systems, fairly high numbers of simulated days would be necessary to guarantee a significant ranking with e.g. an significance level of $0.05$ (about 4000 days for e.g. flow weighted cycling). The computationally expensive simulation environment used in this work does not allow us to run such large experiments in feasible time. We therefore fall back to a comparison with benchmark strategies and report significance of the differences using paired t-confidence-intervals.
 
-Three measures are employed to compare the performance strategies. Similarly to prior work \citep{srinivasan2006neural}, the average velocity of cars in the system is measured. Additionally, we report the number of cars on the map and the percentage of cars waiting (as defined in section \ref{sec:responsive}).
+Two measures are employed to compare the performance strategies. Similarly to prior work \citep{srinivasan2006neural}, the average velocity of cars in the system is measured. Additionally, we report the percentage of cars waiting (as defined in section \ref{sec:responsive}) in order to measure general queue length.
 
 \section{Results}
 \label{sec:results}
@@ -229,7 +233,7 @@ In the following section, results for all experiments are presented. Firstly, th
 \subsection{Phase Length Optimization}
 Experiments for the optimization of phase lengths in all strategies were conducted on the Brusselsepoort map with 5 different configurations each and a simulation duration of 21 days (where the first day was removed as the transient phase. As the measure to be optimized on, we choose the average speed, since this is one of the most common metrics in the literature. Results of those experiments for the basic, informed and flow weighted strategy can be found in the appendix in figure \ref{fig:opt-results} in the form of box plots as an average during the rush hour between 7 and 9 o'clock.
 
-In both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the flow weighted cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
+In both Basic and Informed Cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the Flow Weighted Cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
 Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix.
@@ -281,12 +285,16 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-On the first of three maps, the informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
+On the first of three maps, the Informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
 
-With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but the dynamic ones can outperform the basic cylcing benchmark.
+With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but Dynamic Cycling can outperform the Basic Cylcing benchmark.
 
 \subsection{Experiments on the Brusselsepoort Map}
-\begin{table}[t]
+On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by Flow Weighted Cycling for average speed (see table \ref{tab:waiting-morning-brussel}. Dynamic Cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform Basic Cycling.
+
+Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel}, Flow Weighted Cycling is the best performing system, significantly better than both Basic and Informed Cycling. Close runner-ups are Informed Cycling and Queue Weighted Cycling. As was observed before, all strategies except for the dynamic ones, outperform the Basic Cycling benchmark.
+
+\begin{table}[H]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{tab:velo-morning-brussel}
@@ -318,12 +326,10 @@ With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-two
 \small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by flow weighted cycling for average speed (see table \ref{tab:waiting-morning-brussel}. Dynamic cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform basic cycling.
-
-Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel}, flow weighted cycling is the best performing system, significantly better than both basic and informed cycling. Close runner-ups are informed cycling and queue weighted cycling. As was observed before, all strategies except for the dynamic ones, outperform the basic cycling benchmark.
-
 \subsection{Experiments on the Tie-Fighter Map}
-\begin{table}[t]
+The Tie-Fighter map yields similar results to those of Brusselsepoort. The best-performing system measured in average speed (table \ref{tab:velo-morning-tie}) is Flow-Weighted Cycling, followed by Informed Cycling. Except for the dynamic strategies, all strategies significantly outperform Basic Cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for Queue Weighted Cycling, but Flow Weighted Cycling follows with a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform Basic Cycling significantly.
+
+\begin{table}[h]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:velo-morning-tie}
@@ -355,14 +361,12 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed (table \ref{tab:velo-morning-tie}) is flow-weighted cycling, followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for queue weighted cycling, but flow weighted cycling follows with a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
-
 \vspace{20pt}
 
-In figure \ref{fig:frac-waits-bp}, boxplots of the fractional number of cars waiting for the morning rush hour are shown. It becomes apparent that while the dynamic strategies are performing worse than other strategies with respect to the mean, they do also have large variance. In fact, the best results for those strategies even consistently outperform basic cycling.
+In figure \ref{fig:frac-waits-bp}, boxplots of the fractional number of cars waiting for the morning rush hour are shown. It becomes apparent that while the dynamic strategies are performing worse than other strategies with respect to the mean, they do also have large variance. In fact, the best results for those strategies even consistently outperform Basic Cycling.
 
 \subsection{Urban Planning}
-To investigate the effect of measures related to urban planning, three ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible. Finally, the connecting road is replaced by a highway. In all cases, informed cycling is the underlying traffic light strategy. Figure \ref{fig:urban-planning-stats} shows the results in the form of boxplots for the morning rush hour. All differences are significant with a significance level of $0.05$.
+To investigate the effect of measures related to urban planning, three ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible. Finally, the connecting road is replaced by a highway. In all cases, Informed Cycling is the underlying traffic light strategy. Figure \ref{fig:urban-planning-stats} shows the results in the form of boxplots for the morning rush hour. All differences are significant with a significance level of $0.05$.
 
 \begin{figure*}[t]
 	\includegraphics[width=0.5\textwidth]{img/urban_planning_frac.png}
@@ -374,9 +378,9 @@ As can be observer, all measures improve the fraction of cars waiting. The small
 
 \section{Discussion}
 \label{sec:discussion}
-On the simple map Two-Districts, Informed is the best strategy by some margin. More complicated maps result in flow and sometimes queue weighted cycling to be superior, in particular when measured in fraction of cars waiting. This shows that the map design is an important factor for the choice of strategy. It can therefore not be assumed that there is a definite ranking in performance for such strategies. This implies for future work and the interpretation of prior research, that the evaluation of strategies on single maps should be seen critically. It is advisable to always test strategies on different maps that create different challenges. Furthermore, in real world application, city planners need to simulate specific intersections in order to decide for strategies per crossroad or area.
+On the simple Two-Districts map, Informed Cycling is the best strategy by some margin. More complicated maps result in Flow and sometimes Queue Weighted Cycling to be superior, in particular when measured in fraction of cars waiting. This shows that the map design is an important factor for the choice of strategy. It can therefore not be assumed that there is a definite ranking in performance for such strategies. This implies for future work and the interpretation of prior research that the evaluation of strategies on single maps should be seen critically. It is advisable to always test strategies on a variety of maps that create different challenges. Furthermore, in real world application, city planners need to simulate specific intersections in order to decide for strategies per crossroad or area.
 
-Throughout all experiments, informed cycling was a strong contender for the best strategy and even achieves this rank on the Two-Districts map. This shows that even simple heuristical strategies like the one at hand can achieve good results, improving performance vastly over basic cycling.
+Throughout all experiments, informed cycling was a strong contender for the best strategy and even achieves this rank on the Two-Districts map. This shows that even simple heuristical strategies like the one at hand can achieve good results, improving performance vastly over Basic Cycling.
 
 Interestingly, the weighted cycling strategies usually perform better when the measure of comparison is the percentage of cars waiting. Therefore, those strategies are more effective in minimizing queue length than in actually improving overall speed.
 
