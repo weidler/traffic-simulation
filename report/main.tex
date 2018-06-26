@@ -40,7 +40,7 @@ In this work, we create a traffic simulation evironment and apply various differ
 \end{abstract}
 
 \section{Introduction}
-Intelligent traffic control systems attempt to regulate traffic in order to assure that all people reach their destinations in the most optimal time by minimizing their delay. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas.
+Intelligent traffic control systems attempt to regulate traffic in order to assure that all people reach their destinations in the most optimal time by minimizing their delay. These systems are important for the daily workings of major cities by alleviating traffic congestion and identifying problematic areas.  They do so by using sensors to detect incoming and outgoing cars and using this information to dynamically adjust how often the traffic light cycles throughout the day.  This allows the traffic lights to respond optimally regardless of changes in traffic density throughout the day.
 
 \subsection{Research Questions}
 This work aims to evaluate various traffic control strategies and compare their effectiveness in different scenarios. In particular, we aim to investigate, whether different traffic signal control strategies are best suited for different street layouts, or if all maps induce consistent performance rankings. Furthermore, experiments are conducted in order to compare the effectiveness of strategies controlling the behaviour of traffic signals and such that are related to urban planning, e.g. introduction of new lanes or entirely new roads. We pose the question whether measures of urban planning can improve traffic beyond what was achieved by the best performing strategy.
@@ -92,14 +92,14 @@ In the equation above, $s_0$ and $T$ restrict the car's minimum distance in spac
 In order to simulate a time-continuous model, we need to numerically approximate the integration of the differential equations in \ref{eq:free-road-term} and \ref{eq:int-term}. For that, we choose a small time step $\Delta t$ and repetitively update the velocity as $v(t + \Delta t) = v(t) + \dot{v}(t)$.
 
 \subsection{Traffic Rule Compliance}
-Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights. Following, we briefly discuss the approaches we use in our simulation.
+Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights.
 
 \paragraph{Approaching Traffic Lights} When approaching red traffic lights, drivers will stop in a predefined distance from the intersection, comparable to stop bars in real world streets. Cars that have already exceeded this line will drive through the intersection. 
 
 \paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
 
 \subsection{Lane Changing}
-In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
+In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a Continuous Simulation}
 Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore, the amount of traffic on a map grows automatically with its size. We use a non-stationary poisson process based on real world data from the U.S. Department of Transportation \citep{trafficdata}. The hourly data is used to draw IATs based on a poisson process that is then adjusted using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 7 to 9 am and 5 to 7 pm.
@@ -111,7 +111,7 @@ Rather than predefining arrival times for a fixed simulation duration, we dynami
 \end{figure} 
 
 \subsection{Population}
-As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented.
+As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented. Roads such as highways do not have a population and can therefore also not be chosen as a destination.
 
 \subsection{Zone-based Scheduling}
 Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. The zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are separated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
@@ -393,7 +393,9 @@ In future work, it could be promising to investigate more maps in order to ident
 
 \section{Conclusion}
 \label{sec:conclusion}
-The results of three experiments on three different maps, ranking the 7 strategies used in this work, showed that different street layouts indeed induce different relative performances of the strategies. Furthermore, it was shown that when using one of the best performing strategies, changes to the street layout that relate to urban planning, can also be quite effective.
+We compared seven different traffic light control strategies, organized into three different categories: Benchmark, Weighted and Dynamic. The effects of using different road types were measured as well. Experiments were conducted in our simulation environment on three different maps, two of which were designed to pose a challenge to the strategies and one to represent a real life case. We thereby investigated how different strategies respond to specific street layouts and whether small changes to them could also improve traffic.
+
+The results of the first three experiments on three different maps, ranking the 7 strategies used in this work, showed that different street layouts indeed induce different relative performances of the strategies. Furthermore, it was shown that when using one of the best performing strategies, changes to the street layout that relate to urban planning, can also be quite effective.
 
 {\tiny\printbibliography}
 
