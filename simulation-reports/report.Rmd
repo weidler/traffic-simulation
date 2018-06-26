@@ -14,7 +14,7 @@ library(plotly)
 ```
 
 ```{r include=FALSE}
-srcFile <- commandArgs(TRUE)[1]
+srcFile <- "csv-data/test.csv"
 
 data <- read.csv(srcFile, sep = ";")
 data$time <- data$time/60/60
@@ -27,10 +27,11 @@ data$frac_wait[is.na(data$frac_wait)] <- 0
 ```{r echo=FALSE}
 plot_ly(x=data$time, y=data$avg_velo) %>%
   add_markers(y = ~data$avg_velo) %>%
-  add_lines(y = ~fitted(loess(data$avg_velo ~ data$time, span=0.2))) %>%
-  layout(xaxis = list(title = 'Time (h)'),
+  add_lines(y = ~fitted(loess(data$avg_velo ~ data$time, span=0.2)), line=list(color="red", width=3)) %>%
+  layout(xaxis = list(title = ''),
          yaxis = list(title = 'Average Velocity'),
          legend = list(x = 0.80, y = 0.90),
+         font = list(size = 20),
          showlegend = FALSE)
 ```
 
@@ -38,10 +39,11 @@ plot_ly(x=data$time, y=data$avg_velo) %>%
 ```{r echo=FALSE}
 plot_ly(x=data$time, y=data$numb_cars) %>%
   add_markers(y = ~data$numb_cars) %>%
-  add_lines(y = ~fitted(loess(data$numb_cars ~ data$time, span=0.2))) %>%
-  layout(xaxis = list(title = 'Time (h)'),
+  add_lines(y = ~fitted(loess(data$numb_cars ~ data$time, span=0.2)), line=list(color="red", width=3)) %>%
+  layout(xaxis = list(title = ''),
          yaxis = list(title = 'Number of Cars in System'),
          legend = list(x = 0.80, y = 0.90),
+         font = list(size = 20),
          showlegend = FALSE)
 ```
 
@@ -49,10 +51,11 @@ plot_ly(x=data$time, y=data$numb_cars) %>%
 ```{r echo=FALSE}
 plot_ly(x=data$time, y=data$frac_wait) %>%
   add_markers(y = ~data$frac_wait) %>%
-  add_lines(y = ~fitted(loess(data$frac_wait ~ data$time, span=0.2))) %>%
-  layout(xaxis = list(title = 'Time (h)'),
-         yaxis = list(title = 'Fractional Waiting Time'),
+  add_lines(y = ~fitted(loess(data$frac_wait ~ data$time, span=0.2)), line=list(color="red", width=3)) %>%
+  layout(xaxis = list(title = ''),
+         yaxis = list(title = 'Fractional Number of Cars Waiting'),
          legend = list(x = 0.80, y = 0.90),
+         font = list(size = 20),
          showlegend = FALSE)
 
 ```

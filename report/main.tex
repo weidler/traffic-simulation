@@ -98,6 +98,12 @@ In order to incorporate lane changing behaviour into our traffic model, we apply
 \subsection{Arrival Times in a Continuous Simulation}
 Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore, the amount of traffic on a map grows automatically with its size. We use a non-stationary poisson process based on real world data from the U.S. Department of Transportation \citep{trafficdata}. The hourly data is used to draw IATs based on a poisson process that is then adjusted using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 7 to 9 am and 5 to 7 pm.
 
+\begin{figure}[t]
+	\includegraphics[width=\linewidth]{img/traffic-data.jpeg}
+	\caption{Traffic data from the U.S. Department of Transportation. Graphic received from https://www.fhwa.dot.gov/policyinformation/tmguide/
+	tmg\_2013/traffic-monitoring-methodologies.cfm \label{fig:traffic-data}}
+\end{figure} 
+
 \subsection{Population}
 As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented.
 
@@ -161,9 +167,10 @@ Putting the above parts together, the simulation procedure depicted by algorithm
 \section{Traffic Control Strategies}
 
 \begin{figure*}[htb]
-	\includegraphics[width=0.5\textwidth]{img/number_of_cars_over_day.png}
-	\includegraphics[width=0.5\textwidth]{img/velocity_over_day.png}
-	\caption{Number of cars (left) and average velocity of cars (right) in the system simulated for one day. IATs are generated from the empirical distribution shown in figure \ref{fig:traffic-data}. \label{fig:validation}}
+	\includegraphics[width=0.33\textwidth]{img/number_of_cars_over_day.png}
+	\includegraphics[width=0.33\textwidth]{img/velocity_over_day.png}
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waitin.png}
+	\caption{Number of cars (left), average velocity of cars (middle) and percentage of cars waiting (right) in the system simulated for one day. IATs are generated from the empirical distribution shown in figure \ref{fig:traffic-data}. \label{fig:validation}}
 \end{figure*}
 
 \label{sec:strategies}
@@ -203,6 +210,7 @@ In order to be able to measure and compare the efficiency of the different strat
 where $v$ is the velocity, s the road length and t refers to the time spent on a road. Using this, we can also easily derive the average speed on each road. The second statistic measured is the amount of time each car spends waiting at traffic lights. This is achieved by checking at each time step if a car is under a certain speed and is not accelerating. Whenever the previous conditions are fulfilled, the total amount of waiting time is increased by the size of the time step. The purpose of the control strategies is to maximize the average speeds and minimize the time spent waiting in congestions.
 
 \subsection{Simulated Maps}
+Experiments are conducted on three different maps.They differ in the challenges that they impose on the traffic light systems and are therefore supposed to test their strengths and weaknesses. In the following, the three maps are described and motivated. Images can be found in the Appendix.
 
 \paragraph{Two Districts} “Two Districts” is a small and simple map, designed to test the effects of modifying the most crucial roads in a map. The map has a residential district on the left and an industrial district on the right, connected by only one road, in order to force most vehicles to take it during the rush hours. This road is then modified in various ways, including adding lanes, changing it to a highway and also replaced by multiple one-way streets. 
 
@@ -227,23 +235,22 @@ Three measures are employed to compare the performance strategies. Similarly to 
 In the following section, results for all experiments are presented. Firstly, the outcome of the optimization of the phase length parameter are reported and shortly discussed. Secondly, for each street layout, the performances of all strategies will be used to rank them. In the last subsection, the influence of some urban planning measures will be investigated.
 
 \subsection{Phase Length Optimization}
-Experiments for the optimization of phase lengths in all strategies were conducted on the Brusselsepoort map with 5 different configurations each and a simulation duration of 21 days (where the first day was removed as the transient phase. As the measure to be optimized on, we choose the average speed, since this is one of the most common metrics in the literature. Results of those experiments for the basic, informed and flow weighted strategy can be found in figure \ref{fig:opt-results} in the form of box plots as an average during the rush hour between 7 and 9 o'clock.
+Experiments for the optimization of phase lengths in all strategies were conducted on the Brusselsepoort map with 5 different configurations each and a simulation duration of 21 days (where the first day was removed as the transient phase. As the measure to be optimized on, we choose the average speed, since this is one of the most common metrics in the literature. Results of those experiments for the basic, informed and flow weighted strategy can be found in the appendix in figure \ref{fig:opt-results} in the form of box plots as an average during the rush hour between 7 and 9 o'clock.
 
-\begin{figure*}[t]
-\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
-\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
-\includegraphics[width=\textwidth]{img/flow-opt.png}
-
-\caption{\label{fig:opt-results}}
-\end{figure*}
-
-As figure \ref{fig:opt-results} shows, in both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the flow weighted cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
+In both basic and informed cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the flow weighted cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
 Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix.
 
+\begin{figure*}[t]
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_twodistr.png}
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_maas.png}
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_tie.png}
+	\caption{Fraction of cars waiting in the experiments for Two-Districts (left), Brusselsepoort (middle) and the Tie-Fighter (right), as a development over a day. \label{fig:validation}}
+\end{figure*}
+
 \subsection{Experiments on the Two-Districts Map}
-\begin{table}
+\begin{table}[t]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Two-Districts map.}
 \label{tab:velo-morning-twodi}
@@ -278,7 +285,7 @@ On the first of three maps, the informed cycling strategy outperforms all other 
 With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but the dynamic ones can outperform the basic cylcing benchmark.
 
 \subsection{Experiments on the Brusselsepoort Map}
-\begin{table}
+\begin{table}[t]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{tab:velo-morning-brussel}
@@ -313,7 +320,7 @@ On Brusselsepoort, Informed Cycling is significantly the best performing strateg
 Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel}, flow weighted cycling is the best performing system, significantly better than both basic and informed cycling. Close runner-ups are informed cycling and queue weighted cycling. As was observed before, all strategies except for the dynamic ones, outperform the basic cycling benchmark.
 
 \subsection{Experiments on the Tie-Fighter Map}
-\begin{table}
+\begin{table}[t]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:velo-morning-tie}
@@ -346,13 +353,15 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed (table \ref{tab:velo-morning-tie}) is flow-weighted cycling, followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for queue weighted cycling, but flow weighted cycling follows iwth a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
 
 \subsection{Urban Planning}
-To investigate the effect of measures related to urban planning, two ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible.
+To investigate the effect of measures related to urban planning, three ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible. Finally, the connecting road is replaced by a highway. In all cases, informed cycling is the underlying traffic light strategy. Figure \ref{fig:urban-planning-stats} shows the results in the form of boxplots for the morning rush hour. All differences are significant with a significance level of $0.05$.
 
-\subsubsection{Introducing More Lanes}
+\begin{figure*}[t]
+	\includegraphics[width=0.5\textwidth]{img/urban_planning_frac.png}
+	\includegraphics[width=0.5\textwidth]{img/urban_planning_velo.png}
+	\caption{Fraction of cars waiting and average velocity for different map configurations in the form of boxplots. Default map is Two-Districts, the strategy used is informed cycling. \label{fig:urban-planning-stats}}
+\end{figure*}
 
-\subsubsection{One Way Roads}
-
-\subsection{Connecting Highway}
+As can be observer, all measures improve the fraction of cars waiting. The smallest effect comes from one-way roads, while highways have the largest effect. There is no difference in the mean between two and three lanes, but for three lanes, the quantiles are shifted downwards. For the average velocity, only the introduction of a highway improved the result, while the other measures even slightly decrease the average velocity.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -381,6 +390,28 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 \clearpage
 
 \section*{Appendix}
+
+\begin{figure*}[h]
+\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
+\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
+\includegraphics[width=\textwidth]{img/flow-opt.png}
+\caption{Results for the phaselength optimization experiments for basic cycling, informed cycling and flow weighted cycling. \label{fig:opt-results}}
+\end{figure*}
+
+\begin{figure}[t]
+	\includegraphics[width=\linewidth]{img/twodistr.jpeg}
+	\caption{Map Two-Districts.}
+\end{figure}
+
+\begin{figure}[t]
+	\includegraphics[width=\linewidth]{img/maas.jpeg}
+	\caption{Map Brusselsepoort.}
+\end{figure}
+
+\begin{figure}[t]
+	\includegraphics[width=\linewidth]{img/tie.jpeg}
+	\caption{Map Tie-Fighter.}
+\end{figure}
 
 \begin{table}[h]
 \centering
