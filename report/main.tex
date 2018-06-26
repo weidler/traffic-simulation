@@ -13,6 +13,7 @@
 \useunder{\uline}{\ul}{}
 \usepackage{caption} 
 \usepackage{lastpage}
+\usepackage{float}
 \usepackage[page]{appendix}
 \pagestyle{plain} 
 \usepackage{graphicx}
@@ -200,15 +201,6 @@ Dynamic strategies are strategies that instead of deciding how long a light has 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
 
-\subsection{Measured Statistics}
-In order to be able to measure and compare the efficiency of the different strategies applied, various measurements are taken while the simulation is running. One of these is the average speed of the vehicles for each road. Measuring this is done by starting a timer for a car when it enters a road and stopping it when it leaves it. Then, by using the following formula, the average speed is calculated:   
-
-\begin{equation}
-	v = \frac{s}{t}
-\end{equation}
-
-where $v$ is the velocity, s the road length and t refers to the time spent on a road. Using this, we can also easily derive the average speed on each road. The second statistic measured is the amount of time each car spends waiting at traffic lights. This is achieved by checking at each time step if a car is under a certain speed and is not accelerating. Whenever the previous conditions are fulfilled, the total amount of waiting time is increased by the size of the time step. The purpose of the control strategies is to maximize the average speeds and minimize the time spent waiting in congestions.
-
 \subsection{Simulated Maps}
 Experiments are conducted on three different maps.They differ in the challenges that they impose on the traffic light systems and are therefore supposed to test their strengths and weaknesses. In the following, the three maps are described and motivated. Images can be found in the Appendix.
 
@@ -246,7 +238,14 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_twodistr.png}
 	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_maas.png}
 	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_tie.png}
-	\caption{Fraction of cars waiting in the experiments for Two-Districts (left), Brusselsepoort (middle) and the Tie-Fighter (right), as a development over a day. \label{fig:validation}}
+	\caption{Fraction of cars waiting in the experiments for Two-Districts (left), Brusselsepoort (middle) and the Tie-Fighter (right), as a development over a day. \label{fig:frac-waits-line}}
+\end{figure*}
+
+\begin{figure*}[t]
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_twodistr_bp.png}
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_maas_bp.png}
+	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_tie_bp.png}
+	\caption{Fraction of cars waiting in the experiments for Two-Districts (left), Brusselsepoort (middle) and the Tie-Fighter (right) during morning rush hour as boxplots. \label{fig:frac-waits-bp}}
 \end{figure*}
 
 \subsection{Experiments on the Two-Districts Map}
@@ -278,6 +277,8 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \textbf{Dynamic}    & 0.242$^\dagger$          & 0.242             & 0.0004                     \\
 \textbf{Dynamic+}   & 0.189*$^\dagger$          & 0.0149             & 0.001                    
 \end{tabular}
+
+\small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
 On the first of three maps, the informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
@@ -313,6 +314,8 @@ With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-two
 \textbf{Dynamic}    & 0.2387*$^\dagger$         & 0.0156            & 0.0019                     \\
 \textbf{Dynamic+}   & -              & -                 & -                         
 \end{tabular}
+
+\small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
 On Brusselsepoort, Informed Cycling is significantly the best performing strategy for average speed, but is closely followed by flow weighted cycling for average speed (see table \ref{tab:waiting-morning-brussel}. Dynamic cycling again performs worst, and Dynamic+ even had to be terminated due to performance issues. Except for these two, all strategies can outperform basic cycling.
@@ -348,9 +351,15 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \textbf{Dynamic}    & 0.2565*$^\dagger$          & 0.01699           & 0.0035                     \\
 \textbf{Dynamic+}   & 0.2284*$^\dagger$          & 0.014             & 0.0040                    
 \end{tabular}
+
+\small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed (table \ref{tab:velo-morning-tie}) is flow-weighted cycling, followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for queue weighted cycling, but flow weighted cycling follows iwth a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
+The Tie-Fighter map yields similar results to those of Brusselsepoort. Best-prforming system measured in average speed (table \ref{tab:velo-morning-tie}) is flow-weighted cycling, followed by informed cycling. Except for the dynamic strategies, all strategies significantly outperform basic cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for queue weighted cycling, but flow weighted cycling follows with a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform basic cycling significantly.
+
+\vspace{20pt}
+
+In figure \ref{fig:frac-waits-bp}, boxplots of the fractional number of cars waiting for the morning rush hour are shown. It becomes apparent that while the dynamic strategies are performing worse than other strategies with respect to the mean, they do also have large variance. In fact, the best results for those strategies even consistently outperform basic cycling.
 
 \subsection{Urban Planning}
 To investigate the effect of measures related to urban planning, three ways of changing the Two-Districts map were tested. Firstly, the number of lanes of the road connecting the districts was increased. Secondly, instead of one connecting road, multiple one-way roads were used to make moving from one district to the other possible. Finally, the connecting road is replaced by a highway. In all cases, informed cycling is the underlying traffic light strategy. Figure \ref{fig:urban-planning-stats} shows the results in the form of boxplots for the morning rush hour. All differences are significant with a significance level of $0.05$.
@@ -370,9 +379,6 @@ On the simple map Two-Districts, Informed is best strategy by some margin. More 
 
 Dynamic Cycling+, even though it is the most advanced strategy, does not perform well. Likely the cause is that it is always trying to absolve queues but in doing so it actually creates at least two new ones depending on the number of roads connected to the intersection. This happens because the algorithm decides on which light to turn green based on the average speed and amount of cars on the road. However if for example we have an intersection with 4 connected roads and one road has a big queue, this road will continuously be selected as the traffic light that needs to be green. Unfortunately this causes the other roads to clutter up until they are weighted heavier that the currently most cluttered road. It was attempted to avoid this from happening by making every traffic light turn green once in a while but this impact was clearly not enough to counteract this problem.
 
-\subsection{Limitations}
-
-
 \subsection{Future Work}
 
 - test more maps and find reasons for differneces in maps: are grid maps resulting in informed to be better?
@@ -388,31 +394,27 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 
 
 \clearpage
-
-\section*{Appendix}
-
-\begin{figure*}[h]
-\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
-\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
-\includegraphics[width=\textwidth]{img/flow-opt.png}
-\caption{Results for the phaselength optimization experiments for basic cycling, informed cycling and flow weighted cycling. \label{fig:opt-results}}
-\end{figure*}
-
-\begin{figure}[t]
+\raggedbottom
+\appendix
+\begin{appendix}
+\section{Maps}
+\begin{figure}[h]
 	\includegraphics[width=\linewidth]{img/twodistr.jpeg}
 	\caption{Map Two-Districts.}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[h]
 	\includegraphics[width=\linewidth]{img/maas.jpeg}
 	\caption{Map Brusselsepoort.}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[h]
 	\includegraphics[width=\linewidth]{img/tie.jpeg}
 	\caption{Map Tie-Fighter.}
 \end{figure}
 
+\clearpage
+\section{Second Rush Hour Results}
 \begin{table}[h]
 \centering
 \caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Two-Districts map.}
@@ -427,7 +429,9 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 \textbf{Dynamic}    & 5.9756*$^\dagger$          & 27.924            & 0.0824                     \\
 \textbf{Dynamic+}   & 9.9371*$^\dagger$           & 110.38            & 0.1399                    
 \end{tabular}
+\end{table}
 
+\begin{table}[h]
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 17am and 19am) on the Two-District map.}
 \label{my-label}
@@ -457,7 +461,9 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 \textbf{Dynamic}          & 1.868*$^\dagger$          & 2.564             & 0.032                      \\
 \textbf{Dynamic+}         & -              & -                 & -                         
 \end{tabular}
+\end{table}
 
+\begin{table}[h]
 \centering
 \caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
 \label{my-label}
@@ -487,7 +493,9 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 \textbf{Dynamic}          & 1.399*$^\dagger$          & 1.932             & 0.030                      \\
 \textbf{Dynamic+}         & 1.745*$^\dagger$         & 3.031             & 0.038                     
 \end{tabular}
+\end{table}
 
+\begin{table}[h]
 \centering
 \caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Tie-Fighter map.}
 \label{my-label}
@@ -502,6 +510,17 @@ Dynamic Cycling+, even though it is the most advanced strategy, does not perform
 \textbf{Dynamic+}   & 0.1762*$^\dagger$          & 0.0100            & 0.0001                    
 \end{tabular}
 \end{table}
+\vfill
+\clearpage
+\section{Phase Length Optimization}
+\begin{figure*}[h]
+\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
+\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
+\includegraphics[width=\textwidth]{img/flow-opt.png}
+\caption{Results for the phaselength optimization experiments for basic cycling, informed cycling and flow weighted cycling. \label{fig:opt-results}}
+\end{figure*}
+
+\end{appendix}
 
 
 \end{document}
