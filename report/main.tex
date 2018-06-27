@@ -18,7 +18,7 @@
 \pagestyle{plain} 
 \usepackage{graphicx}
 \captionsetup[table]{skip=10pt}
-\title{Comparing Traffic Control Strategies under Varying Conditions}
+\title{Comparison of Intelligent Traffic Control Strategies\\ under Varying Conditions}
 
 \addbibresource{references.bib}
 \AtBeginBibliography{\small}
@@ -56,7 +56,7 @@ We make our code publicly available at GitHub\footnote{https://github.com/weidle
 \label{sec:related-work}
 In the following, previous research on this topic will be briefly summarized. Extensive work has been done on the simulation of traffic flow as well as the development of traffic control strategies. Following up on different approaches on modelling car following behaviour \citep[e.g.][]{gipps1981behavioural}, \citet{treiber2000congested} developed the influential \textit{Intelligent Driver Model} for the simulation of urban traffic. Similarly to the former, it creates a collision free environment where cars mind the  spacial and time-wise gap to the leading vehicle. The SUMO package \citep{krajzewicz2002sumo, behrisch2011sumo} utilizes the model by \citep{gipps1981behavioural} in an extended version \citep{krauss1998microscopic} in a complex simulation software. In contrast to their research, this work uses the IDM. Hence, the simulation is time-continuous, rather than time-discrete.
 
-Often utilizing such simulation environments for evaluation purposes, a lot of research exists investigating the strengths of different approaches to the automatic control of traffic signals or traffic lights. \citet{papageorgiou2003review} have reviewed such research and identified two key characteristics according to which strategies may be classified. They distinguish between \textit{fixed-time} and \textit{traffic-responsive} strategies, as well as \textit{isolated} and \textit{coordinated} strategies. Fixed-time strategies use historical data to determine (e.g. by optimization) static cycle lengths, while traffic-responsive strategies may use different techniques (e.g. heuristics or optimization algorithms) in order to derive optimal cycle lengths from real-time data that has to be measured in some way. Isolated strategies are focused on a single intersection, while coordinated strategies are able to communicate information between multiple intersections and thereby make potentially joint decisions. \citet{coll2013linear} categorize strategies into four categories. They also distinguish between fixed-time and traffic-responsive approaches, but additionally differentiate \textit{adaptive systems} that apply optimization techniques and \textit{predictive strategies} that use both online and off-line information in order to predict future arrivals at the intersection \citep{coll2013linear}. In this work, the focus will be laid on the former two categories, that is, fixed-time and responsive.
+Often utilizing such simulation environments for evaluation purposes, a lot of research exists investigating the strengths of different approaches to the automatic control of traffic signals or traffic lights. \citet{papageorgiou2003review} have reviewed such research and identified two key characteristics according to which strategies may be classified. They distinguish between \textit{fixed-time} and \textit{traffic-responsive} strategies, as well as \textit{isolated} and \textit{coordinated} strategies. Fixed-time strategies use historical data to determine (e.g. by optimization) static cycle lengths, while traffic-responsive strategies may use different techniques (e.g. heuristics or optimization algorithms) in order to derive optimal cycle lengths from real-time data that has to be measured in some way. Isolated strategies are focused on a single intersection, while coordinated strategies are able to communicate information between multiple intersections and thereby make potentially joint decisions. \citet{coll2013linear} categorize strategies into four categories. They also distinguish between fixed-time and traffic-responsive approaches, but additionally differentiate \textit{adaptive systems} that apply optimization techniques and \textit{predictive strategies} that use both online and off-line information in order to predict future arrivals at the intersection \citep{coll2013linear}. In this work, the focus will be laid on the former two categories, that is, fixed-time and responsive and all strategies will work isolated.
 
 There has also been research on more advanced strategies using e.g. different machine learning techniques like neural networks \citep[e.g.][]{srinivasan2006neural, chao2008intelligent} or linear programming \citep[e.g.][]{coll2013linear, lin2004enhanced} for optimizing the phase or cycle lengths of traffic lights. \citet[][]{coll2013linear} use predictions based on the queue size at red and green lights, flow capacity, and cycle length from the previous time step in order to optimize the cycle lengths with the help of linear programming. As the incoming traffic density from each road entering an intersection changes, the length of green and red phases for the corresponding traffic light is gradually adjusted to assure an optimal output flow. The objective function they optimize minimizes the queue lengths and maximizes the flow. 
 
@@ -92,14 +92,14 @@ In the equation above, $s_0$ and $T$ restrict the car's minimum distance in spac
 In order to simulate a time-continuous model, we need to numerically approximate the integration of the differential equations in \ref{eq:free-road-term} and \ref{eq:int-term}. For that, we choose a small time step $\Delta t$ and repetitively update the velocity as $v(t + \Delta t) = v(t) + \dot{v}(t)$.
 
 \subsection{Traffic Rule Compliance}
-Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights. Following, we briefly discuss the approaches we use in our simulation.
+Due to the large scale maps used in this work, drivers not only need to behave according to their own desires and other traffic participants. They additionally need to comply to a set of traffic rules as given by speed limits or traffic lights.
 
 \paragraph{Approaching Traffic Lights} When approaching red traffic lights, drivers will stop in a predefined distance from the intersection, comparable to stop bars in real world streets. Cars that have already exceeded this line will drive through the intersection. 
 
 \paragraph{Speed Limits} The IDM's free road term incorporates a driver's desired velocity as his intended maximum speed. We use an additional parameter, a driver's favoured velocity $v_{fav}$, and determine the desired velocity by taking the minimum of $v_{fav}$ and the roads speed limit.
 
 \subsection{Lane Changing}
-In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentive} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed of and distance of the approaching car on the new lane.
+In order to incorporate lane changing behaviour into our traffic model, we apply the MOBIL model \citep{treiber2002realistische, kesting2007general}. MOBIL makes decisions for lane changing based on two questions: Is the lane change \textit{incentivized} and is it \textit{safe}? The former question is answered based on the potential gain in acceleration on the new lane, while the latter decision is made based on the speed and distance of the approaching car on the new lane.
 
 \subsection{Arrival Times in a Continuous Simulation}
 Rather than predefining arrival times for a fixed simulation duration, we dynamically generate inter-arrival times (IAT) during runtime. These IATs are drawn from a predefined distribution independently for each road in the map. Therefore, the amount of traffic on a map grows automatically with its size. We use a non-stationary poisson process based on real world data from the U.S. Department of Transportation \citep{trafficdata}. The hourly data is used to draw IATs based on a poisson process that is then adjusted using the thinning algorithm by \citet{lewis1979simulation}. The data used is shown in figure \ref{fig:traffic-data}. As can be observed, this creates rush hours around the hours of 7 to 9 am and 5 to 7 pm.
@@ -111,7 +111,7 @@ Rather than predefining arrival times for a fixed simulation duration, we dynami
 \end{figure} 
 
 \subsection{Population}
-As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented.
+As \citet{papageorgiou2003review} state, most traffic signal strategies are only useful, when the roads are undersaturated with respect to traffic. For that reason but also for the sake of computational efficiency, the simulation prevents oversaturation by using a population count for each road. This population is initialized by determining how many cars would fit on the most outer lanes of that specific road. Cars will only spawn from roads as long as there is population available. Whenever a car leaves or arrives at a road, its population is respectively decremented or incremented. Roads such as highways do not have a population and can therefore also not be chosen as a destination.
 
 \subsection{Zone-based Scheduling}
 Aiming to increase the level of realism, roads on the simulated map have different types of zones that influence the spawn rates and routing of cars. Distinguished zones are \textit{residential}, \textit{mixed}, \textit{commercial} and \textit{industrial}. The zone type determines the traffic flow between different areas of the map. Based on the time of day, cars either mostly move from residential and mixed zones to industrial and commercial zone or vice versa, when they are on their way back home. This way, the simulation also incorporates the difficulties of heavy traffic in one direction, as faced in cities where living and working places are separated by its different areas. Figure \ref{fig:zone-traffic-flow} sketches how the traffic behaves between the zones based on the time of day.
@@ -202,10 +202,11 @@ Dynamic strategies are strategies that instead of deciding how long a light has 
 
 \paragraph{Dynamic Cycling} The first strategy that determines which light of an intersection should turn green is Dynamic Cycling. This strategy measures the amount of cars that are moving towards the intersection for each connected road and chooses to turn the light green for the road which has the most incoming traffic. It makes the next decision at a set interval.
 
-\paragraph{Dynamic Cycling+} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The differenc is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with teh most incoming traffic. Another feature this strategy has is that at every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
+\paragraph{Dynamic Cycling+} The second strategy is Dynaminc Cycling+. This strategy is a more advanced version of the regular Dynamic Cycling. The difference is that Dynamic Cycling+ does not only measure the incoming traffic for each road but also measures their average speed. it chooses to turn the light green for the road with the lowest average speed. Should the average speed of two or more roads be close to each other, then the intersection will choose the road with the most incoming traffic. Another feature this strategy has is that every traffic light has to turn green at least once within a certain amount of time. This is to prevent some roads from never turning green and thus causing some cars to never be able to drive.
 
 \section{Methodology \& Experiments}
 \label{sec:experiments}
+In the following, we outline the experiments conducted in this work and describe our methodological framework. We also briefly touch on the validation of the simulation environment used for these experiments and described in section \ref{sec:envi}.
 
 \subsection{Simulated Maps}
 Experiments are conducted on three different maps.They differ in the challenges that they impose on the traffic light systems and are therefore supposed to test their strengths and weaknesses. In the following, the three maps are described and motivated. Images can be found in the Appendix.
@@ -238,7 +239,7 @@ Experiments for the optimization of phase lengths in all strategies were conduct
 In both Basic and Informed Cycling, 10 seconds and 25 seconds are respectively the best and second best performing strategies numerically. Since 10 seconds is a rather low phase length which might get its benefits from the specific design of the simulation environment, we choose 25 seconds as the phase length for these two strategies in the following experiments. For the Flow Weighted Cycling (and it will be assumed here, that this generalizes to the similar other responsive strategies) higher phase lengths induce worse performance. Again, for the sake of realism we choose a cycle length of 30 seconds and do not consider lower values.
 
 \subsection{Relative Ranking of Strategies}
-Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix.
+Using the phase lengths chosen in the above section, experiments for all strategies on all maps were conducted. Each experiments ran 51 days long, such that the final score is the average of 50 days after the removal of the transient phase. In the following, tables contain averages for the first rush hour. Numbers for the afternoon's rush hour can be found in the Appendix. All tables report the grand mean of all days (except the first one), the mean of the variances of each day ($S^2(n)$) as well as the variance of the means of all days ($S^2_{Means}(n)$)
 
 \begin{figure*}[t]
 	\includegraphics[width=0.33\textwidth]{img/frac_time_waiting_twodistr.png}
@@ -255,7 +256,9 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \end{figure*}
 
 \subsection{Experiments on the Two-Districts Map}
-\begin{table}[t]
+On the first of three maps, the Informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
+
+\begin{table}[!htbp]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Two-Districts map.}
 \label{tab:velo-morning-twodi}
@@ -287,8 +290,6 @@ Using the phase lengths chosen in the above section, experiments for all strateg
 \small{* significant difference to basic, $^\dagger$ significant difference to informed}
 \end{table}
 
-On the first of three maps, the Informed cycling strategy outperforms all other strategies significantly in average velocity. Except for Dynamic and Dynamic+, all strategies outperform the Basic Cycling benchmark system, though. All results can be found in table \ref{tab:velo-morning-twodi}
-
 With respect to the fraction of cars waiting (table \ref{tab:waiting-morning-twodi}), informed cycling is the best performing strategy again, but flow and queue weighted cycling are close runner-ups. All strategies but Dynamic Cycling can outperform the Basic Cylcing benchmark.
 
 \subsection{Experiments on the Brusselsepoort Map}
@@ -296,7 +297,7 @@ On Brusselsepoort, Informed Cycling is significantly the best performing strateg
 
 Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel}, Flow Weighted Cycling is the best performing system, significantly better than both Basic and Informed Cycling. Close runner-ups are Informed Cycling and Queue Weighted Cycling. As was observed before, all strategies except for the dynamic ones, outperform the Basic Cycling benchmark.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{tab:velo-morning-brussel}
@@ -310,7 +311,7 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \textbf{Dynamic}          & 1.99*$^\dagger$          & 3.997             & 0.073                      \\
 \textbf{Dynamic+}         & -             & -                 & -                    
 \end{tabular}
-\vspace{20pt}
+\vspace{10pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Brusselsepoort map.}
 \label{tab:waiting-morning-brussel}
@@ -331,7 +332,7 @@ Measured in the fraction of waiting cars (table \ref{tab:waiting-morning-brussel
 \subsection{Experiments on the Tie-Fighter Map}
 The Tie-Fighter map yields similar results to those of Brusselsepoort. The best-performing system measured in average speed (table \ref{tab:velo-morning-tie}) is Flow-Weighted Cycling, followed by Informed Cycling. Except for the dynamic strategies, all strategies significantly outperform Basic Cycling. The average fraction of cars waiting on this map (table \ref{tab:waiting-morning-tie} has its best score for Queue Weighted Cycling, but Flow Weighted Cycling follows with a difference of only 0.0008. For both measures, all systems except for the dynamic strategies outperform Basic Cycling significantly.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:velo-morning-tie}
@@ -345,7 +346,7 @@ The Tie-Fighter map yields similar results to those of Brusselsepoort. The best-
 \textbf{Dynamic}          & 1.503*$^\dagger$          & 2.983             & 0.054                      \\
 \textbf{Dynamic+}         & 1.574*$^\dagger$          & 3.251             & 0.078                   
 \end{tabular}
-\vspace{20pt}
+\vspace{10pt}
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 7am and 9am) on the Tie-Fighter map.}
 \label{tab:waiting-morning-tie}
@@ -376,7 +377,7 @@ To investigate the effect of measures related to urban planning, three ways of c
 	\caption{Fraction of cars waiting and average velocity for different map configurations in the form of boxplots. Default map is Two-Districts, the strategy used is informed cycling. \label{fig:urban-planning-stats}}
 \end{figure*}
 
-As can be observer, all measures improve the fraction of cars waiting. The smallest effect comes from one-way roads, while highways have the largest effect. There is no difference in the mean between two and three lanes, but for three lanes, the quantiles are shifted downwards. For the average velocity, only the introduction of a highway improved the result, while the other measures even slightly decrease the average velocity.
+As can be observed, all measures improve the fraction of cars waiting. The smallest effect comes from one-way roads, while highways have the largest effect. There is no difference in the mean between two and three lanes, but for three lanes, the quantiles are shifted downwards. For the average velocity, only the introduction of a highway improved the result, while the other measures even slightly decrease the average velocity.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -393,17 +394,20 @@ In future work, it could be promising to investigate more maps in order to ident
 
 \section{Conclusion}
 \label{sec:conclusion}
-The results of three experiments on three different maps, ranking the 7 strategies used in this work, showed that different street layouts indeed induce different relative performances of the strategies. Furthermore, it was shown that when using one of the best performing strategies, changes to the street layout that relate to urban planning, can also be quite effective.
+We compared seven different traffic light control strategies, organized into three different categories: Benchmark, Weighted and Dynamic. The effects of using different road types were measured as well. Experiments were conducted in our simulation environment on three different maps, two of which were designed to pose a challenge to the strategies and one to represent a real life case. We thereby investigated how different strategies respond to specific street layouts and whether small changes to them could also improve traffic.
+
+The results of the first three experiments on three different maps, ranking the 7 strategies used in this work, showed that different street layouts indeed induce different relative performances of the strategies. Furthermore, it was shown that when using one of the best performing strategies, changes to the street layout that relate to urban planning, can also be quite effective.
 
 {\tiny\printbibliography}
-
 
 \clearpage
 \raggedbottom
 \appendix
-\begin{appendix}
+
+\section*{\LARGE{Appendix}}
+
 \section{Maps}
-\begin{figure}[h]
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{img/twodistr.jpeg}
 	\caption{Map Two-Districts.}
 \end{figure}
@@ -420,7 +424,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 
 \clearpage
 \section{Second Rush Hour Results}
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Two-Districts map.}
 \label{my-label}
@@ -436,7 +440,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Fraction of Cars Waiting during first rush hour (between 17am and 19am) on the Two-District map.}
 \label{my-label}
@@ -452,7 +456,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Average Velocity of Cars during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
 \label{my-label}
@@ -468,7 +472,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Brusselsepoort map.}
 \label{my-label}
@@ -484,7 +488,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Average Velocity of Cars during first rush hour (between 17am and 19am) on the Tie-Fighter map.}
 \label{my-label}
@@ -500,7 +504,7 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Fraction of Cars Waiting during second rush hour (between 17am and 19am) on the Tie-Fighter map.}
 \label{my-label}
@@ -515,17 +519,16 @@ The results of three experiments on three different maps, ranking the 7 strategi
 \textbf{Dynamic+}   & 0.1762*$^\dagger$          & 0.0100            & 0.0001                    
 \end{tabular}
 \end{table}
-\vfill
+
 \clearpage
+
 \section{Phase Length Optimization}
-\begin{figure*}[h]
-\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
-\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
-\includegraphics[width=\textwidth]{img/flow-opt.png}
-\caption{Results for the phaselength optimization experiments for basic cycling, informed cycling and flow weighted cycling. \label{fig:opt-results}}
-\end{figure*}
-
-\end{appendix}
-
+\nopagebreak
+\begin{figure}[h]
+	\includegraphics[width=0.5\textwidth]{img/basic-opt.png}
+	\includegraphics[width=0.5\textwidth]{img/informed-opt.png}
+	\includegraphics[width=\textwidth]{img/flow-opt.png}
+	\caption{Results for the phaselength optimization experiments for Basic Cycling, Informed Cycling and Flow Weighted Cycling. \label{fig:opt-results}}
+\end{figure}
 
 \end{document}
